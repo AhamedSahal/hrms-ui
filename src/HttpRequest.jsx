@@ -18,10 +18,10 @@ export const getAPIUrl = () => {
     return "https://demo-service.workplus-hrms.com/service-1"
 }
 const http = axios.create({
-    baseURL: getAPIUrl(),
+    baseURL: import.meta.env.VITE_API_URL,
 });
 const surveyHttp = axios.create({
-    baseURL: "https://demo-service.workplus-hrms.com/survey-service-1",
+    baseURL: import.meta.env.VITE_SURVEY_API_URL,
     headers: headers
 });
 
