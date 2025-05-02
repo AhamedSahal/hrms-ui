@@ -173,7 +173,7 @@ export default class AdminForm extends Component {
                                                                             <i className="las la-bars"></i>
                                                                         </a>
                                                                         <div className="dropdown-menu dropdown-menu-right">
-                                                                            {company.multiEntity && <a className="dropdown-item" href="#" onClick={() => {
+                                                                            {company?.multiEntity && <a className="dropdown-item" href="#" onClick={() => {
                                                                                 this.setState({ ownerDetails: item, showForm: true })
                                                                             }} >
                                                                                 <i className="fa fa-pencil m-r-5"></i> Edit</a>}
