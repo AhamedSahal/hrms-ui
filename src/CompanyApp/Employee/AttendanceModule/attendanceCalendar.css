@@ -1,0 +1,102 @@
+.ant-picker-calendar-mode-switch{
+    display: none;
+    background: #ccc;
+    border: 1px solid #102746;
+  }
+  .attendanceBadge .chart-list{
+    margin-top: 20px;
+  }
+  .attendanceBadge .badge{
+    width :100%;
+    left:auto;
+    right: auto;
+  }
+  .attendanceBadge .bg-present{
+    background-color: #bfeebe;
+    color: #19a014;
+  }
+  
+  .attendanceBadge .bg-absent{
+    background-color: #fab9b1;
+    color: #ac2a19;
+  }
+  .attendanceBadge .bg-leave{
+    background-color: #b9cafa;
+    color: #25459b;
+  }
+  .attendanceBadge .bg-week-off{
+    background-color: #b9bbb9;
+    color: #000;
+  }
+  .attendanceBadge .bg-holiday{
+    background-color: #f1eaa7;
+    color: #b6a617;
+  }
+  .attendanceBadge .bg-half-day{
+    background-color: #a2eeee;
+    color: #1caaaa;
+  }
+  .attendanceBadge .bg-halfday-absent{
+    background-color: #ffad72ad;
+    color: #534027;
+  }
+  .ant-picker-content thead tr{
+    background-color: #869cbb;
+  }
+  .ant-picker-content thead th{
+    padding: 5px !important;
+    text-align: center;
+    color: #102746;
+  }
+  
+  .ant-picker-calendar-full .ant-picker-panel .ant-picker-body th, .ant-picker-calendar-full .ant-picker-panel .ant-picker-body td {
+    padding: 0;
+    border: solid 1px #e0d6d6;
+  }
+  .ant-picker-calendar td:nth-child(1) {
+    background-color: #e6e6e6; 
+  }
+  .ant-picker-calendar td:nth-child(7) {
+    background-color: #e6e6e6; 
+  }
+  .ant-picker-calendar, .ant-picker-calendar .ant-picker-calendar-full, .ant-picker-panel {
+    background: #ffffff !important;
+  }
+  .ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-value {
+    line-height: 24px;
+    transition: color 0.3s;
+    font-weight: 700;
+  }
+  .today_style{
+    color: rgb(24, 144, 255);
+    font-size: 13px;
+    position: absolute;
+    top: 7px;
+    font-weight: 700;
+  }
+  .ant-picker-cell-today .ant-picker-cell-inner {
+    background-color: #E6F7E8; 
+  }
+  .ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-today .ant-picker-calendar-date-value {
+   
+    color: #1890ff !important;
+  }
+  
+  .ant-picker-cell:hover .ant-picker-cell-inner {
+    background-color: #def4ff !important; 
+  }
+  .calender_div{
+      border: solid 1px #ede1e1;
+      margin: 11px;
+      background: white;
+      padding: 6px;
+      width: 99%;
+      border-radius: 6px;
+  }
+  .td.day {
+    padding: 2px;
+    font-size: 12pt;
+    width: 8.3%;
+    height: 1em;
+    vertical-align: top;
+  }

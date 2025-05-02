@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <title>WorkPlus </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <link rel="shortcut icon" id="favicon">
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/assets/css/line-awesome.min.css" rel="stylesheet" />
+    <link href="/assets/css/select2.min.css" rel="stylesheet" />
+    <link href="/assets/css/style.css?v=6" rel="stylesheet" />
+    <link href="/assets/css/chatbot.css" rel="stylesheet" />
+    <link href="/assets/css/dynamic.css?v=6" rel="stylesheet" />
+    <link href="/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="/assets/plugins/summernote/dist/plugin/tam-emoji/css/emoji.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="app" class="main-wrapper"></div>
+    <script type="module" src="/src/index.jsx"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/select2.min.js" async></script>
+
+    <script src="/assets/js/jquery.slimscroll.min.js"></script>
+    <script src="/assets/js/moment.min.js"></script>
+    <script src="/assets/js/bootstrap-datetimepicker.min.js" async></script>
+    <script src="/assets/js/jquery-ui.min.js"></script>
+    <script src="/assets/js/task.js" async></script>
+    <script src="/assets/js/multiselect.min.js" async></script>
+    <!-- <script src="/assets/plugins/summernote/dist/summernote.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js" async></script>
+    <script src="/assets/plugins/summernote/dist/plugin/tam-emoji/js/config.js" async></script>
+    <script src="/assets/plugins/summernote/dist/plugin/tam-emoji/js/tam-emoji.min.js" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" async></script>
+    <script src="/assets/plugins/tinymce/tinymce.min.js" async></script>
+    <script async>
+        document.emojiSource = '/assets/plugins/summernote/dist/plugin/tam-emoji/img';
+        document.emojiType = 'unicode';
+        function TriggerSelect2() {
+            console.log("Configure Select2")
+            $('select.bindSelect2').select2({
+                templateResult: addUserPic,
+                templateSelection: addUserPic
+            });
+        }
+        function BindSelect2Event() {
+            console.log("Bind Select2")
+            $(".select2-hidden-accessible").on("select2:select", function (e) {
+                const event = new Event("change", {
+                    bubbles: true
+                });
+                this.value = $(this).val();
+                let option = $(this).find("option:selected");
+                this.designation = $(option).data("designation");
+                this.dispatchEvent(event);
+            })
+        }
+
+        function addUserPic(opt) {
+            if (!opt.id) {
+                return opt.text;
+            }
+            var optimage = $(opt.element).data('img');
+            if (!optimage) {
+                return opt.text;
+            } else {
+                var $opt = $(
+                    '<span><img data-load-profile-image="' + $(opt.element).data('profile-photo-id') + '" src="' + optimage + '" class="employee-profile"/> ' + $(opt.element).text() + '</span>'
+                );
+                return $opt;
+            }
+        };
+
+        function TriggerSummerNote() {
+
+            $('.summernote').each(function () {
+                var $textArea = $(this);
+                var self = this;
+                $textArea.summernote({
+                    height: 200,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['fontname', ['fontname']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video', 'emoji']],
+                        ['view', ['fullscreen', 'codeview']]
+                    ],
+                    callbacks: {
+                        onBlur: function (element) {
+                            const contents = element.currentTarget.innerHTML;
+                            $textArea.html(contents);
+                            $textArea.val(contents);
+                            let event = new Event('input', { bubbles: true });
+                            self.dispatchEvent(event);
+                        }
+                    },
+                    hint: {
+                        words: ['${signature}',
+                            '${signatureDesignation}',
+                            '${employee.firstName}',
+                            '${employee.middleName}',
+                            '${employee.lastName}',
+                            '${employee.fatherName}',
+                            '${employee.dob}',
+                            '${employee.email}',
+                            '${employee.phone}',
+                            '${employee.gender}',
+                            '${employee.bloodGroup}',
+                            '${employee.doj}',
+                            '${employee.employeeId}',
+                            '${employee.branch}',
+                            '${employee.department}',
+                            '${employee.designation}',
+                            '${employee.status}',
+                            '${employee.shiftStart}',
+                            '${employee.shiftEnd}',
+                            '${employee.reportingManager}',
+                            '${employee.lwd}',
+                            '${employee.country}',
+                            '${employee.companyName}',
+                            '${employee.companyAddress}',
+                            '${employee.bankAccountNumber}',
+                            '${employee.bankBankName}',
+                            '${employee.bankBranchLocation}',
+                            '${employee.bankIBANNumber}',
+                            '${employee.bankSwiftCode}',
+                            '${employee.addressLocalPhone}',
+                            '${employee.addressLocalEmail}',
+                            '${employee.addressLocalCity}',
+                            '${employee.addressLocalAddress}',
+                            '${employee.addressLocalZipCode}',
+                            '${employee.addressHomePhone}',
+                            '${employee.addressHomeEmail}',
+                            '${employee.addressHomeCity}',
+                            '${employee.addressHomeAddress}',
+                            '${employee.addressHomeZipCode}',
+                            '${employee.bankAccountHolderName}',
+                            '${employee.addressEmergencyPhone}',
+                            '${employee.addressEmergencyEmail}',
+                            '${employee.addressEmergencyCity}',
+                            '${employee.salaryBasic}',
+                            '${employee.salaryAllowance}',
+                            '${employee.salaryAllowances} ',
+                            '${employee.addressEmergencyAddress}',
+                            '${employee.addressEmergencyZipCode}'],
+                        // words: ['apple', 'orange', 'watermelon', 'lemon'],
+                        match: /\B@(\w*)$/,
+                        search: function (keyword, callback) {
+                            callback($.grep(this.words, function (item) {
+                                return item.indexOf(keyword) === 0;
+                            }));
+                        },
+                        content: function (item) {
+                            return item;
+                        }
+                    }
+                });
+            });
+
+        }
+
+    </script>
+</body>
+
+</html>

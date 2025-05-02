@@ -1,0 +1,3854 @@
+/* a {
+    color: rgb(0 0 0 / 1);
+} */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    word-spacing: 0px;
+}
+.note-popover .popover-content,
+.note-editor .note-toolbar {
+    background: #f5f5f5 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, .125) !important;
+}
+
+.note-editor.note-frame .note-editing-area .note-editable,
+.note-editor.note-airframe .note-editing-area .note-editable {
+    background-color: white;
+}
+
+.recharts-cartesian-grid-vertical {
+    display: none !important;
+}
+
+.recharts-cartesian-axis-line {
+    display: none !important;
+}
+
+.recharts-legend-wrapper {
+    display: none !important;
+}
+
+.recharts-text {
+    font-size: 12px !important;
+    font-weight: normal !important;
+}
+
+.recharts-line {
+    height: 10px !important
+}
+
+.recharts-tooltip-wrapper {
+    border-radius: 5px !important;
+}
+
+.recharts-surface {
+    padding-right: 40px;
+}
+
+.recharts-default-tooltip {
+    margin: 0px;
+    white-space: nowrap;
+    border-radius: 10px;
+    padding: 6px !important;
+    color: #666 !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: solid 2px rgba(230, 230, 230, 0.8) !important;
+    font-size: 12px;
+    text-align: center;
+}
+
+.leftArtCard {
+    /* padding-top: 20px; */
+    text-align: left;
+    overflow: hidden;
+    margin-bottom: 8px;
+    background-color: #EFF3F6;
+    border-radius: 10px;
+    transition: box-shadow 83ms;
+    border: none;
+    height: auto;
+    border-bottom: 2px solid #E7ECF2;
+    -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+}
+
+.labelstatus {
+    margin-right: 18px;
+    margin-bottom: 18px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.nav-tabs>li .sub-nav {
+    margin-right: 0;
+    color: #e0e0e0;
+    border-radius: 0;
+}
+
+.manage-nav:focus,
+.manage-nav:hover {
+    transition: transform .3s;
+    -ms-transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    color: white;
+    background-color: #1e3f66;
+    border-radius: 10px;
+}
+
+.sub-nav:focus,
+.sub-nav:hover {
+    transition: transform .3s;
+    -ms-transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+#label1 {
+    text-transform: none;
+    color: rgb(255, 255, 255);
+
+}
+
+.project-btn {
+    background-color: #102746;
+    color: white;
+}
+
+.project-btn:focus,
+.project-btn:hover {
+    color: rgb(255, 255, 255);
+    background-color: #011630;
+}
+
+.legend-btn {
+    display: flex;
+    width: 23%;
+    position: absolute;
+    right: 27px;
+    top: 5em;
+    z-index: 5;
+    background: white;
+    padding: 18px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 4px 1px #b1b1b1;
+}
+
+.legend-rating {
+    background: #274883;
+    color: white;
+    width: 8vh;
+    padding: 9px;
+    text-align: center;
+    border-radius: 6px;
+    box-shadow: 0px 0px 4px 1px grey;
+    margin-top: 20px;
+}
+
+/* inside page styling by Ahmed */
+.nav-box {
+    background: #2E5984;
+}
+
+.sub-nav-tabs>ul>li>.nav-link {
+    width: max-content;
+    text-align: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 10px;
+    border-bottom: none;
+    color: #FFF;
+}
+
+.nav-items .nav-link.active,
+.nav-items .nav-link:focus,
+.nav-items .nav-link:hover {
+    background-color: #cccccc;
+    border-color: transparent;
+    color: white;
+    background: #1E3F66;
+    border-bottom: 2px solid #16df6d;
+}
+
+
+.page-headerTab {
+    padding: 17px 15px 0px 15px;
+    border-radius: 0;
+}
+
+#page-head {
+    /* margin-bottom: 1.875rem; */
+    margin-top: 0rem;
+    padding: 15px 15px;
+    border-radius: 0;
+}
+
+.page-titleText {
+    color: black;
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.Table-card {
+    margin-top: 40px;
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 15px;
+    margin-bottom: 40px;
+}
+
+.approvalTable-card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 15px;
+    margin-bottom: 40px;
+}
+
+.insidePageDiv {
+    padding: 0px 50px 40px 50px;
+}
+
+.adminInsidePageDiv {
+    padding: 0px 50px 40px 50px;
+    margin-top: 100px;
+}
+
+.empolyeePageDiv {
+    padding: 55px 40px 15px 40px
+}
+
+.moduleSetupPageContainer {
+    padding: 0px 45px 40px 45px;
+}
+
+.payVariance-card {
+    padding: 0rem 1rem;
+}
+
+.benifitCard {
+    border-bottom: 1px solid rgb(194, 194, 194);
+    padding: 10px;
+}
+
+.filter-btn {
+    cursor: pointer;
+}
+
+#cbColor {
+    accent-color: #8C5FE4;
+}
+
+input[data-id="cbColor"] {
+    accent-color: #8C5FE4;
+}
+
+.form-check-input:checked {
+    background-color: #8C5FE4;
+    border-color: #8C5FE4;
+}
+
+#tableBg {
+    background: white;
+}
+
+.apply-button {
+    background-color: #45C56D;
+    color: #fff;
+    float: right;
+    min-width: 100px;
+    height: 28px;
+    border: none;
+    border-radius: 18px;
+}
+
+.markAll-btn-rejected,
+.markAll-btn {
+    border-radius: 20px;
+    background: #f2f2f2;
+    color: black;
+    font-weight: 500;
+    border: 1px solid #e4e4e4;
+}
+
+.markAll-btn-rejected:hover {
+    background: #FF0000;
+    border: 1px solid #e4e4e4;
+}
+
+.markAll-btn:hover {
+    background: #45C56D;
+    border: 1px solid #e4e4e4;
+}
+
+.markAll-btnGroup {
+    margin-top: -20px;
+}
+
+.tableCard-body {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 0rem 1rem 1rem 1rem;
+}
+
+.tableCard-container {
+    border-top: 1px solid #c2baba;
+    padding-top: 20px;
+}
+
+.tablePage-header {
+    /* margin-bottom: 1.875rem; */
+    margin-top: 1.875rem;
+    background: #ffffff;
+    padding: 7px 5px;
+    border-radius: 0;
+}
+
+.tablePage-title {
+    color: #000000;
+    font-size: 24px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.leave-balance-table {
+    justify-content: right;
+    width: 60%;
+}
+
+.border-style {
+    border-top: 1px solid #c2baba;
+    width: 88em;
+    margin-left: -16px;
+}
+
+.page-container {
+    background-color: #fff !important;
+    border-radius: 11px;
+    box-shadow: 0px 0px 10px 0px #d5d5d5;
+}
+
+.page-containerDocList {
+    background-color: #fff !important;
+    border-radius: 11px;
+    box-shadow: 0px 0px 10px 0px #d5d5d5;
+    margin-top: 100px;
+    margin-bottom: 10px;
+}
+
+.performanceReport-body {
+    background-color: #fff !important;
+    border-radius: 11px;
+    box-shadow: 0px 0px 10px 0px #d5d5d5;
+    margin-bottom: 10px;
+}
+
+.pageTitle-section {
+    border-bottom: 1px solid #c2baba;
+
+}
+
+.ant-table-thead>tr>th {
+    height: 5px;
+    padding: 4px;
+}
+
+#Table-style.ant-table {
+    border-radius: 7px;
+}
+
+.filterCard {
+    border: 1px solid #e7e7e7;
+    background: white;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    border-radius: 11px;
+}
+
+.payrollSearch-btn {
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: 30px;
+    padding: 5px;
+    width: 70px;
+    border-radius: 5px;
+    height: 29px;
+    background: #f88535;
+    color: white;
+}
+
+.statusTable>tr>td {
+    padding: 6px;
+    padding-left: 31px;
+
+}
+
+.statusTable>tr>th {
+    padding: 6px;
+    padding-left: 31px;
+
+}
+
+.changeStatus {
+    font-size: 15px;
+    font-weight: 600;
+
+}
+
+.empInfoTable>tr>th {
+    background-color: #E9F2FF;
+}
+
+.empInfoTable>td {
+    text-align-last: center
+}
+
+.tdHeight {
+    height: 60px;
+}
+
+.empInfoTable .form-control {
+    border-color: #e3e3e3;
+    box-shadow: none;
+    font-size: 15px;
+    height: 35px;
+}
+
+.stepCardDiv {
+    background: #fbfbfb;
+    width: 22em;
+    border-radius: 6px;
+    margin-left: 17px;
+    box-shadow: 0px 0px 3px 0px grey;
+    overflow-y: scroll;
+    height: 33em;
+}
+
+.stepCardStyle {
+    background: rgb(13 22 35);
+    color: white;
+    border-radius: 9px;
+    margin: 12px;
+    padding: 8px;
+    line-height: 17px;
+    width: -webkit-fill-available;
+}
+
+.expireDocs-table {
+    height: auto;
+    background: #fff;
+    margin-top: 15px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 9px #0003;
+}
+
+.rosterAddicon {
+    width: 150px;
+    height: 200px;
+    padding-bottom: 15px;
+    padding-left: 10px;
+    border: 1px solid #C6C0C0;
+}
+
+.rosterDays {
+    text-align: center;
+    padding: 10px 0;
+    font-weight: 1000;
+    height: 55px;
+}
+
+.rosterEditIcon {
+    color: black;
+}
+
+.rosterEdit {
+    margin-left: 100px;
+}
+
+.rosterEditButton {
+    background: none;
+    border: none;
+}
+
+.rosterPlusIcon {
+    background-color: #8AE4F9;
+    text-align: center;
+    padding-top: 35px;
+    height: 90px;
+    font-family: wotfard;
+    font-size: 14px;
+    color: #000000;
+}
+
+.rosterBtnPlusdiv {
+    text-align: center;
+    padding-top: 20px;
+}
+
+/* multi input */
+
+.multi-inputwrapper {
+    background-color: white;
+    color: rgba(0, 0, 0, 0.85);
+
+}
+
+.multi-input {
+    width: 100%;
+    height: 45px;
+    padding: 0 1rem;
+    margin-top: 1rem;
+    box-sizing: border-box;
+    font: inherit;
+    border-radius: 0.2rem;
+    border: 1px solid #e3e3e3;
+    border-style: ridge;
+    box-shadow: none;
+    font-size: 15px;
+    height: 44px;
+}
+
+.multi-input:focus {
+    outline: none;
+}
+
+.multi-input-tag-item {
+
+    background-color: #d4d5d6;
+    display: inline-block;
+    font-size: 14px;
+    border-radius: 30px;
+    height: 30px;
+    padding: 0 4px 0 1rem;
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0.3rem 0.3rem 0;
+}
+
+.multi-input-tag-item>.button {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: #d4d5d6;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    margin-left: 10px;
+    font-weight: bold;
+    padding: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.screeningAutomation {
+    background: #EDF9FD;
+    padding-top: 10px;
+    border-radius: 8px;
+}
+
+/* system field */
+.systemfieldTable {
+    border-collapse: separate;
+    border-spacing: 0 1em;
+    width: 100%;
+}
+
+/* yes no in icon */
+.icon-container {
+    display: inline-block;
+    position: relative;
+}
+
+.icon-text {
+    position: absolute;
+    font-size: x-small;
+    color: white;
+    top: 45%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+}
+
+.icon-text-no {
+    position: absolute;
+    font-size: x-small;
+    color: white;
+    top: 45%;
+    left: 79%;
+    transform: translate(-50%, -50%);
+}
+
+/* summary */
+.collaps-btn {
+    width: 100%;
+    border: none;
+    text-align: start;
+    padding: 10px
+}
+
+.collapse-para {
+    margin-bottom: 0;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.collapse-inner-head {
+    text-align: start
+}
+
+.collapse-edit-btn {
+    border: none;
+    color: none;
+}
+
+.collapse-edit-btn-div {
+    text-align: end
+}
+
+.hire-close {
+    border: 1px solid #e3e3e3;
+    width: 80px;
+    background: white;
+}
+
+.hire-next-btn {
+    color: white;
+    background: #1DA8D5;
+}
+
+.tooltip-icon {
+    color: #1DA8D5;
+}
+
+/* sanjay */
+
+.add_applicant_btn {
+    border: none;
+    background: white;
+    color: #1DA8D5;
+    font-weight: 600;
+}
+
+.main_add_btn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.scheduleIcon {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: 24px;
+    color: #1DA8D5;
+}
+
+.payscaleLanding {
+    margin: 94px 17px 23px 32px;
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.ant-table-tbody>tr>td {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.3s;
+    width: 6em;
+}
+
+.first-row-style>td {
+    font-weight: bold;
+    font-size: 15px;
+    font-family: math;
+    background: #dbeaff;
+}
+
+#c1 {
+    height: 300;
+}
+
+.profileFormHead {
+    background: #ffffff;
+    width: 82%;
+    padding: 15px;
+    box-shadow: 0px 0px 2px 0px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.addPlanForm {
+    background: #ffffff;
+    padding: 15px;
+    box-shadow: 0px 0px 2px 0px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.planInfoSec {
+    box-shadow: 0px 0px 3px 0px #c5c5c5;
+    padding: 12px;
+    border-radius: 5px;
+    margin-top: 12px;
+}
+
+.profileFormHeadContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dvlp-left-align {
+    margin: 0;
+}
+
+.dvlp-right-align {
+    display: flex;
+    align-items: center;
+}
+
+.dvlp-view-span {
+    font-size: 13px;
+    font-weight: 700;
+    color: #5d5d5d;
+    justify-content: space-between;
+
+}
+
+.dvlp-cardRow {
+    place-content: space-between;
+}
+
+.dvlp-profile-card>div {
+    box-shadow: none !important;
+}
+
+.profileFormHeadContent:hover {
+    background: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.surveyMesssageHead {
+    background: #ffffff;
+    padding: 10px 10px 1px 26px;
+    box-shadow: 0px 0px 2px 0px;
+    border-radius: 5px;
+    margin-left: 41px;
+    margin-right: 41px;
+
+}
+
+.dvlp-form {
+    text-align: -webkit-center;
+    text-align-last: left;
+}
+
+.surveyMesssageHead:hover {
+    background: #bbdfff;
+    cursor: pointer;
+}
+
+.profileFormBody {
+    max-height: 0;
+    overflow: hidden;
+    background: white;
+    transition: max-height 0.8s ease;
+}
+
+.dvlpCardIcon {
+    font-size: 20px;
+    color: #292929;
+}
+
+.dvlpCardIcon:hover {
+    cursor: pointer;
+    color: #00568f;
+}
+
+.profileFormBodyVisible {
+    max-height: fit-content;
+    background: white;
+    box-shadow: 0px 0px 2px 0px;
+    margin-bottom: 27px;
+    border-radius: 7px;
+}
+
+.applicant-button:hover {
+    background: #f0f0f0;
+    color: #45C56D;
+    border: 1px solid #45C56D;
+}
+
+.applicant-link {
+    color: white;
+    padding-bottom: 25px;
+}
+
+.survey_btn {
+    width: 105px;
+}
+
+.survey_prevbtn {
+    width: 105px;
+    height: 32px;
+    margin-right: 28px;
+}
+
+.surveyCloseBtn {
+    background: white;
+    padding: 8px 9px 9px 9px;
+    border-radius: 20px;
+    height: 31px;
+    cursor: pointer;
+}
+
+.surveyFormBody {
+    box-shadow: 0px 0px 3px 0px;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 0px 0px 100px;
+}
+
+.surveyNavBtn {
+    float: right;
+    margin-top: 35px;
+    margin-right: 40px;
+
+}
+
+.surveyPagepd {
+    box-shadow: 0px 0px 2px 0px;
+    border-radius: 4px;
+    padding: 4px;
+    width: 96%;
+    margin-left: 22px;
+    background: white;
+}
+
+.surveyQuepg {
+    box-shadow: 0px 0px 2px 0px;
+    border-radius: 4px;
+    padding: 15px;
+    width: 96%;
+    margin-left: 22px;
+    background: white;
+}
+
+.payrollCardElement1 {
+    display: flex;
+    box-shadow: 0px 0px 2px 0px #e77500;
+    padding: 8px;
+    margin: 9px;
+    width: 22em;
+    border-radius: 5px;
+    justify-content: space-between;
+}
+
+.payrollCardElement2 {
+    display: flex;
+    box-shadow: 0px 0px 2px 0px #0ea133;
+    padding: 8px;
+    margin: 9px;
+    width: 22em;
+    border-radius: 5px;
+    justify-content: space-between;
+}
+
+.payrollCardElement3 {
+    display: flex;
+    box-shadow: 0px 0px 2px 0px #0268ec;
+    padding: 8px;
+    margin: 9px;
+    width: 22em;
+    border-radius: 5px;
+    justify-content: space-between;
+}
+
+.payrollCardText1 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #ff8000;
+}
+
+.payrollCardText2 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #0ea133;
+}
+
+.payrollCardText3 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #0268ec;
+}
+
+.payroll-widget-icon {
+    background-color: rgba(116, 168, 245, 0.2);
+    border-radius: 30%;
+    color: #033e8b;
+    font-size: 30px;
+    height: 60px;
+    width: 60px;
+    padding: 8px 10px 10px 10px;
+}
+
+.payrollCountPve {
+    background: #ccf7cc;
+    color: #007a00;
+    padding: 2px 7px 4px 6px;
+    border-radius: 20px;
+}
+
+.payrollCountNve {
+    background: #f8cece;
+    color: #7a0000;
+    padding: 2px 7px 4px 6px;
+    border-radius: 20px;
+}
+
+.payrollCardTittle {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.notifDropdown:hover>.dropdown-menu {
+    display: block;
+}
+
+.notifDropdown>.dropdown-toggle:active {
+    pointer-events: none;
+}
+
+.form-element {
+    position: relative;
+}
+
+.pswrdField .fa-eye {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    cursor: pointer;
+    bottom: 0;
+}
+
+.pswrdField .fa-eye-slash {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    cursor: pointer;
+    bottom: 0;
+}
+
+.nav_level3 {
+    border-radius: 6px;
+    width: 108%;
+    background-color: #528AAE;
+    position: sticky;
+    top: 150px;
+    z-index: 3;
+    margin-left: -55px;
+}
+
+.subMenu_box {
+    position: sticky;
+    top: 4em;
+    z-index: 5;
+}
+
+.filterBox {
+    border: 1px solid rgb(216, 216, 216);
+    padding-top: 13px;
+    border-radius: 5px;
+}
+
+.hideForm {
+    background: #c3c3c3;
+    padding: 15px;
+    box-shadow: 0px 0px 2px 0px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    cursor: not-allowed;
+
+}
+
+.successionPlanHead {
+    display: flex;
+    justify-content: space-between;
+}
+
+.planFormBg {
+    background: #a5a5a5;
+    cursor: not-allowed;
+    padding: 15px;
+    box-shadow: 0px 0px 2px 0px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.successionPlanFromDisable {
+    background: #afafaf;
+    padding: 15px;
+    border-radius: 6px;
+    cursor: not-allowed;
+    margin-bottom: 15px;
+}
+
+.planNewForm {
+    padding: 100px 100px 20px 100px;
+}
+
+.nine-box-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    width: 81em;
+    position: relative;
+    height: 40em;
+}
+
+.box {
+    display: flex;
+    padding-left: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    height: 160px;
+    border: 1px solid #ccc;
+    width: 21em;
+    color: rgb(0, 0, 0);
+}
+
+.threeBox {
+    padding-left: 10px;
+    height: 26em;
+    border: 1px solid #ccc;
+    width: 25em;
+    color: rgb(0, 0, 0);
+}
+
+.boxHeader {
+    font-size: 18px;
+    font-weight: bold;
+    padding-left: 10px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+
+.ratingContent {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.ratingBody {
+    margin-top: 19px;
+    border-top: 1px solid grey;
+    padding-top: 6px;
+}
+
+.nineBoxCandidates {
+    border: 1px solid grey;
+    width: fit-content;
+    padding: 1px 2px 1px 2px;
+    border-radius: 5px;
+    white-space: nowrap;
+    width: 50px;
+    background: #e3e3e3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nineBoxCandidates:hover {
+    background-color: #9c9c9c;
+    cursor: pointer;
+}
+
+.threeBoxCandidates {
+    border: 1px solid grey;
+    width: fit-content;
+    background: #e3e3e3;
+    padding: 1px 2px 1px 2px;
+    border-radius: 5px;
+    white-space: nowrap;
+    width: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.threeBoxCandidates:hover {
+    background-color: #b1b1b1;
+    cursor: pointer;
+}
+
+.candidateImg {
+    width: 25px;
+    height: 25px;
+    border-radius: 35px;
+    padding: 4px;
+}
+
+.quadrant-1 {
+    grid-area: 1 / 1 / 2 / 2;
+    background-color: #ffeebf;
+    border-radius: 5px;
+}
+
+.quadrant-2 {
+    grid-area: 1 / 2 / 2 / 3;
+    background-color: #b9dfc7;
+    border-radius: 5px;
+}
+
+.quadrant-3 {
+    grid-area: 1 / 3 / 2 / 4;
+    background-color: #7ec5a3;
+    border-radius: 5px;
+}
+
+.quadrant-4 {
+    grid-area: 2 / 1 / 3 / 2;
+    background-color: #edabab;
+    border-radius: 5px;
+}
+
+.quadrant-5 {
+    grid-area: 2 / 2 / 3 / 3;
+    background-color: #ffeebf;
+    border-radius: 5px;
+}
+
+.quadrant-6 {
+    grid-area: 2 / 3 / 3 / 4;
+    background-color: #b9dfc7;
+    border-radius: 5px;
+}
+
+.quadrant-7 {
+    grid-area: 3 / 1 / 4 / 2;
+    background-color: #df6c6c;
+    border-radius: 5px;
+}
+
+.quadrant-8 {
+    grid-area: 3 / 2 / 4 / 3;
+    background-color: #edabab;
+    border-radius: 5px;
+}
+
+.quadrant-9 {
+    grid-area: 3 / 3 / 4 / 4;
+    background-color: #ffeebf;
+    border-radius: 5px;
+}
+
+.nineBoxBody {
+    border: 1px solid #d5d5d5;
+    padding: 14px 14px 50px 60px;
+    position: relative;
+    margin-top: -30px;
+}
+
+.threeBoxBody {
+    border: 1px solid #d5d5d5;
+    padding: 24px;
+    width: 80em;
+    position: relative;
+    margin-top: -30px;
+    height: 30em;
+    margin-left: 60px;
+}
+
+
+
+.xSide {
+    position: absolute;
+    top: 46%;
+    left: -39px;
+    transform: translateY(-50%) rotate(-90deg);
+    font-weight: 500;
+}
+
+.ySide {
+    position: absolute;
+    bottom: 1px;
+    left: 53%;
+    transform: translateX(-50%) rotate(0deg);
+    font-weight: 500;
+}
+
+.xBoxText {
+    position: absolute;
+    top: 45%;
+    left: -108px;
+    transform: translateY(-50%) rotate(-90deg);
+    font-weight: 500;
+}
+
+.yBoxText {
+    position: absolute;
+    bottom: 28px;
+    left: 53%;
+    transform: translateX(-50%) rotate(0deg);
+    font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+
+    .xSide,
+    .ySide {
+        display: none;
+    }
+}
+
+.yMedium {
+    margin-right: 345px;
+    margin-left: 345px
+}
+
+.xMedium {
+    margin-right: 104px;
+    margin-left: 104px
+}
+
+.inviteeBtn {
+    background-color: #b1b1b1;
+    color: grey;
+    cursor: not-allowed;
+}
+
+.actionCenter {
+    justify-content: center;
+}
+
+.linear-line-container {
+    position: relative;
+    width: 100%;
+    height: 35px;
+    margin-top: 30px;
+}
+
+.linear-line {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.linear-line-segment {
+    height: 100%;
+}
+
+.value-indicator {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1d75cf;
+    color: white;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.value-indicator::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1d75cf transparent transparent transparent;
+}
+
+.comparatiolabels {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 12px;
+    left: 27%;
+}
+
+.comparatiolabel {
+    position: absolute;
+    top: -55px;
+    transform: translateX(-50%);
+}
+
+@media (max-width: 768px) {
+    .comparatiolabel {
+        font-size: 10px;
+        top: -45px;
+    }
+}
+
+.reportInsidePageDiv {
+    padding: 0px 0px 20px 0px;
+}
+
+.poolImg {
+    width: 45px;
+    height: 45px;
+    box-sizing: border-box;
+    background-size: 60%;
+    border-radius: 35px;
+    padding: 4px;
+}
+
+.candidateSec {
+    border-radius: 6px;
+    align-items: center;
+    padding: 1px;
+    border: 1px solid rgb(197, 197, 197);
+}
+
+.profileBody {
+    text-align-last: center;
+    padding: 25px;
+}
+
+.seeMoreBtn {
+    color: #0035ff;
+    margin: 0px 38px 3px 0px;
+    font-size: 12px;
+    border: 1px solid grey;
+    width: 64px;
+    float: right;
+    text-align: center;
+    cursor: pointer;
+}
+
+.seeMoreBtn:hover {
+    background: #adadad;
+}
+
+.actionBtn {
+    height: 30px;
+}
+
+.columnIcon {
+    box-shadow: 0px 0px 2px 0px;
+    padding: 3px;
+    border-radius: 5px;
+    margin-left: 16px;
+    cursor: pointer;
+    color: #033e8b;
+}
+
+.columnIcon:hover {
+    background-color: #e1eeff;
+    ;
+}
+
+.tableColHide {
+    position: absolute;
+    z-index: 1;
+    background: #ffffff;
+    padding: 12px;
+    width: 169px;
+    right: 10px;
+    top: 37px;
+    border-radius: 4px;
+    box-shadow: 0px 0px 3px 0px;
+}
+
+.currency-select-box {
+    display: flex;
+    align-items: center;
+    border: solid 1px #d1d1d1;
+    padding-left: 8px;
+    border-radius: 4px;
+}
+
+.currency-select-box img {
+    width: 20px;
+    height: auto;
+    margin-right: 8px;
+}
+
+.currency-select-box select {
+    display: inline-block;
+    padding: 5px;
+    border-radius: unset;
+}
+
+.currency-option {
+    display: flex;
+    align-items: center;
+}
+
+.currency-select-box img {
+    width: 27px;
+    height: 18px;
+    margin-right: 5px;
+}
+
+
+.success-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 25;
+}
+
+.success-content {
+    background: #fefcfe;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 18em;
+}
+
+.success-header {
+    align-items: center;
+}
+
+.success-header span {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.success-header button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.apexcharts-legend.apx-legend-position-right {
+    text-align: left;
+}
+
+
+.toggles-btn-view {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: 170px;
+    height: 29px;
+    background: #bbbbbb;
+    border-radius: 20px;
+}
+
+.toggle-button-element {
+    width: 90px;
+    height: 32px;
+    background: #2e5984;
+    box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.14);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.toggle-button-element:hover {
+    background: #1f4163;
+}
+
+.self-btn {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    color: #fff;
+}
+
+.team-btn {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    color: #ffffff;
+    padding-left: 26px;
+}
+
+.menu-toggle {
+    display: flex;
+    display: flex;
+    background: #ffffff;
+    width: fit-content;
+    margin-top: 9px;
+    padding: 4px;
+    border-radius: 6px;
+    border: solid 1px #c7c7c7;
+}
+
+.menu-toggle button {
+    padding: 7px 20px;
+    margin: 3px;
+    color: #787878;
+    font-weight: 500;
+    border-radius: 6px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.6s, color 0.6s;
+    border: solid 1px #e9e9e9;
+}
+
+.menu-toggle button.active {
+    background-color: #528aae;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0px 1px 2px 1px grey;
+}
+
+.menu-toggle button:not(.active):hover {
+    background-color: #dddddd;
+    color: rgb(94, 94, 94);
+
+}
+
+.mygrid-div {
+    text-align: center;
+    border-right: solid 1px #cdc7c7;
+    padding: 10px;
+}
+
+
+.regularize-grid-div {
+    background: #ffdfdf;
+    padding: 0px;
+    border-radius: 3px;
+    font-weight: 600;
+    border: solid #fa9797 2px;
+    color: #a73c3c;
+    width: 50px;
+    font-size: 12px;
+}
+
+.myStatistics-container {
+    padding: 13px;
+    height: 20em;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    padding-top: 6px;
+}
+
+.myStatistics-title {
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    margin-top: 3px;
+}
+
+.myStatistics-bar {
+    margin-bottom: 7px;
+}
+
+.myStatistics-bar span {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.myProgress {
+    background: #f1f1f1;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 15px;
+    position: relative;
+    margin-top: 10px;
+}
+
+.myProgress-bar {
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.myDashCardsBody {
+    background: white;
+    box-shadow: 0px 0px 4px 3px #ede9e9;
+    border-radius: 5px;
+}
+
+.myDashCardsBody2 {
+    height: 10em;
+    align-content: center;
+    background: white;
+    box-shadow: 0px 0px 4px 3px #ede9e9;
+    border-radius: 5px;
+}
+
+.myCardsGrid {
+    width: 75%;
+    margin-right: 30px;
+}
+
+.myProgress-bar.today {
+    background: #4bc0c0;
+}
+
+.myProgress-bar.this-week {
+    background: #1683cc;
+}
+
+.myProgress-bar.this-month {
+    background: #c735d4;
+}
+
+.myProgress-bar.remaining {
+    background: #7c6f34;
+}
+
+.myProgress-bar.overtime {
+    background: #3c8371;
+}
+
+.line-statistics-container {
+    width: 99%;
+    padding: 0px;
+    height: 30em;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    margin-top: 46px;
+}
+
+.myPayslip-Section {
+    overflow-y: auto;
+    max-height: 220px;
+    padding: 7px;
+
+}
+
+.mySlip-btn {
+    background: #376695;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.mypay .ant-picker-input>input {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.myPayCard {
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    position: relative;
+    border: none;
+    height: 250px;
+    /* border-bottom: 2px solid #E7ECF2; */
+    -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    padding: 15px;
+}
+
+.payrollTableGraph {
+    background-color: #fff;
+    border-radius: 7px;
+    box-shadow: 0px 0px 4px 0px rgb(181 171 171);
+    width: 49%;
+    margin-top: 25px;
+    padding: 21px;
+    height: 19em;
+}
+
+.trandingIconStyle {
+    align-content: center;
+    color: #007000;
+    background: #e3fde3;
+    border-radius: 29px;
+    padding: 9px;
+    font-weight: 600;
+}
+
+.trandingIconDownStyle {
+    align-content: center;
+    color: #d40000;
+    background: #ffe9e9;
+    border-radius: 29px;
+    padding: 9px;
+    font-weight: 600;
+}
+
+.menuIconDiv {
+    display: flex;
+    place-content: space-evenly;
+}
+
+.menuIconFa {
+    border: solid 1px #bbbbbb;
+    padding: 4px;
+    border-radius: 6px;
+    height: 24px;
+    width: 24px;
+    color: grey;
+    cursor: pointer;
+}
+
+.menuIconFa:hover {
+    color: rgb(58, 58, 58);
+    border: solid 1px rgb(56, 55, 55);
+}
+
+.pay-table-linkIcon {
+    cursor: pointer;
+    background: none !important;
+    text-align: center;
+    color: #033e8b;
+    font-size: 24px;
+    float: right;
+}
+
+.pay-table-linkIcon:hover {
+    font-size: 24px;
+}
+
+.EmpProfile-home-page {
+    display: flex;
+    flex-direction: column;
+    height: 91vh;
+    place-content: space-evenly;
+}
+
+.EmpProfile-home-page>div {
+    flex: 0.3;
+    text-align: -webkit-center;
+}
+
+
+
+@media (min-width: 768px) {
+    .EmpProfile-home-page {
+        flex-direction: row;
+    }
+}
+
+.payProPic {
+    width: 111px;
+    height: 111px;
+    border-radius: 6px;
+    margin-top: 33px;
+    border: solid #ededed;
+    padding: 4px;
+
+}
+
+.bank-card {
+    width: 350px;
+    box-shadow: 0px 0px 5px 0px #c5bbbb;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    margin-top: 13px;
+}
+
+.bank-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 11px;
+    justify-content: space-between;
+    border-bottom: solid 1px #c9c3c3;
+    padding-bottom: 10px;
+}
+
+.bank-logo {
+    height: 30px;
+    margin-right: 8px;
+}
+
+.account-holder {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.bank-details {
+    font-size: 14px;
+}
+
+.bank-detail {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.bank-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.bank-value {
+    color: #555;
+}
+
+.gnInfo-general-info-card {
+    width: 380px;
+    box-shadow: 0px 0px 5px 0px #c5bbbb;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+}
+
+.gnInfo-card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+    border-bottom: solid 1px #ddd5d5;
+}
+
+.gnInfo-card-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.gnInfo-edit-link {
+    font-size: 14px;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.gnInfo-card-details {
+    font-size: 14px;
+}
+
+.gnInfo-detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.gnInfodetail {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.gnInfolabel {
+    color: #bbbbbb;
+}
+
+.gnInfovalue {
+    color: #444444;
+    font-weight: bold;
+}
+
+.ctc-breakup-card {
+    width: 350px;
+    box-shadow: 0px 0px 5px 0px #c5bbbb;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+}
+
+.ctc-card-header {
+    margin-bottom: 16px;
+    padding: 0px;
+    text-align: -webkit-left;
+    padding-bottom: 10px;
+    border-bottom: solid 1px #ddd5d5;
+}
+
+.ctc-card-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.ctc-revision-date {
+    font-size: 12px;
+    color: #007bff;
+    background-color: #e9f5ff;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.ctc-card-details {
+    font-size: 14px;
+}
+
+.ctc-detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.ctcdeduction .ctcvalue {
+    color: red;
+}
+
+.ctcdeduction {
+    border-top: solid 1px #ddd5d5;
+    margin-top: 14px;
+    padding-top: 12px;
+}
+
+.ctc-net-pay .ctcvalue {
+    color: green;
+    font-weight: bold;
+}
+
+.ctc-net-pay {
+    border-top: solid 1px #ddd5d5;
+    margin-top: 32px;
+    padding-top: 7px;
+}
+
+.ctclabel {
+    color: #555;
+}
+
+.ctcvalue {
+    color: #333;
+    font-weight: 600;
+}
+
+.payProfileBody {
+    margin-left: 0px;
+    background: #ffffff;
+    box-shadow: 0px 0px 5px 0px #c5bbbb;
+    border-radius: 4px;
+
+}
+
+.pay-menu-toggle {
+    display: flex;
+    background: #ffffff;
+    width: fit-content;
+    padding: 4px;
+}
+
+.pay-menu-toggle button {
+    padding: 6px 13px;
+    margin: 3px;
+    color: #787878;
+    font-weight: 500;
+    border-radius: 6px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.6s, color 0.6s;
+    border: solid 1px #e7e3e3;
+}
+
+.pay-menu-toggle button.active {
+    background-color: #528aae;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0px 0px 5px 0px #c5bbbb;
+}
+
+.pay-menu-toggle button:not(.active):hover {
+    background-color: #dddddd;
+    color: rgb(94, 94, 94);
+
+}
+
+.payslip-month-btn {
+    background: #ffffff;
+    padding: 13px;
+    width: 170px;
+    height: 50px;
+    border-radius: 8px;
+    border: solid 1px rgb(223, 217, 217);
+
+    margin: 6px;
+    cursor: pointer;
+}
+
+.payslip-month-btn.active {
+    background-color: #eaf4ff;
+    color: #1b5da3;
+}
+
+.payslip-month-btn:hover {
+    background-color: #eaf4ff;
+    color: #1b5da3;
+}
+
+
+.EmpPay-home-page {
+    display: flex;
+    flex-direction: column;
+    height: 81vh;
+    place-content: space-evenly;
+    border: solid 1px #ddd8d8;
+    ;
+    box-shadow: 0px 0px 5px 0px rgb(223, 217, 217);
+    border-radius: 7px;
+    margin-top: 18px;
+
+}
+
+.EmpPay-home-page>div {
+    flex: 0.3;
+    text-align: -webkit-center;
+}
+
+
+
+@media (min-width: 768px) {
+    .EmpPay-home-page {
+        flex-direction: row;
+    }
+}
+
+.slipSidebar {
+    border-right: solid 1px #ddd8d8;
+    margin-right: 14px;
+}
+
+.payslip_header {
+    float: left;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 9px;
+}
+
+.pay-gradestyle {
+    background: #054c8b;
+    color: white;
+    width: 34px;
+    padding: 4px 7px 5px 7px;
+    border-radius: 6px;
+    height: 34px;
+    font-size: 18px;
+    box-shadow: 1px 1px 5px 1px grey;
+    text-align: -webkit-center;
+
+}
+
+.deduction-column {
+    background-color: #ffefef;
+}
+
+.earnigs-column {
+    background-color: #ecfcec;
+}
+
+.pay-drop {
+    margin-right: 17px;
+    margin-top: -6px;
+    width: 14em;
+
+}
+
+.comparisonChart {
+    box-shadow: 0px 0px 3px 1px #e3d6d6;
+    margin: 16px 0px -1px 0px;
+    padding: 10px;
+    background: white;
+    font-weight: 700;
+    border-radius: 6px;
+
+
+}
+
+.comparisonIcon {
+    margin-top: -26px;
+    font-size: 30px;
+    float: right;
+    cursor: pointer;
+    color: #102746;
+}
+
+.payroll_dash_widget {
+    border: 1px solid #ededed;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    background-color: #fff;
+
+}
+
+.payroll_icon {
+    background-color: rgba(116, 168, 245, .2);
+    border-radius: 100%;
+    color: #033e8b;
+    display: inline-block;
+    float: right;
+    font-size: 30px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    width: 60px;
+    margin-top: -25px;
+}
+
+.tempBtn {
+    position: fixed;
+    top: 99px;
+    right: 7px;
+    z-index: 17;
+    border: 1px solid #32679b;
+    color: #32679b;
+    cursor: pointer;
+}
+
+.dashboard_line_chart {
+    background: white;
+    margin-top: 20px;
+    border-radius: 6px;
+    border: solid 1px #f1e7e7;
+    padding: 15px;
+}
+
+
+.mychart_next:hover {
+    color: #1c8abd;
+    cursor: pointer;
+}
+
+.calendarDayChange_btn {
+    display: flex;
+    margin-bottom: 15px;
+    justify-content: right;
+}
+
+.weeklyCalendar {
+    background: white;
+}
+
+.weeklyCalendar-present {
+    background-color: #bfeebe;
+    color: #19a014;
+    width: 120px;
+}
+
+.weeklyCalendar-absent {
+    background-color: #fab9b1;
+    color: #ac2a19;
+    width: 120px;
+}
+
+.weeklyCalendar-leave {
+    background-color: #b9cafa;
+    color: #25459b;
+    width: 120px;
+}
+
+.weeklyCalendar-week-off {
+    background-color: #b9bbb9;
+    color: #000;
+    width: 120px;
+}
+
+.weeklyCalendar-holiday {
+    background-color: #f1eaa7;
+    color: #b6a617;
+    width: 120px;
+}
+
+.weeklyCalendar-half-day {
+    background-color: #a2eeee;
+    color: #1caaaa;
+    width: 120px;
+}
+
+.weeklyCalendar-half-day-absent {
+    background-color: #ffad72ad;
+    color: #534027;
+}
+
+.clockInOut_weeklytbl {
+    border: solid 1px #cfcfcf;
+}
+
+.clockInOutTime_weeklyTbl {
+    justify-content: space-around;
+    background: #E6F7E8;
+    border-radius: 6px;
+    padding: 1px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: #19a014;
+    border: solid 1px #cfcfcf;
+}
+
+.weeklyBadgeAb {
+    justify-content: space-around;
+    border-radius: 5px;
+    padding: 1px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    border: solid 1px #cfcfcf;
+}
+
+.highlight-today {
+    color: #11a7fd;
+}
+
+
+.table-container {
+    width: 100%;
+    position: relative;
+}
+
+.table-body-scroll {
+    display: block;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.weeklyCalendar {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.weeklyCalendar thead th {
+    position: sticky;
+    top: 0;
+    background: #869cbb;
+    z-index: 1;
+}
+
+.weekly_tbl_cntnr {
+    background: white;
+    border-radius: 6px;
+    padding: 15px;
+    box-shadow: 0px 0px 3px 3px #dbdada;
+}
+
+.weeklyCalendar th,
+.weeklyCalendar td {
+    width: 100px;
+}
+
+.weeklyCalendar td,
+.table th {
+    padding: 5px;
+}
+
+.weekSelectionTag {
+    border: solid 1px #ababab;
+    padding: 4px;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 13px;
+    background: white;
+}
+
+.weekSelectionTag_div {
+    float: right;
+    padding: 6px;
+    padding-bottom: 20px;
+}
+
+.attendanceMonthly-card {
+    background: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 10px;
+    flex: 1 1 300px;
+    /* Adjust width as needed */
+    max-width: 400px;
+    /* Maximum width for responsiveness */
+}
+
+.attendanceMonthly-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #888;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.monthlyReportPie .apexcharts-legend {
+    position: absolute !important;
+    top: -2px !important;
+    right: 10px !important;
+    left: auto !important;
+    scrollbar-width: none;
+
+}
+
+.monthlyReportCardTitle {
+    display: flex;
+    margin-bottom: 5px;
+    border-bottom: solid 1px #d7d7d7;
+    padding: 7px 0px 0px 7px;
+}
+
+.TeamDashCardsBody {
+    background: white;
+    border-radius: 5px;
+    border: solid 1px #e5d9d9;
+    width: 100%;
+    padding: 10px;
+}
+
+.OrgDashCardsBody {
+    background: white;
+    border-radius: 5px;
+    border: solid 1px #e5d9d9;
+    width: 100%;
+    padding: 10px;
+}
+
+.teamDashBarChart {
+    background: white;
+    width: 50%;
+    padding: 8px;
+    padding-top: 15px;
+    border-radius: 5px;
+    border: solid 1px #e5d9d9;
+
+}
+
+.OrgDashBarChart {
+    background: #ffffff;
+    width: 100%;
+    display: flex;
+    margin-top: 14px;
+    padding: 10px;
+    padding-top: 28px;
+    border-radius: 5px;
+    border: solid 1px #e5d9d9;
+}
+
+.teamDashRightCard {
+    background: white;
+    border: solid 1px #d7caca;
+    text-align-last: center;
+    border-radius: 5px;
+    height: 86px;
+    width: 14em;
+    margin-left: 12px;
+    margin-top: 11px;
+}
+
+.teamDashRightCard p {
+    border-bottom: solid 1px #dbcccc;
+    padding: 3px;
+}
+
+.mydashAvarageIcon {
+    border: solid 2px;
+    padding: 3px;
+    border-radius: 4px;
+}
+
+.punctualityChart {
+    width: 44px;
+    height: 40px;
+    margin-top: 7px;
+    margin-bottom: 4px;
+}
+
+.permissionBtnGrid {
+    place-content: space-around;
+    place-items: center;
+    border: solid 1px #e5e1e1;
+    border-radius: 5px;
+    margin: 20px;
+}
+
+.list_LateStatus {
+    color: #f88535;
+    border: solid 1px;
+    padding: 2px;
+    border-radius: 5px;
+    font-size: 12px;
+    background: #FAF0E3;
+}
+
+.list_OnTimeStatus {
+    color: #45C56D;
+    border: solid 1px;
+    padding: 2px;
+    border-radius: 5px;
+    font-size: 12px;
+    background: #E6F7E8;
+}
+
+.teamActionCard {
+    text-align: center;
+    padding: 7px;
+    margin-left: 0px;
+}
+
+.teamActionCardBody {
+    background: white;
+    width: 6em;
+    place-content: center;
+    border: solid 1px rgb(226, 219, 219);
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 20px;
+}
+
+.teamActionCardBody:hover {
+    background: rgb(232, 247, 255);
+    cursor: pointer;
+}
+
+.attendOrgCardSec {
+    text-align: -webkit-center;
+    background: #ffffff;
+    padding: 27px;
+    border: solid 1px #e7dede;
+    border-radius: 6px;
+}
+
+.permissionFormTitle {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.ant-picker-panels {
+    display: flex;
+    justify-content: center;
+}
+
+.ant-picker-range .ant-picker-date-panel:nth-child(2) {
+    display: none;
+}
+
+.ant-picker-range .ant-picker-separator {
+    display: none;
+}
+
+.perform_con {
+    border: solid 1px #c3c1c1;
+    border-radius: 7px;
+    padding: 12px;
+    margin: -3px;
+}
+
+.perform-general-info-card {
+    width: 100%;
+    border-radius: 8px;
+    padding: 3px 12px;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    border: 1px solid #cdcdcd;
+    margin-top: 4px;
+}
+
+.perfom_profile_img {
+    box-shadow: 0px 0px 2px 2px #e3e1e1;
+    text-align-last: center;
+    width: 14em;
+    border-radius: 5px;
+    margin-left: 15px;
+}
+
+.performReviewTable {
+    text-align: center;
+    font-weight: bold;
+    color: #282828;
+}
+
+.perform_table_mng {
+    text-align-last: left;
+    place-self: center;
+    font-size: 19px;
+}
+
+.perform_table_mng_hd {
+    border-radius: 6px;
+    box-shadow: 0px 0px 2px 0px grey;
+    padding: 2px;
+}
+
+.perform-UpDownIcon {
+    align-self: center;
+    margin-left: 20px;
+    margin-right: 6px;
+}
+
+.perform_hdr {
+    background-color: #fff;
+    height: -webkit-fill-available;
+    align-content: center;
+    margin-bottom: 0;
+    padding: 15px;
+    text-align: center;
+}
+
+.perform_hdr:hover {
+    cursor: pointer;
+    background-color: #dcedfb;
+}
+.groupWeightageCard {
+    padding: 4px;
+}
+.groupWeightageCard>p {
+    font-size: 12px;
+    font-weight: bold;
+}
+.innerCardWe {
+    padding: 8px;
+}
+.wtgBtn{
+    border: solid 1px #dfdcdc;
+    padding: 4px;
+    border-radius: 5px;
+    font-weight: 600;
+}
+.wtgBtn:hover{
+    background-color: #e9f4ff;
+    cursor: pointer;
+}
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .table thead th:first-child {
+    border-top-left-radius: 5px;
+  }
+  
+  .table thead th:last-child {
+    border-top-right-radius: 5px;
+  }
+  
+  .table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 5px;
+  }
+  
+  .table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 5px;
+  }
+
+  .performGradeDiv{
+    align-content: center;
+    text-align: -webkit-center;
+  }
+
+  .perform-gradestyle {
+    background: #054c8b;
+    color: rgb(26, 26, 26);
+    border-radius: 6px;
+    height: 34px;
+    font-size: 50px;
+    box-shadow: 1px 1px 5px 1px grey;
+    text-align: -webkit-center;
+    padding: 11px 27px;
+}
+.reviewerHead{
+    font-size: 15px;
+    font-weight: 600;
+    color: #646464;
+}
+.performDownloadIcon{
+    border: solid 1px;
+    padding: 6px;
+    border-radius: 5px;
+}
+
+.performDownloadIcon:hover{
+    background-color: #d8f0ff;
+    color: #145ea3;
+}
+
+.performTableHead{
+    border-bottom: solid 1px grey;
+    font-size: 21px;
+    word-spacing: -6px;
+}
+.performDonutWid{
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px 1px #ede7e7;
+    padding: 10px;
+}
+.performLineChart{
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px 1px #ede7e7;  
+}
+.perform-dash-gradestyle {
+    color: rgb(26, 26, 26);
+    border-radius: 3px;
+    font-size: 25px;
+    box-shadow: 1px 1px 3px 1px #d5cdcd;
+    padding: 2px 17px;
+}
+.prevPerformRate{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    border: solid 1px #dfd8d8;
+    padding: 6px;
+    border-radius: 5px;
+}
+
+.myPendingAction{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: solid 1px #dfd8d8;
+    padding: 6px;
+    border-radius: 5px;
+}
+.performPendingPrev{
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px 1px #ede7e7;
+    place-content: center;
+}
+
+.myPerform-miss-div {
+    background: #ffdfdf;
+    padding: 0px;
+    border-radius: 3px;
+    font-weight: 600;
+    border: solid #fa9797 2px;
+    color: #a73c3c;
+    width: 50px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.myPerform-na-div {
+    background: rgb(128, 128, 128);
+    padding: 0px;
+    border-radius: 3px;
+    font-weight: 600;
+    border: solid rgb(128, 128, 128) 2px;
+    color: white;
+    width: 50px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.TeamPerform_progress-distribution {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 200px;
+  }
+  
+  .TeamPerform_progress-distribution h3 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .TeamPerform_progress-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    margin-top: 25px;
+  }
+  
+  .TeamPerform_progress-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .orgBreakDown {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    place-content: space-between;
+  }
+  
+  .TeamPerform_progress-label {
+    font-size: 14px;
+    width: 125px;
+  }
+  
+  .TeamPerform_progress-bar {
+    height: 8px;
+    background-color: #333;
+    border-radius: 4px;
+    flex-grow: 1;
+  }
+  
+  .TeamPerform_progress-value {
+    font-size: 14px;
+    width: 65px;
+  }
+
+  .TeamPerform_progress-container {
+    width: 100%;
+    height: 10px; 
+    background-color: #f3f3f3; 
+    border-radius: 5px; 
+    overflow: hidden;
+}
+
+.TeamPerform_progress-bar {
+    height: 100%;
+    background-color: #9e9e9e; 
+    border-radius: 5px 0 0 5px; 
+}
+
+.nine-box_teamPerform {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 33em;
+    position: relative;
+    height: 30em;
+}
+.teamPerform_boxHeader {
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 10px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+.teamPerform_nineBoxBody{
+    border: 1px solid #e0dcdc;
+    padding: 14px 14px 50px 60px;
+    position: relative;
+    width: 39em;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.teamPerform_yMedium {
+    margin-right: 120px;
+    margin-left: 130px
+}
+.orgPerform_yMedium {
+    margin-right: 180px;
+    margin-left: 180px
+}
+.teamPerformBox-1 {
+    grid-area: 1 / 1 / 2 / 2;
+    border: solid 1px rgb(231, 228, 228);
+    place-content: center;
+    justify-items: center;
+}
+
+.teamPerformBox-2 {
+    grid-area: 1 / 2 / 2 / 3;
+    border: solid 1px rgb(231, 228, 228);
+    place-content: center;
+    justify-items: center;
+}
+
+.teamPerformBox-3 {
+    grid-area: 1 / 3 / 2 / 4;
+    border: solid 1px rgb(231, 228, 228);
+    place-content: center;
+    justify-items: center;
+}
+
+.teamPerformBox-4 {
+    grid-area: 2 / 1 / 3 / 2;
+    border: solid 1px rgb(231, 228, 228);
+    place-content: center;
+    justify-items: center;
+}
+
+.teamPerformBox-5 {
+    grid-area: 2 / 2 / 3 / 3;
+    border: solid 1px rgb(231, 228, 228);
+    place-content: center;
+    justify-items: center;
+}
+
+.teamPerformBox-6 {
+    grid-area: 2 / 3 / 3 / 4;
+    border: solid 1px rgb(231, 228, 228);
+    place-content: center;
+    justify-items: center;
+}
+
+.teamPerformBox-7 {
+    grid-area: 3 / 1 / 4 / 2;
+    border: solid 1px rgb(231, 228, 228);
+    place-content: center;
+    justify-items: center;
+}
+
+.teamPerformBox-8 {
+    grid-area: 3 / 2 / 4 / 3;
+    border: solid 1px rgb(231, 228, 228);
+    place-content: center;
+    justify-items: center;
+}
+
+.teamPerformBox-9 {
+    grid-area: 3 / 3 / 4 / 4;
+    border: solid 1px rgb(231, 228, 228);
+    place-content: center;
+    justify-items: center;
+}
+
+.calibration_Chart {
+    box-shadow: 0px 0px 3px 1px #e3d6d6;
+    margin: 16px 0px -1px 0px;
+    padding: 10px;
+    background: white;
+    border-radius: 6px;
+}
+
+.perform_xBoxText {
+    position: absolute;
+    top: 45%;
+    left: -103px;
+    transform: translateY(-50%) rotate(-90deg);
+    font-size: 12px;
+    font-weight: 600;
+    color: grey;
+}
+.teamPerform_xBoxText {
+    position: absolute;
+    top: 50%;
+    left: -103px;
+    transform: translateY(-50%) rotate(-90deg);
+    font-size: 12px;
+    font-weight: 600;
+    color: grey;
+}
+.perform_yBoxText {
+    position: absolute;
+    bottom: 28px;
+    left: 53%;
+    transform: translateX(-50%) rotate(0deg);
+    font-size: 12px;
+    font-weight: 600;
+    color: grey;
+}
+
+.performEmpCountText{
+    padding: 1px 15px 1px 15px;
+    border-radius: 25px;
+    color: #000000;
+    font-size: 13px;
+}
+.perform9boxHead{
+    font-weight: 500;
+}
+
+.performXSideHead {
+    position: absolute;
+    top: 46%;
+    left: -50px;
+    transform: translateY(-50%) rotate(-90deg);
+    font-weight: 500;
+}
+
+.OrgXSideHead {
+    position: absolute;
+    top: 46%;
+    left: -13px;
+    transform: translateY(-50%) rotate(-90deg);
+    font-weight: 500;
+}
+.btnGrpOrg{
+        /* background: grey; */
+        width: 30%;
+        border-radius: 5px;
+        padding: -2px;
+        text-align: -webkit-center;
+        margin: 17px;
+        padding: -top;
+        border: solid 1px #cfcaca;
+}
+.btnItemOrg{
+    background: #fdfdfd;
+    border-radius: 5px;
+    padding: 6px;
+    margin: 6px;
+    box-shadow: 0px 1px 1px 1px #d1caca;
+}
+
+.orgNine-box-container {
+    gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 45em;
+    position: relative;
+    height: 25em;
+}
+
+.orgBox-1 {
+    grid-area: 1 / 1 / 2 / 2;
+    background-color: #ffeebf;
+    place-content: center;
+    justify-items: center;
+}
+
+.orgBox-2 {
+    grid-area: 1 / 2 / 2 / 3;
+    background-color: #b9dfc7;
+    place-content: center;
+    justify-items: center;
+}
+
+.orgBox-3 {
+    grid-area: 1 / 3 / 2 / 4;
+    background-color: #7ec5a3;
+    place-content: center;
+    justify-items: center;
+}
+
+.orgBox-4 {
+    grid-area: 2 / 1 / 3 / 2;
+    background-color: #edabab;
+    place-content: center;
+    justify-items: center;
+}
+
+.orgBox-5 {
+    grid-area: 2 / 2 / 3 / 3;
+    background-color: #ffeebf;
+    place-content: center;
+    justify-items: center;
+}
+
+.orgBox-6 {
+    grid-area: 2 / 3 / 3 / 4;
+    background-color: #b9dfc7;
+    place-content: center;
+    justify-items: center;
+}
+
+.orgBox-7 {
+    grid-area: 3 / 1 / 4 / 2;
+    background-color: #df6c6c;
+    place-content: center;
+    justify-items: center;
+}
+
+.orgBox-8 {
+    grid-area: 3 / 2 / 4 / 3;
+    background-color: #edabab;
+    place-content: center;
+    justify-items: center;
+}
+
+.orgBox-9 {
+    grid-area: 3 / 3 / 4 / 4;
+    background-color: #ffeebf;
+    place-content: center;
+    justify-items: center;
+}
+.orgPerformTgl{
+    border: solid 1px #e5e5e5;
+    width: fit-content;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.orgPerform_nineBoxBody{
+    border: 1px solid #e0dcdc;
+    padding: 14px 14px 50px 60px;
+    position: relative;
+    width: 50em;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.nineboxanalysisText {
+    background: #79b53e;
+    width: 55px;
+    align-self: center;
+    text-align: -webkit-center;
+    font-size: 12px;
+}
+
+.chart_col-6 {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 49%;
+}
+
+.pendingReviewers-table .ant-table-tbody > tr > td {
+    padding: 4px 8px !important;
+  }
+
+.goalStatusDis{
+    margin-bottom: 20px;
+    border: solid 1px #d1cbcb;
+    padding: 5px;
+}
+.recognitionAvatar{
+    background-color: #aaa;
+    border-radius: 50%;
+    color: #fff;
+    display: inline-block;
+    font-weight: 500;
+    height: 70px;
+    line-height: 70px;
+    margin: 0 10px 0 0;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    vertical-align: middle;
+    width: 70px;
+    position: relative;
+    white-space: nowrap;
+}
+.scrollable-container {
+    max-height: 480px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.payslip-month-btn {
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+}
+
+.multiSectCustmz {
+    z-index: 2;
+}
+.multiSelectImgSize{
+    width: 33px;
+    height: 33px;
+    box-sizing: border-box;
+    background-size: 60%;
+    border-radius: 35px;
+    padding: 2px;
+}
+.pedo{
+    border-style: none;
+}
+ 
+
+
+
+
+.Goals_table-container {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+  }
+  
+  .goals-table {
+    width: 100%;
+  }
+  
+  .goals-table th,
+  .goals-table td {
+    text-align: left;
+    padding: 12px;
+  }
+
+  /* .goals-table, tr {
+    border-width: 0;
+    background: white;
+    border-bottom: solid 1px #d4d4d4;
+    border: solid 1px #d4d4d4;
+} */
+
+
+.goalPageHead{
+    border: solid 1px #d7cbcb;
+    padding: 0 !important;
+    border-radius: 7px !important;
+    margin: 15px;
+
+}
+  
+  .goals-table th {
+    background-color: #e5e5e5;
+    font-weight: bold;
+  }
+  
+  .goal-title {
+    font-weight: bold;
+    color: #39648f;
+  }
+  
+  .goal-details {
+    font-size: 12px;
+    color: gray;
+  }
+  
+
+
+  .goalHeader-container {
+    font-family: Arial, sans-serif;
+    border: 1px solid #e0e0e0;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    background: white;
+    margin: auto;
+  }
+  
+  .goalHeaderInnerContent-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    float: right;
+  }
+  
+  .Goals_year-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .Goals_year-info span {
+    font-size: 14px;
+    color: #666;
+    margin-right: 16px;
+  }
+  
+  .goalsOverall-progress-btn {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .add-goals-dropdown {
+    position: relative;
+    width: 120px;
+    justify-self: right;
+  }
+  
+  .add-goals-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .Goal_dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 38px;
+    right: 0;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    z-index: 100;
+  }
+  
+  .add-goals-dropdown:hover .Goal_dropdown-menu {
+    display: block;
+  }
+  
+  .Goal_dropdown-menu button {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    text-align: left;
+    width: 100%;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  
+  .Goal_dropdown-menu button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .goal_progress-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .goal_progress-info {
+    flex: 2;
+  }
+  
+  .goal_progress-info span {
+    display: block;
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .goal_progress-percentage {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 8px 0;
+  }
+  
+  .goal_progress-bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    width: 30%;
+  }
+  
+  .goal_progress-fill {
+    height: 100%;
+    background: #007bff;
+  }
+  
+  .last-updated {
+    font-size: 12px;
+    color: #999;
+  }
+  
+  .goal_status-indicators {
+    display: flex;
+    gap: 31px;
+  }
+  
+  .status {
+    font-size: 12px;
+  }
+  
+  .status-circle {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+
+  .sub-goals {
+    border: solid 1px rgb(199, 199, 199);
+    width: 93%;
+    margin-left: 166px;
+    border-radius: 48px;
+    background: white;
+  }
+  .sub-CheckListTask {
+    border: solid 1px rgb(199, 199, 199);
+    width: 100%;
+    margin-left: 92px;
+    border-radius: 48px;
+    background: white;
+  }
+
+  .sub-CheckListTask:hover, .Goals_table_row:hover {
+    background: #e0f5ff;
+  }
+
+  .sub-CheckListTask th, .sub-CheckListTask td {
+    padding: 0!important;
+    width: 130px;
+}
+  .Onboardsub-Task {
+    border: solid 1px rgb(199, 199, 199);
+    margin-left: 166px;
+    border-radius: 48px;
+    background: white;
+  }
+  .GoalName_tab :hover{
+    cursor: pointer;
+  }
+  .Goals_table_row {
+      border-width: 0;
+      background: white;
+      border-bottom: solid 1px #d4d4d4;
+      border: solid 1px #d4d4d4;
+  }
+
+  .sub-goals:hover, .Goals_table_row:hover {
+    background: #e0f5ff;
+  }
+
+  .sub-goals th, .sub-goals td {
+    padding: 0!important;
+    width: 130px;
+}
+
+.Onboardsub-Task:hover, .Goals_table_row:hover {
+    background: #e0f5ff;
+  }
+
+  .Onboardsub-Task th, .Onboardsub-Task td {
+    padding: 0!important;
+    width: 210px;
+}
+
+ /* Goals view Page */
+
+ .goalViewPage-details-container {
+    font-family: Arial, sans-serif;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+  }
+  
+  .goalViewPage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+
+  }
+  
+  .goalViewPage-header h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  
+  .goalViewPage-content {
+    display: flex;
+    justify-content: space-between;
+    
+  }
+  
+  .goalViewPage-details,
+  .goalViewPage-meta {
+    width: 48%;
+  }
+  
+  .goalViewPage-row,
+  .goalViewPage-row {
+    margin-bottom: 20px;
+  }
+  
+  .goalViewPage-row strong,
+  .goalViewPage-row strong {
+    display: block;
+    margin-bottom: 5px;
+    color: grey;
+  }
+  
+  .assigned-to {
+    display: flex;
+    align-items: center;
+  }
+  
+  .avatar {
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .GoalsSubHead{
+    background: #dbdbdb;
+    padding: 8px;
+    display: flex;
+  }
+  .goalsSubHeadContent {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 80%;
+  }
+
+  .onboardTaskSubHead{
+    background: #dbdbdb;
+    padding: 8px;
+  }
+
+  .goalsDeadLineHead{
+    align-content: center;
+    border: solid 1px #c1c1c1;
+    padding: 8px;
+    border-radius: 7px;
+    height: 40px;
+    width: 20%;
+    text-align: center;
+  }
+
+  /* Audit History */
+
+  .GoalAudit-container {
+    font-family: Arial, sans-serif;
+    
+    margin: 20px auto;
+    background-color: #fff;
+  }
+  
+  .GoalAudit-title {
+    color: #333;
+    font-size: 20px;
+    margin: 0;
+    background: #f5f5f5;
+    padding: 14px;
+  }
+  
+  .GoalAudit-timeline {
+    position: relative;
+    padding: 30px;
+    overflow: auto;
+    height: 32em;
+  }
+  
+  .GoalAudit-timelineItem {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    padding-left: 30px;
+    min-height: 70px;
+  }
+  
+  .GoalAudit-dot {
+    position: absolute;
+    left: 4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #1890ff; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .GoalAudit-index {
+    color: #fff; 
+    font-size: 11px; 
+    position: absolute;
+  }
+  .GoalAudit-dotBar{
+    width: 3px;
+    height: -webkit-fill-available;
+    background-color: #1890ff;
+    position: absolute;
+    left: 12px;
+    top: 10px;
+  }
+  
+  .GoalAudit-content {
+    margin-left: 10px;
+    display: flex;
+  }
+  
+  .GoalAudit-dateTime {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .GoalAudit-date {
+    font-weight: bold;
+  }
+  
+  .GoalAudit-time {
+    display: block;
+    color: #888;
+  }
+  
+  .GoalAudit-info {
+    font-size: 14px;
+  }
+  
+  .GoalAudit-name {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+  }
+  
+  .GoalAudit-achievement {
+    color: #555;
+  }
+  .goalAuditTopBtn{
+    display: flex   ;
+    gap: 13px;
+  }
+.goalsViewHeaderBtn{
+    margin: 0;
+    border: solid 1px #e9e9e9;
+    padding: 6px;
+    height: 30px;
+    border-radius: 6px;
+    color: #3a3a3a;
+  }
+  .goalsViewHeaderBtn:hover{
+    cursor: pointer;
+    border: solid 1px #c7c7c7;
+    margin: 0;
+    padding: 6px;
+    height: 30px;
+    border-radius: 6px;
+    color: #0c0c0c;
+  }
+  .goalsViewDiscriptionTag{
+    background: #f3f3f3;
+    border-radius: 6px;
+    width: 91%;
+    min-height: 96px;
+    padding: 6px;
+    border: solid 1px #ede6e6;
+  }
+  .goalsViewUnderGoal{
+    font-size: 13px;
+    color: grey;
+    flex-basis: 100%;
+    margin-top: 5px;
+  }
+  .viewGoalMenuBtnDiv{
+    position: absolute;
+    background: white;
+    border: solid 1px #cdcdcd;
+    padding: 7px;
+    border-radius: 5px;
+    right: 102px;
+    top: 303px;
+  }
+  .viewGoalBtn{
+    margin-bottom: 0;
+    padding: 9px;
+  }
+  .viewGoalBtn:hover{
+    margin-bottom: 0;
+    cursor: pointer;
+    background: #e3f1f7;
+    padding: 9px;
+    border-radius: 6px;
+
+  }
+  .filteredGoalsBtn{
+    cursor: pointer;
+    border: solid 1px #ffffff;
+    padding: 6px 7px 1px 7px;
+    border-radius: 5px;
+  }
+
+  .filteredGoalsBtn:hover{
+    cursor: pointer;
+    border: solid 1px #dfdddd;
+    padding: 6px 7px 1px 7px;
+    border-radius: 5px;
+  }
+
+  .goalViewWeightage{
+    background: #2e5984;
+    color: rgb(255 255 255);
+    border-radius: 6px;
+    height: 34px;
+    font-size: 26px;
+    box-shadow: 1px 1px 5px 1px grey;
+    text-align: -webkit-center;
+    padding: 11px 24px;
+  }
+
+  .ant-popover-title {
+      background: #102746;
+      color: green!important;
+      min-height: 60px;
+      font-size: 25px;
+      font-weight: bold;
+  }
+
+  /*onboard*/ 
+  .onboardList_progress-bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .onboardformTasklist {
+    border: solid 1px #d3d3d3;
+    border-radius: 4px;
+    padding: 6px;
+    height: 309px;
+    overflow: scroll;
+}
+
+  .tasklistInDiv {
+    background: #e7e7e7;
+    padding: 5px 15px 5px 15px;
+    border-radius: 4px;
+    min-width: -moz-fit-content;
+    min-width: fit-content;
+    margin: 5px;
+}
+
+  .OnChecklist-modal-footer {
+    position: absolute;
+    bottom: -24px;
+    border-radius: 8px;
+    right: 2px;
+}
+.tasklistCloseBtn{
+    color: rgb(119, 1, 1)
+}
+
+.tasklistCloseBtn:hover{
+    color: rgb(170, 0, 0);
+    cursor: pointer
+}
+
+  .onboardPageHead{
+    margin: 0;
+    margin-top: 35px;
+    border: 0;
+    box-shadow: 0px 0px 4px 1px #e9dede;
+    border-radius: 8px;
+  }
+  .onboardTaskHead-section{
+    display: flex;
+   justify-content: space-between;
+  }
+
+  .Onboardsub-Task .tbody, td, tfoot, th, thead, tr {
+    height: 45px;
+}
+
+.onboard-view .tbody, td, tfoot, th, thead, tr {
+    border: none;
+}
+
+.onboard-view>:not(:last-child)>:last-child>* {
+    border-bottom-color: rgb(255 255 255);
+}
+.subTaskOnboardBorder{
+    border: solid 1px #e5e5e5;
+    padding: 7px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+/*chatbot*/ 
+.chatbot-Position{
+    border: solid grey 1px;
+    border-radius: 15px;
+    position: absolute;
+    z-index: 81;
+    background: white;
+    top: 28px;
+    right: 8px;
+    width: 291px;
+    padding: 15px;
+}
+  .ant-popover-title {
+      background: #102746;
+      color: green!important;
+      min-height: 60px;
+      font-size: 25px;
+      font-weight: bold;
+  }
+  
+
+  .aibot-container {
+    position: fixed;
+    z-index: 20;
+    right: 57px;
+    bottom: 61px;
+    transition: transform 0.3sease, opacity 0.3sease;
+}
+
+.aibot-circle {
+    width: 80px;
+    height: 80px;
+    background-color: rgb(252, 252, 252);
+    border-radius: 50%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.aibot-chatbot {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.aibot-openai {
+    top: 4%;
+    left: 19%;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.aibot-rasa {
+    bottom: 34%;
+    right: 68%;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.aibot-visible {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+.aibot-message-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.boticon {
+    position: fixed;
+    top: -4em;
+    right: 50px;
+    color: #102746;
+    border: solid 3px #102746;
+    padding: 17px;
+    border-radius: 42px;
+    background: white;
+    box-shadow: 0px 0px 7px 1px grey;
+    cursor: pointer;
+}
+
+
+
+.botImgGif{
+    width: 90px;
+    height: 90px;
+    border-radius: 85px;
+    border: solid 4px #b497ef;
+    padding: 5px 0px 5px 0px;
+    box-shadow: 0px 0px 7px 1px #6c757d;
+    background: #ffffff;
+}
+.checklistViewBtn:hover{
+    border: solid 1px #424242;
+    border-radius: 4px;
+
+}
+
+.checklistTaskProf{
+    width: 60px;
+    height: 60px;
+    box-sizing: border-box;
+    background-size: 60%;
+    border-radius: 35px;
+    padding: 2px;
+}
+
+
+.checklistTaskHeader-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 16px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Left Side: Profile & Name */
+.checklistTaskHeader-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.checklistTaskHeader-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.checklistTaskHeader-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.checklistTaskHeader-title {
+    font-size: 14px;
+    color: gray;
+}
+
+
+.checklistTaskHeader-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; 
+    margin-top: -10px;
+}
+
+.checklistTaskViewHeaderBtn {
+    cursor: pointer;
+    font-weight: bold;
+    color: #3a3a3a;
+    border: solid 1px #e9e9e9;
+    border-radius: 6px;
+    padding: 3px;
+}
+.checklistTaskViewHeaderBtn:hover {
+    cursor: pointer;
+    font-weight: bold;
+    color: #0c0c0c;
+    border: solid 1px #c7c7c7;
+    border-radius: 6px;
+    padding: 3px;
+}
+
+/* Progress Bar */
+.checklistTask_progress-section {
+    text-align: right;
+}
+
+.checklistTask_progress-bar {
+    width: 200px;
+    height: 8px;
+    background-color: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.checklistTask_progress-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+.checklistProgHead{
+    display: flex;
+    place-content: space-between;  
+    margin-bottom: 6px;
+}
+
+

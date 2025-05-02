@@ -1,0 +1,46 @@
+.ant-picker-calendar-mode-switch{
+  display: none;
+  background: #ccc;
+  border: 1px solid #102746;
+}
+.attendanceBadge .chart-list{
+  margin-top: 20px;
+}
+.attendanceBadge .badge{
+  width :90%;
+  left:auto;
+  right: auto;
+}
+.attendanceBadge .bg-present{
+  background-color: #bfeebe;
+  color: #19a014;
+}
+
+.attendanceBadge .bg-absent{
+  background-color: #fab9b1;
+  color: #ac2a19;
+}
+.attendanceBadge .bg-leave{
+  background-color: #b9cafa;
+  color: #25459b;
+}
+.attendanceBadge .bg-week-off{
+  background-color: #e7ebe7;
+  color: #000;
+}
+.attendanceBadge .bg-holiday{
+  background-color: #f1eaa7;
+  color: #b6a617;
+}
+.attendanceBadge .bg-half-day{
+  background-color: #a2eeee;
+  color: #1caaaa;
+}
+.ant-picker-content thead tr{
+  background-color: #2e0257;
+}
+.ant-picker-content thead th{
+  padding: 5px !important;
+  text-align: center;
+  color: #fff;
+}

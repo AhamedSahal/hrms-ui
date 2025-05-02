@@ -1,0 +1,48 @@
+.rw-title{
+	color: #16df6d;
+}
+.rw-widget-container {
+    bottom: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 20px 20px 0 !important;
+    position: fixed !important;
+    right: -44px !important;
+    width: auto !important;
+    align-items: flex-end !important;
+    justify-content: flex-end !important;
+    bottom: 28px !important;
+}
+.rw-widget-container .rw-header {
+	background-color: #102746 !important;
+}
+.rw-launcher{
+	background-color: transparent !important;
+	padding:0;
+	width: 84px !important;
+	height: 84px !important;
+}
+.rw-client{
+	background-color: #4dc2dd !important;
+}
+.rw-response{
+	background-color: #e9f2ff !important;
+}
+.rw-reply{
+	background-color: #102746 !important;
+}
+.rw-launcher img{
+	width: 100%;
+    max-height: 100%;
+}
+.rw-launcher {
+	content: url("/assets/img/bot-icon.png");
+  }
+  .rw-launcher .rw-close-launcher.rw-default{
+	width: auto !important;
+  }
+  .rw-message, .rw-message-text, .rw-reply{
+	font-size: 0.8rem !important;
+  }
+
+  

@@ -1,0 +1,28 @@
+import React from 'react';
+import { camelize } from '../../utility';
+import { Table } from 'antd';
+import {itemRender} from "../../paginationfunction"
+    const PreviewTable = ({ selectedData,selectedProperties,checkedValidation }) => {
+      const columns =  selectedProperties.map(prop => {
+        return {
+          title: camelize(prop),
+          dataIndex: prop,
+          key: prop,
+        };
+      })
+        return (<>
+             {selectedData && selectedData.length > 0  && checkedValidation && <div className="row table-responsive">
+            
+            <Table id='Table-style' className="table-striped "
+                  pagination= { {total : selectedData.length,
+                    showTotal : (total, range) => `Showing ${range[0]} to ${range[1]} of ${selectedData.length} entries`,
+                    showSizeChanger : false,itemRender : itemRender } }
+                  columns={columns}     
+                  dataSource={selectedData}
+                  // rowKey={record => record.id}
+                />
+          </div>}
+          </>
+        )
+    } 
+export default PreviewTable;

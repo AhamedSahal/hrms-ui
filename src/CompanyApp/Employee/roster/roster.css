@@ -1,0 +1,28 @@
+  
+.tree td{
+    border:1px solid #E0E0E0;  
+    border-collapse: collapse; 
+    height:75px;
+    text-align: center;
+    color:#55687d;
+    /* font-family: wotfard; */
+    font-size: 14px;
+    line-height: 1.5;
+
+} 
+ 
+.tre{
+    width: 100%;
+}
+.tre th{
+    width: 147.794px;
+    text-align:center;
+    height: "25%";
+    border: 1px solid #E0E0E0; 
+    border-collapse: collapse; 
+    color:#55687d;
+    font-weight: normal;
+    /* font-family: wotfard; */
+    font-size: 14px;
+    line-height: 1.5;
+}
