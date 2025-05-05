@@ -3,7 +3,7 @@ import App from "../initialpage/App";
 
 const Main = () => {
   return (
-    <BrowserRouter> 
+    <BrowserRouter basename="/"> 
       <App />
     </BrowserRouter>
   );
