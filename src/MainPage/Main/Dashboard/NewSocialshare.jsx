@@ -1782,6 +1782,19 @@ export default class NewSocialShare extends Component {
                             {this.state.socialShare?.map((item, index) => {
                                 let reactionIdByemployee = 0
                                 // get employee reaction Id
+                                if (item.reactions != null && item.reactions?.length > 0) {
+                                    let reactionmap = item.reactions?.find((element) => {
+                                        if (element.employee == null && this.state.defaultEmployeeId == 0) {
+                                            reactionIdByemployee = element.iconId
+                                            return true;
+                                        }
+                                        else if (element.employee?.id == this.state.defaultEmployeeId) {
+                                            reactionIdByemployee = element.iconId
+                                            return true;
+                                        }
+
+                                    })
+                                }
                                
                                 if (item.type == "RECOGNITION") {
                                     const recognitionImages = {
@@ -1896,6 +1909,8 @@ export default class NewSocialShare extends Component {
                                             onMouseOver={() => this.handleMouseOver(item.id)}
                                             style={{ position: 'relative', display: 'inline-block' }}
                                         >
+                                            {console.log('cell --- reactionIdByemployee', reactionIdByemployee)}
+                                            
                                             {reactionIdByemployee == 0 ?
                                                 <li onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} className='h5 likeHover'>
                                                     <span className=' mr-1 p-0' > <AiOutlineLike size={25} /></span> Likes
@@ -2481,13 +2496,14 @@ export default class NewSocialShare extends Component {
                                             onMouseOver={() => this.handleMouseOver(item.id)}
                                             style={{ position: 'relative', display: 'inline-block' }}
                                         >
-                                            {reactionIdByemployee == 0 ?
+                                            {console.log('cell --- reactionIdByemployee', reactionIdByemployee)}
+                                            {reactionIdByemployee === 0 ?
                                                 <li onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} className='h5 likeHover'>
                                                     <span className=' mr-1 p-0' > <AiOutlineLike size={25} /></span> Likes
 
                                                 </li> : <li className='p-0 h5 likeHover' style={{fontSize: '13px'}}> 
  
-                                                <span className=' mr-1 p-0' >{reactionIdByemployee == 1?'👍':reactionIdByemployee == 2?'👏':reactionIdByemployee == 3?'🤲':reactionIdByemployee == 4?'❤️':reactionIdByemployee == 5?'💡':reactionIdByemployee == 6?'😄': <AiOutlineLike size={25} />}</span> {reactionIdByemployee == 1?'Like':reactionIdByemployee == 2?'Celebrate':reactionIdByemployee == 3?'Support':reactionIdByemployee == 4?'Love':reactionIdByemployee == 5?'Insightful':reactionIdByemployee == 6?'Funny': 'Likes'} 
+                                                <span className=' mr-1 p-0' >{reactionIdByemployee === 1?'👍':reactionIdByemployee === 2?'👏':reactionIdByemployee === 3?'🤲':reactionIdByemployee === 4?'❤️':reactionIdByemployee === 5?'💡':reactionIdByemployee === 6?'😄': <AiOutlineLike size={25} />}</span> {reactionIdByemployee === 1?'Like':reactionIdByemployee === 2?'Celebrate':reactionIdByemployee === 3?'Support':reactionIdByemployee === 4?'Love':reactionIdByemployee === 5?'Insightful':reactionIdByemployee === 6?'Funny': 'Likes'} 
                                                 </li>}
 
                                             {this.state.showEmojis && item.id == this.state.likeId && (
