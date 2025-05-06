@@ -1,46 +1,42 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { getCumulativeScore } from "./service";
 import SurveyReportLevel from "./reportLevel";
 import CumulativeScore from "./cumulativeScore";
 
-export default class SurveyReport extends Component {
-  constructor(props) {
-    super(props);
-    let survey = props.location.state;
-    this.state = {
-      report: {
-        id: "",
-        surveyId: survey.id,
-        questions: "",
-        sendTo: "",
-        completedBy: "",
-        cumulativeScore: "",
-      },
-      data: [],
-      survey: survey,
-    };
-  }
+const SurveyReport = () => {
+  const location = useLocation();
+  const survey = location.state;
 
-  componentDidMount() {
-    this.fetchList();
-  }
+  const [report, setReport] = useState({
+    id: "",
+    surveyId: survey.id,
+    questions: "",
+    sendTo: "",
+    completedBy: "",
+    cumulativeScore: "",
+  });
 
-  fetchList = () => {
-    getCumulativeScore(this.state.report.surveyId).then((res) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchList();
+  }, []);
+
+  const fetchList = () => {
+    getCumulativeScore(report.surveyId).then((res) => {
       if (res.status === "OK") {
-        this.setState({
-          data: res.data,
-        });
+        setData(res.data);
       }
     });
   };
 
-  render() {
-    const { data, survey } = this.state;
-    return (
-      <>
-         {data && <CumulativeScore data={data} />}
-            <SurveyReportLevel survey={survey} cumulativeReport={data}></SurveyReportLevel>
-        </>);
-    }
-}
+  return (
+    <>
+      {data && <CumulativeScore data={data} />}
+      <SurveyReportLevel survey={survey} cumulativeReport={data}></SurveyReportLevel>
+    </>
+  );
+};
+
+export default SurveyReport;

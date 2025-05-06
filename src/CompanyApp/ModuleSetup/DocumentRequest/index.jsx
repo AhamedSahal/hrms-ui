@@ -178,7 +178,7 @@ export default class DocumentRequest extends Component {
       );
       if (verifyOrgLevelEditPermission("Manage Document Request")) {
         items.push(<div>
-          <Link className="muiMenu_item" to={{pathname : `employee-document-request`, state : text}}>
+          <Link className="muiMenu_item" to="/app/company-app/employee-document-request" state={text}>
             <i className="fa fa-eye m-r-5"></i> View
           </Link>
         </div>

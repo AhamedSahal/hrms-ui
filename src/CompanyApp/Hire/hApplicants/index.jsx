@@ -73,7 +73,7 @@ export default class ApplicantLandingPage extends Component {
 
                                 {/* <button className="apply-button btn mr-2 applicant-button" style={{paddingBottom:"25px"}}> */}
                                 {verifyOrgLevelEditPermission("Hire Applicants") &&
-                                  <Link to={{ pathname:"internalApplicantForm" }} className = "apply-button btn-primary mr-2" > <i className="fa fa-plus" /> New Applicant </Link>
+                                  <Link to="/app/company-app/hire/internalApplicantForm" className = "apply-button btn-primary mr-2" > <i className="fa fa-plus" /> New Applicant </Link>
                                 }
                                   {/* </button> */}
                             </div>}

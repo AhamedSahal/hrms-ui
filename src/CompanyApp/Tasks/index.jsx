@@ -197,7 +197,7 @@ export default class Tasks extends Component {
                                               this.setState({status: this.state.status == true ? false : true},() =>  this.updateSelf())   
                                             } className={this.state.status ? 'fa-2x fa fa-toggle-on text-success' : 'fa-2x fa fa-toggle-off text-danger'}></i>
                                         <label className="pl-2">{this.state.status ? 'Pending' : 'Completed'}</label> &nbsp;
-                                        <Link to={`./Taskform`} className="btn apply-button btn-primary"><i className="fa fa-plus" /> New Task</Link>
+                                        <Link to="/app/company-app/Taskform" className="btn apply-button btn-primary"><i className="fa fa-plus" /> New Task</Link>
                                     </div>
                                 </div>
                             </div>

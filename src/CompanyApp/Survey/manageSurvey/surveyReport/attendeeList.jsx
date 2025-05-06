@@ -127,10 +127,9 @@ export default class SurveyAttendeeList extends Component {
                 <div className="dropdown-menu dropdown-menu-right">
                   <Link
                     className="dropdown-item"
-                    to={{
-                      pathname: `report/view-response`,
-                      state: confidentialRecord,
-                    }}
+                    to="/app/company-app/survey/report/view-response"
+                      state={confidentialRecord}
+                    
                   >
                     <i className="fa fa-pencil m-r-5"></i> View Response
                   </Link>
@@ -146,10 +145,8 @@ export default class SurveyAttendeeList extends Component {
                 <div className="dropdown-menu dropdown-menu-right">
                   <Link
                     className="dropdown-item"
-                    to={{
-                      pathname: `report/view-response`,
-                      state: record,
-                    }}
+                    to="/app/company-app/survey/report/view-response"
+                      state={record}
                   >
                     <i className="fa fa-pencil m-r-5"></i> View Response
                   </Link>

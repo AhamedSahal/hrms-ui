@@ -10,7 +10,7 @@ import PerformanceReviewReportDetailsForm from './detailsForm';
 const ReportDetailSetupRoute = ({ match }) => {
    return (
       <Routes>
-         <Route path={`${match.url}/:id`} component={PerformanceReviewReportDetailsForm} />
+         <Route path={':id'} element={<PerformanceReviewReportDetailsForm/>} />
       </Routes>
    )
 };

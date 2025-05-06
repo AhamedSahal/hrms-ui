@@ -78,10 +78,9 @@ export default class SuccessionPlan extends Component {
             endRange = totalRecords;
         }
         const menuItems = (text, record) => [
-            <div ><Link className="muiMenu_item" to={{
-                pathname: `successionPlanForm`,
-                state: text
-            }}> <i className="fa fa-pencil m-r-5"></i> Edit</Link></div>,
+            <div ><Link className="muiMenu_item" to="/app/company-app/develop/successionPlanForm"
+                state={text}
+            > <i className="fa fa-pencil m-r-5"></i> Edit</Link></div>,
             <div ><a className="muiMenu_item" href="#" onClick={() => {
                 this.delete(text);
             }}
@@ -146,7 +145,7 @@ export default class SuccessionPlan extends Component {
                                 <h3 className="tablePage-title">Succession Plan</h3>
                             </div>
                             <div className="mt-2 float-right col-auto ml-auto">
-                                <Link to={`successionPlanForm`} className="btn apply-button btn-primary"><i className="fa fa-plus" /> Add Succession Plan</Link>
+                                <Link to="/app/company-app/develop/successionPlanForm" className="btn apply-button btn-primary"><i className="fa fa-plus" /> Add Succession Plan</Link>
 
                             </div>
                         </div>

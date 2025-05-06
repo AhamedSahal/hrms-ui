@@ -129,7 +129,7 @@ export default class ApplicantDrafts extends Component {
     }
 
     const menuItems = (text, record) => [
-      <div ><Link className="muiMenu_item" to={{ pathname: `applicantviewForm/${text.id}`, state: { text: text } }} style={{ color: "black" }}> <b>View</b> </Link></div>,
+      <div ><Link className="muiMenu_item" to={`/app/company-app/hire/applicantviewForm/${text.id}`} state={text}  style={{ color: "black" }}> <b>View</b> </Link></div>,
     ]
 
     const columns = [
@@ -246,7 +246,7 @@ export default class ApplicantDrafts extends Component {
             </a>
               <div className="dropdown-menu dropdown-menu-right" style={{ padding: "5px" }}>
                 {/* Edit */}
-                <Link className="dropdown-item" to={{ pathname: `applicantviewForm/${text.id}`, state: { text: text } }} style={{ color: "black" }}> <BsEyeFill /> View </Link>
+                <Link className="dropdown-item" to={`/app/company-app/hire/applicantviewForm/${text.id}`} state={text}  style={{ color: "black" }}> <BsEyeFill /> View </Link>
                 {/* move to previous */}
                 {isCompanyAdmin && <a className="dropdown-item" href="#"
                   onClick={() => {

@@ -85,7 +85,7 @@ export default class JobClose extends Component {
 
     const menuItems = (text, record) => [
       <div > <a className="muiMenu_item" >
-      <Link to={{pathname:`viewForm/${text.id}`,state: { text: text }}}  className="" style={{color:"black"}}><i className="fa fa-eye" /> View </Link>
+      <Link to={`/app/company-app/hire/viewForm/${text.id}`}state={{ text: text}}  className="" style={{color:"black"}}><i className="fa fa-eye" /> View </Link>
        </a></div>,
     ]
 

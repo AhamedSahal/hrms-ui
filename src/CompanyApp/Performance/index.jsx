@@ -18,7 +18,7 @@ import EmployeePerformanceModule from './PerformanceModule';
 const PerformanceRoute = () => { 
    return (
    <Routes>
-      <Route path="report/details" element={<ReportDetailSetupRoute />} />
+      <Route path="report/details/*" element={<ReportDetailSetupRoute />} />
       <Route path="report" element={<EmployeePerformanceReviewReport />} />
       {/* <Route path="review/details" element={<PerformanceDetailSetupRoute />} /> */}
       <Route path="review" element={<EmployeePerformanceModule />} />

@@ -211,7 +211,7 @@ export default class rosterList extends Component {
 
 
                 {isCompanyAdmin && <div className="mt-2 float-right col-auto ml-auto" >
-                  <Link to={`employee/RosterForm`} className="btn apply-button btn-primary"><i className="fa fa-plus" /> Assign Roster</Link>
+                  <Link to={`/app/company-app/employee/RosterForm`} className="btn apply-button btn-primary"><i className="fa fa-plus" /> Assign Roster</Link>
                 </div>}
                 {(verifyViewPermissionForTeam("Manage Roster") || verifyOrgLevelViewPermission("Manage Roster")) &&
                   <div className="float-right col-md-6" >
