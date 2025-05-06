@@ -122,7 +122,7 @@ export default class Scheduled extends Component {
       endRange = totalRecords;
     }
     const menuItems = (text, record) => [
-      <div key="1"><Link className="muiMenu_item" to={{ pathname: `survey/manage`, state: record }}>
+      <div key="1"><Link className="muiMenu_item" to="/app/company-app/survey/manage" state={record}>
         <i className="fa fa-pencil m-r-5"></i> Edit</Link></div>,
       <div key="2"> <a className="muiMenu_item" href="#" onClick={() => { this.delete(text) }} >
         <i className="fa fa-trash-o m-r-5"></i> Delete </a></div>,

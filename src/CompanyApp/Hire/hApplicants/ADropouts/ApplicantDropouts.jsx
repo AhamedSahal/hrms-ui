@@ -81,7 +81,7 @@ export default class ApplicantDropouts extends Component {
       endRange = totalRecords;
     }
     const menuItems = (text, record) => [
-      <div ><Link className="muiMenu_item" to={{ pathname: `applicantviewForm/${text.id}`, state: { text: text } }} style={{ color: "black" }}> <b>View</b> </Link></div>,
+      <div ><Link className="muiMenu_item" to={`/app/company-app/hire/applicantviewForm/${text.id}`} state={text}  style={{ color: "black" }}> <b>View</b> </Link></div>,
     ]
 
     const columns = [

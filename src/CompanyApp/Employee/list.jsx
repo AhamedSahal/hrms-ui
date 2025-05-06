@@ -179,7 +179,7 @@ export default class EmployeeList extends Component {
       endRange = totalRecords;
     }
     const menuItems = (text) => [
-      <div key="1"><Link className="muiMenu_item" to={`employee/detail/${text.id}`}>
+      <div key="1"><Link className="muiMenu_item" to={`/app/company-app/employee/detail/${text.id}`}>
         <i className="fa fa-pencil m-r-5"></i> Edit</Link></div>,
       <div key="2">  <a className="muiMenu_item" href="#" onClick={() => {
         this.setState({ employee: text, showForm: true })
@@ -422,7 +422,7 @@ export default class EmployeeList extends Component {
             <div className="mt-1 float-right col-auto ml-auto btn-group btn-group-sm cust-button-group-mr-35">
               <button type="button" className="btn apply-button btn-primary dropdown-toggle mr-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="fa fa-plus" /> Add</button>
               <div className="dropdown-menu">
-                <Link to={`employee/create`} className="dropdown-item" ><i className="fa fa-plus" /> Add Employee</Link>
+                <Link to="/app/company-app/employee/create" className="dropdown-item" ><i className="fa fa-plus" /> Add Employee</Link>
               </div>
               <BsSliders className='ml-2 filter-btn' size={25} onClick={() => this.setState({ showFilter: !this.state.showFilter })} />
             </div>
@@ -569,13 +569,13 @@ export default class EmployeeList extends Component {
                             return <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-4">
                               <div className="profile-widget">
                                 <div className="profile-img">
-                                  <Link to={`employee/detail/${e.id}`} className="avatar"><img src={e.profilePicture ? `data:image/jpeg;base64,${e.profilePicture}` : CONSTANT.userImage} alt="" /></Link>
+                                  <Link to={`/app/company-app/employee/detail/${e.id}`} className="avatar"><img src={e.profilePicture ? `data:image/jpeg;base64,${e.profilePicture}` : CONSTANT.userImage} alt="" /></Link>
                                 </div>
                                 <div className="dropdown profile-action">
                                   <a href="#" className="action-icon dropdown-toggle"
                                     data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
                                   <div className="dropdown-menu dropdown-menu-right">
-                                    <Link className="dropdown-item" to={`employee/detail/${e.id}`}>
+                                    <Link className="dropdown-item" to={`/app/company-app/employee/detail/${e.id}`}>
                                       <i className="fa fa-pencil m-r-5"></i> Edit</Link>
                                     <a className="dropdown-item" href="#" onClick={() => {
                                       this.setState({ employee: e, showForm: true })
@@ -592,7 +592,7 @@ export default class EmployeeList extends Component {
                                       <i className="fa fa-trash-o m-r-5"></i> Delete</a>
                                   </div>
                                 </div>
-                                <h4 className="user-name m-t-10 mb-0 text-ellipsis"><Link to={`employee/detail/${e.id}`}>{e.name}</Link></h4>
+                                <h4 className="user-name m-t-10 mb-0 text-ellipsis"><Link to={`/app/company-app/employee/detail/${e.id}`}>{e.name}</Link></h4>
                                 <h5 style={{ color: "grey" }}>{e.employeeId}</h5>
                                 <h6 style={{ color: "black" }}>{e.email}</h6>
                                 <div className="small text-muted">{e.branch?.name ? e.branch?.name : "-"}</div>

@@ -36,7 +36,6 @@ const canMangerViewable = verifyViewPermissionForTeam("Peoples My Team");
 
 const EmployeeDetail = (props) => {
     const { id } = useParams();
-    console.log("cell id", id);
     const employeeId = id === "0" ? getEmployeeId() : id;
     const [state, setState] = useState({
         id: employeeId,

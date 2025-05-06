@@ -1047,10 +1047,10 @@ export default class NewSocialShare extends Component {
                                     {roleName == 'admin' || roleName == 'HR' ? <Link to={`/app/company-app/attendance`}>
                                         <p className='viewAllBtn'>View All</p>
                                     </Link> :
-                                        this.state.selfPermission == 1 ? <Link to={{
-                                            pathname: '/app/company-app/attendance',
-                                            teamPermission: true,
-                                        }}>
+                                        this.state.selfPermission == 1 ? <Link
+                                         to='/app/company-app/attendance'
+                                            state={{teamPermission: true}}
+                                        >
                                             <p className='viewAllBtn'>View All</p>
                                         </Link> :
                                             <Link to={`/app/company-app/attendance`}>
@@ -1141,10 +1141,9 @@ export default class NewSocialShare extends Component {
                             <div className='AttendanceCards' >
                             <div className='attendanceTitle Title' >
                                 <h2 className='newDashboardTitleAction' >Leave Balance</h2>
-                                <Link to={{
-                                    pathname: '/app/company-app/leave',
-                                    fromDashboard: true,
-                                }}>
+                                <Link to='/app/company-app/leave'
+                                    state={{fromDashboard: true}}
+                                >
                                     <p className='viewAllBtn'>View All</p>
                                 </Link>
                             </div>
@@ -1360,18 +1359,16 @@ export default class NewSocialShare extends Component {
                                         </Link>
                                     }
                                     {activeButton === 2 &&
-                                        <Link to={{
-                                            pathname: '/app/company-app/attendance',
-                                            fromDashboardOvertime: true,
-                                        }}>
+                                        <Link to='/app/company-app/attendance'
+                                            state={{fromDashboardOvertime: true}}
+                                        >
                                             <p className='viewAllBtn'>View All</p>
                                         </Link>
                                     }
                                     {activeButton === 3 &&
-                                        <Link to={{
-                                            pathname: '/app/company-app/leave',
-                                            fromDashboardTimeInLieu: true,
-                                        }}>
+                                        <Link to='/app/company-app/leave'
+                                            state={{fromDashboardTimeInLieu: true}}
+                                        >
                                             <p className='viewAllBtn'>View All</p>
                                         </Link>
                                     }

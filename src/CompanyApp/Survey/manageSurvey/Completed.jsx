@@ -150,8 +150,8 @@ export default class Completed extends Component {
     const menuItems = (text, record) => [
       <div key="1"> <a className="muiMenu_item" href="#" onClick={() => {this.delete(text); }} >
         <i className="fa fa-trash-o m-r-5"></i> Delete</a></div>,
-      <div key="2"><Link className="muiMenu_item" to={{ pathname: `survey/report`,
-        state: record }}> <i className="fa fa-file m-r-5"></i> Report</Link></div>,
+      <div key="2"><Link className="muiMenu_item" to="/app/company-app/survey/report"
+        state={record} > <i className="fa fa-file m-r-5"></i> Report</Link></div>,
         <div key="3">{text.attendeesCount > 0 && <a className="muiMenu_item"  onClick={() => {
           this.getParticipatedInfo(text.id)
         }} > <i className="fa fa-file-excel-o m-r-5"></i> Response Report </a>}</div>,

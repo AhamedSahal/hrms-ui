@@ -293,13 +293,13 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
           <div key="1">
             <Link
               className="muiMenu_item"
+              state={{ empId: text.employeeId }}
               to={
                 text.submited == 0
                   ? '#'
-                  : {
-                    pathname: '/app/company-app/performance/report/details/' + text.id,
-                    state: { empId: text.employeeId }
-                  }
+                  : `/app/company-app/performance/report/details/${text.id}`
+                    
+                  
               }
               onClick={() => {
                 if (text.submited == 0) {

@@ -274,7 +274,7 @@ export default class ApplicantOffered extends Component {
                   }}
                 >
                   <BsHourglassSplit /> On Hold</a>}
-                  <Link className="dropdown-item" to={{ pathname: `applicantviewForm/${text.id}`, state: { text: text } }} style={{ color: "black" }}> <BsEyeFill />  View </Link>
+                  <Link className="dropdown-item" to={`/app/company-app/hire/applicantviewForm/${text.id}`} state={text}  style={{ color: "black" }}> <BsEyeFill />  View </Link>
                 {/* Share */}
               </div></>
           </div>

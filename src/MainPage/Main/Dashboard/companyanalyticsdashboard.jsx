@@ -320,20 +320,22 @@ function CompanyAnalyticsDashboard() {
                       <ResponsiveContainer width='100%' height={200}>
                         <div>
                           {/* {toDos=> task,description and actionLink } */}
-                          {dashboardData.toDos?.length > 0 && dashboardData.toDos.map((toDo, index) => {
-                            return (
-                              <div key={index} className="border-bottom">
-
-                                <Link to={toDo.actionLink}>
-                                  <label className='m-0'>
-                                    <i className='fa fa-check'></i>&nbsp;
-                                    {toDo.task}</label>
-                                </Link>
-                                <br />
-                                <small>{toDo.description}</small>
-                              </div>
-                            )
-                          })}
+                          {console.log("cell toDo", dashboardData.toDos)}
+                          {dashboardData.toDos?.map((toDo, index) => {
+                                    const resolvedLink = index < 3 ? '/app/company-app/settings' : (toDo.actionLink.startsWith('/') ? toDo.actionLink : `/app${toDo.actionLink}`);
+                                    return (
+                                        <div key={index} className="border-bottom">
+                                            <Link to={resolvedLink}>
+                                                <label className='m-0'>
+                                                    <i className='fa fa-check'></i>&nbsp;
+                                                    {toDo.task}
+                                                </label>
+                                            </Link>
+                                            <br />
+                                            <small>{toDo.description}</small>
+                                        </div>
+                                    );
+                                })}
                         </div>
                       </ResponsiveContainer>
                     </div>

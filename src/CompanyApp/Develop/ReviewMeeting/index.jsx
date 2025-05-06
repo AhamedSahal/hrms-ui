@@ -238,10 +238,9 @@ export default class ReviewMeeting extends Component {
         const menuItems = (text, record) => {
             const items = [];
             items.push(
-                <div ><Link className="muiMenu_item" to={{
-                    pathname: `talentReviewMeeting`,
-                    state: text
-                }}> <i className="fa fa-pencil m-r-5"></i> Edit</Link></div>,
+                <div ><Link className="muiMenu_item" to="/app/company-app/develop/talentReviewMeeting"
+                    state={text}
+                > <i className="fa fa-pencil m-r-5"></i> Edit</Link></div>,
                 <div ><a className="muiMenu_item" href="#"
                     onClick={() => {
                         this.setState({ reviewMeetingData: record, meetingView: true })
@@ -363,7 +362,7 @@ export default class ReviewMeeting extends Component {
                                 <h3 className="tablePage-title">Review meeting</h3>
                             </div>
                             <div className="mt-2 float-right col-auto ml-auto">
-                                <Link to={`talentReviewMeeting`} className="btn apply-button btn-primary"><i className="fa fa-plus" /> Add Review Meeting</Link>
+                                <Link to="/app/company-app/develop/talentReviewMeeting" className="btn apply-button btn-primary"><i className="fa fa-plus" /> Add Review Meeting</Link>
 
                             </div>
                         </div>

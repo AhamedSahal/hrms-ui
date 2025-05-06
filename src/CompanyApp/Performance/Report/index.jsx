@@ -87,7 +87,7 @@ export default class EmployeePerformanceReviewReport extends Component {
         title: 'Employee',
         sorter: false,
         render: (text, record) => {
-          return <Link className="page-link bg-transparent" to={'/app/company-app/performance/report/details/' + text.id} >
+          return <Link className="page-link bg-transparent" to={`/app/company-app/performance/report/details/'${text.id}`} >
           {text.employeesId} - {text.employee.name}</Link> 
           
         }

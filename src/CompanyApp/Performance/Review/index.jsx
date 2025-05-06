@@ -166,13 +166,11 @@ export default class EmployeePerformanceReview extends Component {
       <div key="1">
         <Link
           className="muiMenu_item"
+          state={{ empId: text.employee.id }}
           to={
             !text.submited
               ? '#'
-              : {
-                pathname: '/app/company-app/performance/report/details/' + text.id,
-                state: { empId: text.employee.id }
-              }
+              : `/app/company-app/performance/report/details/${text.id}`   
           }
           onClick={() => {
             if (!text.submited) {
