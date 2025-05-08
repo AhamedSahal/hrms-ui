@@ -8,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getReadableDate } from '../../../../utility';
 import { updateSettlement } from './service';
 
-
 export default class FinalSettlementAction extends Component {
     constructor(props) {
         super(props)

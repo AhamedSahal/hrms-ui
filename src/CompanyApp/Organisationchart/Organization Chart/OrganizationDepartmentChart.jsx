@@ -8,7 +8,6 @@ import { verifyOrgLevelViewPermission } from '../../../utility';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 import { PictureOutlined } from '@ant-design/icons';
 
-
 export default class DepartmentChart extends Component {
     constructor(props) {
         super(props)

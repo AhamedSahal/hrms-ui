@@ -9,7 +9,6 @@ import { getOrgSettings, updateOrgSettings } from './service';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 
 
-
 export default class OrgSetupForm extends Component {
   constructor(props) {
     super(props)
@@ -67,7 +66,7 @@ export default class OrgSetupForm extends Component {
       action.setSubmitting(false)
     }).catch(err => {
       console.log({ err });
-      toast.error("Error while saving Organisation Setup");
+      toast.error("Error while saving Organization Setup");
       action.setSubmitting(false);
     })
   }
@@ -80,10 +79,10 @@ export default class OrgSetupForm extends Component {
         <div className="tablePage-header">
           <div className="row pageTitle-section">
             <div className="col">
-              <h3 className="tablePage-title" >Organisation Setup</h3>
+              <h3 className="tablePage-title" >Organization Setup</h3>
               <ul hidden className="breadcrumb">
                 <li className="breadcrumb-item"><a href="/app/main/dashboard">Dashboard</a></li>
-                <li className="breadcrumb-item active">Organisation Setup</li>
+                <li className="breadcrumb-item active">Organization Setup</li>
               </ul>
             </div>
 
@@ -117,7 +116,7 @@ export default class OrgSetupForm extends Component {
                     <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                       <div className="row">
                         <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                          <h6 className="card-title m-b-20">Organisation Access</h6>
+                          <h6 className="card-title m-b-20">Organization Access</h6>
                           <div className="m-b-30">
                             <ul className="list-group notification-list">
                              <li className="list-group-item" style={{ height: "60px" }}>

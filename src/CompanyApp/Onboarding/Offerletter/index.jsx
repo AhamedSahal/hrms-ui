@@ -137,7 +137,7 @@ export default class Offerletter extends Component {
         sorter: true,
       },
       {
-        title: 'Candidate Email Id',
+        title: 'Candidate Email ID',
         dataIndex: 'candidateemailid',
         sorter: true,
       },

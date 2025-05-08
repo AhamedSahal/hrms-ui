@@ -4,7 +4,7 @@ import RecognitionListIndex from './RecognitionListIndex';
 const RecognitionListRoute = ({ match }) => {
    return (
    <Routes>
-      <Route path={`${match.url}/RecognitionList`} component={RecognitionListIndex} /> 
+      <Route path={"RecognitionList"} element={<RecognitionListIndex/>} /> 
    </Routes>
 )};
 

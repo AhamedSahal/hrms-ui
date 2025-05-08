@@ -27,8 +27,9 @@ export default class MyRegularization extends Component {
             totalRecords: 0,
             currentPage: 1,
             showFilter: false,
-            self: 1,
-            selected: []
+            self: 1 || 0,
+            selected: [],
+            status: ""
         };
 
     }
@@ -37,7 +38,7 @@ export default class MyRegularization extends Component {
     }
 
     fetchList = () => {
-        getRegularizationList(this.state.q, this.state.regularizedDate, this.state.page, this.state.size, this.state.sort, this.state.self, this.state.fromDate, this.state.toDate).then(res => {
+        getRegularizationList(this.state.q, this.state.regularizedDate, this.state.page, this.state.size, this.state.sort, this.state.self, this.state.fromDate, this.state.toDate,this.state.status).then(res => {
             if (res.status == "OK") {
                 this.setState({
                     data: res.data.list,
@@ -85,7 +86,7 @@ export default class MyRegularization extends Component {
 
 
     render() {
-        const { data, totalRecords, currentPage, size } = this.state
+        const { data, totalPages, totalRecords, currentPage, size, selected } = this.state
         let startRange = ((currentPage - 1) * size) + 1;
         let endRange = ((currentPage) * (size + 1)) - 1;
         if (endRange > totalRecords) {
@@ -157,6 +158,7 @@ export default class MyRegularization extends Component {
                 title: 'Reason for Regularization',
                 sorter: true,
                 className: "text-center",
+                className: 'pre-wrap',
                 render: (text, record) => {
                     return <>
                         <div>{record.systemReason}</div>
@@ -167,7 +169,7 @@ export default class MyRegularization extends Component {
             {
                 title: 'Requested Clock-In Time',
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <>
                         <div>{toLocalDateTime(text.regularizedInTime)}</div>
                     </>
@@ -177,7 +179,7 @@ export default class MyRegularization extends Component {
                 title: 'Requested Clock-Out Time',
                 sorter: true,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <>
                         <div>{toLocalDateTime(text.regularizedOutTime)}</div>
                     </>
@@ -186,7 +188,7 @@ export default class MyRegularization extends Component {
             {
                 title: 'Request Submission Status',
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <div>{text.regularizationRemarks}</div>
                 }
             },
@@ -195,7 +197,7 @@ export default class MyRegularization extends Component {
                 width: 100,
                 sorter: true,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <>
                         {<span className={text.regularizationStatus == "NOT_REGULARIZED" ? "badge bg-inverse-secondary " : text.regularizationStatus == "PENDING" ? "badge bg-inverse-warning " : text.regularizationStatus == "REGULARIZED" ? "badge bg-inverse-success " : "-"}>
                             {text.regularizationStatus == "NOT_REGULARIZED" ? <i className="pr-2 fa fa-ban text-secondary"></i> : text.regularizationStatus == "PENDING" ? <i className="pr-2 fa fa-hourglass-o text-warning"></i> : text.regularizationStatus == "REGULARIZED" ? <i className="pr-2 fa fa-check text-success"></i> : "-"}{
@@ -209,7 +211,7 @@ export default class MyRegularization extends Component {
                 title: 'Approval Status',
                 width: 100,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <div>{this.getStyle(text.approvalstatus)}</div>
                 }
             },
@@ -286,7 +288,7 @@ export default class MyRegularization extends Component {
                                     <Table id='Table-style' className="table-striped"
                                         pagination={{
                                             total: totalRecords,
-                                            showTotal: () => {
+                                            showTotal: (total, range) => {
                                                 return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                                             },
                                             showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

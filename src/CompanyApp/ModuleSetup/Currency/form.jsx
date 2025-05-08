@@ -10,7 +10,6 @@ import Select from "react-select";
 import { deleteCurrency, saveCurrencies,getCurrencyList,updateStatus } from './service';
 import { confirmAlert } from 'react-confirm-alert';
 
-
 export default class CurrencySettingForm extends Component {
     constructor(props) {
         super(props)

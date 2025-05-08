@@ -1,106 +1,96 @@
 import React, { Component } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { Modal } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { getOnboardSubtaskList, getOnboardMSTaskList,getJobTitles } from './service';
+import { getBranchLists, getDepartmentLists } from '../../../Performance/ReviewCycle/CycleForms/service';
 import OnboardTaskForm from './taskForm';
 import { Avatar, Empty, Tooltip } from 'antd';
 import OnboardSubTaskForm from './subTaskFrom';
 import OnboardMSTaskForm from './taskForm';
+import { sub } from 'date-fns';
 import EmployeeProfilePhoto from '../../../Employee/widgetEmployeePhoto';
 const { Header, Body } = Modal;
 
-const tasks = [
-    {
-        id: 1,
-        name: "Company Introduction",
-        description: "Introduction to the company, team, and workplace policies.",
-        active: true,
-        assign: "2",
-        taskCreationTime: "3",
-        departments: [56, 76],
-    },
-    {
-        id: 2,
-        name: "Workplace Policies Overview",
-        description: "Setting up email, workstations, and required software tools.",
-        active: true,
-        assign: "location",
-        taskCreationTime: "onJoining",
-        branches: [35, 44],
-    },
-    {
-        id: 3,
-        name: "Team Meet & Greet",
-        description: "Schedule introductions with team members and key stakeholders.",
-        active: false,
-        assign: "employee",
-        taskCreationTime: "onJoining",
-        employeeId: [409, 413],
-    },
-];
 
-const subtasks = [
-    {
-        id: 1.1,
-        taskId: 1,
-        name: "Watch Introduction Video",
-        active: false,
-    },
-    {
-        id: 1.2,
-        taskId: 1,
-        name: "Complete Orientation Quiz",
-        active: true,
-    },
-    {
-        id: 2.1,
-        taskId: 2,
-        name: "Set Up Work Email",
-        active: true,
-    },
-    {
-        id: 2.2,
-        taskId: 2,
-        name: "Install Required Software",
-        active: false,
-    },
-    {
-        id: 3.1,
-        taskId: 3,
-        name: "Schedule Meeting with Manager",
-        active: true,
-    },
-    {
-        id: 3.2,
-        taskId: 3,
-        name: "Attend Team Lunch",
-        active: true,
-    },
-];
 
 class OnboardMSTaskView extends Component {
     constructor(props) {
         super(props);
         this.state = {
             subTaskData: [],
+            jobtitle: [],
+            department: [],
+            branches: [],
             active: true,
             isEditing: false,
-            taskList: tasks || [],
+            taskList:  [],
             expandedRows: {},
         };
     }
 
     componentDidMount() {
-        this.fetchList();
+        // this.fetchList();
+        this.fetchData();
+    }
+
+    fetchData = () => {
+         getBranchLists().then(res => {
+                            if (res.status === "OK") {
+                                this.setState({
+                                    branches: res.data,
+                                });
+                            }
+                        });
+                        getDepartmentLists().then(res => {
+                            if (res.status === "OK") {
+                                this.setState({
+                                    department: res.data,
+                                });
+                            }
+                        });
+                        setTimeout(() => {this.fetchList()},1000) 
+        
     }
 
     fetchList = () => {
-        // getOnboardMSTaskList(this.props.id).then(res => {
-        //     if (res.status == "OK") {
-        //       this.setState({
-        //         taskList: res.data.list,
-        //       })
-        //     }
-        //   })
+        getOnboardMSTaskList(this.props.viewData.id).then(res => {
+            if (res.status == "OK") {
+            //   this.setState({
+            //     taskList: res.data,
+            //   })
+            if(res.data.length > 0 ){
+                let data = res.data.map((res) => {
+                    if(res.assignId == 0 &&  this.state.department.length > 0){
+                        let department =  this.state.department.filter((dept) => res.departments?.split(',').map(Number).includes(dept.id))
+                        let arrname = department.map(dept => dept.name);
+                        let applicableFor = arrname.join(", ");
+                        return {...res,applicableFor : applicableFor}
+
+                    }
+                    if(res.assignId == 1 &&  this.state.branches.length > 0){
+                        let branches =  this.state.branches.filter((dept) => res.branches?.split(',').map(Number).includes(dept.id))
+                        let arrname = branches.map(dept => dept.name);
+                        let applicableFor = arrname.join(", ");
+                        return {...res,applicableFor : applicableFor}
+                    }
+                    if(res.assignId == 2){
+                        return {...res,employeeId: res.employeeId.split(",").map(Number)} ;
+                    }
+
+
+                })
+                this.setState({taskList : data})
+
+            }else {
+                this.setState({taskList : []})
+            }
+
+            
+            }else{
+                this.setState({taskList : []})
+            }
+          })
     }
 
     toggleEdit = () => {
@@ -158,14 +148,44 @@ class OnboardMSTaskView extends Component {
         }));
     };
 
-    subTaskExpand = () => {
-        // getOnboardSubtaskList(id).then(res => {
-        //     if (res.status == "OK") {
-        //         this.setState({
-        //             subTaskData: res.data.list,
-        //         })
-        //     }
-        // })
+    subTaskExpand = (id) => {
+        getOnboardSubtaskList(id).then(res => {
+            if (res.status == "OK") {
+               
+                if(res.data.length > 0 &&  this.state.department.length > 0){
+                    let data = res.data.map((res) => {
+                        if(res.assignId == 0){
+                            let department =  this.state.department.filter((dept) => res.departments?.split(',').map(Number).includes(dept.id))
+                            let arrname = department.map(dept => dept.name);
+                            let applicableFor = arrname.join(", ");
+                            return {...res,applicableFor : applicableFor}
+    
+                        }
+                        if(res.assignId == 1 &&  this.state.branches.length > 0){
+                            let branches =  this.state.branches.filter((dept) => res.branches?.split(',').map(Number).includes(dept.id))
+                            let arrname = branches.map(dept => dept.name);
+                            let applicableFor = arrname.join(", ");
+                            return {...res,applicableFor : applicableFor}
+                        }
+                        if(res.assignId == 2){
+                            return {...res,employeeId: res.employeeId.split(",").map(Number)} ;
+                        }
+    
+    
+                    })
+                    this.setState({subTaskData : data})
+    
+                }else {
+                    this.setState({taskList : []})
+                }
+
+                
+            }else{
+                this.setState({
+                    subTaskData: [],
+                })
+            }
+        })
     };
 
 
@@ -175,7 +195,7 @@ class OnboardMSTaskView extends Component {
     }
 
     render() {
-        const {taskList, expandedRows } = this.state;
+        const { isEditing, taskList, expandedRows } = this.state;
         const checklist = this.props.viewData;
         return (
             <div className="">
@@ -261,11 +281,11 @@ class OnboardMSTaskView extends Component {
                                                             <div className="goal-title">{this.reduceString(item.name, 45)}</div>
                                                         </Tooltip>
                                                         <div className="goal-details">
-                                                            2 Subtask
+                                                            {item.subgoalsCount} {item.subgoalsCount > 1?"Subtasks":"Subtask"}
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>5 days After joining</td>
+                                                <td>{item.numberofDays != 0? item.numberofDays:null} {item.dueOn == 1?"Days Before Joining":item.dueOn == 2?"Days After Joining":"Date of Joining"}</td>
                                                 {item.employeeId ? <td >
                                                     <Avatar.Group
                                                         max={{
@@ -290,7 +310,7 @@ class OnboardMSTaskView extends Component {
                                                             </Tooltip>
                                                         )}
                                                     </Avatar.Group>
-                                                </td> : <td>HR Department</td>}
+                                                </td> : <td>{item.applicableFor}</td>}
                                                 <td >
                                                     <span
                                                         className={item.active
@@ -311,13 +331,13 @@ class OnboardMSTaskView extends Component {
                                                 <td style={{ textAlign: 'center' }}>
                                                     <div className="">
                                                         <i className="menuIconFa fa fa-pencil-square-o"
-                                                            onClick={() => { this.setState({ showForm: true, taskData: item }) }} aria-hidden="true"></i>
+                                                            onClick={() => { this.setState({ showForm: true, taskData: {...item, assign:item.assignId.toString(), dueOn: item.dueOn.toString()} }) }} aria-hidden="true"></i>
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             {isExpanded && (
-                                                subtasks?.filter(sub => sub.taskId === item.id).map((sub) => (
+                                              this.state.subTaskData.length > 0 &&  this.state.subTaskData?.map((sub) => (
                                                     <tr key={sub.id}>
                                                         <td className='p-1' colSpan={5}>
                                                             <div className="Onboardsub-Task">
@@ -331,32 +351,32 @@ class OnboardMSTaskView extends Component {
                                                                                     </Tooltip>
                                                                                 </div>
                                                                             </td>
-                                                                            <td>Date of Joining</td>
-                                                                            {item.employeeId ? <td >
+                                                                            <td>{sub.numberofDays != 0?sub.numberofDays:null} {sub.dueOn == 1?"Days Before Joining":sub.dueOn == 2?"Days After Joining":"Date of Joining"}</td>
+                                                                            {sub.employeeId ? <td >
                                                                                 <Avatar.Group
                                                                                     max={{
                                                                                         count: 3,
                                                                                         style: { color: '#f56a00', backgroundColor: '#fde3cf' },
                                                                                     }}
                                                                                 >
-                                                                                    {item.employeeId.slice(0, 3).map((memberId, index) => (
+                                                                                    {sub.employeeId.slice(0, 3).map((memberId, index) => (
                                                                                          <Avatar key={index} style={{ backgroundColor: '#1677ff' }} icon={<EmployeeProfilePhoto className="" id={memberId} />} />
                                                                                     ))}
 
-                                                                                    {item.employeeId.length > 3 && (
+                                                                                    {sub.employeeId.length > 3 && (
                                                                                         <Tooltip
-                                                                                            title={item.members.slice(3).map((memberId, index) => (
+                                                                                            title={sub.employeeId.slice(3).map((memberId, index) => (
                                                                                                  <Avatar key={index} style={{ backgroundColor: '#1677ff' }} icon={<EmployeeProfilePhoto className="" id={memberId} />} />
                                                                                             ))}
                                                                                             placement="top"
                                                                                         >
                                                                                             <Avatar style={{ backgroundColor: '#ffb586', color: '#5f4115' }}>
-                                                                                                +{item.employeeId.length - 3}
+                                                                                                +{sub.employeeId.length - 3}
                                                                                             </Avatar>
                                                                                         </Tooltip>
                                                                                     )}
                                                                                 </Avatar.Group>
-                                                                            </td> : <td>HR Department</td>}
+                                                                            </td> : <td>{sub.applicableFor}</td>}
                                                                             <td style={{ textAlign: 'center' }}>
                                                                                 <span
                                                                                     className={sub.active
@@ -376,7 +396,7 @@ class OnboardMSTaskView extends Component {
                                                                             </td>
                                                                             <td style={{ textAlign: 'center' }}>
                                                                                 <div className="">
-                                                                                    <i className="menuIconFa fa fa-pencil-square-o" onClick={() => this.setState({ showSubtaskForm: true, subTask: sub })} aria-hidden="true"></i>
+                                                                                    <i className="menuIconFa fa fa-pencil-square-o" onClick={() => this.setState({ showSubtaskForm: true, subTask: {...sub,assign:sub.assignId.toString(), dueOn: sub.dueOn.toString()}, taskId : item.id })} aria-hidden="true"></i>
                                                                                 </div>
                                                                             </td>
 
@@ -400,7 +420,7 @@ class OnboardMSTaskView extends Component {
                         <h5 className="modal-title">{this.state.taskData ? 'Edit' : 'Add'} Task</h5>
                     </Header>
                     <Body>
-                        <OnboardMSTaskForm taskData={this.state.taskData} updateList={this.updateTaskList} >
+                        <OnboardMSTaskForm taskData={this.state.taskData} checklist={checklist} updateList={this.updateList} >
                         </OnboardMSTaskForm>
                     </Body>
                 </Modal>
@@ -409,7 +429,7 @@ class OnboardMSTaskView extends Component {
                         <h5 className="modal-title">{this.state.subTask ? 'Edit' : 'Add'} Subtask</h5>
                     </Header>
                     <Body>
-                        <OnboardSubTaskForm updateList={this.updateList} subTask={this.state.subTask}>
+                        <OnboardSubTaskForm updateList={this.updateTaskList} subTask={this.state.subTask} taskList = {this.state.taskList} taskId= {this.state.taskId}>
                         </OnboardSubTaskForm>
                     </Body>
                 </Modal>

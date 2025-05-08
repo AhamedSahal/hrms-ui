@@ -5,63 +5,87 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { getgratuitySettings, updategratuitySettings } from './service';
 import { GratuitySchema } from './validation';
-import { verifyOrgLevelViewPermission, verifyOrgLevelEditPermission } from '../../../utility';
+import { verifyOrgLevelEditPermission, verifyOrgLevelViewPermission } from '../../../utility';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
+import { confirmAlert } from 'react-confirm-alert';
 
 export default class GratuitySettingForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            gratuity: {}
+            gratuity: this.props.gratuityData?.[0] || {} 
         }
     }
-    componentDidMount() {
-        if (verifyOrgLevelViewPermission("Module Setup Pay")) {
-            getgratuitySettings().then(res => {
-                if (res.status == "OK") {
-                    this.setState({ gratuity: res.data })
-                }
-            })
+
+    
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.gratuityData !== this.props.gratuityData) {
+            this.setState({
+                gratuity: this.props.gratuityData?.[0] || {}
+            });
         }
     }
+
     save = (data, action) => {
+        const payload = {
+            ...data,
+            branchId: this.props.gratuityData[0]?.branchId,
+            id: 0 
+        };
         action.setSubmitting(true);
-        updategratuitySettings(data).then(res => {
-            if (res.status == "OK") {
-                toast.success(res.message);
-            } else {
-                toast.error(res.message);
-            }
-            action.setSubmitting(false)
-        }).catch(err => {
-            console.log({ err });
-            toast.error("Error while saving gratuity");
-            action.setSubmitting(false);
-        })
+        confirmAlert({
+            message: `Are you sure you want to Save?`,
+            buttons: [
+                {
+                    label: 'Cancel',
+                    onClick: () => { }
+                },
+                {
+                    label: "I'm Sure",
+                    className: "confirm-alert",
+                    onClick: () => {
+                        updategratuitySettings(payload).then(res => {
+                            if (res.status === "OK") {
+                                toast.success(res.message);
+                            } else {
+                                toast.error(res.message);
+                            }
+                            action.setSubmitting(false);
+                        }).catch(err => {
+                            console.error({ err });
+                            toast.error("Error while saving gratuity");
+                            action.setSubmitting(false);
+                        });
+                    },
+                }
+            ]
+        });
+
     }
+
     render() {
+        const { gratuity } = this.state;
         return (
             <>
-                <div className="page-container content container-fluid">
-                    {/* Page Header */}
-                    <div className="tablePage-header">
-                        <div className="row pageTitle-section">
-                            <div className="col">
-                                <h3 className="tablePage-title">Gratuity</h3>
-                            </div>
-
-
-
+                <div className='endofService-form'>
+                    <div className="row ">
+                        <div className="col">
+                            <p className="endofService-title">Gratuity</p>
                         </div>
                     </div>
-
-                    {/* /Page Header */}
+                    {/* /Page Body */}
                     <div className="row">
                         <div className="col-md-12">
                             <div className="card-body">
                                 {verifyOrgLevelViewPermission("Module Setup Pay") && <Formik
                                     enableReinitialize={true}
-                                    initialValues={this.state.gratuity}
+                                    initialValues={{
+                                        gratuityServiceRequired: gratuity.gratuityServiceRequired || '',
+                                        gratuityAmountPer: gratuity.gratuityAmountPer || '',
+                                        gratuityServiceRequiredMax: gratuity.gratuityServiceRequiredMax || '',
+                                        gratuityAmountPerMax: gratuity.gratuityAmountPerMax || ''
+                                    }}
                                     onSubmit={this.save}
                                     validationSchema={GratuitySchema}
                                 >
@@ -72,9 +96,7 @@ export default class GratuitySettingForm extends Component {
                                         handleChange,
                                         handleBlur,
                                         handleSubmit,
-                                        isSubmitting,
-                                        setFieldValue,
-                                        setSubmitting
+                                        isSubmitting
                                         /* and other goodies */
                                     }) => (
                                         <Form>
@@ -128,17 +150,14 @@ export default class GratuitySettingForm extends Component {
                                             </div>
                                             {verifyOrgLevelEditPermission("Module Setup Pay") && <input type="submit" style={{ color: 'white', background: '#102746' }} className="btn" value="Save" />}
                                         </Form>
-                                    )
-                                    }
+                                    )}
                                 </Formik>}
                                 {!verifyOrgLevelViewPermission("Module Setup Pay") && <AccessDenied></AccessDenied>}
                             </div>
                         </div>
                     </div>
                 </div>
-
-
             </>
-        )
+        );
     }
 }

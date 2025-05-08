@@ -10,7 +10,7 @@ import PerformanceTemplateDetailsForm from './detailsForm';
 const TemplateDetailSetupRoute = ({ match }) => {
    return (
       <Routes>
-         <Route path={`${match.url}/:id`} component={PerformanceTemplateDetailsForm} />
+         <Route path={':id'} element={<PerformanceTemplateDetailsForm />} />
       </Routes>
    )
 };

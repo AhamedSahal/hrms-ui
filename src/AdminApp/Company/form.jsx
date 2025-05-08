@@ -8,7 +8,6 @@ import PasswordField from '../../initialpage/PasswordField';
 import { saveCompany } from './service';
 import { CompanySchema } from './validation';
 
-
 export default class CompanyForm extends Component {
     constructor(props) {
         super(props)

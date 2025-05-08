@@ -31,14 +31,14 @@ export default class OrgSetupMain extends Component {
         return (
             <div className="page-wrapper">
                 <Helmet>
-                    <title>Organisation Modules | {getTitle()}</title>
+                    <title>Organization Modules | {getTitle()}</title>
                 </Helmet>
                 <div className="mt-4 content container-fluid">
                     <div className="tab-content">
                         <div className="subMenu_box row user-tabs">
                             <div className="nav-box">
                                 <div className="page-headerTab">
-                                    <h3 style={{ color: 'white' }} className="page-title">Organisation</h3>
+                                    <h3 style={{ color: 'white' }} className="page-title">Organization</h3>
                                     <div className="p-0 col-lg-12 col-md-12 col-sm-12 sub-nav-tabs">
                                         <ul className="nav nav-items">
                                             {orgsetup.entity && <li className="nav-item"><a href="#pent" data-toggle="tab" className="nav-link active">Entity</a></li>}

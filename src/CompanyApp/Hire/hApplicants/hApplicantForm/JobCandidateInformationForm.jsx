@@ -45,10 +45,10 @@ export default class JobCandidateInformationForm extends Component {
 
   }
 
-  save = (data) => {
+  save = (data, action) => {
     const { applicantsList,jobInfo } = this.state;
     let flag = true;
-    let output = {...data, hiringManagerId: jobInfo.hiringManagerId,hiringManagerName: jobInfo.hiringManagerName,jobProfile:jobInfo.hiringManagerName,}
+    let output = {...data, hiringManagerId: jobInfo.hiringManagerId,hiringManagerName: jobInfo.hiringManagerName,jobProfile:jobInfo.hiringManagerName,jobProfile:jobInfo.jobRole}
     if (applicantsList.length > 0) {
       applicantsList.map((applciantData) => {
         if (applciantData.email == data.email) {
@@ -76,7 +76,18 @@ export default class JobCandidateInformationForm extends Component {
           onSubmit={this.save}
         // validationSchema={JobProfileSchema}
         >
-          {() => (
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            setFieldValue,
+            setSubmitting,
+            /* and other goodies */
+          }) => (
             <Form autoComplete="off" >
               {/* phase 1 */}
               <div className="row" style={{ padding: "40px" }}>

@@ -11,19 +11,19 @@ import Header from './header';
 import SidebarContent from './settingsidebar';
 
 class SettingsLayout extends Component {
-    render() {
-        const { match } = this.props;
-        return (
-            <div className="main-wrapper">
-                <Header/>
-                <div>
-                    {settingservice && settingservice.map((route, key) =>
-                        <Route key={key} path={`${match.url}/${route.path}`} component={route.component} />
-                    )}
-                </div>                
-                <SidebarContent/>
-            </div>
-        );
-    }
+	render() {
+		const { match } = this.props;
+		return (
+			<div className="main-wrapper">
+				<Header/>
+				<div>
+					{settingservice && settingservice.map((route,key)=>
+						<Route key={key} path={`${match.url}/${route.path}`} component={route.component} />
+					)}
+				</div>				
+				<SidebarContent/>
+			</div>
+		);
+	}
 }
-export default SettingsLayout;
+export default (SettingsLayout);

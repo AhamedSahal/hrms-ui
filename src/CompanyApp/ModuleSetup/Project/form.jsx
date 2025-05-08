@@ -8,7 +8,6 @@ import { save } from './service';
 import EmployeeDropdown from "../Dropdown/EmployeeDropdown";
 import { ProjectSchema } from './validation';
 
-
 export default class ProjectForm extends Component {
     constructor(props) {
         super(props)

@@ -8,7 +8,6 @@ import PerformanceTemplateDropdown from '../../ModuleSetup/Dropdown/PerformanceT
 import { createNew } from './service';
 import { PerformanceReviewSchema } from './validation';
 
-
 export default class PerformanceReviewForm extends Component {
     constructor(props) {
         super(props)

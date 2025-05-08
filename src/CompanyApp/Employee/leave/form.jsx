@@ -9,7 +9,6 @@ import LeaveTypeDropdown from '../../ModuleSetup/Dropdown/LeaveTypeDropdown';
 import { saveLeave,getEmployeeLeaveInformation } from './service';
 import { LeaveSchema } from './validation';
 import { differenceInDays } from 'date-fns'
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 
 export default class LeaveForm extends Component {

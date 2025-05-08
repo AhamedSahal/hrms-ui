@@ -9,7 +9,6 @@ import { getJobDescriptionById, saveJobDescriptionById } from './service';
 import { PeoplesJobDescriptionSchema } from './validation';
 
 
-
 const { Header, Body, Footer, Dialog } = Modal;
 export default class PeoplejobDescription extends Component {
     constructor(props) {

@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { addLocationIntoGroup, getLocationList } from './service';
 
 
-
 export default class MobileAttendanceLocationForm extends Component {
     constructor(props) {
         super(props)

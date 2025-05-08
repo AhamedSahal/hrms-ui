@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { savePaymentMode } from './service';
 import { PaymentModeSchema } from './validation';
 
-
 export default class PaymentModeForm extends Component {
     constructor(props) {
         super(props)

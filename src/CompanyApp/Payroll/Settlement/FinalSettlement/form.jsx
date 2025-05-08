@@ -8,7 +8,6 @@ import { getUserType } from '../../../../utility';
 import EmployeeDropdown from '../../../ModuleSetup/Dropdown/EmployeeDropdown';
 import { saveFF } from "./service"; 
 
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 export default class FinalSettlementForm extends Component {
   constructor(props) {

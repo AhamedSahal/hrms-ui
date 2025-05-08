@@ -1,68 +1,111 @@
 import { Empty, Table, Tooltip } from 'antd';
 import React, { Component } from 'react';
 import { Modal } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { verifyOrgLevelEditPermission, verifyOrgLevelViewPermission } from '../../../../utility';
 import OnboardMSchecklistForm from './checklistForm';
+import { getBranchLists, getDepartmentLists } from '../../../Performance/ReviewCycle/CycleForms/service';
+import { getOnboardMSCheckList,getJobTitles,updateOnboardCompanySetting } from './service';
+import { getFormat } from '../../../Settings/Format/service';
 const { Header, Body } = Modal;
 
-const tasks = [
-    {
-        id: 1,
-        name: "Welcome Orientation",
-        description: "Introduction to the company, team, and workplace policies.",
-        active: true,
-        applicableFor: "Everyone",
-    },
-    {
-        id: 2,
-        name: "IT Setup",
-        description: "Setting up email, workstations, and required software tools.",
-        active: true,
-        applicableFor: "India",
-    },
-    {
-        id: 3,
-        name: "Meet the Team",
-        description: "Schedule introductions with team members and key stakeholders.",
-        active: false,
-        applicableFor: "HR Department",
-    },
-];
+
 
 
 export default class OnboardingMSCheckList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: tasks || [],
+            data:  [],
             q: "",
             page: 0,
             size: 10,
             sort: "id,desc",
+            jobtitle: [],
+            department: [],
+            branches: [],
             totalPages: 0,
             totalRecords: 0,
             currentPage: 1,
             expandedRows: {},
             taskListdata: [],
+            onboardStatus: false,
         };
     }
 
     componentDidMount() {
-        this.fetchList();
+        // this.fetchList();
+        this.fetchData();
+    }
+
+    fetchData = () => {
+         getFormat().then(res => {
+                        if (res.status == "OK") {
+                            this.setState({ onboardStatus: res.data.onboardEnable })
+                        }
+                    })
+        getBranchLists().then(res => {
+                    if (res.status === "OK") {
+                        this.setState({
+                            branches: res.data,
+                        });
+                    }
+                });
+                getDepartmentLists().then(res => {
+                    if (res.status === "OK") {
+                        this.setState({
+                            department: res.data,
+                        });
+                    }
+                });
+        
+                getJobTitles().then(res => {
+                    if (res.status == "OK") {
+                        this.setState({
+                            jobtitle: res.data,
+                        })
+                    }
+                })
+                setTimeout(() => {this.fetchList()},1000) 
+                
     }
 
     fetchList = () => {
-        // getOnboardMSCheckList(this.state.q, this.state.page, this.state.size, this.state.sort).then(res => {
-        //     if (res.status == "OK") {
-        //       this.setState({
-        //         data: res.data.list,
-        //         totalPages: res.data.totalPages,
-        //         totalRecords: res.data.totalRecords,
-        //         currentPage: res.data.currentPage + 1
-        //       })
-        //     }
-        //   })
+        getOnboardMSCheckList().then(res => {
+            if (res.status == "OK") {
+           
+            if(res.data.length > 0){
+                let data = res.data.map((res) => {
+                    if(res.applicableId == 0){
+                        return {...res,applicableFor : "Everyone"}
+                    }
+                    if(res.applicableId == 1 &&  this.state.department.length > 0){
+                        let department =  this.state.department.filter((dept) => res.departments?.split(',').map(Number).includes(dept.id))
+                        let arrname = department.map(dept => dept.name);
+                        let applicableFor = arrname.join(", ");
+                        return {...res,applicableFor : applicableFor}
+                    }
+
+                    if(res.applicableId == 2 &&  this.state.branches.length > 0){
+                        let branches =  this.state.branches.filter((dept) => res.branches?.split(',').map(Number).includes(dept.id))
+                        let arrname = branches.map(dept => dept.name);
+                        let applicableFor = arrname.join(", ");
+                        return {...res,applicableFor : applicableFor}
+                    }
+                    if(res.applicableId == 3 &&  this.state.jobtitle.length > 0){
+                        let jobtitle =  this.state.jobtitle.filter((dept) => res.jobtitle?.split(',').map(Number).includes(dept.id))
+                        let arrname = jobtitle.map(dept => dept.name);
+                        let applicableFor = arrname.join(", ");
+                        return {...res,applicableFor : applicableFor}
+                    }
+                })
+                this.setState({data : data})
+            }else {
+                this.setState({data : []})
+            }
+            }
+          })
     }
 
     
@@ -102,6 +145,23 @@ export default class OnboardingMSCheckList extends Component {
         return str.length > length ? str.substring(0, length) + '...' : str;
     }
 
+    handleMasterRecordUpdate = () => {
+
+        this.setState({onboardStatus: !this.state.onboardStatus},() => {
+            updateOnboardCompanySetting(this.state.onboardStatus).then((res) => {
+                if (res.status == "OK") {
+                  toast.success(res.message);
+                  this.fetchList();
+                } else {
+                  toast.error(res.message);
+                }
+              })
+
+        })
+
+         
+    }
+
     render() {
         const { data, totalPages, totalRecords, currentPage, size, expandedRows } = this.state;
         let startRange = ((currentPage - 1) * size) + 1;
@@ -112,15 +172,47 @@ export default class OnboardingMSCheckList extends Component {
 
         return (
             <div >
+                 {/* head */}
+                 <div style={{ height: '80px' }} className="onboardPageHead ">
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="card">
+                                        <div className="card-header">
+                                            <h5 className="card-title">Onboard</h5>
+                                        </div>
+                                        {/* body */}
+                                        <div className="card-body">
+                                            {/* onboard  active inactive */}
+                                            <div className="mt-2 float-left col-auto ml-auto">
+                                                <label htmlFor="">Enable Onboard</label>
+                                                <div type="checkbox" name="onboardStatus" onClick={
+                                                    this.handleMasterRecordUpdate
+                                                } >
+
+                                                    <i className={`fa fa-2x ${this.state.onboardStatus
+                                                        ? 'fa-toggle-on text-success' :
+                                                        'fa fa-toggle-off text-danger'}`}></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                          {/* head */}
                 {/* Page Header */}
-                <div className='onboardPageHead ' >
+              {this.state.onboardStatus &&  <div className='onboardPageHead ' style={{marginTop: "113px"}}>
                     <div className=''>
+                       
+
                         <div style={{ height: '80px' }} className="goalHeader-container">
                             <div className="onboardTaskHead-section">
-                                <div>
-                                    <h3 className='mt-2 mb-0'>Checklist</h3>
+                                <div className='mt-8 mb-0'>
+                                    <h3 className='mt-8 mb-0'>Checklist</h3>
                                 </div>
+                                 
                                 <div className="mt-2 float-right col-auto ml-auto">
+
                                     {verifyOrgLevelEditPermission("Module Setup Onboard") && <button onClick={() => {
                                         this.setState({
                                             showForm: true
@@ -163,7 +255,7 @@ export default class OnboardingMSCheckList extends Component {
                                                             <div className="goal-title">{this.reduceString(item.name, 45)}</div>
                                                         </Tooltip>
                                                         <div className="goal-details">
-                                                            2 Task
+                                                            {item.taskCount} {item.taskCount > 1 ?"Tasks":"Task"} 
                                                         </div>
                                                     </div>
                                                 </td>
@@ -188,7 +280,7 @@ export default class OnboardingMSCheckList extends Component {
                                                 </td>
                                                 <td style={{textAlign: 'center'}}>
                                                     <div className="">
-                                                        <i onClick={() => this.setState({showForm: true , checklist: item})} className="menuIconFa fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        <i onClick={() => this.setState({showForm: true , checklist: {...item,assign:item.applicableId.toString() }})} className="menuIconFa fa fa-pencil-square-o" aria-hidden="true"></i>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -198,7 +290,7 @@ export default class OnboardingMSCheckList extends Component {
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div>}
                 <Modal enforceFocus={false} size={"md"} show={this.state.showForm} onHide={this.hideForm}>
                     <Header closeButton>
                         <h5 className="modal-title">{this.state.checklist ? 'Edit' : 'Add'} Checklist</h5>

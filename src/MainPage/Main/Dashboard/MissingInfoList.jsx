@@ -94,7 +94,7 @@ export default class MissingInfoList extends Component {
     }
 
     render() {
-        const { documentMissingList,  activeTab } = this.state;
+        const { documentMissingList, missingInfoList, activeTab } = this.state;
         
         return (
             <>

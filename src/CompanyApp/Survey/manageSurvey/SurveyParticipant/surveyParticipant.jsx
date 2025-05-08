@@ -15,7 +15,6 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import DepartmentDropdown from '../../../ModuleSetup/Dropdown/DepartmentDropdown';
 
-
 const { Header, Body, Footer, Dialog } = Modal;
 export default class SurveyParticipantList extends Component {
   constructor(props) {
@@ -238,6 +237,7 @@ export default class SurveyParticipantList extends Component {
   }
 
   saveEveryoneInOrg = () => {
+    let { surveyId } = this.state;
     saveEveryoneInOrganization(this.props.survey).then(res => {
       if (res.status == "OK") {
         toast.success(res.message);
@@ -254,7 +254,7 @@ export default class SurveyParticipantList extends Component {
   }
 
   saveEveryoneInDepartment = () => {
-    let {selectedDepartment} = this.state;
+    let {selectedDepartment, surveyId} = this.state;
     saveEveryoneInDept(selectedDepartment, this.props.survey).then(res => {
       if (res.status == "OK") {
         toast.success(res.message);
@@ -338,7 +338,8 @@ export default class SurveyParticipantList extends Component {
     }
   };
   render() {
-    const { data, totalRecords, currentPage, size, selected, participantCurrentPage, participantTotalRecords, participantData, selectedOption, selectedInternalEmpOption, surveyDetails } = this.state;
+    const isCompanyAdmin = getUserType() == "COMPANY_ADMIN";
+    const { data, totalPages, totalRecords, currentPage, size, selected, participantCurrentPage, participantTotalRecords, participantData, selectedOption, selectedInternalEmpOption, surveyDetails } = this.state;
     let startRange = ((currentPage - 1) * size) + 1;
     let endRange = ((currentPage) * (size)) ;
     if (endRange > totalRecords) {
@@ -350,6 +351,8 @@ export default class SurveyParticipantList extends Component {
     if (participantEndRange > participantTotalRecords) {
       participantEndRange = participantTotalRecords;
     }
+    
+    let ids = participantData.map((item)=>item.internalUserId);
     // this.setState({
     //   selected:ids
     // })
@@ -363,7 +366,7 @@ export default class SurveyParticipantList extends Component {
       {
         title: 'Employee',
         sorter: false,
-        render: (text) => {
+        render: (text, record) => {
           return <div>{text.name}</div>
         }
       },
@@ -387,7 +390,7 @@ export default class SurveyParticipantList extends Component {
                   type="checkbox"
                   checked={selected && selected.length > 0 && selected.indexOf(record.id) > -1}
                   className="pointer"
-                  onClick={() => {
+                  onClick={e => {
                     this.saveParticipantData(record);
                   }}></input>}
               </Col>
@@ -401,7 +404,7 @@ export default class SurveyParticipantList extends Component {
       {
         title: 'Name',
         sorter: false,
-        render: (text) => {
+        render: (text, record) => {
           return <div>{text.name}</div>
         }
       },
@@ -424,7 +427,7 @@ export default class SurveyParticipantList extends Component {
         title: 'Action',
         width: 50,
         className: "text-center",
-        render: (text) => (
+        render: (text, record) => (
           <div >
             <Row className='actionCenter'>
               <Col md={12}>
@@ -603,7 +606,7 @@ export default class SurveyParticipantList extends Component {
                 <Table id='Table-style' className="table-striped "
                   pagination={{
                     total: participantTotalRecords,
-                    showTotal: () => {
+                    showTotal: (total, range) => {
                       return `Showing ${participantStartRange} to ${participantEndRange} of ${participantTotalRecords} entries`;
                     },
                     showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

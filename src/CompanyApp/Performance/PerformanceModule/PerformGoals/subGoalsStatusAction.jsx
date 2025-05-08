@@ -5,7 +5,6 @@ import { FormGroup } from 'reactstrap';
  import { updateSubGoalStatus,updateGoalStatus,getSubGoalsActionList } from './service';
 import { Button, Stack } from '@mui/material';
 
-
 export default class subGoalsStatusAction extends Component {
     constructor(props) {
         super(props)

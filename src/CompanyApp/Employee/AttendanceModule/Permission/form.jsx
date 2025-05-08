@@ -14,7 +14,6 @@ import { LightTooltip } from '../../../ModuleSetup/RequestPermission/tootip';
 import { IconButton } from '@mui/material';
 
 const { RangePicker } = DatePicker;
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 
 

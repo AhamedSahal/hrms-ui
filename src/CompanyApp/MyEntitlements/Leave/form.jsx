@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { getUserType,verifyApprovalPermission } from '../../../utility';
 import { saveLeave, saveOpeningBalance } from './service';
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 export default class LeaveEntitlementForm extends Component {
     constructor(props) {

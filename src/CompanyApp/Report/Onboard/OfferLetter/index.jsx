@@ -76,7 +76,7 @@ export default class OfferLetterReport extends Component {
   }));
   };
   render() {
-    const { data, selectedProperties, showPdf,sortedProperties } = this.state;
+    const { data, selectedProperties, showPdf, showCsv,sortedProperties } = this.state;
     let selectedData = [];
 
     if (data && selectedProperties) {

@@ -9,7 +9,6 @@ import * as htmlToImage from 'html-to-image';
 import { PictureOutlined } from '@ant-design/icons';
 
 
-
 export default class OrganizationCompany extends Component {
   constructor(props) {
     super(props);

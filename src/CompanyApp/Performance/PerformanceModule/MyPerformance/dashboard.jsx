@@ -121,6 +121,7 @@ export default class MyPerformDashboard extends Component {
                             width: 200
                         },
                         legend: {
+                            position: 'bottom',
                             position: 'absolute',
                             left: 'auto',
                             top: '7px',

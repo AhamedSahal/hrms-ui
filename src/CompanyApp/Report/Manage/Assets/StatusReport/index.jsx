@@ -103,7 +103,7 @@ export default class AssetStatusReport extends Component {
           if (selectedProperties.includes(key)) {
             if(key != "warrantyEndDate" && key != "completedDate" && key != "warrantyStartDate" && key != "assignDate" && key != "purchaseDate"){
               if(key == "status"){
-                temp[key] = element[key] == "REJECTED"?"Available":element[key] == "APPROVED"?"Allocated":"-"
+                temp[key] = element[key] == "AVAILABLE"?"Available":element[key] == "APPROVED"?"Allocated":element[key] == "PENDING"?(element["pendingStatus"] == "RETURN"?"Return Request":"Assign Request"):"-"
               }else{
             temp[key] = element[key] == null || element[key] == "undefined" ||  element[key] == "" ? "-": element[key];
                     
@@ -118,11 +118,10 @@ export default class AssetStatusReport extends Component {
     }
     
     return (
-      
       <div className="insidePageDiv">
         <Helmet>
           <title>Asset | {getTitle()}</title>
-          <meta name="description" content="Login page" />
+        <meta name="description" content="Login page" />
         </Helmet>
         {/* Page Content */}
         <div className="page-containerDocList content container-fluid" style={{ marginTop: "20px" }}>
@@ -151,13 +150,15 @@ export default class AssetStatusReport extends Component {
                     }}
                   >
                     <option value="">All</option>
+                    <option value="0">Available</option>
                     <option value="1">Allocated</option>
-                    <option value="2">Available</option>
+                    <option value="3">Acknowledge</option>
             
                   </select>
               </div>
               </div>
               
+             
               <div className="col-sm-6 col-md-3">
 
                 <div className="form-group form-focus">

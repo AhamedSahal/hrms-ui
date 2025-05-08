@@ -2,7 +2,7 @@
  * Signin Firebase
  */
 
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from "react-helmet";
 import {User,Avatar_19,Avatar_07,Avatar_06,Avatar_14} from '../../../Entryfile/imagepath.jsx'
 import { getUserName } from '../../../utility';
@@ -35,7 +35,7 @@ const linechartdata = [
 ];
 const AdminDashboard = () => {
 
-  React.useEffect(() => {
+ useEffect(() => {
     let firstload = localStorage.getItem("firstload");
     if (firstload === "true") {
       setTimeout(() => {

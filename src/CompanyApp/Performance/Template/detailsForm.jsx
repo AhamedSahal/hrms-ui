@@ -8,7 +8,6 @@ import { FormGroup } from 'reactstrap';
 import { savePerformanceTemplateConfig,getPerformanceTemplateById } from './service';
 import { PerformanceSchema } from './validation';
 
-
 export default class PerformanceTemplateDetailsForm extends Component {
     constructor(props) {
         super(props) 

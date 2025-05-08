@@ -25,36 +25,43 @@ export default class AssetAvailable extends Component{
         super(props);
     
         this.state = {
-            Assets: props.Assets || 0,
+          Assets: props.Assets || 0,
           data: [],
+          filteredMetaData:[],
           q: "",
           page: 0,
           size: 10,
           sort: "id,desc",
-          AssetView: true,
+          AssetAcknowledgeStatusId:4,
           totalPages: 0,
           totalRecords: 0,
           currentPage: 1,
           showForm: false,
-          showFilter: false
+          showFilter: false,
+         
         };
       }
       componentDidMount() {
-        this.fetchList();
-      }
-      fetchList = () => {
-       { verifyViewPermission("Manage Assets") &&  getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort,0,0,0).then(res => {
     
+        this.fetchList();
+       
+      }
+       fetchList = () => {
+       { verifyViewPermission("Manage Assets") && getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort,this.state.AssetAcknowledgeStatusId,0,0,0).then(res => {
           if (res.status == "OK") {
+    
             this.setState({
               data: res.data.list,
               totalPages: res.data.totalPages,
               totalRecords: res.data.totalRecords,
-              currentPage: res.data.currentPage + 1
+              currentPage: res.data.currentPage + 1,
             })
+           
           }
-        })  }
+        })
       }
+    }
+
       onTableDataChange = (d, filter, sorter) => {
         this.setState({
           page: d.current - 1,
@@ -74,9 +81,8 @@ export default class AssetAvailable extends Component{
         }
         this.setState({ data },
           () => {
-            this.hideAssetView(); 
+            
             this.hideForm(); 
-            this.hideAssetAction();
             this.hideAssetActive();
           });
       }
@@ -96,34 +102,11 @@ export default class AssetAvailable extends Component{
           Assets: undefined
         })
       }
-      hideAssetView = () => {
-        this.setState({
-          showAssetView: false,
-          showAssetAction: false,
-          AssetView: undefined
-        })
-      } 
-      hideAssetAction = () => {
-        this.setState({
-          showAssetAction: false,
-          showAssetView: false,
-          AssetsAction: undefined
-        })
-      }
-      hideAssetHistory = () => {
-        this.setState({
-          showAssetAction: false,
-          showAssetView: false,
-          showAssetHistory: false,
-          showAssetActive: false,
-          AssetsHistory: undefined
-        })
-      } 
+
+
       hideAssetActive = () => {
         this.setState({
-          showAssetAction: false,
-          showAssetView: false,
-          showAssetHistory: false,
+         
           showAssetActive: false,
           AssetsActive: undefined
         })
@@ -142,7 +125,7 @@ export default class AssetAvailable extends Component{
       })
   }
     render() {
-        const { data, totalPages, totalRecords, currentPage, size,AssetView,AssetsAction,AssetsHistory,AssetsActive,showForm} = this.state
+        const { data, filteredMetaData, totalPages, totalRecords, currentPage, size,AssetView,AssetsAction,AssetsHistory,AssetsActive,showForm} = this.state
         let startRange = ((currentPage - 1) * size) + 1;
         let endRange = ((currentPage) * (size)) - 1;
         if (endRange > totalRecords) {
@@ -151,37 +134,12 @@ export default class AssetAvailable extends Component{
 
         const menuItems = (text, record) => {
           const items = [];
-          items.push(
-            <div>
-              <a className="muiMenu_item" href="#" onClick={() => {
-                this.setState({ AssetView: record, showAssetView: true, showForm: false })
-              }} >
-                <i className="fa fa-eye m-r-5" /><b>View</b></a>
-            </div>
-          );
-  
-          if (!isEmployee) {
-            items.push(
-              <div >  <a className="muiMenu_item" href="#" onClick={() => {
-                this.setState({ AssetsHistory: record, showAssetHistory: true, showForm: false })
-              }} >
-                <i className="fa fa-history m-r-5" /><b>History</b></a>
-              </div>
-            );
-          }
-          if (text.isStatus == "APPROVED") {
-            items.push(
-              <div ><a className="muiMenu_item" href="#" onClick={() => {
-                this.setState({ AssetsAction: record, showAssetAction: true, showForm: false })
-              }} >
-                <i className="las la-check-double m-r-5" /><b>Available</b></a>
-              </div>
-            );
-          }
-          if (text.isStatus == "REJECTED") {
+
+         
+            if (text!='') {
             items.push(<div >  <a className="muiMenu_item" href="#"
               onClick={() => {
-                this.setState({ AssetsActive: record, showAssetActive: true, showForm: false })
+                this.setState({ AssetsActive: record, showAssetActive: true, showForm: false, })
               }} >
               <i className="las la-check-double m-r-5" /><b>Allocate</b></a>
             </div>
@@ -191,14 +149,14 @@ export default class AssetAvailable extends Component{
           return items;
         };
 
-      const columns = [
+         const columns = [
         {
           title: 'Name',
 
           width: 50,
           render: (text, record) => {
             return <>
-              <span>{text && text.assets?.name != "" ? text.assets?.name : "-"}</span>
+              <span>{text && text.assetCategoryName != "" ? text.assetCategoryName : "-"}</span>
             </>
           }
         },
@@ -208,97 +166,7 @@ export default class AssetAvailable extends Component{
           width: 50,
           render: (text, record) => {
             return <>
-              <span>{text && text.category?.name != "" ? text.category?.name : "-"}</span>
-            </>
-          }
-        },
-        {
-          title: 'Serial Number',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <span>{text && text.serialno != "" ? text.serialno : "-"}</span>
-            </>
-          }
-        },
-        {
-          title: 'Brand Name',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <span>{text && text.brandName != "" ? text.brandName : "-"}</span>
-            </>
-          }
-        },
-        {
-          title: 'Model Number',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <span>{text && text.modelNo != "" ? text.modelNo : "-"}</span>
-            </>
-          }
-        },
-        {
-          title: 'RAM',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <span>{text && text.ram != "" ? text.ram : "-"}</span>
-            </>
-          }
-        },
-        {
-          title: 'Storage Capacity',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <span>{text && text.storagecapacity != "" ? text.storagecapacity : "-"}</span>
-            </>
-          }
-        },
-        {
-          title: 'IMEI Number',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <span>{text && text.imeiNo != "" ? text.imeiNo : "-"}</span>
-            </>
-          }
-        },
-        {
-          title: 'IP Address',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <span>{text && text.ipAddress != "" ? text.ipAddress : "-"}</span>
-            </>
-          }
-        },
-        {
-          title: 'Previous State',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <span>{text && text.prevState != "" ? text.prevState : "-"}</span>
-            </>
-          }
-        },
-        {
-          title: 'Tag',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <span>{text && text.tag != "" ? text.tag : "-"}</span>
+              <span>{text && text.assetSetupName != "" ? text.assetSetupName : "-"}</span>
             </>
           }
         },
@@ -308,87 +176,28 @@ export default class AssetAvailable extends Component{
           width: 50,
           render: (text, record) => {
             return <>
-              <span>{text && text.currentlocation != "" ? text.currentlocation : "-"}</span>
+              <span>{text && text.currentLocation != "" ? text.currentLocation : "-"}</span>
             </>
           }
         },
         {
-          title: 'Purchased From',
+          title: 'Total Assets',
 
           width: 50,
           render: (text, record) => {
             return <>
-              <span>{text && text.purchasefrom != "" ? text.purchasefrom : "-"}</span>
+            <span>{text && text.totalAssets != "" ? text.totalAssets : "-"}</span>
             </>
           }
         },
-        {
-          title: 'Purchased Date',
+         {
+          title: 'Available Assets',
 
           width: 50,
           render: (text, record) => {
             return <>
-              <div>{record.purchaseDate != null ? getReadableDate(record.purchaseDate) : "-"}</div>
+            <span>{text && text.count != "" ? text.count : "-"}</span>
             </>
-          }
-        },
-        {
-          title: 'Warranty Start Date',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <div>{record.wstartDate != null ? getReadableDate(record.wstartDate) : "-"}</div>
-            </>
-          }
-        },
-        {
-          title: 'Warranty End Date',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <div>{record.wendDate != null ? getReadableDate(record.wendDate) : "-"}</div>
-            </>
-          }
-        },
-        {
-          title: 'Status',
-
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <span className={text.isStatus == "APPROVED" ? "badge bg-inverse-success " : "badge bg-inverse-danger"}>
-                {text.isStatus == "APPROVED" ? <i className="pr-2 fa fa-lock text-success"></i> : <i className="pr-2 fa fa-check text-danger"></i>}{
-                  text.isStatus == "APPROVED" ? 'Allocated' : 'Available'
-                }</span>
-            </>
-          }
-        },
-        {
-          title: 'Assigned On',
-          width: 50,
-          render: (text, record) => {
-            return <>
-              <div>{record.assignDate != null ? getReadableDate(record.assignDate) : "-"}</div>
-            </>
-          }
-        },
-        {
-          title: 'Assigned To',
-          width: 50,
-          render: (text, record) => {
-            return <> {text.employee?.id != null ? <EmployeeListColumn
-              id={text.employee?.id} name={text.employee?.name}></EmployeeListColumn> : "-"}</>
-          }
-        },
-        {
-          title: 'Previous Owner',
-
-          width: 50,
-          render: (text, record) => {
-            return <> {text.pEmployee?.id != null ? <EmployeeListColumn
-              id={text.pEmployee?.id} name={text.pEmployee?.name}></EmployeeListColumn> : "-"}</>
           }
         },
         {
@@ -442,7 +251,8 @@ export default class AssetAvailable extends Component{
             </div>
           </div>}
             {/* /Page Header */}
-           {verifyViewPermission("Manage Assets") && <div className='Table-card'>
+      
+            {verifyViewPermission("Manage Assets") && <div className='Table-card'>
             <div className="tableCard-body">
             <div className=" p-12 m-0">
                 <div className="row " >
@@ -485,46 +295,15 @@ export default class AssetAvailable extends Component{
             <AssetForm updateList={this.updateList} Assets={this.state.Assets}>
             </AssetForm>
           </Body>
-
-
-        </Modal>
-        <Modal enforceFocus={false} size={"xl"} show={this.state.showAssetView} onHide={this.hideAssetView} >
- 
-        <Header closeButton>
-          {isCompanyAdmin && <><h5 className="modal-title">Asset Details</h5></>}
-          {!isCompanyAdmin && <><h5 className="modal-title">My Asset Details</h5></>} 
-        </Header>
-        <Body>
-            {AssetView && <AssetViewer AssetView={AssetView} />}
-        </Body>
-
-
-      </Modal>
-      <Modal enforceFocus={false} size={"md"} show={this.state.showAssetAction} onHide={this.hideAssetAction} >
-          <Header closeButton>
-            <h5 className="modal-title">Asset Deactivation</h5>
-          </Header>
-          <Body>
-            <AssetAction updateList={this.updateList} AssetsAction={this.state.AssetsAction}>
-            </AssetAction>
-          </Body>
         </Modal>
 
-        <Modal enforceFocus={false} size={"xl"} show={this.state.showAssetHistory} onHide={this.hideAssetHistory} >
-          <Header closeButton>
-            <h5 className="modal-title">Asset History</h5>
-          </Header>
-          <Body>
-            <AssetHistory updateList={this.updateList} AssetsHistory={this.state.AssetsHistory}>
-            </AssetHistory>
-          </Body>
-        </Modal>
+
         <Modal enforceFocus={false} size={"md"} show={this.state.showAssetActive} onHide={this.hideAssetActive} >
           <Header closeButton>
             <h5 className="modal-title">Asset Activation</h5>
           </Header>
           <Body>
-            <AssetActive updateList={this.updateList} AssetsActive={this.state.AssetsActive}>
+            <AssetActive updateList={this.updateList} AssetsActive={this.state.AssetsActive}  onHide={this.hideAssetActive}>
             </AssetActive>
           </Body>
         </Modal>

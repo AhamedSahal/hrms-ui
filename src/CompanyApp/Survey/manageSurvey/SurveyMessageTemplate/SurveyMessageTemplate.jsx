@@ -11,7 +11,6 @@ import { getUserType } from '../../../../utility';
 import { getSurveyById } from '../service';
 
 
-
 export default class SurveyMessageTemplate extends Component {
     constructor(props) {
         super(props);

@@ -87,11 +87,11 @@ export default class Process extends Component {
       showForm: false,
     })
   } 
-closeForm = () => {
+closeForm = (value) => {
     this.hideForm()
 }
   render() {
-    const { data, totalRecords, currentPage, size } = this.state
+    const { data, totalPages, totalRecords, currentPage, size } = this.state
     let startRange = ((currentPage - 1) * size) + 1;
     let endRange = ((currentPage) * (size + 1)) - 1;
     if (endRange > totalRecords) {
@@ -101,7 +101,7 @@ closeForm = () => {
     const columns = [
       {
         title: 'Workflow Name',
-        render: (text) => {
+        render: (text, record) => {
           return <>
             <div>{text.workflowautomate?.name}</div>
           </>
@@ -110,7 +110,7 @@ closeForm = () => {
       },
       {
         title: 'Step Name',
-        render: (text) => {
+        render: (text, record) => {
           return <>
             <div>{text.workflowstepautomate?.name}</div>
           </>
@@ -119,7 +119,7 @@ closeForm = () => {
       },
       {
         title: 'Comment',
-        render: (text) => {
+        render: (text, record) => {
           return <>
             <div>{text.comment}</div>
           </>
@@ -141,7 +141,7 @@ closeForm = () => {
       {
         title: 'Status',
         sorter: true,
-        render: (text) => {
+        render: (text,record) => {
           return <span>{text.status == "PROCESS" || text.status == "SEND"?"Waiting for approval":"-"}</span>
          }
       },
@@ -173,7 +173,7 @@ closeForm = () => {
                 <Table id='Table-style' className="table-striped "
                   pagination={{
                     total: totalRecords,
-                    showTotal: () => {
+                    showTotal: (total, range) => {
                       return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                     },
                     showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { updateStatus } from './service';
 import { Button, Stack } from '@mui/material';
 
-
 export default class TimeInLieuAction extends Component {
     constructor(props) {
         super(props)

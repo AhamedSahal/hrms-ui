@@ -8,7 +8,6 @@ import Roleform from './form';
 import { getActionList, getRoleList, updateRoleActions } from './service';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 const { Header, Body, Footer, Dialog } = Modal;
-
 export default class Role extends Component {
   constructor(props) {
     super(props);
@@ -106,7 +105,16 @@ export default class Role extends Component {
         this.fetchList();
       });
   }
-  
+  pageSizeChange = (currentPage, pageSize) => {
+    this.setState({
+      size: pageSize,
+      page: 0
+    }, () => {
+      this.fetchList();
+
+    })
+
+  }
   hideForm = () => {
     this.setState({
       showForm: false,
@@ -124,7 +132,7 @@ export default class Role extends Component {
   getCheckbox = (roleAction) => {
     const { roleActionEntities, role } = this.state;
     const isActionAllowed = roleActionEntities.findIndex(r => r.actionId == roleAction.id) > -1;
-    return <Button variant="link" size='sm' onClick={() => {
+    return <Button variant="link" size='sm' onClick={e => {
       this.toggleAccess(role.id, roleAction.id, isActionAllowed);
     }} >
       <i className={`fa fa-2x fa-${isActionAllowed ? 'toggle-on text-success' : 'toggle-off text-danger'}`}></i>
@@ -238,7 +246,7 @@ export default class Role extends Component {
 
                                       </thead>
                                       <tbody>
-                                        {Object.keys(groupedAllActions).map((a) => {
+                                        {Object.keys(groupedAllActions).map((a, i) => {
                                           const moduleName = a;
 
                                           const viewOrganizationActionIndex = groupedAllActions[a].findIndex(a => a.action == "VIEW" && a.permissionLevel == "ORGANIZATION");
@@ -303,7 +311,7 @@ export default class Role extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {Object.keys(groupedAllActions).map((a) => {
+                        {Object.keys(groupedAllActions).map((a, i) => {
                           const moduleName = a;
                           const viewSelfActionIndex = groupedAllActions[a].findIndex(a => a.action == "VIEW" && a.permissionLevel == "SELF");
                           const viewHierarchyActionIndex = groupedAllActions[a].findIndex(a => a.action == "VIEW" && a.permissionLevel == "HIERARCHY");
@@ -312,7 +320,7 @@ export default class Role extends Component {
                           const editSelfActionIndex = groupedAllActions[a].findIndex(a => a.action == "EDIT" && a.permissionLevel == "SELF");
                           const editHierarchyActionIndex = groupedAllActions[a].findIndex(a => a.action == "EDIT" && a.permissionLevel == "HIERARCHY");
                           const editOrganizationActionIndex = groupedAllActions[a].findIndex(a => a.action == "EDIT" && a.permissionLevel == "ORGANIZATION");
-                          
+                          let isactive = groupedAllActions[a].findIndex(a => a.isMainMenu == 0)
                           return <>{groupedAllActions[a][0].isMainMenu == 0 && <tr>
                             <td style={{ textAlign: "left" }}><label className='pt-1'>{moduleName === 'Employee'? 'People': moduleName}</label></td>
                             <td>{viewSelfActionIndex > -1 && this.getCheckbox(groupedAllActions[a][viewSelfActionIndex])}</td>

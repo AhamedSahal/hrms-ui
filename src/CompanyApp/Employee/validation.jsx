@@ -63,7 +63,9 @@ export const EmployeeSchema = Yup.object().shape({
     //     .required("Please provide Total Experience"),
 
     middleName: Yup.string()
-        .matches(/^[a-zA-Z._ ]+$/,'Middle name should not contain numbers/special characters' ),
+    .nullable()
+    .notRequired()
+    .matches(/^[a-zA-Z._ ]+$/,'Middle name should not contain numbers/special characters' ),
     
     fatherName: Yup.string()
         .nullable()
@@ -143,8 +145,10 @@ export const SalaryBasicAndModeSchema = Yup.object().shape({
         .required('Please enter Basic Salary'),
     salaryCalculationMode: Yup.string()
         .required('Please select Salary Calculation Mode').nullable('Please select Salary Calculation Mode'),
-        currency: Yup.number().required('Please select currency')
-
+    currency: Yup.number().required('Please select currency'),
+    endOfServiceMode: Yup.string()
+        .required('Please select End of Service Mode')
+        .oneOf(['0', '1', '2', '3'], 'Invalid End of Service Mode') // Validates the allowed values
 });
 
 export const AddressDetailEmployeeSchema = Yup.object().shape({

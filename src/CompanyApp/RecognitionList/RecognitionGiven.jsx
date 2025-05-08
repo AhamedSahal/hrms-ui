@@ -13,7 +13,6 @@ import EmployeePhoto from '../Employee/employeePhoto';
 import "./recstyle.css";
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
 
-
 export default class RecognitionGiven extends Component {
   constructor(props) {
     super(props)

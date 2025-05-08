@@ -119,9 +119,8 @@ export default class PerformanceSubGoalsForm extends Component {
         })
     }
     render() {
-
         const { issubGoalWeightage, PerformanceSubGoalsForm } = this.state
-        
+        const isEmployeeId = this.props?.isEmployeeGoals
         return (
             <div>
                 {/* remove record */}
@@ -154,28 +153,34 @@ export default class PerformanceSubGoalsForm extends Component {
                                     <label>Employee<span style={{ color: "red" }}>*</span>
                                     </label>
                                     <Field name="employeeId" className="col-md-12" render={field => {
-                                        return <EmployeeDropdown defaultValue={this.props.goalDataItem?.employeeId || 0} onChange={e => {
+                                        return <EmployeeDropdown defaultValue={isEmployeeId || this.props.goalDataItem?.employeeId || 0} onChange={e => {
                                             this.setState({ employeeId: e.target.value })
                                             setFieldValue("goalsId", 0);
                                             setFieldValue("goals", null);
-                                        }}></EmployeeDropdown>
+                                        }}  readOnly={isEmployeeId}></EmployeeDropdown>
                                     }}></Field>
                                 </FormGroup>}
 
                                 {/* new dropdown s */}
-                                {!this.props.multiForm && this.state.employeeId > 0 && <div className="col-md-6">
+                                {!this.props.multiForm && (this.state.employeeId > 0 || isEmployeeId) && <div className="col-md-6">
                                     <FormGroup>
                                         <label>Goals<span style={{ color: "red" }}>*</span>
                                         </label>
                                         <Field name="goalsId" render={field => {
-                                            return <GoalsEmployeeDropdown employeeId={this.state.employeeId} defaultValue={this.props.goalDataItem?.id || values.goalsId} onChange={e => {
-                                                setFieldValue("goalsId", e.target.value);
-                                                setFieldValue("goals", { id: e.target.value });
-                                                this.handleGoalStatusValidation(e.target.value)
-                                                if (this.state.PerformanceSubGoalsForm.id > 0) {
-                                                    toast.error("Are you sure, you want to update Goals")
-                                                }
-                                            }} readOnly required></GoalsEmployeeDropdown>
+                                            return <GoalsEmployeeDropdown 
+                                                employeeId={this.state.employeeId || isEmployeeId} 
+                                                defaultValue={ this.props.goalDataItem?.id || values.goalsId} 
+                                                onChange={e => {
+                                                    setFieldValue("goalsId", e.target.value);
+                                                    setFieldValue("goals", { id: e.target.value });
+                                                    this.handleGoalStatusValidation(e.target.value);
+                                                    if (this.state.PerformanceSubGoalsForm.id > 0) {
+                                                        toast.error("Are you sure, you want to update Goals");
+                                                    }
+                                                }} 
+                                                readOnly={!this.props.enableGoalDropdown} 
+                                                required>
+                                            </GoalsEmployeeDropdown>
                                         }}></Field>
 
                                     </FormGroup>

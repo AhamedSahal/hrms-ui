@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveBranch } from './service';
 import { BranchSchema } from './validation';
 
-
 export default class BranchForm extends Component {
     constructor(props) {
         super(props)

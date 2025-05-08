@@ -172,7 +172,8 @@ export default class MyPermission extends Component {
 
 
   render() {
-    const { data, totalRecords, currentPage, size } = this.state
+    let isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
+    const { data, totalPages, totalRecords, currentPage, size, selected, buttonState } = this.state
     let startRange = ((currentPage - 1) * size) + 1;
     let endRange = ((currentPage) * (size + 1)) - 1;
     if (endRange > totalRecords) {
@@ -319,7 +320,7 @@ export default class MyPermission extends Component {
                     <Table id='Table-style' className="table-striped"
                       pagination={{
                         total: totalRecords,
-                        showTotal: () => {
+                        showTotal: (total, range) => {
                           return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                         },
                         showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

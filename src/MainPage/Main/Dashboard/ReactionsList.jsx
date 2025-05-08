@@ -23,6 +23,7 @@ export default class ReactionList extends Component {
   }
 
   fetchList = () => {
+    const { postId } = this.state
     getSocialPostReaction(this.props?.postId).then(res => {
         if (res.status == "OK") {
             this.setState({

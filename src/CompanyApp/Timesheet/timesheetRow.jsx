@@ -8,7 +8,6 @@ import AllActivityDropdown from '../ModuleSetup/Dropdown/AllActivityDropdown';
 import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown';
 import ProjectDropdown from './../ModuleSetup/Dropdown/ProjectDropdown';
 
-
 export default class TimesheetRow extends Component {
     constructor(props) {
         super(props)

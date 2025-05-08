@@ -8,7 +8,6 @@ import { saveBenefitsType } from './service';
 import { BenefitsModuleSetupSchema } from './validation';
 
 
-
 export default class BenefitsForm extends Component {
     constructor(props) {
         super(props)

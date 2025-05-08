@@ -9,7 +9,6 @@ import SurveyLanguageDropdown from '../../ModuleSetup/Dropdown/SurveyLanguageDro
 import { setRandomized, getSurveyQuestionList } from './service';
 import { getSurveyById } from '../manageSurvey/service';
 
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 
 

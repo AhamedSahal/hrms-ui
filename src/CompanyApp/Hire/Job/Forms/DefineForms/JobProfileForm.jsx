@@ -119,7 +119,7 @@ export default class JobProfileForm extends Component {
     let {hireJobId} = this.state;
     return (
       <div style={{ padding: "15px", background: "white" }}>
-        <h3>
+        <h3 style={{wordSpacing: "-4px"}}>
           <BsChatSquareText size={30} style={{ color: "#1DA8D5" }} /> Let's Define The Basics About The Job
         </h3>
         <br />

@@ -913,14 +913,14 @@ a.btn.btn-success.post-btn {
 
 .annoucementTitle {
     margin: 0;
-    font-size: 15px;
+    font-size: 13px;
     color: #102746;
     font-weight: 700;
 }
 
 .annoucementDescr {
-    font-size: 13px;
-    color: black;
+    font-size: 12.5px;
+    color: rgb(27, 27, 27);
     margin: 0;
     margin-bottom: 8px;
 }
@@ -1815,7 +1815,7 @@ a.btn.btn-success.post-btn {
     font-size: 11px;
     background: #E9F2FF;
     padding: 6px;
-    margin-top: -10px;
+    margin-top: -7px;
     border-radius: 7px;
     color: #4DC2DD;
 }
@@ -2074,8 +2074,8 @@ a.btn.btn-success.post-btn {
     cursor: pointer;
     background: #3b834e;
     color: #ffffff;
-    font-weight: 500;
-    box-shadow: 0px 1px 5px 0px rgb(117, 117, 117);
+    font-weight: 700;
+    box-shadow: 0px 1px 5px 0px black;
 }
 
 
@@ -2969,4 +2969,28 @@ a.btn.btn-success.post-btn {
       max-width: 38%; 
     }
   }
-  
+
+
+  .socialPostloadMoreBtn {
+    border: solid 1px grey;
+    width: fit-content;
+    border-radius: 5px;
+    margin-bottom: -29px;
+    padding: 0px 4px 0px 4px;
+    margin-top: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    color: grey;
+  }
+
+  .socialPostloadMoreBtn:hover {
+    border: solid 1px black;
+    width: fit-content;
+    border-radius: 5px;
+    margin-bottom: -29px;
+    padding: 0px 4px 0px 4px;
+    margin-top: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    color: black;
+  }

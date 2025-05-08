@@ -7,7 +7,6 @@ import { saveIPConfig } from './service';
 import { IPSchema } from './validation';
 import axios from 'axios';
 
-
 export default class IPConfigForm extends Component {
     constructor(props) {
         super(props)

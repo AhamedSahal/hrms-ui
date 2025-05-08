@@ -10,7 +10,6 @@ import ShiftDropdown from "../../ModuleSetup/Dropdown/ShiftDropdown";
 import { getRepeatByRoster, saveRoster } from "./service";
 import { getTimeProps } from "antd/lib/date-picker/generatePicker";
 
-
 export default class RosterForm extends Component {
   constructor(props) {
     super(props);

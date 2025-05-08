@@ -6,7 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { updateStatus,updateBetifitListAction } from './service';
 
-
 export default class BenefitApprovalAction extends Component {
     constructor(props) {
         super(props)

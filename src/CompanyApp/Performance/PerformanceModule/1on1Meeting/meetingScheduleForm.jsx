@@ -8,7 +8,6 @@ import { createOneOnOneScheduleMeeting } from './service';
 import { oneOnOneSchema } from './Validation';
 import { getPermission } from '../../../../utility';
 
-
 export default class MeetingScheduleForm extends Component {
     constructor(props) {
         super(props)

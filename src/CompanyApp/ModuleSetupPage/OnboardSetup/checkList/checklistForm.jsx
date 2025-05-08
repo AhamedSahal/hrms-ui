@@ -12,10 +12,11 @@ export default class OnboardMSchecklistForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            applicable: '',
+            applicable: this.props?.checklist?.assign || '',
             jobtitle: [],
             department: [],
             branches: [],
+            applicableFor: '',
             checklist: this.props.checklist || {
                 id: 0,
                 name: "",
@@ -32,17 +33,16 @@ export default class OnboardMSchecklistForm extends Component {
             if (res.status === "OK") {
                 this.setState({
                     branches: res.data,
-                }, () => {
-                    if (this.props.taskData?.branches) {
-                        const brancheData = res.data.filter(br => this.props.taskData.branches.includes(br.id));
-                        this.setState(prevState => ({
-                            task: {
-                                ...prevState.task,
-                                branches: brancheData
-                            }
-                        }));
+                }
+                , () => {
+                    if (this.props.checklist?.branches != null ) {
+                        const brancheData = res.data.filter(br => this.props.checklist.branches.split(',').map(Number).includes(br.id));
+                        let {checklist } = this.state;
+                        checklist.branches = brancheData
+                        this.setState({checklist});
                     }
-                });
+                }
+            );
             }
         });
         getDepartmentLists().then(res => {
@@ -50,14 +50,12 @@ export default class OnboardMSchecklistForm extends Component {
                 this.setState({
                     department: res.data,
                 }, () => {
-                    if (this.props.taskData?.departments) {
-                        const departmentData = res.data.filter(dept => this.props.taskData.departments.includes(dept.id));
-                        this.setState(prevState => ({
-                            task: {
-                                ...prevState.task,
-                                departments: departmentData
-                            }
-                        }));
+                    if (this.props.checklist?.departments != null) {
+                        const departmentData = res.data.filter(dept => this.props.checklist.departments.split(',').map(Number).includes(dept.id));
+                        let {checklist } = this.state;
+                        checklist.departments = departmentData
+                        this.setState({checklist});
+                       
                     }
                 });
             }
@@ -67,6 +65,14 @@ export default class OnboardMSchecklistForm extends Component {
             if (res.status == "OK") {
                 this.setState({
                     jobtitle: res.data,
+                }, () => {
+                    if (this.props.checklist?.jobtitle != null) {
+                        const jobtitleData = res.data.filter(dept => this.props.checklist.jobtitle.split(',').map(Number).includes(dept.id));
+                        let {checklist } = this.state;
+                        checklist.jobtitle = jobtitleData
+                        this.setState({checklist});
+
+                    }
                 })
             }
         })
@@ -85,27 +91,37 @@ export default class OnboardMSchecklistForm extends Component {
             active: data.active,
             applicableId: data.assign,
         };
-        if (data.departments && data.departments.length > 0) {
-            checklist.departments = data.departments.map(dept => dept.id);
+        checklist.applicableFor = 'EveryOne'
+        if (data.departments && data.departments.length > 0 && data.assign == 1) {
+            let arr = data.departments.map(dept => dept.id);
+            let arrname = data.departments.map(dept => dept.name);
+            checklist.departments =  arr.join(", ");
+            checklist.applicableFor = arrname.join(", ");
         }
-        if (data.branches && data.branches.length > 0) {
-            checklist.branches = data.branches.map(brnch => brnch.id);
+        if (data.branches && data.branches.length > 0 && data.assign == 2) {
+            let arr = data.branches.map(brnch => brnch.id);
+            let arrname = data.branches.map(brnch => brnch.name);
+            checklist.branches =  arr.join(", ");
+            checklist.applicableFor = arrname.join(", ");
         }
-        if (data.jobtitle && data.jobtitle.length > 0) {
-            checklist.jobtitle = data.jobtitle.map(job => job.id);
+        if (data.jobtitle && data.jobtitle.length > 0 && data.assign == 3) {
+            let arr = data.jobtitle.map(job => job.id);
+            let arrname = data.jobtitle.map(job => job.name);
+            checklist.jobtitle =  arr.join(", ");
+            checklist.applicableFor = arrname.join(", ");
         }
-        // saveMSChecklist(checklist).then(res => {
-        //     if (res.status == "OK") {
-        //         toast.success(res.message);
-        //         this.props.updateList(res.data);
-        //     } else {
-        //         toast.error(res.message);
-        //     }
-        //     action.setSubmitting(false)
-        // }).catch(err => {
-        //     toast.error("Error while saving Checklist");
-        //     action.setSubmitting(false);
-        // })
+        saveMSChecklist(checklist).then(res => {
+            if (res.status == "OK") {
+                toast.success(res.message);
+                this.props.updateList(res.data);
+            } else {
+                toast.error(res.message);
+            }
+            action.setSubmitting(false)
+        }).catch(err => {
+            toast.error("Error while saving Checklist");
+            action.setSubmitting(false);
+        })
     }
     render() {
         const { applicable } = this.state;

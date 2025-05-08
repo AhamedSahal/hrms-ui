@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveCountry } from './service';
 import { CountrySchema } from './validation';
 
-
 export default class CountryForm extends Component {
     constructor(props) {
         super(props)

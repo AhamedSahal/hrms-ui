@@ -5,7 +5,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { FormGroup } from "reactstrap";
 import { saveTalentCandidateReview } from "./service";
 
-
 const data =
     [
         {

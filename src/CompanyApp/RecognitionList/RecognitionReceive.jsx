@@ -11,7 +11,6 @@ import { CONSTANT } from '../../constant';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
 
 
-
 export default class RecognitionReceive extends Component {
     constructor(props) {
         super(props)

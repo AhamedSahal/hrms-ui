@@ -12,7 +12,6 @@ import { Accordion, Card } from 'react-bootstrap';
 import HtmlMceEditor from '../../../HtmlMceEditor';
 
 
-
 export default class SurveyForm extends Component {
     constructor(props) {
         super(props);

@@ -9,7 +9,6 @@ import EmployeeDropdown from '../../ModuleSetup/Dropdown/EmployeeDropdown';
 import { saveTimeinlieu } from './service';
 import { TimeInLieuSchema } from './validation';
 
-
 const { Header, Body, Footer, Dialog } = Modal;
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 export default class TimeInLieuForm extends Component {

@@ -12,22 +12,25 @@ import AssetViewer from './view';
 import EmployeeListColumn from '../Employee/employeeListColumn';
 import AssetAction from './AssetAction';
 import AssetHistory from './AssetHistory';
+import AssetAcknowledgeForm from './AssetAcknowledgeForm';
 import AssetActive from './AssetActive';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
-import { getReadableDate, getCustomizedDate, getTitle, getUserType, verifyViewPermission } from '../../utility';
+import { getReadableDate, getCustomizedDate, getTitle, getUserType, verifyViewPermission, getEmployeeId, verifyEditPermission } from '../../utility';
 import { getAssetList, updateStatus, getEmployeeList } from './service';
 import TableDropDown from '../../MainPage/tableDropDown';
 const { Header, Body, Footer, Dialog } = Modal;
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 const isEmployee = getUserType() == 'EMPLOYEE';
+const loggedInUserId = getEmployeeId();
 export default class Assets extends Component {
   constructor(props) {
     super(props);
-
+    this.assetRef = createRef();
     this.state = {
       Assets: props.Assets || 0,
       data: [],
       empdata: [],
+      employeeId:props.employeeId || 0,
       q: "",
       page: 0,
       size: 10,
@@ -37,19 +40,31 @@ export default class Assets extends Component {
       totalRecords: 0,
       currentPage: 1,
       showForm: false,
-      self: isCompanyAdmin ? 0 : 1,
+      buttonState: true,
+      self: (isCompanyAdmin && (props.employeeId == undefined || 0)) ? 0 : 1,
+      empId:(props.employeeId == undefined || 0)? 0: props.employeeId,
+      AssetAcknowledge:[],
+      showAssetAcknowledge: false,
+      AssetAcknowledgeStatusId:1,
       Team: 0,
-      showFilter: false
+      showFilter: false,
+      
     };
   }
   componentDidMount() {
+   
     this.fetchList();
     this.getEmployeefetchList();
   }
+
   fetchList = () => {
+
+  
     {
-      verifyViewPermission("Manage Assets") && getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort, 1, this.state.self, 0).then(res => {
+     
+    { verifyViewPermission("Manage Assets") && getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.AssetAcknowledgeStatusId, this.state.self, 0, this.state.empId).then(res => {
         if (res.status == "OK") {
+          
           this.setState({
             data: res.data.list,
             totalPages: res.data.totalPages,
@@ -59,10 +74,29 @@ export default class Assets extends Component {
           })
         }
       })
-    }
+    }}
   }
+
+  handleButtonClick = () => {
+    this.setState((prevState) => ({
+      buttonState: !prevState.buttonState,
+  //    preferredMethod: prevState.buttonState ? 'Self' : 'Team'
+    }));
+  };
+
+  updateSelf = () => {
+
+    this.setState({
+      self: this.state.self == 1 ? 0 : 1
+    }, () => {
+      this.fetchList();
+    })
+  }
+
+
   getTeamList = () => {
-    getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort, 1, this.state.self, 1).then(res => {
+ 
+    { verifyViewPermission("Manage Assets") &&  getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort, 1, this.state.self, 1).then(res => {
       if (res.status == "OK") {
         this.setState({
           data: res.data.list,
@@ -72,11 +106,11 @@ export default class Assets extends Component {
           Team: this.state.Team == 1 ? 0 : 1
         })
       }
-    })
+    })}
   }
   getEmployeefetchList = () => {
     {
-      !isCompanyAdmin && getEmployeeList().then(res => {
+      !isCompanyAdmin && verifyViewPermission("Manage Assets") && getEmployeeList().then(res => {
         if (res.status == "OK") {
           this.setState({
             empdata: res.data
@@ -94,7 +128,9 @@ export default class Assets extends Component {
       this.fetchList();
     })
   }
+  
   updateList = (Assets) => {
+    
     let { data } = this.state;
     let index = data.findIndex(d => d.id == Assets.id);
     if (index > -1)
@@ -108,6 +144,7 @@ export default class Assets extends Component {
         this.hideForm();
         this.hideAssetAction();
         this.hideAssetActive();
+        this.hideAssetAcknowledgeForm();
       });
   }
   pageSizeChange = (currentPage, pageSize) => {
@@ -146,20 +183,22 @@ export default class Assets extends Component {
       showAssetView: false,
       showAssetHistory: false,
       showAssetActive: false,
+      showAssetAcknowledgeForm: false,
       AssetsHistory: undefined
     })
   }
-  hideAssetActive = () => {
+
+  hideAssetAcknowledgeForm =()=>{
     this.setState({
-      showAssetAction: false,
-      showAssetView: false,
-      showAssetHistory: false,
-      showAssetActive: false,
-      AssetsActive: undefined
+    
+      showAssetAcknowledgeForm: false,
+      AssetAcknowledge: undefined
     })
   }
+
+  
   updateStatus = (id, status) => {
-    updateStatus(id, status).then(res => {
+    verifyEditPermission("Manage Assets") && updateStatus(id, status).then(res => {
       if (res.status == "OK") {
         toast.success(res.message);
 
@@ -171,8 +210,16 @@ export default class Assets extends Component {
       toast.error("Error while updating status");
     })
   }
+
+  handleDownload = () => {
+    if (this.assetRef.current) {
+
+      this.assetRef.current.generatePDF(); 
+    }
+  };
+
   render() {
-    const { data, empdata, totalPages, totalRecords, currentPage, size, AssetView, AssetsAction, AssetsHistory, AssetsActive, showForm } = this.state
+    const { data, empdata, totalPages,  buttonState,totalRecords, currentPage, size, AssetView, AssetsAction, AssetsHistory, AssetsActive, AssetAcknowledge, showForm } = this.state
     let startRange = ((currentPage - 1) * size) + 1;
     let endRange = ((currentPage) * (size + 1)) - 1;
     if (endRange > totalRecords) {
@@ -199,7 +246,9 @@ export default class Assets extends Component {
           </div>
         );
       }
-      if (text.isStatus == "APPROVED") {
+     
+      
+      if (text.isStatus == "APPROVED" ) {
         items.push(
           <div ><a className="muiMenu_item" href="#" onClick={() => {
             this.setState({ AssetsAction: record, showAssetAction: true, showForm: false })
@@ -208,16 +257,15 @@ export default class Assets extends Component {
           </div>
         );
       }
-      if (text.isStatus == "REJECTED") {
-        items.push(<div >  <a className="muiMenu_item" href="#"
-          onClick={() => {
-            this.setState({ AssetsActive: record, showAssetActive: true, showForm: false })
-          }} >
-          <i className="las la-check-double m-r-5" /><b>Allocate</b></a>
-        </div>
+      if (text.isStatus == "APPROVED" && this.props.AcknowledgeStatus) {
+        items.push( 
+          <div ><a className="muiMenu_item" href="#" onClick={() =>
+          this.setState({ AssetAcknowledge: record, showAssetAcknowledgeForm: true, showForm: false })
+           }> 
+                  <i className="fa fa-download m-r-5" /><b> Download Acknowledge</b></a>
+           </div>
         );
       }
-
       return items;
     };
 
@@ -244,157 +292,10 @@ export default class Assets extends Component {
       },
       {
         title: 'Serial Number',
-
         width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.serialno != "" ? text.serialno : "-"}</span>
-          </>
-        }
+        render: (text, record) => <span>{text && text.serialno  != "" ? text.serialno  : "-"}</span>
       },
-      {
-        title: 'Brand Name',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.brandName != "" ? text.brandName : "-"}</span>
-          </>
-        }
-      },
-      {
-        title: 'Model Number',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.modelNo != "" ? text.modelNo : "-"}</span>
-          </>
-        }
-      },
-      {
-        title: 'RAM',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.ram != "" ? text.ram : "-"}</span>
-          </>
-        }
-      },
-      {
-        title: 'Storage Capacity',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.storagecapacity != "" ? text.storagecapacity : "-"}</span>
-          </>
-        }
-      },
-      {
-        title: 'IMEI Number',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.imeiNo != "" ? text.imeiNo : "-"}</span>
-          </>
-        }
-      },
-      {
-        title: 'IP Address',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.ipAddress != "" ? text.ipAddress : "-"}</span>
-          </>
-        }
-      },
-      {
-        title: 'Previous State',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.prevState != "" ? text.prevState : "-"}</span>
-          </>
-        }
-      },
-      {
-        title: 'Tag',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.tag != "" ? text.tag : "-"}</span>
-          </>
-        }
-      },
-      {
-        title: 'Current Location',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.currentlocation != "" ? text.currentlocation : "-"}</span>
-          </>
-        }
-      },
-      {
-        title: 'Purchased From',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span>{text && text.purchasefrom != "" ? text.purchasefrom : "-"}</span>
-          </>
-        }
-      },
-      {
-        title: 'Purchased Date',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <div>{record.purchaseDate != null ? getReadableDate(record.purchaseDate) : "-"}</div>
-          </>
-        }
-      },
-      {
-        title: 'Warranty Start Date',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <div>{record.wstartDate != null ? getReadableDate(record.wstartDate) : "-"}</div>
-          </>
-        }
-      },
-      {
-        title: 'Warranty End Date',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <div>{record.wendDate != null ? getReadableDate(record.wendDate) : "-"}</div>
-          </>
-        }
-      },
-      {
-        title: 'Status',
-
-        width: 50,
-        render: (text, record) => {
-          return <>
-            <span className={text.isStatus == "APPROVED" ? "badge bg-inverse-success " : "badge bg-inverse-danger"}>
-              {text.isStatus == "APPROVED" ? <i className="pr-2 fa fa-lock text-success"></i> : <i className="pr-2 fa fa-check text-danger"></i>}{
-                text.isStatus == "APPROVED" ? 'Allocated' : 'Available'
-              }</span>
-          </>
-        }
-      },
+     
       {
         title: 'Assigned On',
 
@@ -414,6 +315,7 @@ export default class Assets extends Component {
             id={text.employee?.id} name={text.employee?.name}></EmployeeListColumn> : "-"}</>
         }
       },
+     
       {
         title: 'Previous Owner',
 
@@ -423,36 +325,67 @@ export default class Assets extends Component {
             id={text.pEmployee?.id} name={text.pEmployee?.name}></EmployeeListColumn> : "-"}</>
         }
       },
-      {
+
+      
+
+      ...(this.props.employeeId == undefined ? [{
         title: 'Action',
         width: 50,
         render: (text, record) => (
           <div className="">
             <TableDropDown menuItems={menuItems(text, record)} />
           </div>
-        ),
-      },
+        )
+      }] : []),
+
     ]
+
     return (
       <>
         <div className="content container-fluid">
 
           <div id='page-head' >
             <div className="float-right col-md-5 btn-group btn-group-sm" style={{ paddingRight: "30px" }}>
+               {/* {!isCompanyAdmin && <>
+                {empdata == 1 && <><div className="toggles-btn-view" id="button-container" onClick={e => {
+                                this.updateSelf()
+                                this.handleButtonClick()
+                              }}>
 
-              {!isCompanyAdmin && <>
-                {empdata == 1 && <><div class="btn-group btn-cust-group" role="group" aria-label="Basic example">
-                  {<button type="button" className={this.state.self == 1 ? 'btn btn-sm btn-success btn-selected self-btn' : 'btn btn-sm btn-secondary'} onClick={e => {
-                    this.fetchList();
-                  }} > Self </button>}
+                  <div id="my-button" className="toggle-button-element" style={{ transform: buttonState ? 'translateX(0px)' : 'translateX(80px)' }}  onClick={e => {
+                    if(buttonState){
+                      this.getTeamList();
+                    }else{
+                      this.fetchList();
+                    }
+                    
+                  }}>
+                                  <p className='m-0 self-btn'>{buttonState ? 'Self' : 'Team'}</p>
+                                </div>
+                                <p className='m-0 team-btn' style={{ transform: buttonState ? 'translateX(0px)' : 'translateX(-80px)' }}>{buttonState ? 'Team' : 'Self'}</p>       
 
-                  <button type="button" className={this.state.Team == 1 ? 'btn btn-sm btn-primary btn-selected' : 'btn btn-sm btn-secondary'} onClick={e => {
-                    this.getTeamList();
-                  }} > Team </button>
-                </div></>}
-              </>}
+              </div></>}
+               </>} */}
 
-              {isCompanyAdmin && !showForm && <>
+{/* 
+               {
+                (this.props.employeeId !== undefined) &&
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ fontWeight: 'bold', fontSize: '18px' }}>Manage Asset</span>
+                  <i
+                    className="fa fa-arrow-right text-success cursor-pointer"
+                    style={{ fontSize: '30px', marginLeft: '10px' }}
+                    onClick={() => {
+                      window.location.href = `/app/company-app/Assets`;
+                    }}
+                  ></i>
+                </div>
+              } */}
+
+             
+                            
+
+              {isCompanyAdmin &&  (this.props.employeeId == undefined ) && !showForm && <>
                 <button className="apply-button btn-primary mr-2" onClick={() => {
                   this.setState({
                     showForm: true
@@ -461,7 +394,7 @@ export default class Assets extends Component {
                   <i className="fa fa-plus" /> New Asset</button></>
               }
 
-              {verifyViewPermission("Manage Assets") && <BsSliders className='filter-btn' size={30} onClick={() => this.setState({ showFilter: !this.state.showFilter })} />}
+              {verifyViewPermission("Manage Assets") && this.props.employeeId == undefined &&  <BsSliders className='filter-btn' size={30} onClick={() => this.setState({ showFilter: !this.state.showFilter })} />}
             </div>
           </div>
           {this.state.showFilter && <div className='mt-4 filterCard p-3'>
@@ -483,16 +416,20 @@ export default class Assets extends Component {
               </div>
             </div>
           </div>}
+
+              
+           
           {/* /Page Header */}
-          {verifyViewPermission("Manage Assets") && <div className='Table-card'>
+          {verifyViewPermission("Manage Assets") && 
+            <div className='Table-card'>
             <div className="tableCard-body">
-              <div className=" p-12 m-0">
+             { (this.props.employeeId == undefined) && <div className=" p-12 m-0">
                 <div className="row " >
                   <div className="mt-3 col">
                     <h3 className="page-titleText">Assets</h3>
                   </div>
                 </div>
-              </div>
+              </div> }
               <div className="tableCard-container row">
                 <div className="col-md-12">
                   <div className="table-responsive">
@@ -514,20 +451,13 @@ export default class Assets extends Component {
                 </div>
               </div>
             </div>
-          </div>}
-          {!verifyViewPermission("Manage Assets") && <AccessDenied></AccessDenied>}
+          </div> }
+           {!verifyViewPermission("Manage Assets") && <AccessDenied></AccessDenied>} 
         </div>
-        <Modal enforceFocus={false} size={"xl"} show={this.state.showForm} onHide={this.hideForm} >
-          <Header closeButton>
-            <h5 className="modal-title">New Asset</h5>
-          </Header>
-          <Body>
-            <AssetForm closeForm={this.closeForm}>
-            </AssetForm>
-          </Body>
 
 
-        </Modal>
+       
+
         <Modal enforceFocus={false} size={"xl"} show={this.state.showForm} onHide={this.hideForm} >
           <Header closeButton>
             <h5 className="modal-title">New Asset</h5>
@@ -553,7 +483,7 @@ export default class Assets extends Component {
         </Modal>
         <Modal enforceFocus={false} size={"md"} show={this.state.showAssetAction} onHide={this.hideAssetAction} >
           <Header closeButton>
-            <h5 className="modal-title">Asset Deactivation</h5>
+            <h5 className="modal-title">Asset Return</h5>
           </Header>
           <Body>
             <AssetAction updateList={this.updateList} AssetsAction={this.state.AssetsAction}>
@@ -570,16 +500,50 @@ export default class Assets extends Component {
             </AssetHistory>
           </Body>
         </Modal>
-        <Modal enforceFocus={false} size={"md"} show={this.state.showAssetActive} onHide={this.hideAssetActive} >
+       
+        <Modal enforceFocus={false} size={"xl"} show={this.state.showAssetAcknowledgeForm} onHide={this.hideAssetAcknowledgeForm} >
           <Header closeButton>
-            <h5 className="modal-title">Asset Activation</h5>
+            <h5 className="modal-title">Asset Acknowledge Receipt</h5>
           </Header>
-          <Body>
-            <AssetActive updateList={this.updateList} AssetsActive={this.state.AssetsActive}>
-            </AssetActive>
+          <Body style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+            <AssetAcknowledgeForm updateList={this.updateList} AssetAcknowledge={AssetAcknowledge}>
+            </AssetAcknowledgeForm>
           </Body>
         </Modal>
+
+
+             
       </>
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

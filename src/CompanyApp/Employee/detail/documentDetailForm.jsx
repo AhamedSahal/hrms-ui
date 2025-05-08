@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { updateDocumentInformation } from './service';
-
 export default class DocumentDetailEmployeeForm extends Component {
     constructor(props) {
         super(props)

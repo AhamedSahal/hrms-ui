@@ -166,7 +166,7 @@ save = async (data, action) => {
     let { RecruitmentSetting } = this.state;
     return (
       <div style={{ padding: "15px", background: "white" }}>
-        <h3><BsGear size={30} style={{color: "#1DA8D5"}} /> Set Up Your Recruitments Options.</h3>
+        <h3 style={{wordSpacing: "-4px"}}><BsGear size={30} style={{color: "#1DA8D5"}} /> Set Up Your Recruitments Options.</h3>
         <br />
         <Formik
           enableReinitialize={true}

@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveDivision } from './service';
 import { DivisionSchema } from './validation'; 
 
-
 export default class DivisionForm extends Component {
     constructor(props) {
         super(props)

@@ -8,7 +8,6 @@ import { PayVarianceSchema } from './validation';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 
-
 export default class PayVarianceForm extends Component {
     constructor(props) {
         super(props)

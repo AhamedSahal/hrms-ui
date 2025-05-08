@@ -8,7 +8,7 @@ import { BsDropbox } from "react-icons/bs";
 import { getReportAccessByCompanyId } from '../../../AdminApp/Company/service';
 
 const { Header, Body, Footer, Dialog } = Modal;
-export default class WorkForceplaneReportLanding extends Component {
+export default class workForceplaneReportLanding extends Component {
     constructor(props) {
       super(props);
       this.state = {

@@ -6,9 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { updateRegularizeData } from './service';
 import { convertToUserTimeZone, toDateTime, getReadableDate, convertToUTC, toLocalDate, getCustomizedDate } from '../../../utility';
-import { localeData } from 'moment/moment';
-//import { LeaveSchema } from './validation';
 
+//import { LeaveSchema } from './validation';
 
 export default class RegularizeAttendance extends Component {
     constructor(props) {

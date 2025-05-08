@@ -12,9 +12,14 @@ export default class OnboardChecklistModule extends Component {
         super(props);
         this.state = {
             activePage: 'checklist',
+            employeeInfo: []
         };
     }
 
+    handleMenuAndEmployeeId = (menu,employeeInfo) => {
+        this.setState({ employeeInfo: employeeInfo });
+        this.setState({ activePage: menu });
+    }
 
     handleMenuClick = (menu) => {
         this.setState({ activePage: menu });
@@ -48,8 +53,8 @@ export default class OnboardChecklistModule extends Component {
                                 </div>
                             </div>
                             <div id="list" className="pro-overview mt-3 tab-pane fade show active ">
-                                {activePage === 'checklist' && <OnboardList handlePage={this.handleMenuClick}></OnboardList>}
-                                {activePage === 'tasklist' && <OnboardTasklist handlePage={this.handleMenuClick}></OnboardTasklist>}
+                                {activePage === 'checklist' && <OnboardList handlePage={this.handleMenuAndEmployeeId}></OnboardList>}
+                                {activePage === 'tasklist' && <OnboardTasklist handlePage={this.handleMenuClick} employeeInfo={this.state.employeeInfo}></OnboardTasklist>}
                             </div>
                         </div>
                     </div>

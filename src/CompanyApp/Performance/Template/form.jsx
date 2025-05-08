@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { savePerformanceTemplate } from './service';
 
-
 export default class PerformanceTemplateForm extends Component {
     constructor(props) {
         super(props)

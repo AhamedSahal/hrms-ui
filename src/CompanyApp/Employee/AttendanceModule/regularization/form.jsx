@@ -8,7 +8,6 @@ import { updateRegularizeData } from './service';
 import { convertToUserTimeZone, toDateTime, getReadableDate, convertToUTC } from '../../../../utility';
 //import { LeaveSchema } from './validation';
 
-
 export default class RegularizeAttendance extends Component {
     constructor(props) {
         super(props)

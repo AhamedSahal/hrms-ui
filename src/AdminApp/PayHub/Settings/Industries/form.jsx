@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { industrySchema } from './validation';
 import { saveIndustry } from './service';
 
-
 export default class IndustryForm extends Component {
     constructor(props) {
         super(props)

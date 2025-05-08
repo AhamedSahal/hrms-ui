@@ -7,7 +7,6 @@ import ObjectiveGroupDropdown from '../../Dropdown/ObjectiveGroupDropdown';
 import { saveObjective } from './service';
 import { ObjectiveSchema } from './validation';
 
-
 export default class ObjectiveForm extends Component {
     constructor(props) {
         super(props)

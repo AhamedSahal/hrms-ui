@@ -12,7 +12,6 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
 import { BsFillInfoCircleFill } from "react-icons/bs";
 
-
 const LightTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
@@ -261,7 +260,7 @@ export default class Shifts extends Component {
                                                 </>
                                             </span>
                                         </label> &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <Field type="number" name="totalhoursfulldaypresentinmins" placeholder="Enter Total Mins" className="form-control"></Field>
+                                        <Field type="number" name="totalhoursfulldaypresentinmins" placeholder="Enter Total Mins" min="0" max="60" className="form-control"></Field>
                                         <ErrorMessage name="totalhoursfulldaypresentinmins">
                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                         </ErrorMessage>
@@ -281,7 +280,7 @@ export default class Shifts extends Component {
                                                 </>
                                             </span>
                                         </label> &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <Field type="number" name="totalfulldayflexiblehours" placeholder="Enter Flexible Mins" className="form-control"></Field>
+                                        <Field type="number" name="totalfulldayflexiblehours" placeholder="Enter Flexible Mins" min="0" max="60" className="form-control"></Field>
                                         <ErrorMessage name="totalfulldayflexiblehours">
                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                         </ErrorMessage>
@@ -321,7 +320,7 @@ export default class Shifts extends Component {
                                                 </>
                                             </span>
                                         </label> &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <Field type="number" name="totalhourshalfdaypresentinmins" placeholder="Enter Total Mins" className="form-control"></Field>
+                                        <Field type="number" name="totalhourshalfdaypresentinmins" placeholder="Enter Total Mins" min="0" max="60" className="form-control"></Field>
                                         <ErrorMessage name="totalhourshalfdaypresentinmins">
                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                         </ErrorMessage>
@@ -341,7 +340,7 @@ export default class Shifts extends Component {
                                                 </>
                                             </span>
                                         </label> &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <Field type="number" name="totalhalfdayflexiblehours" placeholder="Enter Flexible Mins" className="form-control"></Field>
+                                        <Field type="number" name="totalhalfdayflexiblehours" placeholder="Enter Flexible Mins" min="0" max="60" className="form-control"></Field>
                                         <ErrorMessage name="totalhalfdayflexiblehours">
                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                         </ErrorMessage>

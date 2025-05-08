@@ -7,7 +7,6 @@ import { saveDesignation } from './service';
 import { DesignationSchema } from './validation';
 import DepartmentDropdown from '../Dropdown/DepartmentDropdown';
 
-
 export default class DesignationForm extends Component {
     constructor(props) {
         super(props)

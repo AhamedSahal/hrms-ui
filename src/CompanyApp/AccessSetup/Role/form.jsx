@@ -7,7 +7,6 @@ import { saveRole } from './service';
 import { RoleSchema } from './validation';
 import RoleDropdown from '../../ModuleSetup/Dropdown/RoleDropdown';
 
-
 export default class RoleForm extends Component {
     constructor(props) {
         super(props)
@@ -46,7 +45,7 @@ export default class RoleForm extends Component {
                 toast.error(res.message);
             }
             action.setSubmitting(false)
-        }).catch(() => {
+        }).catch(err => {
             toast.error("Error while saving role");
 
             action.setSubmitting(false);
@@ -64,7 +63,15 @@ export default class RoleForm extends Component {
                     validationSchema={RoleSchema}
                 >
                     {({
+                        values,
+                        errors,
+                        touched,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        isSubmitting,
                         setFieldValue,
+                        setSubmitting
                         /* and other goodies */
                     }) => (
                         <Form>
@@ -79,7 +86,7 @@ export default class RoleForm extends Component {
                             </FormGroup>
                             {this.state.role.id != 0 || this.state.role.id == '' &&<>
                             <FormGroup>
-                                <div type="cloneRole" name="active" onClick={() => {
+                                <div type="cloneRole" name="active" onClick={e => {
                                     let { role } = this.state;
                                     role.cloneRole = !role.cloneRole;
                                     setFieldValue("cloneRole", role.cloneRole);
@@ -96,7 +103,7 @@ export default class RoleForm extends Component {
                                 <label>Role
                                     <span style={{ color: "red" }}>*</span>
                                 </label>
-                                <Field name="roleId" render={() => {
+                                <Field name="roleId" render={field => {
                                     return <RoleDropdown required defaultValue={this.state.role.roleId?.id} onChange={e => {
                                         setFieldValue("roleId", e.target.value);
                                     }}></RoleDropdown>

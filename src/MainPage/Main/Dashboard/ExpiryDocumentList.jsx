@@ -178,7 +178,7 @@ export default class ExpiryDocumentList extends Component {
     
     
     render() {
-        const { filterList } = this.state;
+        const { documentList, filterList, upComingDocumentExpiry } = this.state;
 
         return (
             <>

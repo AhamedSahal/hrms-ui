@@ -8,7 +8,6 @@ import { savePerformanceCycle } from './service';
 import { toast } from "react-toastify";
 
 
-
 const repetitionValidationSchema = Yup.object().shape({
     frequencyType: Yup.string().when('active', {
         is: true,

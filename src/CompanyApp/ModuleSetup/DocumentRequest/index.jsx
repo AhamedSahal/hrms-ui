@@ -14,6 +14,7 @@ import TableDropDown from "../../../MainPage/tableDropDown";
 import AccessDenied from "../../../MainPage/Main/Dashboard/AccessDenied";
 
 const { Header, Body, Footer, Dialog } = Modal;
+let isCompanyAdmin = verifyOrgLevelEditPermission("Manage Document Request");
 
 export default class DocumentRequest extends Component {
   constructor(props) {
@@ -122,12 +123,14 @@ export default class DocumentRequest extends Component {
   }
   download = (id, fileName) => {
     downloadDocument(id).then(res => {
+      if(res){
       const url = window.URL.createObjectURL(new Blob([res]));
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', fileName);
       document.body.appendChild(link);
       link.click();
+      }
     })
   }
   getStyle(text) {
@@ -149,21 +152,24 @@ export default class DocumentRequest extends Component {
     return 'black';
   }
   render() {
+    const { location } = this.props;
     const {
       data,
+      totalPages,
       totalRecords,
       currentPage,
       size,
       documentrequest,
+      showDocumentRequest,
     } = this.state;
     let startRange = (currentPage - 1) * size + 1;
     let endRange = currentPage * (size + 1) - 1;
     if (endRange > totalRecords) {
       endRange = totalRecords;
     }
-    const menuItems = (text) => {
+    const menuItems = (text, record) => {
       const items = [];
-      if (isEmployee() && text.status === "REQUESTED") {
+      if (isEmployee() && text.employee.id === getEmployeeId() && text.status === "REQUESTED") {
         items.push(<div> <Anchor className="muiMenu_item"
           onClick={() => { this.setState({ documentrequest: text, showForm: true }); }} >
           <i className="fa fa-pencil m-r-5"></i> Edit
@@ -171,6 +177,7 @@ export default class DocumentRequest extends Component {
         </div>
         );
       }
+      if(text.status === 'REQUESTED' && text.employee.id === getEmployeeId())
       items.push(
         <div><Anchor className="muiMenu_item"
           onClick={() => { this.delete(text); }} > <i className="fa fa-trash-o m-r-5"></i> Cancel
@@ -178,13 +185,13 @@ export default class DocumentRequest extends Component {
       );
       if (verifyOrgLevelEditPermission("Manage Document Request")) {
         items.push(<div>
-          <Link className="muiMenu_item" to="/app/company-app/employee-document-request" state={text}>
+          <Link className="muiMenu_item" to={{pathname : `employee-document-request`, state : text}}>
             <i className="fa fa-eye m-r-5"></i> View
           </Link>
         </div>
         );
       }
-      if (text.status === "APPROVED") {
+      if (text.status === "APPROVED" && text.allowedToDownload && (!text.expired|| text.numberOfDaysAllowedToDownload === 0)) {
         items.push(<div>
           <Anchor className="muiMenu_item" onClick={() => {
             this.download(text.id, `${text.template?.name}-${text.employee?.name}.pdf`);
@@ -203,7 +210,7 @@ export default class DocumentRequest extends Component {
       columns.push({
         title: "Employee Name",
         sorter: true,
-        render: (text) => {
+        render: (text, record) => {
           return <span>{text.employee.name}</span>
         }
       })
@@ -213,7 +220,7 @@ export default class DocumentRequest extends Component {
       {
         title: "Document Name",
         sorter: true,
-        render: (text) => {
+        render: (text, record) => {
           return <span>{text.template.name}</span>
         }
       },
@@ -226,7 +233,7 @@ export default class DocumentRequest extends Component {
         dataIndex: 'status',
         sorter: true,
 
-        render: (text) => {
+        render: (text, record) => {
            return <><div >{this.getStyle(text)}</div>
           </>
         }
@@ -295,7 +302,7 @@ export default class DocumentRequest extends Component {
                 <Table id='Table-style' className="table-striped "
                   pagination={{
                     total: totalRecords,
-                    showTotal: () => {
+                    showTotal: (total, range) => {
                       return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                     },
                     showSizeChanger: true, onShowSizeChange: this.pageSizeChange,
@@ -328,7 +335,7 @@ export default class DocumentRequest extends Component {
         >
           <Header closeButton>
             <h5 className="modal-title">
-              {this.state.documentrequest ? "Edit" : "Add"} DocumentRequest
+              {this.state.documentrequest ? "Edit " : "Add "} Document Request
             </h5>
           </Header>
           <Body>

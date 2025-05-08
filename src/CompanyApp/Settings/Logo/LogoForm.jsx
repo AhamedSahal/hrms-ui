@@ -8,7 +8,6 @@ import {  getFavIcon, getLogo, getPrimaryColor, getTitle, verifyOrgLevelViewPerm
 import { updateFavicon, updateLogo } from './service';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 
-
 export default class LogoForm extends Component {
     constructor(props) {
         super(props)

@@ -9,7 +9,12 @@ import BranchDropdown from '../../../ModuleSetup/Dropdown/BranchDropdown';
 import JobTitlesDropdown from '../../../ModuleSetup/Dropdown/JobTitlesDropdown';
 import { BsSliders } from 'react-icons/bs';
 import SuccessAlert from '../../../../MainPage/successToast';
+import checkimg from '../../../../assets/img/tickmarkimg.gif';
+import { formatDistanceToNow, parse } from "date-fns";
 import EmployeeProfilePhoto from '../../../Employee/widgetEmployeePhoto';
+import { FcHighPriority, FcLowPriority, FcMediumPriority } from 'react-icons/fc';
+import {  getOffboardChecklist } from './tasklist/service';
+
 
 
 const OffboardTask = [
@@ -101,8 +106,8 @@ export default class OffboardList extends Component {
     render() {
 
         const isAdmin = (verifyOrgLevelViewPermission("Offboard") || getUserType() == 'COMPANY_ADMIN');
-        const { totalRecords, currentPage, size } = this.state
-       
+        const { formData, screenCount, visiblePopover, subGoalsList, expandedRows, totalPages, totalRecords, currentPage, size, goalsView, goalsViewHistory, subGoalsData } = this.state
+        let startRange = ((currentPage - 1) * size) + 1;
         let endRange = ((currentPage) * (size + 1)) - 1;
         if (endRange > totalRecords) {
             endRange = totalRecords;

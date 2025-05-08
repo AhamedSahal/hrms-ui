@@ -35,18 +35,18 @@ class Objective extends Component {
     this.props.getObjectiveGroups();
   }
   fetchList = () => {
-    if(verifyOrgLevelViewPermission("Module Setup Performance")){
-    getObjectiveList(this.state.q, this.state.page, this.state.size, this.state.sort).then(res => {
+    if (verifyOrgLevelViewPermission("Module Setup Performance")) {
+      getObjectiveList(this.state.q, this.state.page, this.state.size, this.state.sort).then(res => {
 
-      if (res.status == "OK") {
-        this.setState({
-          data: res.data.list,
-          totalPages: res.data.totalPages,
-          totalRecords: res.data.totalRecords,
-          currentPage: res.data.currentPage + 1
-        })
-      }
-    })
+        if (res.status == "OK") {
+          this.setState({
+            data: res.data.list,
+            totalPages: res.data.totalPages,
+            totalRecords: res.data.totalRecords,
+            currentPage: res.data.currentPage + 1
+          })
+        }
+      })
     }
   }
   onTableDataChange = (d, filter, sorter) => {
@@ -127,9 +127,6 @@ class Objective extends Component {
       {
         title: 'Cluster',
         sorter: true,
-        render: (text, record) => {
-          return <span> {record.performanceObjectiveGroup.name}</span>;
-        }
       },
       {
         title: 'Action',
@@ -137,7 +134,7 @@ class Objective extends Component {
         className: "text-center",
         render: (text, record) => (
           <div className="dropdow">
-            {verifyOrgLevelEditPermission("Module Setup Performance") && <> <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            {verifyOrgLevelEditPermission("Module Setup Pension") && <> <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
               <i className="las la-bars"></i>
             </a>
               <div className="dropdown-menu dropdown-menu-right">
@@ -181,26 +178,26 @@ class Objective extends Component {
         <div className="row">
           <div className="col-md-12">
             <div className="mt-3 mb-3 table-responsive">
-            {verifyOrgLevelViewPermission("Module Setup Performance") &&
-              <Table id='Table-style' className="table-striped "
-                pagination={{
-                  total: totalRecords,
-                  showTotal: (total, range) => {
-                    return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
-                  },
-                  showSizeChanger: true, onShowSizeChange: this.pageSizeChange,
-                  itemRender: itemRender,
-                  pageSizeOptions: [10, 20, 50, 100],
-                  current: currentPage,
-                  defaultCurrent: 1,
-                }}
-                style={{ overflowX: 'auto' }}
-                columns={columns}
-                // bordered
-                dataSource={[...data]}
-                rowKey={record => record.id}
-                onChange={this.onTableDataChange}
-              />}
+              {verifyOrgLevelViewPermission("Module Setup Performance") &&
+                <Table id='Table-style' className="table-striped "
+                  pagination={{
+                    total: totalRecords,
+                    showTotal: (total, range) => {
+                      return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
+                    },
+                    showSizeChanger: true, onShowSizeChange: this.pageSizeChange,
+                    itemRender: itemRender,
+                    pageSizeOptions: [10, 20, 50, 100],
+                    current: currentPage,
+                    defaultCurrent: 1,
+                  }}
+                  style={{ overflowX: 'auto' }}
+                  columns={columns}
+                  // bordered
+                  dataSource={[...data]}
+                  rowKey={record => record.id}
+                  onChange={this.onTableDataChange}
+                />}
               {!verifyOrgLevelViewPermission("Module Setup Performance") && <AccessDenied></AccessDenied>}
             </div>
           </div>
@@ -211,35 +208,35 @@ class Objective extends Component {
 
 
 
-          <Modal enforceFocus={false} size={"md"} show={this.state.showForm} onHide={this.hideForm} >
+        <Modal enforceFocus={false} size={"md"} show={this.state.showForm} onHide={this.hideForm} >
 
 
-            <Header closeButton>
-              <h5 className="modal-title">{this.state.objective ? 'Edit' : 'Add'} Common Factors</h5>
+          <Header closeButton>
+            <h5 className="modal-title">{this.state.objective ? 'Edit' : 'Add'} Common Factors</h5>
 
-            </Header>
-            <Body>
-              <ObjectiveForm updateList={this.updateList} objective={this.state.objective}>
-              </ObjectiveForm>
-            </Body>
+          </Header>
+          <Body>
+            <ObjectiveForm updateList={this.updateList} objective={this.state.objective}>
+            </ObjectiveForm>
+          </Body>
 
 
-          </Modal>
-        </div>
-        );
+        </Modal>
+      </div>
+    );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-          objectives: state.dropdown.objectives
+    objectives: state.dropdown.objectives
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-          getObjectiveGroups: () => {
-          dispatch(DropdownService.getObjectiveGroups())
-        }
+    getObjectiveGroups: () => {
+      dispatch(DropdownService.getObjectiveGroups())
+    }
   }
 }
-        export default connect(mapStateToProps, mapDispatchToProps)(Objective);
+export default connect(mapStateToProps, mapDispatchToProps)(Objective);

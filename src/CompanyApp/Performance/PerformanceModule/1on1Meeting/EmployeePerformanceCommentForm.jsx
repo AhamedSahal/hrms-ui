@@ -7,7 +7,6 @@ import EmployeeDropdown from '../../../ModuleSetup/Dropdown/EmployeeDropdown';
 import { createOneOnOneEvaluvationForm } from './service';
 import { get1On1ViewList } from './service';
 
-
 export default class EmployeePerformanceCommentForm extends Component {
     constructor(props) {
         super(props)

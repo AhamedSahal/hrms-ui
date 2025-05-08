@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { updatePlan } from './service';
 import { PlanSchema } from './validation';
 
-
 export default class PlanForm extends Component {
     constructor(props) {
         super(props)

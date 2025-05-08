@@ -40,7 +40,8 @@ export default class OrgRegularization extends Component {
             currentPage: 1,
             showFilter: false,
             self: 0,
-            selected: []
+            selected: [],
+            status: ""
         };
 
     }
@@ -50,7 +51,7 @@ export default class OrgRegularization extends Component {
 
     fetchList = () => {
         if (verifyViewPermission("ATTENDANCE")) {
-            getRegularizationList(this.state.q, this.state.regularizedDate, this.state.page, this.state.size, this.state.sort, this.state.self, this.state.fromDate, this.state.toDate).then(res => {
+            getRegularizationList(this.state.q, this.state.regularizedDate, this.state.page, this.state.size, this.state.sort, this.state.self, this.state.fromDate, this.state.toDate,this.state.status).then(res => {
                 if (res.status == "OK") {
                     this.setState({
                         data: res.data.list,
@@ -118,7 +119,12 @@ export default class OrgRegularization extends Component {
                         label: 'Yes',
                         onClick: () => {
                             let selected = []
-                            
+                            let test = data.map((d) => {
+                                if (d.regularizationStatus == "REGULARIZED") {
+                                    selected.push(d.id)
+                                    return d.id;
+                                }
+                            });
 
                             this.updateStatus(selected, status);
                             this.setState({ selected: [] })
@@ -204,7 +210,7 @@ export default class OrgRegularization extends Component {
 
 
     render() {
-        const { data,  totalRecords, currentPage, size, selected } = this.state
+        const { data, totalPages, totalRecords, currentPage, size, selected } = this.state
         let startRange = ((currentPage - 1) * size) + 1;
         let endRange = ((currentPage) * (size + 1)) - 1;
         if (endRange > totalRecords) {
@@ -249,7 +255,7 @@ export default class OrgRegularization extends Component {
                 fixed: 'left',
                 hidden: true,
                 width: 250,
-                render: (text) => {
+                render: (text, record) => {
                     return <EmployeeListColumn
                         id={text.employee.id} name={text.employee.name} employeeId={text.employeeId}></EmployeeListColumn>
                 }
@@ -305,6 +311,7 @@ export default class OrgRegularization extends Component {
                 sorter: true,
                 width: 200,
                 className: "text-center",
+                className: 'pre-wrap',
                 render: (text, record) => {
                     return <div>{record.actualOutTimeBeforeRegularize != null ? convertToUserTimeZone(record.actualOutTimeBeforeRegularize) : "-"}</div>
                 }
@@ -335,7 +342,7 @@ export default class OrgRegularization extends Component {
                 ),
                 width: 200,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <>
                         <div>{toLocalDateTime(text.regularizedInTime)}</div>
                     </>
@@ -350,7 +357,7 @@ export default class OrgRegularization extends Component {
                 sorter: true,
                 width: 210,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <>
                         <div>{toLocalDateTime(text.regularizedOutTime)}</div>
                     </>
@@ -364,7 +371,7 @@ export default class OrgRegularization extends Component {
                 ),
                 width: 210,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <div>{text.regularizationRemarks}</div>
                 }
             },
@@ -373,7 +380,7 @@ export default class OrgRegularization extends Component {
                 width: 200,
                 className: "text-center",
                 sorter: true,
-                render: (text) => {
+                render: (text, record) => {
                     return <>
                         {<span className={text.regularizationStatus == "NOT_REGULARIZED" ? "badge bg-inverse-secondary " : text.regularizationStatus == "PENDING" ? "badge bg-inverse-warning " : text.regularizationStatus == "REGULARIZED" ? "badge bg-inverse-success " : "-"}>
                             {text.regularizationStatus == "NOT_REGULARIZED" ? <i className="pr-2 fa fa-ban text-secondary"></i> : text.regularizationStatus == "PENDING" ? <i className="pr-2 fa fa-hourglass-o text-warning"></i> : text.regularizationStatus == "REGULARIZED" ? <i className="pr-2 fa fa-check text-success"></i> : "-"}{
@@ -387,7 +394,7 @@ export default class OrgRegularization extends Component {
                 title: 'Approval Status',
                 width: 150,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <div>{this.getStyle(text.approvalstatus)}</div>
                 }
             },
@@ -395,6 +402,7 @@ export default class OrgRegularization extends Component {
             {
                 title: 'Action',
                 dataIndex: 'action',
+                key: 'action',
                 align: 'center',
                 width: 100,
                 key: '17',
@@ -505,7 +513,7 @@ export default class OrgRegularization extends Component {
                                         rowSelection={this.rowSelection}
                                         pagination={{
                                             total: totalRecords,
-                                            showTotal: () => {
+                                            showTotal: (total, range) => {
                                                 return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                                             },
                                             showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

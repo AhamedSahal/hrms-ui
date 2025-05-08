@@ -16,6 +16,29 @@ export function getPerformanceGoalsList(searchText, pageNumber, pageSize, sort,s
     });
 }
 
+// get Goal List by employee
+export function getPerformanceGoalsListByEmployee(searchText, pageNumber, pageSize, sort,branchId,departmentId,jobTitleId,fromDate,toDate,self,status) {
+    let path = `${servicePath}/employee?${getPaginationQueryString(searchText, pageNumber, pageSize, sort)}`;
+    path=path+`&self=${self?1:0}&branchId=${branchId}&departmentId=${departmentId}&jobTitleId=${jobTitleId}&fromDate=${fromDate}&toDate=${toDate}&status=${status}`;
+
+    return getWithAuth(path).then(res => {
+        return Promise.resolve(res.data);
+    }).catch(err => {
+        return Promise.reject(err);
+    });
+}
+
+export function getEmployeeGoalsList(searchText, pageNumber, pageSize, sort,self,branchId,departmentId,jobTitleId,fromDate,toDate,status) {
+    let path = `${servicePath}/list?${getPaginationQueryString(searchText, pageNumber, pageSize, sort)}`;
+    path=path+`&self=${self?1:0}&branchId=${branchId}&departmentId=${departmentId}&jobTitleId=${jobTitleId}&fromDate=${fromDate}&toDate=${toDate}&status=${status}`;
+
+    return getWithAuth(path).then(res => {
+        return Promise.resolve(res.data);
+    }).catch(err => {
+        return Promise.reject(err);
+    });
+}
+
 //get Sub Goals List
 export function getSubGoalsList(searchText, pageNumber, pageSize, sort, id) {
     let path = `${servicePath1}/list?${getPaginationQueryString(searchText, pageNumber, pageSize, sort)}`;

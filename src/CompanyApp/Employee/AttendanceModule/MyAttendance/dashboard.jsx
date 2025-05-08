@@ -15,7 +15,14 @@ export default class Mydashboard extends Component {
         super(props);
         var today = new Date();
         var firstDay = new Date(today.getFullYear(), today.getMonth(), 2);
-      
+        var lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+        const data = [
+            { 'On-Time': 15 },
+            { 'Late': 3 },
+            { 'Absent  ': 1 },
+            { 'Weakend ': 4 },
+        ];
+
         this.state = {
             RegularizationSettings: false,
             clockInTime: [],

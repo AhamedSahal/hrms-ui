@@ -11,7 +11,6 @@ import { PERMISSION_LEVEL } from '../../../Constant/enum';
 import PaymentModeDropdown from '../../ModuleSetup/PaymentMode/PaymentModeDropdown';
 import { getPaymentModeSelectList } from '../../ModuleSetup/PaymentMode/service';
 
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 const isEmployee = getUserType() == 'EMPLOYEE';
 const { Header, Body, Footer, Dialog } = Modal;

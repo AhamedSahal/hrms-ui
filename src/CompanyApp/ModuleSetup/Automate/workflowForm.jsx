@@ -8,7 +8,6 @@ import { getDropdownInfo } from './service'
 
 
 
-
 const validationSchema = Yup.object().shape({
     name: Yup.string()
     .min(2, 'Name is Too Short!')

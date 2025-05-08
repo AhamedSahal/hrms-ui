@@ -8,7 +8,6 @@ import HtmlEditor from "../../../HtmlEditor";
 import EnumDropdown from './../Dropdown/EnumDropdown';
 import { saveTemplate } from "./service";
 import { TemplateSchema } from "./validation";
-
 export default class TemplateForm extends Component {
   constructor(props) {
     super(props);

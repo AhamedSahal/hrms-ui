@@ -96,7 +96,7 @@ export default class JobDistribution extends Component {
     let {JobDistribution} = this.state;
     return (
         <div style={{ padding: "15px", background: "white" }}>
-              <h3><BsFileEarmarkText size={30} style={{color: "#1DA8D5"}} />  Job Distribution</h3>
+              <h3 style={{wordSpacing: "-4px"}}><BsFileEarmarkText size={30} style={{color: "#1DA8D5"}} />  Job Distribution</h3>
         <br />
         <Formik
           enableReinitialize={true}

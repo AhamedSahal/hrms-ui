@@ -8,7 +8,6 @@ import { LeaveTypeSchema } from './validation';
 import { Tooltip } from 'antd';
 
 
-
 export default class LeaveTypeForm extends Component {
     constructor(props) {
         super(props)
@@ -41,8 +40,8 @@ export default class LeaveTypeForm extends Component {
                 futureOpeningMonth: "",
                 carryexpirymonth: "",
 		        halfDay: true,
-                active: true
-
+                active: true,
+                mobileDefaultLeave: false,
             }
         }
     }
@@ -78,8 +77,8 @@ export default class LeaveTypeForm extends Component {
                     entStartMode:0,
                     futureOpeningMonth: "",
                     carryexpirymonth: "",
-		            halfDay: true
-
+		            halfDay: true,
+                    mobileDefaultLeave: false,
                 }
             })
         }
@@ -216,7 +215,7 @@ export default class LeaveTypeForm extends Component {
                                     }} required>
                                     <option value="">Select Leave Cycle</option>
                                     <option selected={this.state.leaveType && this.state.leaveType.entStartMode == 0} value="0" title="Leave period is from Date of Joining to 31st December in the first year, then January to December in following years.">
-                                    Calender</option>
+                                    Calendar</option>
                                     <option selected={this.state.leaveType && this.state.leaveType.entStartMode == 1} value="1" title="Entitlement period is from Date of Joining each year to the same date the next year, repeating annually.">Work Anniversary</option>
                                 </select>
                                 </FormGroup>
@@ -572,7 +571,28 @@ export default class LeaveTypeForm extends Component {
                                     </ErrorMessage>
                                     </FormGroup>
                                 </div>}
-
+                                <div className={values.mobileDefaultLeave == true ? "col-md-2" : "col-md-4"}>
+                                    <FormGroup>
+                                        <div type="checkbox" name="mobileDefaultLeave">
+                                            <label>Default Mobile Leave</label>
+                                                    <Tooltip title="Allow employees to apply for leave in advance, exceeding their available balance.">
+                                                    <i className="fa fa-info-circle" style={{ marginLeft: '4px', cursor: 'pointer' }}></i>
+                                                    </Tooltip><br />
+                                                     
+                                            <i className={`fa fa-2x ${this.state.leaveType
+                                                && this.state.leaveType.mobileDefaultLeave
+                                                ? 'fa-toggle-on text-success' :
+                                                'fa fa-toggle-off text-danger'}`}  onClick={e => {
+                                                    let { leaveType } = this.state;
+                                                    leaveType.mobileDefaultLeave = !leaveType.mobileDefaultLeave;
+                                                    setFieldValue("mobileDefaultLeave", leaveType.mobileDefaultLeave);
+                                                    this.setState({
+                                                        leaveType
+                                                    });
+                                                }}  ></i>
+                                        </div>
+                                    </FormGroup>
+                                </div>
                                
                                 
                             </div>

@@ -5,7 +5,7 @@ const isEmployee = getUserType() == 'EMPLOYEE';
 export const LeaveSchema = Yup.object().shape({
     employeeId: Yup.number()
         .when('leaveTypeId', {
-            is: () => isEmployee,
+            is: (employeeId) => isEmployee,
             then: Yup.number().notRequired(),
             otherwise: Yup.number().min(1, 'Employee is required').required('Employee is required')
         }),

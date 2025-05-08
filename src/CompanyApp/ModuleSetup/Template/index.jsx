@@ -162,11 +162,6 @@ export default class Template extends Component {
         sorter: true,
       },
       {
-        title: "Subject",
-        dataIndex: "subject",
-        sorter: true,
-      },
-      {
         title: "Created On",
         dataIndex: "createdOn",
         sorter: true,
@@ -209,7 +204,7 @@ export default class Template extends Component {
       },
     ];
     return (
-      <div className="adminInsidePageDiv">
+      <div className="">
       {/* Page Content */ }
       < div className = "page-container content container-fluid" >
         {/* Page Header */ }

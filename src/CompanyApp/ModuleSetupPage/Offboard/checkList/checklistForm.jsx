@@ -8,7 +8,6 @@ import { getBranchLists, getDepartmentLists } from '../../../Performance/ReviewC
 import { getJobTitles } from '../../OnboardSetup/checkList/service';
 
 
-
 export default class OffboardMSchecklistForm extends Component {
     constructor(props) {
         super(props)

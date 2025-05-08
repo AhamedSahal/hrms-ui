@@ -7,7 +7,6 @@ import PasswordField from '../../initialpage/PasswordField';
 import { resetPassword } from './service';
 import { ResetPasswordSchema } from './validation';
 
-
 export default class ResetPasswordForm extends Component {
     constructor(props) {
         super(props)

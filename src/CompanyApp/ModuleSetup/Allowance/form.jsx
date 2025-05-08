@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveAllowancetype } from './service';
 import { AllowanceTypeSchema } from './validation';
 
-
 export default class AllowanceTypeForm extends Component {
     constructor(props) {
         super(props)

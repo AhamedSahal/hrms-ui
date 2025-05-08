@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { FormGroup } from 'reactstrap';
 import 'react-toastify/dist/ReactToastify.css';
 import { savePayRange, getPayRangeList } from './service';
-
 export default class PayRange extends Component {
     constructor(props) {
         super(props)

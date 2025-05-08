@@ -7,7 +7,6 @@ import { getOvertimeSettings, updateOvertimeSettings } from './service';
 import { verifyOrgLevelViewPermission, verifyOrgLevelEditPermission } from '../../../utility';
 import { overtimeSchema } from './validation';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
-
 export default class OvertimeSettingForm extends Component {
     constructor(props) {
         super(props)

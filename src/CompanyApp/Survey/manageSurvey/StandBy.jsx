@@ -28,7 +28,7 @@ export default class StandBy extends Component {
       currentPage: 1,
       showFilter: false,
       refresh: false,
-      id: 0
+      id:0
     };
 
   }
@@ -38,23 +38,23 @@ export default class StandBy extends Component {
 
 
   fetchList = () => {
-    if (verifyOrgLevelViewPermission("Survey")) {
-      getStandByList(this.state.q, this.state.page, this.state.size, this.state.sort).then(res => {
-        if (res.status == "OK") {
-          this.setState({
-            data: res.data.list,
-            totalPages: res.data.totalPages,
-            totalRecords: res.data.totalRecords,
-            currentPage: res.data.currentPage + 1,
-          })
-        }
-      })
-    }
+    if(verifyOrgLevelViewPermission("Survey")){
+    getStandByList(this.state.q, this.state.page, this.state.size, this.state.sort).then(res => {
+      if (res.status == "OK") {
+        this.setState({
+          data: res.data.list,
+          totalPages: res.data.totalPages,
+          totalRecords: res.data.totalRecords,
+          currentPage: res.data.currentPage + 1,
+        })
+      }
+    })
+  }
   }
   delete = (data) => {
     confirmAlert({
       title: `Delete Survey`,
-      message: 'Are you sure, you want to delete ' + data.name + '?',
+      message: 'Are you sure, you want to delete '+data.name+'?',
       buttons: [
         {
           className: "btn btn-danger",
@@ -157,7 +157,7 @@ export default class StandBy extends Component {
         width: 50,
         render: (text, record) => (
           <div className="">
-            <TableDropdown menuItems={menuItems(text, record)} />
+            <TableDropdown menuItems={menuItems(text , record)} />
           </div>
         ),
       },

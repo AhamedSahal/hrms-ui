@@ -21,16 +21,13 @@ export default class Landing extends Component {
     }
 
     handleTabChange = (tab) => {
-
         this.setState({ activeTab: tab });
     };
 
     componentDidUpdate() {
         if (this.state.activeTab !== this.state.prevActiveTab) {
             const activeComponent = this.getActiveComponent();
-            if (activeComponent && typeof activeComponent.fetchList === 'function') {
-                activeComponent.fetchList();
-            }
+            activeComponent.fetchList();
             this.setState({ prevActiveTab: this.state.activeTab });
         }
     }
@@ -55,7 +52,6 @@ export default class Landing extends Component {
     }
 
     render() {
-        console.log("cell Landing", this.state.activeTab, this.state.prevActiveTab);
         return (
 
 
@@ -87,7 +83,7 @@ export default class Landing extends Component {
                                             </li>}
                                             {isCompanyAdmin && <li className="nav-item" onClick={() => this.handleTabChange("Completed")}>
                                                 <a href="#Completed" data-toggle="tab" className={`nav-link ${this.state.activeTab === "Completed" ? "active" : ""}`}>
-                                                    Completed 
+                                                    Completed
                                                 </a>
                                             </li>}
                                             {isCompanyAdmin && <li className="nav-item" onClick={() => this.handleTabChange("StandBy")}>

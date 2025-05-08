@@ -10,7 +10,6 @@ import EmployeeDropDownByCompany from '../Dropdown/EmployeeDropDownByCompany';
 import RoleDropdownByCompanyId from '../Dropdown/RoleDropdownByCompanyId';
 import { MultiEntityAccessValidation } from './validation';
 
-
 export default class MultiEntityAccessForm extends Component {
     constructor(props) {
         super(props)

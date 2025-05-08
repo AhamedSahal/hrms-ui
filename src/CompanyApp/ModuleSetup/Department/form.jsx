@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveDepartment } from './service';
 import { DepartmentSchema } from './validation';
 
-
 export default class DepartmentForm extends Component {
     constructor(props) {
         super(props)

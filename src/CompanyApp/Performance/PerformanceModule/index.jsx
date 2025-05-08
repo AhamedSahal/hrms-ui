@@ -12,11 +12,17 @@ import MyPerformDashboard from './MyPerformance/dashboard';
 import TeamPerformDashboard from './TeamPerformance/teamDashboard';
 import OrgPerformDashboard from './OrgPerformance/orgDashboard';
 import EmployeePerformanceReview from '../Review';
-import { TbBrandTeams } from "react-icons/tb";
 import PerformGoals from './PerformGoals/index.jsx';
 import EmployeePerformance1on1MeetingModule from './1on1Meeting';
 import EmployeePerformance1on1MeetingView from './1on1Meeting/view';
 import GoalDetails from './PerformGoals/GoalsViewIndex.jsx';
+import EmployeePerformGoalsList from './PerformGoals/employeeGoalList.jsx';
+import EmployeesGoals from './PerformGoals/EmployeeGoals.jsx';
+import { Tooltip } from 'antd';
+import { IoIosPeople } from "react-icons/io";
+import { CiViewList } from "react-icons/ci";
+import { BsMicrosoftTeams } from 'react-icons/bs';
+
 
 export default class EmployeePerformanceModule extends Component {
     constructor(props) {
@@ -30,6 +36,7 @@ export default class EmployeePerformanceModule extends Component {
             meetingView: false,
             meetingId: 0,
             goalDetailsData: null,
+            buttonState: true,
         };
     }
 
@@ -58,6 +65,12 @@ export default class EmployeePerformanceModule extends Component {
 
     }
 
+    handleButtonClick = () => {
+        this.setState((prevState) => ({
+            buttonState: !prevState.buttonState,
+            preferredMethod: prevState.buttonState ? 'Emp' : 'List'
+        }));
+    };
     handleMenuSection = (menu) => {
         this.setState({ thirdLevelMenu: menu })
     }
@@ -87,13 +100,17 @@ export default class EmployeePerformanceModule extends Component {
         this.setState({ activeMenu: 'goalsView', goalDetailsData: { item, type } });
 
     };
+    handleOpenEmpGoal = (item, type) => {
+        this.setState({ activeMenu: 'empGoals', goalDetailsData: { item, type } });
+    };
+
     handleBackToGoals = () => {
         this.setState({ activeMenu: 'Goals', goalDetailsData: null });
     };
 
 
     render() {
-        const { activeMenu, dashboard, goalDetailsData, thirdLevelMenu } = this.state
+        const { activeMenu, dashboard, goalDetailsData, thirdLevelMenu, buttonState } = this.state
         const EmployeeId = getEmployeeId()
 
         return (
@@ -128,70 +145,88 @@ export default class EmployeePerformanceModule extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="menu-toggle">
-                                <button
-                                    className={activeMenu === 'dashboard' ? 'active' : ''}
-                                    onClick={() => this.handleMenuClick('dashboard')}
-                                >
-                                    <RiDashboardLine className='mr-1' />
-                                    Dashboard
-                                </button>
-                                <button
-                                    className={activeMenu === 'Goals' ? 'active' : ''}
-                                    onClick={() => this.handleMenuClick('Goals')}
-                                >
+                            <div className='d-flex align-items-center'>
 
-                                    <GoGoal className=" mr-1" size={20} />
-                                    Goals
-                                </button>
-                                <button
-                                    className={activeMenu === 'Reviews' ? 'active' : ''}
-                                    onClick={() => this.handleMenuClick('Reviews')}
-                                >
-                                    <i class="fa fa-bar-chart mr-2" aria-hidden="true"></i>
-                                    Reviews
-                                </button>
-                                {thirdLevelMenu &&
-                                    <>
-                                        <button
-                                            className={activeMenu === 'probation' ? 'active' : ''}
-                                            onClick={() => this.handleMenuClick('probation')}
-                                        >
 
-                                            <FcQuestions className=" mr-1" size={20} />
-                                            Probation
-                                        </button>
-                                        <button
-                                            className={activeMenu === '1on1Meeting' ? 'active' : ''}
-                                            onClick={() => this.handleMenuClick('1on1Meeting')}
-                                        >
-                                            <TbBrandTeams className=" mr-1" size={20} />
-                                            1-on-1 Meeting
-                                        </button>
-                                    </>
-                                }
+                                <div className="menu-toggle">
+                                    <button
+                                        className={activeMenu === 'dashboard' ? 'active' : ''}
+                                        onClick={() => this.handleMenuClick('dashboard')}
+                                    >
+                                        <RiDashboardLine className='mr-1' />
+                                        Dashboard
+                                    </button>
+                                    <button
+                                        className={activeMenu === 'Goals' ? 'active' : ''}
+                                        onClick={() => this.handleMenuClick('Goals')}
+                                    >
 
-                                <button
-                                    className={activeMenu === 'overtime' ? 'active' : ''}
-                                    onClick={() => this.handleMenuClick('overtime')}
-                                >
-                                    <FcFeedback className=" mr-1" size={20} />
-                                    Feedback
-                                </button>
-                                <button
-                                    className={activeMenu === 'regularize' ? 'active' : ''}
-                                    onClick={() => this.handleMenuClick('regularize')}
-                                >
-                                    <FaPencilRuler className=" mr-1" size={20} />
-                                    Skill
-                                </button>
-                                <button
-                                    className={activeMenu === 'permission' ? 'active' : ''}
-                                    onClick={() => this.handleMenuClick('permission')}
-                                >
-                                    <FaChartLine className=" mr-1" size={20} />
-                                    PIP
-                                </button>
+                                        <GoGoal className=" mr-1" size={20} />
+                                        Goals
+                                    </button>
+                                    <button
+                                        className={activeMenu === 'Reviews' ? 'active' : ''}
+                                        onClick={() => this.handleMenuClick('Reviews')}
+                                    >
+                                        <i class="fa fa-bar-chart mr-2" aria-hidden="true"></i>
+                                        Reviews
+                                    </button>
+                                    {thirdLevelMenu &&
+                                        <>
+                                            <button
+                                                className={activeMenu === 'probation' ? 'active' : ''}
+                                                onClick={() => this.handleMenuClick('probation')}
+                                            >
+
+                                                <FcQuestions className=" mr-1" size={20} />
+                                                Probation
+                                            </button>
+                                            <button
+                                                className={activeMenu === '1on1Meeting' ? 'active' : ''}
+                                                onClick={() => this.handleMenuClick('1on1Meeting')}
+                                            >
+                                                <BsMicrosoftTeams  className=" mr-1" size={20} />
+                                                1-on-1 Meeting
+                                            </button>
+                                        </>
+                                    }
+
+                                    <button
+                                        className={activeMenu === 'overtime' ? 'active' : ''}
+                                        onClick={() => this.handleMenuClick('overtime')}
+                                    >
+                                        <FcFeedback className=" mr-1" size={20} />
+                                        Feedback
+                                    </button>
+                                    <button
+                                        className={activeMenu === 'regularize' ? 'active' : ''}
+                                        onClick={() => this.handleMenuClick('regularize')}
+                                    >
+                                        <FaPencilRuler className=" mr-1" size={20} />
+                                        Skill
+                                    </button>
+                                    <button
+                                        className={activeMenu === 'permission' ? 'active' : ''}
+                                        onClick={() => this.handleMenuClick('permission')}
+                                    >
+                                        <FaChartLine className=" mr-1" size={20} />
+                                        PIP
+                                    </button>
+
+                                </div>
+                                {activeMenu === 'Goals' && thirdLevelMenu &&
+                                    <div className="float-right ml-4">
+                                        <Tooltip title={buttonState ? "Employees List" : "Goals List"}>
+                                            <div onClick={e => { this.handleButtonClick() }} className="toggles-btn-view" id="button-container" >
+
+                                                <div id="my-button" className="toggle-button-element" style={{ transform: buttonState ? 'translateX(0px)' : 'translateX(80px)' }}>
+                                                    <p className='m-0 self-btn'>{buttonState ? <IoIosPeople size={28} /> :  <CiViewList size={28} />}</p>
+
+                                                </div>
+                                                <p className='m-0 team-btn' style={{ transform: buttonState ? 'translateX(0px)' : 'translateX(-80px)' }}>{buttonState ? <CiViewList size={28} /> : <IoIosPeople size={28} />}</p>
+                                            </div>
+                                        </Tooltip>
+                                    </div>}
                             </div>
                             <div id='my_div' className="pl-0 pro-overview ant-table-background tab-pane fade show active" >
                                 {activeMenu === 'dashboard' && <MyPerformDashboard updateActiveMenu={this.updateActiveMenu} />}
@@ -206,7 +241,9 @@ export default class EmployeePerformanceModule extends Component {
                                 {activeMenu === 'dashboard' && <TeamPerformDashboard />}
                                 {activeMenu === 'Reviews' && <EmployeePerformanceReview />}
                                 {activeMenu === '1on1Meeting' && (!this.state.meetingView ? <EmployeePerformance1on1MeetingModule oneOnOneStatus={1} updateList={this.updateList} /> : <EmployeePerformance1on1MeetingView meetingId={this.state.meetingId} updateView={this.updateView} viewStatus={true} />)}
-                                {activeMenu === 'Goals' && <PerformGoals onOpenGoalDetails={this.handleOpenGoalDetails} goalStatus={1} />}
+                                {activeMenu === 'Goals' && buttonState && <EmployeePerformGoalsList handleOpenEmpGoal={this.handleOpenEmpGoal} onOpenGoalDetails={this.handleOpenGoalDetails} goalStatus={1} />}
+                                {activeMenu === 'Goals' && !buttonState && <PerformGoals onOpenGoalDetails={this.handleOpenGoalDetails} goalStatus={1} />}
+                                {activeMenu === 'empGoals' && <EmployeesGoals goalsData={goalDetailsData} onOpenGoalDetails={this.handleOpenGoalDetails} onBack={this.handleBackToGoals} goalStatus={1} />}
                                 {activeMenu === 'goalsView' && <GoalDetails goalStatus={1} goalsData={goalDetailsData} onBack={this.handleBackToGoals} />}
                             </div>
                             <div id='org_div' className="pl-0 pro-overview ant-table-background tab-pane fade ">
@@ -214,7 +251,9 @@ export default class EmployeePerformanceModule extends Component {
 
                                 {activeMenu === 'Reviews' && <EmployeePerformanceReview />}
                                 {activeMenu === '1on1Meeting' && (!this.state.meetingView ? <EmployeePerformance1on1MeetingModule oneOnOneStatus={2} updateList={this.updateList} /> : <EmployeePerformance1on1MeetingView meetingId={this.state.meetingId} updateView={this.updateView} viewStatus={true} />)}
-                                {activeMenu === 'Goals' && <PerformGoals onOpenGoalDetails={this.handleOpenGoalDetails} goalStatus={2} />}
+                                {activeMenu === 'Goals' && buttonState && <EmployeePerformGoalsList handleOpenEmpGoal={this.handleOpenEmpGoal} onOpenGoalDetails={this.handleOpenGoalDetails} goalStatus={2} />}
+                                {activeMenu === 'Goals' && !buttonState && <PerformGoals onOpenGoalDetails={this.handleOpenGoalDetails} goalStatus={2} />}
+                                {activeMenu === 'empGoals' && <EmployeesGoals goalsData={goalDetailsData} onOpenGoalDetails={this.handleOpenGoalDetails} onBack={this.handleBackToGoals} goalStatus={2} />}
                                 {activeMenu === 'goalsView' && <GoalDetails goalStatus={2} goalsData={goalDetailsData} onBack={this.handleBackToGoals} />}
                             </div>
                         </div>

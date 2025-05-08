@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveFunction } from './service';
 import { FunctionSchema } from './validation'; 
 
-
 export default class FunctionForm extends Component {
     constructor(props) {
         super(props)

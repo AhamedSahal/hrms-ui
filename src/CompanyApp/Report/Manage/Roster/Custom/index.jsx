@@ -78,7 +78,7 @@ export default class RosterReport extends Component {
   }));
   };
   render() {
-    const { data, selectedProperties,isFilter, showPdf, sortedProperties} = this.state;
+    const { data, selectedProperties,isFilter, showPdf, showCsv, sortedProperties,companyId,companies } = this.state;
     let selectedData = [];
 
     if (data && selectedProperties) {

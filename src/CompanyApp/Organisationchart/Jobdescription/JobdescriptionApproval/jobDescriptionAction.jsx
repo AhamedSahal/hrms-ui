@@ -8,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { updateStatus } from '../service'; 
  
 
-
 export default class  JobDescriptionAction extends Component {
     constructor(props) {
         super(props)

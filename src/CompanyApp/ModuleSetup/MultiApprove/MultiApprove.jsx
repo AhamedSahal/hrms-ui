@@ -10,7 +10,6 @@ import { confirmAlert } from 'react-confirm-alert';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 import { updateMultiApprovalPermission, getMultiApprovalPermission, getMultiApprovalcompanyMenu } from './service';
 
-
 export default class MultiApprove extends Component {
     constructor(props) {
         super(props)
@@ -39,7 +38,7 @@ export default class MultiApprove extends Component {
                         multiApprovalStatus: res.data
                     });
                 } else {
-                    console.log("Error: " + res.error);
+                 
                 }
             }).catch(error => { console.log("Error: " + error); });
 
@@ -65,7 +64,7 @@ export default class MultiApprove extends Component {
     }
 
 
-
+    
 
     save = () => {
         updateMultiApprovalPermission(this.state.multiApprovalStatus).then(res => {

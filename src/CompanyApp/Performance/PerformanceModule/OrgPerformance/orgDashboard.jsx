@@ -85,6 +85,74 @@ const goalChartData = [
     { function: 'CEO’s Office', "1-3": 0, "3-5": 1, "5-7": 0, "7+": 0 }
 ];
 
+const sampledata = [
+    {
+        name: 'Page A',
+        uv: 4000,
+        pv: 2400,
+        amt: 2400,
+    },
+    {
+        name: 'Page B',
+        uv: 3000,
+        pv: 1398,
+        amt: 2210,
+    },
+    {
+        name: 'Page C',
+        uv: 2000,
+        pv: 9800,
+        amt: 2290,
+    },
+    {
+        name: 'Page D',
+        uv: 2780,
+        pv: 3908,
+        amt: 2000,
+    },
+    {
+        name: 'Page E',
+        uv: 1890,
+        pv: 4800,
+        amt: 2181,
+    },
+    {
+        name: 'Page F',
+        uv: 2390,
+        pv: 3800,
+        amt: 2500,
+    },
+    {
+        name: 'Page G',
+        uv: 3490,
+        pv: 4300,
+        amt: 2100,
+    },
+];
+
+
+
+const dataLine = [
+    {
+        "name": "Low Performance",
+        "uv": 0,
+        "pv": 14,
+        "amt": 200
+    },
+    {
+        "name": "Average Performance",
+        "uv": 50,
+        "pv": 98,
+        "amt": 221
+    },
+    {
+        "name": "Top Performance",
+        "uv": 30,
+        "pv": 0,
+        "amt": 220
+    },
+
+];
 
 export default class OrgPerformDashboard extends Component {
     constructor(props) {
@@ -126,7 +194,7 @@ export default class OrgPerformDashboard extends Component {
                 },
                 tooltip: {
                     enabled: true,
-                    custom: function ({ series, seriesIndex, w }) {
+                    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                         const value = series[seriesIndex];
                         const total = series.reduce((acc, value) => acc + value, 0);
                         const percentage = ((value / total) * 100).toFixed(1);
@@ -380,7 +448,8 @@ export default class OrgPerformDashboard extends Component {
                 title: 'Bell Curve Analysis',
                 dataIndex: 'ratings',
                 key: 'ratings',
-                render: (ratings) => {
+                render: (ratings, record) => {
+                    const [redRating] = ratings;
 
                     return (
                         <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
@@ -521,7 +590,7 @@ export default class OrgPerformDashboard extends Component {
                 title: 'Employee',
                 dataIndex: 'name',
                 key: 'name',
-                render: (text) => (
+                render: (text, record) => (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div>
                             <Text strong>{text}</Text>
@@ -634,7 +703,7 @@ export default class OrgPerformDashboard extends Component {
                                 <div style={{ border: 'none' }} className='mt-2 mygrid-div'>
                                     <span
                                         className="perform-dash-gradestyle gnInfovalue"
-                                        style={{ backgroundColor: 'rgb(128, 128, 128)',color:'white'}}
+                                        style={{ backgroundColor: '#b0eb70' ,backgroundColor: 'rgb(128, 128, 128)',color:'white'}}
                                     >
                                          N/A
                                     </span>

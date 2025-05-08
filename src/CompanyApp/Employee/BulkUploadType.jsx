@@ -9,7 +9,6 @@ import { downloadAttendanceTemplate } from '../../HttpRequest';
 import { saveImportJobsAttendance, saveImportJobsDeductions, saveImportJobsEarnings, saveImportJobsEmployees, saveImportJobsJobTitle } from './service';
 import { verifyOrgLevelEditPermission, verifyOrgLevelViewPermission } from '../../utility';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
-
 export default class BulkUploadTypeForm extends Component {
     constructor(props) {
         super(props)

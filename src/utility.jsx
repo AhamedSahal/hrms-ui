@@ -88,6 +88,9 @@ export function getEmailId() {
 export function getUserName() {
     return JSON.parse((localStorage.getItem('userData')))?.name;
 }
+export function getBranchId() {
+    return JSON.parse((localStorage.getItem('userData')))?.branchId;
+}
 export function getOtpRequired() {
     return JSON.parse((localStorage.getItem('userData')))?.inAppOtpEnabled;
 }

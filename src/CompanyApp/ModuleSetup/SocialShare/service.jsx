@@ -3,7 +3,6 @@ import { getPaginationQueryString } from "../../../utility";
 import { toast } from 'react-toastify';
 
 const servicePath = "/social-share";
-
 export function getSocialShareList(searchText, pageNumber, pageSize, sort) {
     let get = getWithAuth(`${servicePath}?${getPaginationQueryString(searchText, pageNumber, pageSize, sort)}`)
     return get.then(res => {

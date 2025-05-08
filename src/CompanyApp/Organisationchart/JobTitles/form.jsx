@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveJobTitles } from './service';
  import { JobTitlesSchema } from './validation'; 
 
-
 export default class JobTitlesForm extends Component {
     constructor(props) {
         super(props)

@@ -8,7 +8,6 @@ import EmployeeDropdown from '../../ModuleSetup/Dropdown/EmployeeDropdown';
 import { saveGratuity } from './service';
 
 
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 export default class GratuityEntitlementForm extends Component {
     constructor(props) {

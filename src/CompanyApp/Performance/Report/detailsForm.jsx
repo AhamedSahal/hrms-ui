@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
+import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import { Helmet } from 'react-helmet';
-import { getCustomizedWidgetDate, getTitle } from '../../../utility';
+import { getCustomizedWidgetDate, getTitle, getUserType } from '../../../utility';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { getPerformanceById, getOverallScoreList } from './service';

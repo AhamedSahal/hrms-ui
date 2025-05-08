@@ -587,6 +587,14 @@ export function setAssetCategoryData(AssetsCategory) {
     }
 }
 
+export function setAssetSerialNoData(AssetSerialNo) {
+    return {
+        type: 'SET_ASSETS_SERIAL_NO_DATA',
+        AssetSerialNo
+    }
+}
+
+
 export function setAssetSetupData(AssetSetup) {
     return {
         type: 'SET_ASSETS_SETUP_DATA',

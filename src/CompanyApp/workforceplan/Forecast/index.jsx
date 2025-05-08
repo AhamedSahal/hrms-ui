@@ -170,7 +170,7 @@ export default class Forecast extends Component {
       },
 
       {
-        title: 'Requested No of Resources',
+        title: 'Requested no of Resources',
         dataIndex: 'persons',
         sorter: true,
       },

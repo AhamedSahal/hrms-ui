@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { saveCompositePayscale } from './service';
 
-
 export default class CompositeForm extends Component {
     constructor(props) {
         super(props)
