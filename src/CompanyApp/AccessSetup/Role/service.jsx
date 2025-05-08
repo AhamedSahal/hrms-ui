@@ -1,4 +1,4 @@
-import { getWithAuth, patchWithAuth, postWithAuth, putWithAuth } from '../../../HttpRequest';
+import { deleteWithAuth, getWithAuth, patchWithAuth, postWithAuth, putWithAuth } from '../../../HttpRequest';
 import { getPaginationQueryString } from '../../../utility';
 
 const servicePath = "/role";

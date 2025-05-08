@@ -8,7 +8,8 @@ import { getOvertimeList } from '../Overtime/service';
 import { toast } from 'react-toastify';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { confirmAlert } from 'react-confirm-alert';
-import { getReadableDate, getUserType, getEmployeeId, verifyViewPermission, verifyOrgLevelEditPermission } from '../../../../utility';
+import { getReadableDate, getUserType, getEmployeeId, getPermission, verifyViewPermission, verifyApprovalPermission, verifyViewPermissionForTeam, verifyEditPermission, verifyOrgLevelEditPermission } from '../../../../utility';
+import TableDropDown from '../../../../MainPage/tableDropDown';
 import BranchDropdown from '../../../ModuleSetup/Dropdown/BranchDropdown';
 import JobTitlesDropdown from '../../../ModuleSetup/Dropdown/JobTitlesDropdown';
 import DepartmentDropdown from '../../../ModuleSetup/Dropdown/DepartmentDropdown';
@@ -177,7 +178,7 @@ export default class OrgOvertimeApproval extends Component {
   };
 
   updateSelected = (status) => {
-    const { selectedArray } = this.state;
+    const { selected, selectedArray } = this.state;
     confirmAlert({
       title: `Update Status for selected as ${status}`,
       message: 'Are you sure, you want to update status for selected?',
@@ -210,6 +211,14 @@ export default class OrgOvertimeApproval extends Component {
             label: 'Yes',
             onClick: () => {
               let selected = []
+              let test = data.map((d) => {
+                let tempArray = {
+                  id: d.id,
+                  employeeId: d.employee.id
+                }
+                selected.push(tempArray)
+              });
+             
               this.updateStatus(selected, status);
               this.setState({ selected: [] })
             }
@@ -250,13 +259,16 @@ export default class OrgOvertimeApproval extends Component {
 
 
   render() {
-    const { data,  totalRecords, currentPage, size, selected } = this.state
+    let isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
+
+
+    const { data, totalPages, totalRecords, currentPage, size, selected, buttonState } = this.state
     let startRange = ((currentPage - 1) * size) + 1;
     let endRange = ((currentPage) * (size + 1)) - 1;
     if (endRange > totalRecords) {
       endRange = totalRecords;
     }
-    const menuItems = (text) => {
+    const menuItems = (text, record) => {
       const items = [];
       items.push(
         <div><a className="muiMenu_item" href="#" onClick={() => {
@@ -280,7 +292,7 @@ export default class OrgOvertimeApproval extends Component {
         title: 'Employee',
         sorter: false,
         width: 300,
-        render: (text) => {
+        render: (text, record) => {
           return <EmployeeListColumn id={text.employee.id} name={text.employee.name} employeeId={text.employeeId}></EmployeeListColumn>
         }
       },
@@ -351,7 +363,7 @@ export default class OrgOvertimeApproval extends Component {
         sorter: true,
         width: 150,
         className: "text-center",
-        render: (Forecast) => {
+        render: (Forecast, record) => {
           return <> <div>{this.getStyle(Forecast)}</div>
           </>
         }
@@ -359,6 +371,7 @@ export default class OrgOvertimeApproval extends Component {
       {
         title: 'Action',
         width: 50,
+        width: 150,
         className: "text-center",
         render: (text, record) => {
           return <>
@@ -510,7 +523,7 @@ export default class OrgOvertimeApproval extends Component {
                       rowSelection={this.rowSelection}
                       pagination={{
                         total: totalRecords,
-                        showTotal: () => {
+                        showTotal: (total, range) => {
                           return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                         },
                         showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

@@ -7,7 +7,6 @@ import ProjectDropdown from '../../Dropdown/ProjectDropdown';
 import { save } from './service';
 import { ActivitySchema } from './validation';
 
-
 export default class ActivityForm extends Component {
     constructor(props) {
         super(props)

@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import RoleDropdown from '../ModuleSetup/Dropdown/RoleDropdown';
 import { assignRoleToEmployee } from './service';
 
-
 export default class EmployeeRoleForm extends Component {
     constructor(props) {
         super(props)

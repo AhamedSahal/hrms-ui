@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { getUserType, getEmployeeId,getPermission,verifyApprovalPermission } from '../../../utility';
 import { saveCategory } from './service';
 import { CategorySchema } from './validation';
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 
 export default class CategoryForm extends Component {

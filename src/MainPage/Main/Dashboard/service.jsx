@@ -4,7 +4,6 @@ import { getPaginationQueryString } from "../../../utility";
 
 const servicePathV2 = "/timesheet-v2";
 
-
 export function getEmployeeDashboardDetail(date) {
     return getWithAuthDashboard(`/dashboard/employee?date=${date}`).then(res => {
         return Promise.resolve(res.data);

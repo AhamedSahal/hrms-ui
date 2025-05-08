@@ -8,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { updateStatus } from './service';
 import { ForecastSchema } from './validation';
 
-
 export default class ForecastAction extends Component {
     constructor(props) {
         super(props)
@@ -91,7 +90,7 @@ export default class ForecastAction extends Component {
                         <td>{forecast.name}</td>
                     </tr>
                     <tr>
-                        <th>Requested No of Resources</th>
+                        <th>Requested no of Resources</th>
                         <td>{forecast.persons}</td>
                     </tr>
                     <tr>
@@ -107,7 +106,7 @@ export default class ForecastAction extends Component {
                         <td>{forecast.experience}</td>
                     </tr>
                     <tr>
-                    <th>Approved No of Resources</th>
+                    <th>Approved no of Resources</th>
                     <td>
                         <FormGroup>
                             <input name="appnoofresources" type="number" className="form-control" defaultvalue={forecast.appnoofresources}

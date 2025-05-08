@@ -80,7 +80,7 @@ export default class CompanySettingForm extends Component {
                     toast.error(res.message);
                 }
                 action.setSubmitting(false);
-            }).catch(() => {
+            }).catch(err => {
                 toast.error("Error while saving company setting");
                 action.setSubmitting(false);
             });
@@ -260,13 +260,21 @@ export default class CompanySettingForm extends Component {
                 //validationSchema={CompanySchema}
                 >
                     {({
+                        values,
+                        errors,
+                        touched,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        isSubmitting,
                         setFieldValue,
+                        setSubmitting
                         /* and other goodies */
                     }) => (
                         <Form>
                         <FormGroup className="col-md-4">
                             <div className="row">
-                                <div type="checkbox" name="active" onClick={() => {
+                                <div type="checkbox" name="active" onClick={e => {
                                         let { enable } = this.state;
                                         this.handleDefaultPermission();
                                         enable= ! enable;

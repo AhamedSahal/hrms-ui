@@ -124,7 +124,7 @@ export default class MeetingInvite extends Component {
         });
     };
 
-    save = () => {
+    save = (data, action) => {
         const { participantData } = this.state
         this.props.handleFormData({ participants: participantData })
         this.props.nextStep()
@@ -142,7 +142,7 @@ export default class MeetingInvite extends Component {
     render() {
 
 
-        const { showFilter, data, totalRecords, currentPage, size, selected, participantCurrentPage, participantTotalRecords, participantData} = this.state;
+        const { showFilter, data, totalPages, totalRecords, currentPage, size, selected, participantCurrentPage, participantTotalRecords, participantData, selectedOption, selectedInternalEmpOption, surveyDetails } = this.state;
         let startRange = ((currentPage - 1) * size) + 1;
         let endRange = ((currentPage) * (size + 1)) - 1;
         if (endRange > totalRecords) {
@@ -157,7 +157,7 @@ export default class MeetingInvite extends Component {
             {
                 title: 'Employee',
                 sorter: false,
-                render: (text) => {
+                render: (text, record) => {
                     return <div>{text.name}</div>
                 }
             },
@@ -181,7 +181,7 @@ export default class MeetingInvite extends Component {
                                     type="checkbox"
                                     checked={selected && selected.length > 0 && selected.indexOf(record.id) > -1}
                                     className="pointer"
-                                    onChange={() => {
+                                    onChange={e => {
                                         this.saveParticipantData(record);
                                     }}></input>
                             </Col>
@@ -197,7 +197,7 @@ export default class MeetingInvite extends Component {
             {
                 title: 'Name',
                 sorter: false,
-                render: (text) => {
+                render: (text, record) => {
                     return <div>{text.name}</div>
                 }
             },
@@ -213,7 +213,7 @@ export default class MeetingInvite extends Component {
                 title: 'Action',
                 width: 50,
                 className: "justify-content-center text-center",
-                render: (text) => (
+                render: (text, record) => (
                     <div >
                         <Row >
                             <Col >
@@ -238,7 +238,18 @@ export default class MeetingInvite extends Component {
                     onSubmit={this.save}
                 // validationSchema={ownerFormValidation}
                 >
-                    {() => (
+                    {({
+                        values,
+                        errors,
+                        touched,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        isSubmitting,
+                        setFieldValue,
+                        setSubmitting
+                        /* and other goodies */
+                    }) => (
                         <Form >
                             <div >
 
@@ -309,7 +320,7 @@ export default class MeetingInvite extends Component {
                                             <Table id='Table-style' className="table-striped "
                                                 pagination={{
                                                     total: totalRecords,
-                                                    showTotal: () => {
+                                                    showTotal: (total, range) => {
                                                         return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                                                     },
                                                     showSizeChanger: true, onShowSizeChange: this.pageSizeChange,
@@ -332,7 +343,7 @@ export default class MeetingInvite extends Component {
                                             <Table id='Table-style' className="table-striped "
                                                 pagination={{
                                                     total: participantTotalRecords,
-                                                    showTotal: () => {
+                                                    showTotal: (total, range) => {
                                                         return `Showing ${participantStartRange} to ${participantEndRange} of ${participantTotalRecords} entries`;
                                                     },
                                                     showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

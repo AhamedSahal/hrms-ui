@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { getWithAuth, postWithAuth, putWithAuth } from "../../../../HttpRequest";
+import { getWithAuth, postWithAuth, putWithAuth,patchWithAuth } from "../../../../HttpRequest";
 
 const servicePath = "onboard-mstaskList";
 const servicePath1 = "onboard-mssubtaskList";
@@ -45,7 +45,7 @@ export function getOnboardSubtaskList(id) {
 
 
 export function saveMSChecklist(checklist) {
-    let post = checklist.id == 0 ? postWithAuth(servicePath, checklist)
+    let post = checklist.id == 0 ? postWithAuth(servicePath2, checklist)
         : putWithAuth(`${servicePath2}?id=${checklist.id}`, checklist);
     return post.then(res => {
         return Promise.resolve(res.data);
@@ -66,7 +66,7 @@ export function saveOnboardMSSubTask(subtask) {
 }
 
 export function saveOnboardMSTask(task) {
-    let post = task.id == 0 ? postWithAuth(servicePath1, task)
+    let post = task.id == 0 ? postWithAuth(servicePath, task)
         : putWithAuth(`${servicePath}?id=${task.id}`, task);
     return post.then(res => {
         return Promise.resolve(res.data);
@@ -74,4 +74,15 @@ export function saveOnboardMSTask(task) {
         console.log({ err })
         return Promise.reject(err);
     });
+
+}
+
+    // update company setting
+    export function updateOnboardCompanySetting(status) {
+        let path = servicePath2 + "/setting?&status=" + status;
+        return patchWithAuth(path).then(res => {
+            return Promise.resolve(res.data);
+        }).catch(err => {
+            return Promise.reject(err);
+        });
 }

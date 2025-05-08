@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveLanguage } from './service';
 import { LanguageSchema } from './validation';
 
-
 export default class LanguageForm extends Component {
     constructor(props) {
         super(props)

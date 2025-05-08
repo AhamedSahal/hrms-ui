@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { updateStatus } from './service';
 import { Button, Stack } from '@mui/material';
 
-
 export default class OvertimeAction extends Component {
     constructor(props) {
         super(props)

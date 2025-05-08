@@ -8,7 +8,6 @@ import { updateRegularizeStatus } from './service';
 import { convertToUserTimeZone, toDateTime, getReadableDate, convertToUTC,toLocalDateTime,formatDateTime } from '../../../utility';
 
 
-
 export default class RegularizationAction extends Component {
     constructor(props) {
         super(props)

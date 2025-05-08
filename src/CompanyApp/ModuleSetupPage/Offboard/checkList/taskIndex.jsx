@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { Modal } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import OffboardTaskForm from './taskForm';
 import { Avatar, Empty, Tooltip } from 'antd';
 import OffboardSubTaskForm from './subTaskFrom';
@@ -159,7 +160,7 @@ class OffboardMSTaskView extends Component {
         }));
     };
 
-    subTaskExpand = () => {
+    subTaskExpand = (id) => {
         // getOffboardSubtaskList(id).then(res => {
         //     if (res.status == "OK") {
         //         this.setState({
@@ -176,7 +177,7 @@ class OffboardMSTaskView extends Component {
     }
 
     render() {
-        const { taskList, expandedRows } = this.state;
+        const { isEditing, taskList, expandedRows } = this.state;
         const checklist = this.props.viewData;
         return (
             <div className="">

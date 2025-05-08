@@ -25,6 +25,7 @@ import ReportRoute from './Report';
 import RosterLanding from './RosterLanding';
 import CompanySettingModuleSetupRoute from './Settings';
 import SupportModuleSetupRoute from './Support';
+import SurveySetupRoute from './Survey';
 import TasksForm from './Tasks/form.jsx';
 import Rewards from './Rewards';
 import TasksLanding from './TasksLanding';
@@ -49,7 +50,6 @@ import { getEmployeeId } from '../utility.jsx';
 import Timesheet from './Timesheet/list.jsx';
 import TeamApprovalLanding from './TeamApproval/TeamApprovalLanding.jsx';
 import EmployeeDetail from './Employee/detail/detail.jsx';
-import SurveySetupRoute from './Survey/index.jsx';
 
 const CompanyAppRoute = () => {
    let employeeId = getEmployeeId();

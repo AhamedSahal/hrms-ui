@@ -76,9 +76,9 @@ export default class OfferLetterViewer extends Component {
                 <div style={{height: "25px",width:"10%"}}>
                     <img className="img-fluid" src={logo} alt="responsive image" />
                    </div>
-                    <p align="right" ><p style={{ "fontWeight" : "bolder","fontSize" : "18px"}} >Offer Id & Candidate Id:</p> {offerletterId} & {candidateId} </p>
+                    <p align="right" ><p style={{ "fontWeight" : "bolder","fontSize" : "18px"}} >Offer ID & Candidate ID:</p> {offerletterId} & {candidateId} </p>
                 </div>
-                <p  align="center" style={{ "fontWeight" : "bolder","fontSize" : "30px"}}><u>OFFER LETTER</u></p><br/><br/>
+                <p  align="center" style={{ "fontWeight" : "bolder","fontSize" : "30px"}}><u>OFFER  LETTER</u></p><br/><br/>
                <p align="justify" style={{   "fontSize" : "18px","paddingBottom" : "75px" }}>
                 Date:  
                 {new Intl.DateTimeFormat('en-GB', { 

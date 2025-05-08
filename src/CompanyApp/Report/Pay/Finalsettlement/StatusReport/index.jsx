@@ -94,7 +94,7 @@ export default class FinalSettlementStatusReport extends Component {
   };
 
   render() {
-    const { data, selectedProperties, showPdf } = this.state;
+    const { data, selectedProperties, showPdf, showCsv } = this.state;
     const currentDate = new Date().toISOString().split('T')[0];
     let selectedData = [];
     let finalSettlementTotalHours = 0;

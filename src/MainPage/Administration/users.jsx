@@ -16,13 +16,13 @@ class Users extends Component {
     super(props);
     this.state = {
        data : [
-         {id:1,image:Avatar_02,name:"John Doe",email:"johndoe@example.com",company :"Global Technologies",mobile:'9876543210',joindate:"1 Jan 2013",role:"Client"},
-         {id:2,image:Avatar_05,name:"Richard Miles",email:"richardmiles@example.com",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"18 Mar 2014",role:"Admin"},
-         {id:3,image:Avatar_11,name:"John Smith",email:"johnsmith@example.com	",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"1 Apr 2014",role:"Employee"},
-         {id:4,image:Avatar_21,name:"Mike Litorus",email:"mikelitorus@example.com",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"1 Apr 2014",role:"Employee"},
-         {id:5,image:Avatar_09,name:"Wilmer Deluna",email:"wilmerdeluna@example.com",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"22 May 2014",role:"Employee"},
-         {id:6,image:Avatar_10,name:"Jeffrey Warden",email:"jeffreywarden@example.com",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"16 Jun 2013",role:"Employee"},
-         {id:7,image:Avatar_19,name:"Bernardo Galaviz",email:"bernardogalaviz@example.com",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"1 Jan 2013",role:"Employee"},
+         {id:1,image:Avatar_02,name:"John Doe",role:"Web Designer",email:"johndoe@example.com",company :"Global Technologies",mobile:'9876543210',joindate:"1 Jan 2013",role:"Client"},
+         {id:2,image:Avatar_05,name:"Richard Miles",role:"Web Developer",email:"richardmiles@example.com",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"18 Mar 2014",role:"Admin"},
+         {id:3,image:Avatar_11,name:"John Smith",role:"Android Developer",email:"johnsmith@example.com	",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"1 Apr 2014",role:"Employee"},
+         {id:4,image:Avatar_21,name:"Mike Litorus",role:"IOS Developer",email:"mikelitorus@example.com",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"1 Apr 2014",role:"Employee"},
+         {id:5,image:Avatar_09,name:"Wilmer Deluna",role:"Team Leader",email:"wilmerdeluna@example.com",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"22 May 2014",role:"Employee"},
+         {id:6,image:Avatar_10,name:"Jeffrey Warden",role:"Web Developer",email:"jeffreywarden@example.com",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"16 Jun 2013",role:"Employee"},
+         {id:7,image:Avatar_19,name:"Bernardo Galaviz",role:"Web Developer",email:"bernardogalaviz@example.com",company :"Dreamguy's Technologies",mobile:'9876543210',joindate:"1 Jan 2013",role:"Employee"},
        ],          
     };
   }
@@ -62,7 +62,7 @@ class Users extends Component {
       {
         title: 'Role',
         dataIndex: 'role',
-        render: (text) => (
+        render: (text, record) => (
             <span className={text ==="Admin" ? "badge bg-inverse-danger" :  "badge bg-inverse-success" }
            >{text}</span>
           ),
@@ -70,7 +70,7 @@ class Users extends Component {
       },
       {
         title: 'Action',
-        render: () => (
+        render: (text, record) => (
             <div className="dropdown dropdown-action text-right">
               <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
               <div className="dropdown-menu dropdown-menu-right">

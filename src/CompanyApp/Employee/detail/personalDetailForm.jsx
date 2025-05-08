@@ -14,7 +14,6 @@ import ReligionDropdown from '../../ModuleSetup/Dropdown/ReligionDropdown';
 import { getPersonalInformation, updatePersonalInformation } from './service';
 import { EmployeeSchema } from '../validation';
 ;
-
 const { Header, Body, Footer, Dialog } = Modal;
 export default class PersonalDetailEmployeeForm extends Component {
     constructor(props) {

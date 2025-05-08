@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { companyLogoURL } from "../../../HttpRequest";
+import { getDefaultProfilePicture } from "../../../utility";
 
 export default class CompanyLogo extends Component {
     constructor(props) {

@@ -8,7 +8,6 @@ import {  saveWeekoff } from './service';
 import { WeekOffSchema } from './validation'; 
 import WeekDaysDropdown from '../../../ModuleSetup/Dropdown/WeekDaysDropdown';
 
-
 export default class Weekoff extends Component {
     constructor(props) {
         super(props)

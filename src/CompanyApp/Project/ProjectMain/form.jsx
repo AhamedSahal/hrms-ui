@@ -8,7 +8,6 @@ import { save } from './service';
 import ProjectDropdown from '../../ModuleSetup/Dropdown/ProjectDropdown';
 import ActivityDropdown from '../../ModuleSetup/Dropdown/ActivityDropdown';
 
-
 export default class ProjectMainForm extends Component {
     constructor(props) {
         super(props)

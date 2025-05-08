@@ -229,7 +229,7 @@ export default class CandidateInfoForm extends Component {
                                                     <span style={{ color: "red" }}>*</span>
                                                 </label>
                                                 <Field name="gender" className="form-control"
-                                                    render={() => {
+                                                    render={field => {
                                                         return <EnumDropdown label={"GENDER"} enumObj={GENDER} defaultValue={this.state.CandidateInfoForm.gender} onChange={e => {
                                                             setFieldValue("gender", e.target.value)
                                                         }}>

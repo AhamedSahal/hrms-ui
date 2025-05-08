@@ -178,9 +178,6 @@ class GoalDetails extends Component {
                                 Add Weightage
                             </p>
                         </div>}
-
-
-
                         <p onClick={() => this.props.onBack()} className="goalsViewHeaderBtn "><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</p>
                     </div>
 

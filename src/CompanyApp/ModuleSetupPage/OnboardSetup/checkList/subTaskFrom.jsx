@@ -4,17 +4,21 @@ import { FormGroup } from 'reactstrap';
 import Select from "react-select";
 import EmployeeMultiSelectDropDown from '../../../ModuleSetup/Dropdown/EmployeeMultiSelectDropDown';
 import * as Yup from 'yup';
+import { saveOnboardMSSubTask } from './service';
+import { toast } from 'react-toastify';
+
+import EmpMultiSelectDropDown from '../../../ModuleSetup/Dropdown/EmpMultiSelectDropDown';
 import { getBranchLists, getDepartmentLists, getFunctionLists } from '../../../Performance/ReviewCycle/CycleForms/service';
 
 const subTaskValidationSchema = Yup.object().shape({
-    selectedTask: Yup.string().required('Select Task is required'),
+   
     name: Yup.string().required('Subtask Name is required'),
     assign: Yup.string().required('Assign To is required'),
     dueOn: Yup.string().required('Due Date is required'),
-    numberofDays: Yup.number().when('dueOn', {
-        is: (value) => value && value !== 'onJoining',
-        then: Yup.number().required('Number of days is required')
-    })
+    // numberofDays: Yup.number().when('dueOn', {
+    //     is: (value) => value && value !== 'onJoining',
+    //     then: Yup.number().required('Number of days is required')
+    // })
 });
 
 class OnboardSubTaskForm extends Component {
@@ -24,6 +28,8 @@ class OnboardSubTaskForm extends Component {
             function: [],
             department: [],
             branch: [],
+            taskId:this.props?.taskId || 0,
+            assign: this.props.subTask?.assign,
             subTask: this.props.subTask || {
                 id: 0,
                 active: true,
@@ -45,6 +51,14 @@ class OnboardSubTaskForm extends Component {
             if (res.status == "OK") {
                 this.setState({
                     branch: res.data,
+                }, () => {
+                    if (this.props.subTask?.branches != null) {
+                        const brancheData = res.data.filter(br => this.props.subTask.branches.split(',').map(Number).includes(br.id));
+                       let {subTask} = this.state;
+                       subTask.branches = brancheData
+                       this.setState({subTask});
+                    }
+
                 })
             }
         })
@@ -52,6 +66,13 @@ class OnboardSubTaskForm extends Component {
             if (res.status == "OK") {
                 this.setState({
                     department: res.data,
+                }, () => {
+                    if (this.props.subTask?.departments != null) {
+                        const departmentData = res.data.filter(dept => this.props.subTask.departments.split(',').map(Number).includes(dept.id));
+                        let {subTask} = this.state;
+                        subTask.departments = departmentData
+                       this.setState({subTask});
+                    }
                 })
             }
         })
@@ -70,6 +91,7 @@ class OnboardSubTaskForm extends Component {
 
     save = (data, action) => {
         const subtask = {
+            taskId: this.state.taskId,
             id: data.id,
             name: data.name,
             active: data.active,
@@ -79,38 +101,42 @@ class OnboardSubTaskForm extends Component {
         };
 
         if (data.employeeId && data.employeeId.length > 0) {
-            subtask.employeeId = data.employeeId;
+           let arr = data.employeeId;
+            subtask.employeeId = arr.join(", ");
         }
         if (data.departments && data.departments.length > 0) {
-            subtask.departments = data.departments;
+            let arr = data.departments.map(dept => dept.id);
+            subtask.departments = arr.join(", ");
         }
         if (data.branches && data.branches.length > 0) {
-            subtask.branches = data.branches;
+            let arr = data.branches.map(brnch => brnch.id);
+            subtask.branches = arr.join(", ");
         }
         if (data.functions && data.functions.length > 0) {
-            subtask.functions = data.functions;
+            let arr = data.functions;
+            subtask.functions = arr.join(", ");
         }
 
-        // saveOnboardMSSubTask(subtask).then(res => {
-        //     if (res.status === "OK") {
-        //         toast.success(res.message);
-        //     } else {
-        //         toast.error(res.message);
-        //     }
-        //     action.setSubmitting(false);
-        // }).catch(err => {
-        //     toast.error("Error while saving Subtask");
-        //     action.setSubmitting(false);
-        // });
+        saveOnboardMSSubTask(subtask).then(res => {
+            if (res.status === "OK") {
+                toast.success(res.message);
+            } else {
+                toast.error(res.message);
+            }
+            action.setSubmitting(false);
+        }).catch(err => {
+            toast.error("Error while saving Subtask");
+            action.setSubmitting(false);
+        });
     };
 
     render() {
         const { active, assign, subTask } = this.state;
 
         let options = [];
-        if (assign === 'location') {
+        if (assign == '1') {
             options.push(...this.state.branch);
-        } else if (assign === 'department') {
+        } else if (assign == '0') {
             options.push(...this.state.department);
         }
 
@@ -118,10 +144,10 @@ class OnboardSubTaskForm extends Component {
             const { name } = field;
 
             const handleChange = (data) => {
-                if (assign === 'location') {
+                if (assign === '1') {
                     setFieldValue("departments", []);
                     setFieldValue("functions", []);
-                } else if (assign === 'department') {
+                } else if (assign === '0') {
                     setFieldValue("branches", []);
                     setFieldValue("functions", []);
                 }
@@ -160,14 +186,16 @@ class OnboardSubTaskForm extends Component {
                         setSubmitting
                     }) => (
                         <Form autoComplete='off'>
-                            <FormGroup className=''>
+                        {this.state.subTask.id == 0 &&    <FormGroup className=''>
                                 <label htmlFor="selectedTask">Select task<span style={{ color: "red" }}>*</span></label>
-                                <Field as="select" name="selectedTask" className="form-control">
+                                <select  name="selectedTask"  className="form-control" onChange={e=> this.setState({  taskId: e.target.value})}>
                                     <option value="">Select Task</option>
-                                    <option value="task1">Task 1</option>
-                                </Field>
-                                <ErrorMessage name="selectedTask" component="div" style={{ color: 'red' }} />
-                            </FormGroup>
+                                    {this.props.taskList?.length > 0 && this.props.taskList?.filter(e => e.active).map((res) => {
+                                       return  <option key={res.id} value={res.id} >{res.name}</option>
+                                    })}
+                                </select>
+                                {/* <ErrorMessage name="selectedTask" component="div" style={{ color: 'red' }} /> */}
+                            </FormGroup>}
                             <div className='row'>
                                 <FormGroup className='col-md-6'>
                                     <label htmlFor="name">Subtask Name<span style={{ color: "red" }}>*</span></label>
@@ -194,12 +222,12 @@ class OnboardSubTaskForm extends Component {
                                     setFieldValue("assign", e.target.value);
                                 }}>
                                     {/* <Field className='mr-1' type="radio" value="everyone" name="assign" /> Everyone */}
-                                    <Field className='mr-1' type="radio" value="department" name="assign" /> Department
-                                    <Field className='ml-4 mr-1' type="radio" value="location" name="assign" /> Location
-                                    <Field className='ml-4 mr-1' type="radio" value="employee" name="assign" /> Individual Employee
+                                    <Field className='mr-1' type="radio" value="0" name="assign" /> Department
+                                    <Field className='ml-4 mr-1' type="radio" value="1" name="assign" /> Location
+                                    <Field className='ml-4 mr-1' type="radio" value="2" name="assign" /> Individual Employee
                                 </div>
                                 <ErrorMessage name="assign" component="div" style={{ color: 'red' }} />
-                                {assign === 'department' &&
+                                {assign == '0' &&
                                     <div className='col-md-12'>
                                         <FormGroup >
                                             <label>Select Department
@@ -216,20 +244,22 @@ class OnboardSubTaskForm extends Component {
                                         </FormGroup>
                                     </div>
                                 }
-                                {assign === 'employee' &&
+                                {assign == '2' &&
                                     <div className='col-md-12'>
                                         <FormGroup>
                                             <label>Select Employees
                                                 <span style={{ color: "red" }}>*</span>
                                             </label>
-                                            <EmployeeMultiSelectDropDown onChange={(selectedOptions) => {
-                                                const employeeIds = selectedOptions.map(option => option.value);
-                                                setFieldValue('employeeId', employeeIds);
-                                            }} ></EmployeeMultiSelectDropDown>
+                                            
+                                            <EmpMultiSelectDropDown
+                                                                                            name="employeeId"
+                                                                                            setFieldValue={setFieldValue}
+                                                                                            defaultValue={values.employeeId}
+                                                                                        />
                                         </FormGroup>
                                     </div>
                                 }
-                                {assign === 'location' &&
+                                {assign == '1' &&
                                     <div className='col-md-12'>
                                         <FormGroup >
                                             <label>Select Location  <span style={{ color: "red" }}>*</span></label>

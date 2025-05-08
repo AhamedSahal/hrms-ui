@@ -95,7 +95,7 @@ export default class AttendanceMonthList extends Component {
                         id="demo-simple-select-standard"
                         onChange={(e) => { this.setState({ year: e.target.value }) }}
                       >
-                        {this.years.map((year) => (
+                        {this.years.map((year, index) => (
                           <MenuItem value={year}>{year}</MenuItem>
                         ))}
                       </Select>

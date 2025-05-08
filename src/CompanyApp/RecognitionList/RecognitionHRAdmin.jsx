@@ -15,7 +15,6 @@ import { height } from '@mui/system';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
 import RecognitionProfilePhoto from '../Employee/recognitionProfile';
 
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 export default class RecognitionMainList extends Component {
   constructor(props) {

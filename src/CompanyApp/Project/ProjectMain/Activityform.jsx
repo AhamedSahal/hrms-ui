@@ -9,7 +9,6 @@ import ActivityDropdown from '../../ModuleSetup/Dropdown/ActivityDropdown';
 import ProjectDropdown from '../../ModuleSetup/Dropdown/ProjectDropdown';
 // import { ProjectSchema } from './validation';
 
-
 export default class ProjectActivityMainForm extends Component {
     constructor(props) {
         super(props)

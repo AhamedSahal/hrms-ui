@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from "react-helmet";
-import { Link } from 'react-router-dom';
-import { User, Avatar_19, Avatar_07, Avatar_06, Avatar_14 } from '../../../Entryfile/imagepath.jsx'
 import {  getPrimaryGradientColor, getPrimaryColor, getReadableDate, verifyOrgLevelViewPermission } from '../../../utility';
-import {
-  BarChart, Bar, Cell, ResponsiveContainer,
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-} from 'recharts';
 
 import "../../index.css"
 import { getCompanyAdminDashboardDetail } from './service.jsx';

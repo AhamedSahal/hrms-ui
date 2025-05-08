@@ -548,7 +548,7 @@ export default class EmployeeList extends Component {
                         <Table id='Table-style' className="table-striped "
                           pagination={{
                             total: totalRecords,
-                            showTotal: () => {
+                            showTotal: (total, range) => {
                               return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                             },
                             showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

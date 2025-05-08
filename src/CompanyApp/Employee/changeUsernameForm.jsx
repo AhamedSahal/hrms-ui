@@ -41,7 +41,7 @@ export default class ChangeUsernameForm extends Component {
                 toast.error(res.message);
             }
             action.setSubmitting(false)
-        }).catch(() => {
+        }).catch(err => {
             toast.error("Error while updating username");
 
             action.setSubmitting(false);
@@ -61,7 +61,18 @@ export default class ChangeUsernameForm extends Component {
                     onSubmit={this.save}
                     validationSchema={UpdateUsernameSchema}
                 >
-                    {() => (
+                    {({
+                        values,
+                        errors,
+                        touched,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        isSubmitting,
+                        setFieldValue,
+                        setSubmitting
+                        /* and other goodies */
+                    }) => (
                         <Form>
                             <FormGroup>
                                 <label>User Name

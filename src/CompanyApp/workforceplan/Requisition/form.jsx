@@ -10,7 +10,6 @@ import DepartmentDropdown from '../../ModuleSetup/Dropdown/DepartmentDropdown';
 import EmployeeDropdown from '../../ModuleSetup/Dropdown/EmployeeDropdown';
 import { event } from 'jquery';
 
-
 export default class RequisitionForm extends Component {
     constructor(props) {
         super(props)

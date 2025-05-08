@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { saveAssetsCategory } from './service'; 
 
-
 export default class AssetsCategoryForm extends Component {
     constructor(props) {
         super(props)

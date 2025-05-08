@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { getPermission, getUserType, verifyEditPermission } from '../../../utility';
 import { getAllowanceInformation, updateAllowanceInformation } from './service';
 import { PERMISSION_LEVEL } from '../../../Constant/enum';
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION;
 export default class AllowanceForm extends Component {
     constructor(props) {

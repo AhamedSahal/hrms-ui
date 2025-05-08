@@ -38,6 +38,7 @@ export default class TeamEmployeeList extends Component {
       totalRecords: 0,
       currentPage: 1,
       gridView: false,
+      gridView: false,
       status: "ACTIVE",
       showFilter: false,
     };
@@ -98,6 +99,12 @@ export default class TeamEmployeeList extends Component {
       employee: undefined
     })
   }
+  hideForm = () => {
+    this.setState({
+      showForm: false,
+      employee: undefined
+    })
+}
   render() {
     const isCompanyAdmin = getUserType() == "COMPANY_ADMIN";
     const { data, totalPages, totalRecords, currentPage, size } = this.state
@@ -114,7 +121,7 @@ export default class TeamEmployeeList extends Component {
       {
         title: 'Employee',
         sorter: false,
-        render: (text) => {
+        render: (text, record) => {
           return <EmployeeListColumn id={text.id} name={text.name} employeeId={text.employeeId}></EmployeeListColumn>
         }
       },
@@ -327,7 +334,7 @@ export default class TeamEmployeeList extends Component {
                         <Table id='Table-style' className="table-striped "
                           pagination={{
                             total: totalRecords,
-                            showTotal: () => {
+                            showTotal: (total, range) => {
                               return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                             },
                             showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

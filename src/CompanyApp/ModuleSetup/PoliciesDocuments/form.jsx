@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { savePoliciesDocument } from './service';
 import { RecognitionSetupSchema } from './validation';
 
-
 export default class PoliciesDocumentForm extends Component {
     constructor(props) {
         super(props)

@@ -10,7 +10,6 @@ import { PermissionTypeSchema } from './validation';
 import { LightTooltip } from './tootip';
 
 
-
 export default class AttendancePermissionForm extends Component {
     constructor(props) {
         super(props)

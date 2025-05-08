@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveEmploymentStatus } from './service';
 import { EmploymentStatusSchema } from './validation'; 
 
-
 export default class EmploymentForm extends Component {
     constructor(props) {
         super(props)

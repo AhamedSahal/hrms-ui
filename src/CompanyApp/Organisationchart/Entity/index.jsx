@@ -7,6 +7,7 @@ import TableDropDown from '../../../MainPage/tableDropDown';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 import EntityForm from './form';
 import { deleteEntity, getEntityList } from './service';
+import { fileDownload } from '../../../HttpRequest';
 import { confirmAlert } from 'react-confirm-alert';
 import { toast } from 'react-toastify';
 
@@ -115,13 +116,13 @@ export default class Entity extends Component {
 
 
   render() {
-    const { data, totalRecords, currentPage, size } = this.state
+    const { data, totalPages, totalRecords, currentPage, size } = this.state
     let startRange = ((currentPage - 1) * size) + 1;
     let endRange = ((currentPage) * (size + 1)) - 1;
     if (endRange > totalRecords) {
       endRange = totalRecords;
     }
-    const menuItems = (text) => [
+    const menuItems = (text, record) => [
       <div ><a className="muiMenu_item" href="#" onClick={() => {
         this.setState({ entity: text, showForm: true })
       }} >

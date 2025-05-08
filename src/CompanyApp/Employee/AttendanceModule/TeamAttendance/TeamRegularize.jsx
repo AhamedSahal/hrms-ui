@@ -16,6 +16,7 @@ import { Button } from '@mui/material';
 
 
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
+const isEmployee = getUserType() == 'EMPLOYEE';
 const { Header, Body, Footer, Dialog } = Modal;
 export default class TeamRegularization extends Component {
     constructor(props) {
@@ -40,7 +41,8 @@ export default class TeamRegularization extends Component {
             currentPage: 1,
             showFilter: false,
             self: isCompanyAdmin ? 0 : 1,
-            selected: []
+            selected: [],
+            status: ""
         };
 
     }
@@ -50,7 +52,7 @@ export default class TeamRegularization extends Component {
 
     fetchList = () => {
         if (verifyViewPermission("ATTENDANCE")) {
-            getRegularizationList(this.state.q, this.state.regularizedDate, this.state.page, this.state.size, this.state.sort, this.state.self, this.state.fromDate, this.state.toDate).then(res => {
+            getRegularizationList(this.state.q, this.state.regularizedDate, this.state.page, this.state.size, this.state.sort, this.state.self, this.state.fromDate, this.state.toDate,this.state.status).then(res => {
                 if (res.status == "OK") {
                     this.setState({
                         data: res.data.list,
@@ -137,6 +139,13 @@ export default class TeamRegularization extends Component {
                         label: 'Yes',
                         onClick: () => {
                             let selected = []
+                            let test = data.map((d) => {
+                                if (d.regularizationStatus == "REGULARIZED") {
+                                    selected.push(d.id)
+                                    return d.id;
+                                }
+                            });
+
                             this.updateStatus(selected, status);
                             this.setState({ selected: [] })
                         }
@@ -201,7 +210,7 @@ export default class TeamRegularization extends Component {
 
 
     render() {
-        const { data, totalRecords, currentPage, size, selected } = this.state
+        const { data, totalPages, totalRecords, currentPage, size, selected } = this.state
         let startRange = ((currentPage - 1) * size) + 1;
         let endRange = ((currentPage) * (size + 1)) - 1;
         if (endRange > totalRecords) {
@@ -246,7 +255,7 @@ export default class TeamRegularization extends Component {
                 fixed: 'left',
                 hidden: true,
                 width: 250,
-                render: (text) => {
+                render: (text, record) => {
                     return <EmployeeListColumn
                         id={text.employee.id} name={text.employee.name} employeeId={text.employeeId}></EmployeeListColumn>
                 }
@@ -302,7 +311,7 @@ export default class TeamRegularization extends Component {
                 sorter: true,
                 width: 200,
                 className: "text-center",
-                // className: 'pre-wrap',
+                className: 'pre-wrap',
                 render: (text, record) => {
                     return <div>{record.actualOutTimeBeforeRegularize != null ? convertToUserTimeZone(record.actualOutTimeBeforeRegularize) : "-"}</div>
                 }
@@ -333,7 +342,7 @@ export default class TeamRegularization extends Component {
                 ),
                 width: 200,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <>
                         <div>{toLocalDateTime(text.regularizedInTime)}</div>
                     </>
@@ -348,7 +357,7 @@ export default class TeamRegularization extends Component {
                 sorter: true,
                 width: 210,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <>
                         <div>{toLocalDateTime(text.regularizedOutTime)}</div>
                     </>
@@ -362,7 +371,7 @@ export default class TeamRegularization extends Component {
                 ),
                 width: 210,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <div>{text.regularizationRemarks}</div>
                 }
             },
@@ -371,7 +380,7 @@ export default class TeamRegularization extends Component {
                 width: 200,
                 className: "text-center",
                 sorter: true,
-                render: (text) => {
+                render: (text, record) => {
                     return <>
                         {<span className={text.regularizationStatus == "NOT_REGULARIZED" ? "badge bg-inverse-secondary " : text.regularizationStatus == "PENDING" ? "badge bg-inverse-warning " : text.regularizationStatus == "REGULARIZED" ? "badge bg-inverse-success " : "-"}>
                             {text.regularizationStatus == "NOT_REGULARIZED" ? <i className="pr-2 fa fa-ban text-secondary"></i> : text.regularizationStatus == "PENDING" ? <i className="pr-2 fa fa-hourglass-o text-warning"></i> : text.regularizationStatus == "REGULARIZED" ? <i className="pr-2 fa fa-check text-success"></i> : "-"}{
@@ -385,7 +394,7 @@ export default class TeamRegularization extends Component {
                 title: 'Approval Status',
                 width: 150,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <div>{this.getStyle(text.approvalstatus)}</div>
                 }
             },
@@ -396,6 +405,7 @@ export default class TeamRegularization extends Component {
                 key: 'action',
                 align: 'center',
                 width: 100,
+                key: '17',
                 render: (text, record) => {
                     return <>
                         <div className="menuIconDiv">
@@ -503,7 +513,7 @@ export default class TeamRegularization extends Component {
                                         rowSelection={this.rowSelection}
                                         pagination={{
                                             total: totalRecords,
-                                            showTotal: () => {
+                                            showTotal: (total, range) => {
                                                 return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                                             },
                                             showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

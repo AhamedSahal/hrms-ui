@@ -9,6 +9,7 @@ export default class SuccessAlert extends Component {
             headText: this.props.headText || '',
             visible: true,
             imgUrl: this.props.img || '',
+            description: this.props.desc || '',
         }
 
     }

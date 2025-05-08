@@ -9,7 +9,6 @@ import 'react-toastify/dist/ReactToastify.css';
  import { saveHInternalApplicantForms, saveHExternalApplicantForms} from '../../Hire/hApplicants/service';
 // import { ForecastSchema } from './validation';
 
-
 export default class CandidateInfoApproval extends Component {
     constructor(props) {
         super(props)

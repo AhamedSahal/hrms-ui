@@ -17,7 +17,6 @@ import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 
 const { Header, Body, Footer, Dialog } = Modal;
 
-
 const LightTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({

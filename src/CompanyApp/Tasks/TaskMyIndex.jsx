@@ -202,12 +202,20 @@ export default class MyTasks extends Component {
                             </div>
                             <div className="float-right col">
                                 <div className="row justify-content-end">
-                                    <div className="mt-2 float-right col-auto ml-auto">
-
-                                        <i onClick={() => 
+                                    <div className="mt-2 float-right col-auto ml-auto flex items-center space-x-2">
+                                        
+                                          <div onClick={() => 
                                              this.setState({status: this.state.status == true ? false : true},() =>  this.updateSelf())  
-                                            } className={this.state.status ? 'fa-2x fa fa-toggle-on text-success' : 'fa-2x fa fa-toggle-off text-danger'}></i>
-                                        <label className="pl-2">{this.state.status ? 'Pending' : 'Completed'}</label> &nbsp;
+                                            } className="toggles-btn-view " id="button-container" >
+
+                                            <div id="my-button" className="toggle-button-element" style={{ transform:  this.state.status ? 'translateX(0px)' : 'translateX(80px)' }}>
+                                                <p className='m-0 self-btn'>{ this.state.status ? 'Pending' : 'Completed'}</p>
+
+                                            </div>
+                                            <p className='m-0 team-btn' style={{ transform:  this.state.status ? 'translateX(-10px)' : 'translateX(-100px)' }}>{this.state.status ? 'Completed' : 'Pending'}</p>
+                                            </div>
+
+
                                         <Link to="/app/company-app/Taskform" className="btn apply-button btn-primary"><i className="fa fa-plus" /> New Task</Link>
                                     </div>
                                 </div>

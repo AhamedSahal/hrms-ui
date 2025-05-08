@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
-import { camelize,exportToSortedCsvOrder, getTitle,verifyViewPermission,setAllChecked, getCompanyId, getMultiEntityCompanies } from '../../../../../utility';
+import moment from "moment";
+import { camelize, exportToCsv,exportToSortedCsvOrder, getTitle,verifyViewPermission,setAllChecked, getCompanyId, getMultiEntityCompanies } from '../../../../../utility';
 import BranchDropdown from '../../../../ModuleSetup/Dropdown/BranchDropdown';
 import DepartmentDropdown from '../../../../ModuleSetup/Dropdown/DepartmentDropdown';
 import PdfDocument from '../../../pdfDocument';
@@ -77,7 +78,7 @@ export default class WorkForcePlanBudgetReport extends Component {
   };
 
   render() {
-    const { data, selectedProperties, showPdf, sortedProperties } = this.state;
+    const { data, selectedProperties, showPdf, showCsv, sortedProperties } = this.state;
     let selectedData = [];
 
     if (data && selectedProperties) {

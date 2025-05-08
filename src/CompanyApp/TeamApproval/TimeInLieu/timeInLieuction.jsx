@@ -5,7 +5,6 @@ import { FormGroup } from 'reactstrap';
 import { updateStatus } from './service';
 import { Button, Stack } from '@mui/material';
 
-
 export default class TimeInLieuction extends Component {
     constructor(props) {
         super(props)

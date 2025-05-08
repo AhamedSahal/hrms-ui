@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { addMobileIPsIntoGroup, getMobileIPsList } from './service';
 
 
-
 export default class MobileAttendanceIPForm extends Component {
     constructor(props) {
         super(props)

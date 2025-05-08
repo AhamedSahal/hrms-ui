@@ -9,7 +9,6 @@ import { getPermission, getRoleId, getUserType, verifyEditPermission } from '../
 import EnumDropdown from '../../ModuleSetup/Dropdown/EnumDropdown';
 import { getStatusInformation, updateStatusInformation } from './service';
 
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 const isEmployee = getUserType() == 'EMPLOYEE';
 export default class StatusDetailEmployeeForm extends Component {

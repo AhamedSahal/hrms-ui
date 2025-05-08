@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveSection } from './service';
 import { SectionSchema } from './validation'; 
 
-
 export default class SectionForm extends Component {
     constructor(props) {
         super(props)

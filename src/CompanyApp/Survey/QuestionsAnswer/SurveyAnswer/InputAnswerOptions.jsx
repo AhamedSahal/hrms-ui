@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-
 class InputAnswerOptions extends Component {
     render() {
         const { value, onChange, onRemove, readOnly, placeholder, image, answerReadOnly } = this.props;

@@ -325,6 +325,20 @@ input[data-id="cbColor"] {
     border-radius: 0;
 }
 
+.endofService-title{
+    color: #000000;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.endofService-form{
+    border: solid 1px #d1d1d1;
+    padding: 15px;
+    margin: 15px;
+    border-radius: 5px;
+}
+
 .tablePage-title {
     color: #000000;
     font-size: 24px;
@@ -947,22 +961,32 @@ input[data-id="cbColor"] {
     position: relative;
 }
 
-.pswrdField .fa-eye {
-    position: absolute;
-    top: 15px;
-    right: 10px;
-    cursor: pointer;
-    bottom: 0;
-}
 
-.pswrdField .fa-eye-slash {
+.pswrdField {
+    position: relative;
+    width: 100%;
+  }
+  
+  .input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .input-wrapper input {
+    width: 100%;
+    padding-right: 40px; /* Prevent text from overlapping with the eye icon */
+  }
+  
+  .input-wrapper .fa-eye,
+  .input-wrapper .fa-eye-slash {
     position: absolute;
-    top: 15px;
+    top: 50%;
     right: 10px;
+    transform: translateY(-50%);
     cursor: pointer;
-    bottom: 0;
-}
-
+    color: #333;
+    font-size: 16px;
+  }
 .nav_level3 {
     border-radius: 6px;
     width: 108%;
@@ -3850,5 +3874,104 @@ input[data-id="cbColor"] {
     place-content: space-between;  
     margin-bottom: 6px;
 }
+.jobSummary_text{
+    font-size: 16px;
+    font-weight: 700;
+}
+/* HolidayCalendar.css */
 
+.holiday-container {
+    border: solid 1px #e3e3e3;
+    border-radius: 5px
+  }
+  
+  .holiday-item {
+    display: flex;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    padding: 12px 16px;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .holiday-date-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    margin-right: 16px;
+  }
+  
+  .holiday-month {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    color: #555;
+  }
+  
+  .holiday-date {
+    line-height: 1.2;
+    font-size: 18px;
+    font-weight: bold;
+    color: #222;
+    padding: 3px;
+  }
+  
+  .holiday-info {
+    flex: 1;
+  }
+  
+  .holiday-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .holiday-day {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .holiday-floater {
+    font-size: 11px;
+    margin-top: 4px;
+    background: #f3f3f3;
+    color: #555;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    font-weight: 500;
+  }
+  
 
+.holiday-month-jan { background: #b0c4de; }
+.holiday-month-feb { background: #f08080; }
+.holiday-month-mar { background: #f4a460; }
+.holiday-month-apr { background: #87ceeb; }
+.holiday-month-may { background: #98fb98; }
+.holiday-month-jun { background: #ffb6c1; }
+.holiday-month-jul { background: #ffa07a; }
+.holiday-month-aug { background: #9370db; }
+.holiday-month-sep { background: #204baa; }
+.holiday-month-oct { background: #dc143c; }
+.holiday-month-nov { background: #ffdead; }
+.holiday-month-dec { background: #4682b4; } 
+  
+
+.month-date {
+    text-align: center;
+    margin-right: 15px;
+    min-width: 62px;
+    color: #333; 
+    border: #d1d1d1 1px solid;
+    border-radius: 4px;
+  }
+  

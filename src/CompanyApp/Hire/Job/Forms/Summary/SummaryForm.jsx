@@ -271,49 +271,49 @@ export default class SummaryForm extends Component {
               <div className="row">
                 <div className="col-md-4">
                   <label>Job Code</label>
-                  <h3>{jobProfile.jobCode ? jobProfile.jobCode : "-"}</h3>
+                  <p className="jobSummary_text">{jobProfile.jobCode ? jobProfile.jobCode : "-"}</p>
                 </div>
                 <div className="col-md-4">
                   <label>Division</label>
-                  <h3>
+                  <p className="jobSummary_text">
                     {this.state.divisionName }
-                  </h3>
+                  </p>
                 </div>
                 <div className="col-md-4">
                   <label>Job Title</label>
-                  <h3>{jobProfile.jobTitle ? jobProfile.jobTitle : "-"}</h3>
+                  <p className="jobSummary_text">{jobProfile.jobTitle ? jobProfile.jobTitle : "-"}</p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-4">
                   <label>Deparment</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {this.state.departmentName}
-                  </h3>
+                  </p>
                 </div>
                 <div className="col-md-4">
                   <label>Employee Type</label>
-                  <h3>
+                  <p className="jobSummary_text">
                     {jobProfile.employmentType? jobProfile.employmentType == 1 ? "Full Time" : jobProfile.employmentType == 2 ? "Probation" : jobProfile.employmentType == 3  ? "Intern" : jobProfile.employmentType == 4 ? "Contrac" : jobProfile.employmentType == 5 ? "Part Time" : "-" : "-"}
-                  </h3>
+                  </p>
                 </div>
                 <div className="col-md-4">
                   <label>Experience Level</label>
-                  <h3>
+                  <p className="jobSummary_text">
                     {jobProfile.experienceLevel? jobProfile.experienceLevel: "-"}
-                  </h3>
+                  </p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-6">
                   <label>Location</label>
-                  <h3>{this.state.branchName}</h3>
+                  <p className="jobSummary_text">{this.state.branchName}</p>
                 </div>
                 <div className="col-md-6">
                   <label>Workplace Type</label>
-                  <h3>
+                  <p className="jobSummary_text">
                     {jobProfile.workplaceType? jobProfile.workplaceType == 1? "Remote": jobProfile.workplaceType == 2? "Onsite": jobProfile.workplaceType == 3? "Hybrid": "-": "-"}
-                  </h3>
+                  </p>
                 </div>
               </div>
             </div>
@@ -377,23 +377,23 @@ export default class SummaryForm extends Component {
               <div className="row">
                 <div className="col-md-6">
                   <label>External Job</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {JobDistribution
                       ? JobDistribution.jobType
                         ? "True"
                         : "False"
                       : "-"}
-                  </h3>
+                  </p>
                 </div>
                 <div className="col-md-6">
                   <label>Internal Job</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {jobProfile
                       ? JobDistribution.jobType
                         ? "False"
                         : "True"
                       : "-"}
-                  </h3>
+                  </p>
                 </div>
               </div>
             </div>
@@ -458,17 +458,17 @@ export default class SummaryForm extends Component {
               <div className="row">
                 <div className="col-md-6">
                   <label>Qualification</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {jobDescription.qualification
                       ? jobDescription.qualification
                       : "-"}
-                  </h3>
+                  </p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-6">
                   <label>Must Have Skills</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {jobDescription.name.length > 0
                       ? jobDescription.name.map((res, i) => (
                           <span>
@@ -477,11 +477,11 @@ export default class SummaryForm extends Component {
                           </span>
                         ))
                       : "-"}
-                  </h3>
+                  </p>
                 </div>
                 <div className="col-md-6">
                   <label>Good to have skills</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {jobDescription.skills.length > 0
                       ? jobDescription.skills.map((res, i) => (
                           <span>
@@ -490,7 +490,7 @@ export default class SummaryForm extends Component {
                           </span>
                         ))
                       : "-"}
-                  </h3>
+                  </p>
                 </div>
               </div>
             </div>
@@ -556,45 +556,45 @@ export default class SummaryForm extends Component {
               <div className="row">
                 <div className="col-md-6">
                   <label>Hiring Manager</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {this.state.hiringManagerName}
-                  </h3>
+                  </p>
                 </div>
                 <div className="col-md-6">
                   <label>Recruiter Tagged</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {this.state.recruiterName}
-                  </h3>
+                  </p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-4">
                   <label>No of Openings</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {RecruitmentSetting.noOfOpenings
                       ? RecruitmentSetting.noOfOpenings
                       : "-"}
-                  </h3>
+                  </p>
                 </div>
                 <div className="col-md-4">
                   <label>Opening Date</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {RecruitmentSetting
                       ? moment(RecruitmentSetting.openingDate).utc().format("MM-DD-YYYY"): "-"}
-                  </h3>
+                  </p>
                 </div>
                 <div className="col-md-4">
                   <label> Expiry Date</label>
-                  <h3>
+                  <p  className="jobSummary_text">
                     {RecruitmentSetting
                       ? moment(RecruitmentSetting.expiryDate).utc().format("MM-DD-YYYY"): "-"}
-                  </h3>
+                  </p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-4">
                   <label>Evaluate Candidates</label>
-                  <h3>
+                  <p className="jobSummary_text">
                     {RecruitmentSetting.evaluationParameter.length > 0
                       ? RecruitmentSetting.evaluationParameter.map((res, i) => (
                           <span>
@@ -603,27 +603,27 @@ export default class SummaryForm extends Component {
                           </span>
                         ))
                       : "-"}
-                  </h3>
+                  </p>
                 </div>
                 <div className="col-md-4">
                   <label>Screening Automation</label>
-                  <h3>
+                  <p className="jobSummary_text">
                     {RecruitmentSetting
                       ? RecruitmentSetting.screeningAutomation
                         ? "True"
                         : "False"
                       : "-"}
-                  </h3>
+                  </p>
                 </div>
                 <div className="col-md-4">
                   <label>Active</label>
-                  <h3>
+                  <p className="jobSummary_text">
                     {RecruitmentSetting
                       ? RecruitmentSetting.active
                         ? "True"
                         : "False"
                       : "-"}
-                  </h3>
+                  </p>
                 </div>
               </div>
             </div>
@@ -691,7 +691,7 @@ export default class SummaryForm extends Component {
                     <div className="row">
                        {systemFieldBoolean = true}
                        {CustomFieldBoolean = true}
-                      <h3>{applicantFieldresponse.fieldName}</h3>
+                      <h5>{applicantFieldresponse.fieldName}</h5>
                       <div className="col-md-6">
                         <table className="systemfieldTable">
                           {/* head */}

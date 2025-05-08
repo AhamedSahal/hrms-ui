@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React, { Component } from "react";
 import { getCumulativeScore } from "./service";
 import SurveyReportLevel from "./reportLevel";
 import CumulativeScore from "./cumulativeScore";

@@ -10,7 +10,6 @@ import { WorkflowStepSchema } from './validation';
 import { saveWorkflow } from './service';
 
 
-
 class WorkflowStepForm extends Component {
     constructor(props) {
         super(props)

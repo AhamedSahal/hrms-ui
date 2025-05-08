@@ -26,7 +26,6 @@ import CandidateInfoForm from '../CompanyApp/Onboarding/Candidateinfo/form';
 function getFaviconEl() {
     return document.getElementById("favicon");
 }
-
 function hexToRgbA(hex) {
     var c;
     if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { BsSliders } from 'react-icons/bs';
 import 'react-confirm-alert/src/react-confirm-alert.css'
-import { getUserType, getEmployeeId, getCustomizedWidgetDate } from '../../../../utility';
+import { getUserType, getEmployeeId, verifyViewPermission, getCustomizedWidgetDate } from '../../../../utility';
 import { itemRender } from '../../../../paginationfunction';
 import { getOvertimeList } from '../Overtime/service';
 import { Button } from '@mui/material';
@@ -29,7 +29,7 @@ export default class MyOvertimeApproval extends Component {
       totalPages: 0,
       totalRecords: 0,
       currentPage: 1,
-      self: 1,
+      self: 1 || 0,
       showFilter: false,
       fromDate: firstDay.toISOString().split('T')[0],
       toDate: lastDay.toISOString().split('T')[0],
@@ -105,7 +105,7 @@ export default class MyOvertimeApproval extends Component {
 
 
   render() {
-    const { data, totalRecords, currentPage, size } = this.state
+    const { data, totalPages, totalRecords, currentPage, size, selected, buttonState } = this.state
     let startRange = ((currentPage - 1) * size) + 1;
     let endRange = ((currentPage) * (size + 1)) - 1;
     if (endRange > totalRecords) {
@@ -174,7 +174,7 @@ export default class MyOvertimeApproval extends Component {
         dataIndex: 'overTimeApprovalStatus',
         sorter: true,
         className: "text-center",
-        render: (Forecast) => {
+        render: (Forecast, record) => {
           return <> <div>{this.getStyle(Forecast)}</div>
           </>
         }
@@ -259,7 +259,7 @@ export default class MyOvertimeApproval extends Component {
                     <Table id='Table-style' className="table-striped"
                       pagination={{
                         total: totalRecords,
-                        showTotal: () => {
+                        showTotal: (total, range) => {
                           return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                         },
                         showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

@@ -8,7 +8,6 @@ import EnumDropdown from '../../CompanyApp/ModuleSetup/Dropdown/EnumDropdown';
 import { PayrollType } from '../../Constant/enum';
 
 
-
 export default class PayrollCycle extends Component {
     constructor(props) {
         super(props)

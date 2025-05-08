@@ -9,17 +9,19 @@ import { getByCompanyId } from '../../CompanyApp/Settings/Theme/service';
 export default class ManageSSOForm extends Component {
     constructor(props) {
         super(props);
+        let companyId = this.props.company?.id;
         this.state = {
             manageSSOKey:{
             isSsoKeyEnabled:'',
         },
+            manageSSOKey:{},
             companyId: this.props.company?.id,
         };
     }
     componentDidMount (){
         this.fetchList();
     }
-    fetchList = () => {
+    fetchList = (companyId) => {
         getByCompanyId(this.state.companyId).then(res => {
             if (res.status == "OK") {
                 this.setState({
@@ -42,7 +44,7 @@ export default class ManageSSOForm extends Component {
                     toast.error(res.message);
                 }
                 action.setSubmitting(false);
-            }).catch(() => {
+            }).catch(err => {
                 toast.error("Error while saving SSO Key");
                action.setSubmitting(false);
             });

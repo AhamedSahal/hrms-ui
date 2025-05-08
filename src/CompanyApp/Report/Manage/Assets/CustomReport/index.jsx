@@ -61,7 +61,7 @@ export default class AssetsReport extends Component {
         this.setState({checkedValidation:true})
       })
     })
-}
+  }
   }
 
   handlesortFuntion = (checkAll) => {

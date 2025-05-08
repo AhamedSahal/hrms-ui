@@ -16,7 +16,6 @@ import AttendanceSettingLanding from './ConfigurationSettings/AttendanceSettingL
 
 const { Header, Body } = Modal;
 
-
 export default class Groups extends Component {
     constructor(props) {
         super(props);

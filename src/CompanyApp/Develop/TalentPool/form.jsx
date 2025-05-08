@@ -11,7 +11,6 @@ import EmployeeListColumn from '../../Employee/employeeListColumn';
 import { validateTalentPool } from './validation';
 import { getEmployeeList, saveTalentPool } from './service';
 
-
 export default class TalentPoolForm extends Component {
     constructor(props) {
         super(props)

@@ -18,7 +18,7 @@ export default class Signature extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      employeeId: props.employeeId,
+      employeeId: getEmployeeId(),
       data: [],
       q: "",
       page: 0,
@@ -62,6 +62,7 @@ export default class Signature extends Component {
     }
     this.setState({ data }, () => {
       this.hideForm();
+      this.fetchList()
     });
   };
 

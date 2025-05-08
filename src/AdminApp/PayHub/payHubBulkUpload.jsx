@@ -10,7 +10,6 @@ import PayHubIndustryDropdown from '../../CompanyApp/ModuleSetup/Dropdown/PayHub
 import PayHubRegionDropdown from '../../CompanyApp/ModuleSetup/Dropdown/PayHubRegionDropdown';
 import PayHubSubRegionDropdown from '../../CompanyApp/ModuleSetup/Dropdown/PayHubSubRegionDropdown';
 import PayHubRevenueDropdown from '../../CompanyApp/ModuleSetup/Dropdown/PayHubRevenueDropdown';
-
 export default class PayHubBulkUpload extends Component {
     constructor(props) {
         super(props)

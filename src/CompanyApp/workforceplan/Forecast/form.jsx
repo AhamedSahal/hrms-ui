@@ -7,7 +7,6 @@ import { saveForecast } from './service';
 import { ForecastSchema } from './validation';
 import DepartmentDropdown from '../../ModuleSetup/Dropdown/DepartmentDropdown'; 
 
-
 export default class ForecastForm extends Component {
     constructor(props) {
         super(props)

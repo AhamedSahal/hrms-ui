@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import GratuitySettingForm from '../ModuleSetup/gratuity/GratuitySettingForm';
 import OvertimeSettingForm from '../ModuleSetup/overtime/OvertimeSettingForm';
 import Expenses from '../ModuleSetup/Expenses/index';
 import PaymentMode from '../ModuleSetup/PaymentMode/list';
 import CurrencySettingForm from '../ModuleSetup/Currency/form';
+import EndofServices from '../ModuleSetup/EndofService';
 
 export default class PayLanding extends Component {
     render() {
@@ -17,7 +17,7 @@ export default class PayLanding extends Component {
                         <CurrencySettingForm></CurrencySettingForm>
                     </div>
                     <div id="gratuity" className="pro-overview tab-pane fade show active">
-                        <GratuitySettingForm></GratuitySettingForm>
+                        <EndofServices></EndofServices>
                     </div>
                     <div id="Expenses" className="pro-overview tab-pane fade show active">
                         <Expenses></Expenses>
@@ -26,8 +26,6 @@ export default class PayLanding extends Component {
                         <PaymentMode></PaymentMode>
                     </div>
                 </div>
-
-
             </div>
         )
     }

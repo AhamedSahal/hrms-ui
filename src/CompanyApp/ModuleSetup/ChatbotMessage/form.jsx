@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveChatbotMessage } from './service';
 import { ChatbotMessageSchema } from './validation';
 
-
 export default class ChatbotMessageForm extends Component {
     constructor(props) {
         super(props)

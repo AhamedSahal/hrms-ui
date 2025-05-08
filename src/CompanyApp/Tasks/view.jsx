@@ -44,7 +44,7 @@ export default class TasksView extends Component {
         })
     }
     render() {
-        const { employee, taskname, description, startdate, createdOn, enddate, fileName, url, raisedby, status, completeddate, profileImg, raisedprofileImg } = this.state.TasksView;
+        const { id, employeeId, employee, taskname, description, startdate, createdOn, enddate, fileName, url, raisedby, status, completeddate, profileImg, raisedprofileImg } = this.state.TasksView;
         return (
             <div className="card" style={{ fontFamily: "wotfard" }}>
                 <div className="card-body" id="card">

@@ -21,7 +21,7 @@ const CompanyModuleSetupRoute = ({ match }) => {
       <Route path={`${match.url}/allowance-type`} component={AllowanceType} />
       <Route path={`${match.url}/gratuity`} component={GratuitySettingForm} />
       <Route path={`${match.url}/overtime`} component={OvertimeSettingForm} /> */}
-      <Route path={`${match.url}/performance/objectivegroup`} component={ObjectiveGroup} />
+      <Route path={`${match.url}/performance/objectivegroup`} element={<ObjectiveGroup/>} />
      
    </Routes>
 )};

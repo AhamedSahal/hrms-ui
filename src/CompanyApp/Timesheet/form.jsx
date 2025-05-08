@@ -11,7 +11,6 @@ import ActivityDropdown from '../ModuleSetup/Dropdown/ActivityDropdown';
 import ProjectDropdown from './../ModuleSetup/Dropdown/ProjectDropdown';
 import TimesheetRow from './timesheetRow';
 
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 export default class CreateTimesheetForm extends Component {
     constructor(props) {

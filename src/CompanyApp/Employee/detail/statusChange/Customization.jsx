@@ -13,7 +13,6 @@ import { getSalaryInformation, updateSalaryInformation } from './service';
 
 import { SalaryBasicAndModeSchema } from '../validation';
 import ComparatioMap from './comparatioMap';
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION;
 const isEmployee = getUserType() == 'EMPLOYEE';
 

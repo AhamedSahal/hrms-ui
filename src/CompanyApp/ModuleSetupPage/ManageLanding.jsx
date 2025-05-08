@@ -1,69 +1,112 @@
 import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
-import { getTitle } from '../../utility';
 import EmployeeModule from './EmployeeModule'
 import LeaveModule from './LeaveModule';
 import RosterModule from './RosterModule'
 import PoliciesDocuments from '../ModuleSetup/PoliciesDocuments'
 import DocumentRequestLanding from './DocumentRequestLanding'
 import AssetsLanding from './AssetsLanding'
-import { Box, Tab, Tabs } from '@mui/material';
-import AttendanceFormatForm from '../Settings/Format/attendanceFormat';
 import AttendanceModuleLanding from './AttendanceModuleLanding';
+
 export default class ManageLanding extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            value: 0
+            activeMenu: 'Employee' // Default active button set to 'Employee'
         };
     }
-    handleChange = (event, newValue) => {
-        this.setState({ value: newValue })
+
+    handleMenuClick = (menu) => {
+        this.setState({ activeMenu: menu });
     };
+
     render() {
         return (
-            <div >
-
-
+            <div>
                 <div className="mt-3 content container-fluid">
-                    <Box className='nav_level3' >
-                        <Tabs value={this.state.value} onChange={this.handleChange}>
-                            <Tab href="#Employee" data-toggle="tab" className="manage-nav nav-link" id="label1" label="Employee" />
-                            <Tab href="#AttendanceFormat" data-toggle="tab" className="manage-nav nav-link" id="label1" label="Attendance" />
-                            <Tab href="#Leave" data-toggle="tab" className="manage-nav nav-link" id="label1" label="Leave" />
-                            <Tab href="#Roster" data-toggle="tab" className="manage-nav nav-link" id="label1" label="Roster" />
-                            <Tab href="#Policy" data-toggle="tab" className="manage-nav nav-link" id="label1" label="Policy & Document" />
-                            <Tab href="#Document" data-toggle="tab" className="manage-nav nav-link" id="label1" label="Document Request" />
-                            <Tab href="#Assets" data-toggle="tab" className="manage-nav nav-link" id="label1" label="Assets" />
-                        </Tabs>
-                    </Box>
+                    <div className="menu-toggle">
+                        <button
+                            className={this.state.activeMenu === 'Employee' ? 'active' : ''}
+                            onClick={() => this.handleMenuClick('Employee')}
+                        >
+                            Employee
+                        </button>
+                        <button
+                            className={this.state.activeMenu === 'Attendance' ? 'active' : ''}
+                            onClick={() => this.handleMenuClick('Attendance')}
+                        >
+                            Attendance
+                        </button>
+                        <button
+                            className={this.state.activeMenu === 'Leave' ? 'active' : ''}
+                            onClick={() => this.handleMenuClick('Leave')}
+                        >
+                            Leave
+                        </button>
+                        <button
+                            className={this.state.activeMenu === 'Roster' ? 'active' : ''}
+                            onClick={() => this.handleMenuClick('Roster')}
+                        >
+                            Roster
+                        </button>
+                        <button
+                            className={this.state.activeMenu === 'Policy' ? 'active' : ''}
+                            onClick={() => this.handleMenuClick('Policy')}
+                        >
+                            Policy & Document
+                        </button>
+                        <button
+                            className={this.state.activeMenu === 'Document' ? 'active' : ''}
+                            onClick={() => this.handleMenuClick('Document')}
+                        >
+                            Document Request
+                        </button>
+                        <button
+                            className={this.state.activeMenu === 'Assets' ? 'active' : ''}
+                            onClick={() => this.handleMenuClick('Assets')}
+                        >
+                            Assets
+                        </button>
+                    </div>
                     <div className="tab-content">
-                        <div id="Employee" className="pro-overview tab-pane fade show active">
-                            <EmployeeModule></EmployeeModule>
-                        </div>
-                        <div id="Leave" className="pro-overview tab-pane fade ">
-                            <LeaveModule></LeaveModule>
-                        </div>
-                        <div id="Roster" className="pro-overview tab-pane fade">
-                            <RosterModule></RosterModule>
-                        </div>
-                        <div id="Policy" className="pro-overview tab-pane fade ">
-                            <PoliciesDocuments></PoliciesDocuments>
-                        </div>
-                        <div id="Document" className="pro-overview tab-pane fade ">
-                            <DocumentRequestLanding></DocumentRequestLanding>
-                        </div>
-                        <div id="Assets" className="pro-overview tab-pane fade ">
-                            <AssetsLanding></AssetsLanding>
-                        </div>
-                        <div id="AttendanceFormat" className="pro-overview tab-pane fade ">
-                            <AttendanceModuleLanding></AttendanceModuleLanding>
-                        </div>
+                        {this.state.activeMenu === 'Employee' && (
+                            <div>
+                                <EmployeeModule />
+                            </div>
+                        )}
+                        {this.state.activeMenu === 'Attendance' && (
+                            <div>
+                                <AttendanceModuleLanding />
+                            </div>
+                        )}
+                        {this.state.activeMenu === 'Leave' && (
+                            <div>
+                                <LeaveModule />
+                            </div>
+                        )}
+                        {this.state.activeMenu === 'Roster' && (
+                            <div>
+                                <RosterModule />
+                            </div>
+                        )}
+                        {this.state.activeMenu === 'Policy' && (
+                            <div>
+                                <PoliciesDocuments />
+                            </div>
+                        )}
+                        {this.state.activeMenu === 'Document' && (
+                            <div>
+                                <DocumentRequestLanding />
+                            </div>
+                        )}
+                        {this.state.activeMenu === 'Assets' && (
+                            <div>
+                                <AssetsLanding />
+                            </div>
+                        )}
                     </div>
                 </div>
-
             </div>
-        )
+        );
     }
 }

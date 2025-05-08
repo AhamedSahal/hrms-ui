@@ -15,7 +15,7 @@ export default class OrgAttendanceCardView extends Component {
         super(props);
         this.state = {
             series: [21, 1, 1, 2],
-            employeeId: [],
+            employeeId: [] || 0,
             branchId: '',
             month: '',
             departmentId: '',

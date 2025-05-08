@@ -1,6 +1,6 @@
 
 import { getPaginationQueryString } from '../../utility';
-import {  getWithAuth, patchWithAuth, postWithAuth, putWithAuth } from '../../HttpRequest';
+import { deleteWithAuth, getWithAuth, patchWithAuth, postWithAuth, putWithAuth } from '../../HttpRequest';
 
 const servicePath = "/tasks";
 

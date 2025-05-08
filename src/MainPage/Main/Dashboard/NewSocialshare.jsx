@@ -51,6 +51,7 @@ import { Card, Avatar, Typography, Input } from 'antd';
 import moment from 'moment';
 import UploadDocsEmployeeForm from './uploadDocsForm.jsx';
 import checkimg from '../../../assets/img/tickmarkimg.gif'
+import HolidayCalendar from './HolidaysList.jsx';
 
 const { Text } = Typography;
 
@@ -72,7 +73,6 @@ const responsive = {
         items: 2
     }
 };
-
 
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || getPermission("Employee", "VIEW") == PERMISSION_LEVEL.ORGANIZATION;;
 const isEmployee = getUserType() == 'EMPLOYEE';
@@ -654,6 +654,11 @@ export default class NewSocialShare extends Component {
             showReactionList: false
         })
     }
+    hideHolidays = () => {
+        this.setState({
+            showHolidays: false
+        })
+    }
     responsive = {
         desktop: {
             breakpoint: { max: 3000, min: 1024 },
@@ -761,18 +766,6 @@ export default class NewSocialShare extends Component {
         })
     }
 
-    onPageSizeChange = () => {
-        this.setState(prevState => ({
-            pageSize: prevState.pageSize + 10
-        }), () => {
-            Promise.all([this.getSocialShareList()])
-                .then(([socialShareCount, recognitionCount]) => {
-                    if (socialShareCount === 0 && recognitionCount === 0) {
-                        this.setState({ hideLoadMore: true });
-                    }
-                });
-        });
-    };
 
     handleButtonClick(index) {
         this.setState({ activeButton: index });
@@ -831,9 +824,7 @@ export default class NewSocialShare extends Component {
               desc: 'submited successfully',
               showAlert: true
             });
-          } else {
-            console.log("Invalid status for alert message.");
-           }
+          } else { }
 
         setTimeout(() => {
             this.setState({ showAlert: false });
@@ -906,9 +897,10 @@ export default class NewSocialShare extends Component {
     }
 
     render() {
-        const { documentExpiryByMonth, upComingAnnouncement, dashboard, RecognitionSetup, LeaveTrack, LeaveTrackSelf, LeaveTrackTeam } = this.state;
-        
-        const { timeSheetList, attendanceToggle, roleName, newHire, leaveList, leaveBalanceList, overTimeList, timeInLieu } = this.state;
+        const { documentExpiryByMonth, likeControl, logo, upComingDocumentExpiry, upComingBirthday, upComingAnniversary, upComingHolidays, todayAttendance, upComingAnnouncement, dashboard, dashboardData, socialShare, RecognitionSetup, policiesdocument, LeaveTrack, LeaveTrackSelf, LeaveTrackTeam, totalPages, currentPage, totalRecords, clockin, clockout, isLoggedIn } = this.state;
+        const { item } = this.props;
+        const { hideLoadMore } = this.state;
+        const { timeSheetList, attendanceToggle, roleName, newHire, showComments, clickedCommentId, clickedShareCommentId, leaveList, leaveBalanceList, overTimeList, timeInLieu , hasMore} = this.state;
 
         const buttons = ['Leave', 'Timesheet', 'Overtime', 'Time in Lieu'];
         const { activeButton } = this.state;
@@ -1183,7 +1175,7 @@ export default class NewSocialShare extends Component {
                         {/* Emp policyCard */}
                          <div className="policyCard">
                             <div className="Title">
-                                <h2 className="TitleAction">Policies & Documents</h2>
+                                <h2 style={{wordSpacing: '-3px'}}  className="TitleAction">Policies & Documents</h2>
                                 {/* <img src={quickActionIcon} alt="" /> */}
                             </div>
                             <div className="qui">
@@ -1529,7 +1521,7 @@ export default class NewSocialShare extends Component {
                                     )) : <span><Empty style={{ marginTop: '35px' }} /></span> : null}
                                     {/* Overtime Action */}
 
-                                    {activeButton === 2 ? overTimeList.length > 0 ? overTimeList.map((data) => (
+                                    { this.state.overtimeEnable && activeButton === 2 ? overTimeList.length > 0 ? overTimeList.map((data, index) => (
                                         <MeetingDashboardTooltip title={
 
                                             <div>
@@ -1587,7 +1579,7 @@ export default class NewSocialShare extends Component {
                                         </MeetingDashboardTooltip>)) : <span><Empty style={{ marginTop: '35px' }} /></span> : null
                                     }
                                     {/* Time In Lieu Action */}
-                                    {activeButton === 3 ? timeInLieu.length > 0 ? timeInLieu.map((data) => (
+                                    {activeButton === 3 ? timeInLieu.length > 0 ? timeInLieu.map((data, index) => (
                                         <MeetingDashboardTooltip title={
 
                                             <div>
@@ -1697,7 +1689,7 @@ export default class NewSocialShare extends Component {
                                         <p onClick={() => this.setState({ newHire: true })} className={`btnText ${newHire ? 'btnTextActive' : ''}`} >Leaving</p>
                                     </div>
                                     <div className='eventScroll'>
-                                        {this.state.upComingLeaving.length > 0 ? this.state.upComingLeaving.map((data) => (
+                                        {this.state.upComingLeaving.length > 0 ? this.state.upComingLeaving.map((data, index) => (
                                             <div hidden={!this.state.newHire} className='container-fluid' id='eventElements'>
                                                 <div >
                                                     <EmployeeProfilePhoto className="events-proPic" id={data.id} alt={data.firstName} />
@@ -1707,7 +1699,7 @@ export default class NewSocialShare extends Component {
                                             </div>)) : <div style={{ placeSelf: 'center' }} hidden={!this.state.newHire}><Empty /></div>
                                         }
 
-                                    {this.state.upComingHire.length > 0 ? this.state.upComingHire.map((data) => (
+                                    {this.state.upComingHire.length > 0 ? this.state.upComingHire.map((data, index) => (
                                         <div hidden={this.state.newHire} className='container-fluid' id='eventElements'>
                                             <div >
                                                 <EmployeeProfilePhoto className="events-proPic" id={data.id} alt={data.firstName} />
@@ -1721,6 +1713,9 @@ export default class NewSocialShare extends Component {
                                 <div className=' upCommingHolidays'>
                                     <div className='Title d-flex upCommingHolidaysTitle' >
                                         <h2 className='newDashboardTitleAction'>Upcoming Holidays </h2>
+                                        <div style={{cursor: 'pointer'}} onClick={() => this.setState({ showHolidays: true })} >
+                                            <p className='viewAllBtn viewAllBtnEvent'>View All</p>
+                                        </div>
                                     </div>
                                     {this.state.upComingHolidays.length > 0 ? <div>
                                         {this.state.upComingHolidays.slice(0, 4).map((data, index) => {
@@ -1762,6 +1757,7 @@ export default class NewSocialShare extends Component {
                                         placeholder={`What's on your mind, ${getUserName()}?`}
                                         onClick={() => this.setState({ showForm: true })}
                                     />
+                                   
                                 </div>
                                 <div className="action-buttons">
                                     <button onClick={() => this.setState({ showForm: true })} className="action-button live-video">
@@ -1775,8 +1771,7 @@ export default class NewSocialShare extends Component {
                                     </button>
                                 </div>
                             </div>
-                           
-                            {this.state.socialShare?.map((item, index) => {
+                           {this.state.socialShare?.map((item, index) => {
                                 let reactionIdByemployee = 0
                                 // get employee reaction Id
                                 if (item.reactions != null && item.reactions?.length > 0) {
@@ -1792,8 +1787,11 @@ export default class NewSocialShare extends Component {
 
                                     })
                                 }
-                               
                                 if (item.type == "RECOGNITION") {
+                                    let showComment = item.comments;
+                                    if (item.commentCount) {
+                                        showComment = showComment.slice(0, item.commentCount > 0 ? item.commentCount : defaultCommentCount);
+                                    }
                                     const recognitionImages = {
                                         'Customer Service Superstar!': customerService,
                                         'Great Work!': greatWorkBg,
@@ -1851,8 +1849,8 @@ export default class NewSocialShare extends Component {
                                                         <div >
                                                             <EmployeeProfilePhoto className='recEmployeePic' id={item.awardee?.id}></EmployeeProfilePhoto>
                                                         </div>
-                                                        <h4 className='m-0'>{item.awardee && item.awardee?.name}</h4>
-                                                        <h6>
+                                                        <h4 style={{wordSpacing: '-3px'}} className='m-0'>{item.awardee && item.awardee?.name}</h4>
+                                                        <h6 style={{wordSpacing: '-3px'}}>
                                                             <MediaComponent mediaPath={item.mediaPath} mediaType={item.mediaType} />
                                                             &nbsp;{item.recognitionSetup?.name}</h6>
                                                     </div>
@@ -1906,8 +1904,6 @@ export default class NewSocialShare extends Component {
                                             onMouseOver={() => this.handleMouseOver(item.id)}
                                             style={{ position: 'relative', display: 'inline-block' }}
                                         >
-                                            {console.log('cell --- reactionIdByemployee', reactionIdByemployee)}
-                                            
                                             {reactionIdByemployee == 0 ?
                                                 <li onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} className='h5 likeHover'>
                                                     <span className=' mr-1 p-0' > <AiOutlineLike size={25} /></span> Likes
@@ -2066,7 +2062,7 @@ export default class NewSocialShare extends Component {
                                                             placeholder="Write a comment..."
                                                         />
                                                         <div className="input-group-append recComment-group">
-                                                            <p className="p-2 btn btn-secondary send-btn" type="button" onClick={() => {
+                                                            <p className="p-2 btn btn-secondary send-btn" type="button" onClick={e => {
                                                                 putRecognitionComment(item.id, this.state.commentText[item.id]).then(res => {
                                                                     if (res.status === "OK") {
                                                                         this.getSocialShareList();
@@ -2122,7 +2118,12 @@ export default class NewSocialShare extends Component {
                                     </div>)
                                 // Birthday Post
                             } else if (item.type == "BIRTHDAY" || item.type == "ANNIVERSARY") {
-                                
+                                let showComments = item.comments;
+                                if (item.commentCount) {
+                                    showComments = showComments.slice(0, item.commentCount);
+                                } else {
+                                    showComments = showComments.slice(0, defaultCommentCount);
+                                }
                                 const inputDate = new Date(item.createdOn);
                                 const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
                                 const formattedDate = inputDate.toLocaleDateString('en-US', options);
@@ -2422,10 +2423,18 @@ export default class NewSocialShare extends Component {
                                                 </div>
                                             </>
                                             : null}
+
+
                                     </div>)
                             } else {
                                 {/* socialShare */ }
 
+                                let showComments = item.comments;
+                                if (item.commentCount) {
+                                    showComments = showComments.slice(0, item.commentCount);
+                                } else {
+                                    showComments = showComments.slice(0, defaultCommentCount);
+                                }
                                 return (
                                     <div className='newRecognitionShare' key={index}>
                                         <div className="m-0">
@@ -2500,7 +2509,7 @@ export default class NewSocialShare extends Component {
 
                                                 </li> : <li className='p-0 h5 likeHover' style={{fontSize: '13px'}}> 
  
-                                                <span className=' mr-1 p-0' >{reactionIdByemployee === 1?'👍':reactionIdByemployee === 2?'👏':reactionIdByemployee === 3?'🤲':reactionIdByemployee === 4?'❤️':reactionIdByemployee === 5?'💡':reactionIdByemployee === 6?'😄': <AiOutlineLike size={25} />}</span> {reactionIdByemployee === 1?'Like':reactionIdByemployee === 2?'Celebrate':reactionIdByemployee === 3?'Support':reactionIdByemployee === 4?'Love':reactionIdByemployee === 5?'Insightful':reactionIdByemployee === 6?'Funny': 'Likes'} 
+                                                <span className=' mr-1 p-0' >{reactionIdByemployee == 1?'👍':reactionIdByemployee == 2?'👏':reactionIdByemployee == 3?'🤲':reactionIdByemployee == 4?'❤️':reactionIdByemployee == 5?'💡':reactionIdByemployee == 6?'😄': <AiOutlineLike size={25} />}</span> {reactionIdByemployee == 1?'Like':reactionIdByemployee == 2?'Celebrate':reactionIdByemployee == 3?'Support':reactionIdByemployee == 4?'Love':reactionIdByemployee == 5?'Insightful':reactionIdByemployee == 6?'Funny': 'Likes'} 
                                                 </li>}
 
                                             {this.state.showEmojis && item.id == this.state.likeId && (
@@ -2646,7 +2655,7 @@ export default class NewSocialShare extends Component {
                                                             placeholder="Write a comment..."
                                                         />
                                                         <div className="input-group-append recComment-group">
-                                                            <p className="p-2 btn btn-secondary send-btn" type="button" onClick={() => {
+                                                            <p className="p-2 btn btn-secondary send-btn" type="button" onClick={e => {
                                                                 putSocialShareComment(item.id, this.state.commentText[item.id]).then(res => {
                                                                     if (res.status === "OK") {
                                                                         let { socialShare } = this.state;
@@ -2705,6 +2714,16 @@ export default class NewSocialShare extends Component {
                                         </div>)
                                 }
                             })}
+                            {totalRecords !== this.state.socialShare.length &&
+                                <div className="text-center">
+                                    <p className="socialPostloadMoreBtn" onClick={() => {
+                                        this.setState({
+                                            pageNumber: currentPage
+                                        }, this.getSocialShareList,
+                                            this.getRecognitionList)
+                                    }}>Load More..</p>
+                                </div>
+                            }
                         </div>
 
                     </div>
@@ -2726,7 +2745,15 @@ export default class NewSocialShare extends Component {
                                 //validationSchema={DashboardSchema}
                                 >
                                     {({
+                                        values,
+                                        errors,
+                                        touched,
+                                        handleChange,
+                                        handleBlur,
+                                        handleSubmit,
+                                        isSubmitting,
                                         setFieldValue,
+                                        setSubmitting,
 
                                         /* and other goodies */
                                     }) => (
@@ -2889,6 +2916,17 @@ export default class NewSocialShare extends Component {
 
 
                 </Modal>
+                <Modal enforceFocus={false} size={"lg"} show={this.state.showHolidays} onHide={this.hideHolidays}>
+                    <Header closeButton>
+                        <h5 className="modal-title">
+                            Holidays
+                        </h5>
+                    </Header>
+                    <Body>
+                        <HolidayCalendar ></HolidayCalendar>
+                    </Body>
+                </Modal>
+                
             </div >
         )
     }

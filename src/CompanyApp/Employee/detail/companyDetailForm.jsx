@@ -21,7 +21,6 @@ import { PERMISSION_LEVEL } from '../../../Constant/enum';
 import EmploymentStatusDropdown from '../../ModuleSetup/Dropdown/EmploymentStatusDropdown';
 import EntityDropdown from '../../ModuleSetup/Dropdown/EntityDropdown';
 
-
 const { Header, Body, Footer, Dialog } = Modal;
 
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';

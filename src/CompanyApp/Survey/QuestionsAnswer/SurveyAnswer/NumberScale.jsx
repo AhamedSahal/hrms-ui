@@ -4,7 +4,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
-
 class NumberScale extends Component {
 
     constructor(props) {

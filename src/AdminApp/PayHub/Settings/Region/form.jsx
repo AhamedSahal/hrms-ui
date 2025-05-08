@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { regionSchema } from './validation';
 import { saveRegion } from './service';
 
-
 export default class RegionForm extends Component {
     constructor(props) {
         super(props)

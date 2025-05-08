@@ -6,7 +6,6 @@ import { CouponSchema } from './validation';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 export default class CouponForm extends Component {
     constructor(props) {
         super(props)

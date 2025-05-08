@@ -123,8 +123,8 @@ class Loginpage extends Component {
                           <Field name="userName" type="text" required className="form-control" placeholder="Email Address *" />
                         </div>
                         <div className="pswrdField">
-                          <span className="form-element">
-                          <span onClick={this.togglePasswordVisibility} className={showPassword ? `fa fa-eye-slash` : `fa fa-eye`}></span>
+                          <div className="input-wrapper">
+                            <span onClick={this.togglePasswordVisibility} className={showPassword ? `fa fa-eye-slash` : `fa fa-eye`}></span>
                             <Field
                               name="password"
                               type={showPassword ? 'text' : 'password'}
@@ -132,7 +132,11 @@ class Loginpage extends Component {
                               className="form-control"
                               placeholder="Password *"
                             />
-                          </span>
+                            <span
+                              className={showPassword ? `fa fa-eye-slash` : `fa fa-eye`}
+                              onClick={this.togglePasswordVisibility}
+                            ></span>
+                          </div>
                         </div>
                         <div className="text-center form-group">
                           <input style={{ height: '40px', padding: '2px' }} type="submit" className="btn btn-primary account-btn" value="Sign in" />

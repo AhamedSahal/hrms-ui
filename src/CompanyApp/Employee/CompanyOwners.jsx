@@ -8,7 +8,6 @@ import EmployeeListColumn from './employeeListColumn';
 import { confirmAlert } from 'react-confirm-alert';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
 import CompanyOwnerForm from './CompanyOwnerForm';
-
 const { Header, Body } = Modal;
 
 export default class CompanyOwners extends Component {

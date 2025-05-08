@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { revenueSchema } from './validation';
 import { savePayHubRevenue } from './service';
 
-
 export default class RevenueForm extends Component {
     constructor(props) {
         super(props)

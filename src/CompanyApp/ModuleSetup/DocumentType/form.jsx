@@ -7,7 +7,6 @@ import { saveDocumentType } from './service';
 import { DocumentTypeSchema } from './validation';
 import { Tooltip } from 'antd';
 
-
 export default class DocumentTypeForm extends Component {
     constructor(props) {
         super(props)

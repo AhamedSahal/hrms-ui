@@ -9,7 +9,6 @@ import { updateStatus } from './service';
 import { getReadableDate} from '../../../utility'; 
  
 
-
 export default class RequisitionAction extends Component {
     constructor(props) {
         super(props)

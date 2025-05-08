@@ -134,7 +134,7 @@ export default class CandidateInfo extends Component{
 
         const columns = [
             {
-            title: 'Candidate Id', 
+            title: 'Candidate ID', 
             sorter: true,
             width: 50,
             render: (text, record) => {
@@ -144,7 +144,7 @@ export default class CandidateInfo extends Component{
             }
             },  
             {
-              title: 'Offer Letter Id', 
+              title: 'Offer Letter ID', 
               sorter: true,
               width: 50,
               render: (text, record) => {
@@ -166,7 +166,7 @@ export default class CandidateInfo extends Component{
               dataIndex: 'lastname',
             },
             {
-              title: 'Email Id', 
+              title: 'Email ID', 
               sorter: true,
               width: 50,
               dataIndex: 'personalemailid',

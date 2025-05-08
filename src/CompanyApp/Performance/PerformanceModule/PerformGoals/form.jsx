@@ -13,7 +13,7 @@ export default class PerformanceGoalsForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            id:0,
+            id: 0,
             name: '',
             description: '',
             priority: '',
@@ -23,16 +23,15 @@ export default class PerformanceGoalsForm extends Component {
             active: true,
             subGoalsData: [],
             isWeightage: true,
-            
 
         }
 
     }
 
-    componentDidMount () {
-        if(this.props.PerformanceGoalsForm != undefined){
-         
-            this.setState({isWeightage: this.props.PerformanceGoalsForm.isWeightage})
+    componentDidMount() {
+        if (this.props.PerformanceGoalsForm != undefined) {
+
+            this.setState({ isWeightage: this.props.PerformanceGoalsForm.isWeightage })
         }
     }
 
@@ -43,7 +42,7 @@ export default class PerformanceGoalsForm extends Component {
         } else if (!nextProps.PerformanceGoalsForm) {
             return prevState.PerformanceGoalsForm || ({
                 PerformanceGoalsForm: {
-                    id:0,
+                    id: 0,
                     name: '',
                     description: '',
                     priority: '',
@@ -62,7 +61,7 @@ export default class PerformanceGoalsForm extends Component {
         let tempData = this.state.subGoalsData;
         if (tempData.length < 5) {
             let temp = {
-                id:0,
+                id: 0,
                 name: '',
                 description: '',
                 priority: '',
@@ -73,7 +72,6 @@ export default class PerformanceGoalsForm extends Component {
                 issubGoalWeightage: true
             }
             let data = tempData.push(temp)
-            console.log("subGoalsData", tempData)
             this.setState({ subGoalsData: tempData })
 
         }
@@ -103,120 +101,117 @@ export default class PerformanceGoalsForm extends Component {
         this.setState({
             subGoalsData: tmp,
         });
-      };
+    };
 
     save = (data, action) => {
-        console.log("data", data);
-        console.log("subGoalsDatasubGoalsData", this.state.subGoalsData);
         action.setSubmitting(true);
         data["isWeightage"] = this.state.isWeightage;
         data["weightage"] = this.state.isWeightage;
-        if(this.weightageValidation()){  // weightage validation
-        saveGoals(data).then(res => {
-            if (res.status == "OK") {
-                toast.success(res.message);
-            } else {
-                toast.error(res.message);
-            }
-            if (res.status == "OK") {
-                if(this.state.subGoalsData.length > 0){
-                    this.saveSubGoalsData(res.data.id)
-                    // this.weightageValidation(res.data.id)
-                }else{
-                    this.props.updateList();
+        if (this.weightageValidation()) {  // weightage validation
+            saveGoals(data).then(res => {
+                if (res.status == "OK") {
+                    toast.success(res.message);
+                } else {
+                    toast.error(res.message);
                 }
-                // setTimeout(function () {
-                //     window.location.reload()
-                // }, 3000)
-            }
-            action.setSubmitting(false)
-        }).catch(err => {
-            toast.error("Error while saving Performance Goals");
+                if (res.status == "OK") {
+                    if (this.state.subGoalsData.length > 0) {
+                        this.saveSubGoalsData(res.data.id)
+                        // this.weightageValidation(res.data.id)
+                    } else {
+                        this.props.updateList();
+                    }
+                    // setTimeout(function () {
+                    //     window.location.reload()
+                    // }, 3000)
+                }
+                action.setSubmitting(false)
+            }).catch(err => {
+                toast.error("Error while saving Performance Goals");
 
-            action.setSubmitting(false);
-        })
-    }
+                action.setSubmitting(false);
+            })
+        }
     }
 
     // weigthage validation
     weightageValidation = () => {
-        if(this.state.subGoalsData.length > 0){
+        if (this.state.subGoalsData.length > 0) {
             let manualCount = 0
             let autoCount = 0
             let manualWeigthage = 0
             let autoApproveArray = []
             // 100% validation s
-            this.state.subGoalsData.map((data,i) => {  
-                  if(data.issubGoalWeightage){
+            this.state.subGoalsData.map((data, i) => {
+                if (data.issubGoalWeightage) {
                     autoApproveArray.push(i)
                     autoCount++
-                  }else{
+                } else {
                     manualCount++
-                    manualWeigthage = Number(manualWeigthage)+Number(data.subgoalWeightage)
-                  }
+                    manualWeigthage = Number(manualWeigthage) + Number(data.subgoalWeightage)
+                }
             })
-            if(manualWeigthage > 100 || (manualWeigthage == 100 && autoCount > 0) ){
-                toast.error("Weighage should be less than or equals to 100."); 
+            if (manualWeigthage > 100 || (manualWeigthage == 100 && autoCount > 0)) {
+                toast.error("Weighage should be less than or equals to 100.");
                 return false;
-            }else{
-               
-                
-                if(autoCount > 0 && autoApproveArray.length > 0){
-                    let autoWeight = (100-manualWeigthage)/autoCount
+            } else {
+
+
+                if (autoCount > 0 && autoApproveArray.length > 0) {
+                    let autoWeight = (100 - manualWeigthage) / autoCount
                     let tempData = this.state.subGoalsData;
                     autoApproveArray.map((res) => {
                         tempData[res].subgoalWeightage = autoWeight
 
                     })
-                    console.log("tempDatatempData",tempData)
-                    this.setState({subGoalsData: tempData})
-                
+                    
+                    this.setState({ subGoalsData: tempData })
+
                 }
                 return true;
             }
             // 100% validation e
-        }else{
+        } else {
             return true;
         }
 
     }
 
     // save goals sub tables
-    saveSubGoalsData = (goalsId) => { 
-        console.log("tempDatatempData",this.state.subGoalsData)
-            if(this.state.subGoalsData.length > 0){
-                this.state.subGoalsData.map((data,i) => {   
-          let  dataUpdate = {...data,goalsId:goalsId}; 
-            saveSubGoals(dataUpdate).then(res => {
-                if (res.status == "OK") {
-                    // toast.success(res.message); 
-                } else {
-                    toast.error(res.message);
-                }
-                if(res.status == "OK"){
-                    if(this.state.subGoalsData.length-1 == i){
-                        toast.success(res.message); 
-                        this.props.updateList();
+    saveSubGoalsData = (goalsId) => {
+        if (this.state.subGoalsData.length > 0) {
+            this.state.subGoalsData.map((data, i) => {
+                let dataUpdate = { ...data, goalsId: goalsId };
+                saveSubGoals(dataUpdate).then(res => {
+                    if (res.status == "OK") {
+                        // toast.success(res.message); 
+                    } else {
+                        toast.error(res.message);
                     }
-                    // setTimeout(function () {
-                    //     window.location.reload()
-                    //   }, 3000)
-                }
-               
-            }).catch(err => {
-                toast.error("Error while saving Performance Sub Goals");
-    
-            
+                    if (res.status == "OK") {
+                        if (this.state.subGoalsData.length - 1 == i) {
+                            toast.success(res.message);
+                            this.props.updateList();
+                        }
+                        // setTimeout(function () {
+                        //     window.location.reload()
+                        //   }, 3000)
+                    }
+
+                }).catch(err => {
+                    toast.error("Error while saving Performance Sub Goals");
+
+
+                })
             })
-        }) // map end
-        } // if end
         }
+    }
 
 
     render() {
-
+        const isEmployeeId = this.props?.isEmployeeGoals
         const { isWeightage } = this.state
-     
+
         return (
             <div>
 
@@ -239,6 +234,24 @@ export default class PerformanceGoalsForm extends Component {
                     }) => (
                         <Form autoComplete='off'>
                             <div className="row">
+                                <div className="mb-3 col-12">
+                                    <label>Employee
+                                        <span style={{ color: "red" }}>*</span>
+                                    </label>
+                                    <Field name="employeeId" render={field => {
+                                        return <EmployeeDropdown 
+                                            defaultValue={isEmployeeId || values.employeeId} 
+                                            onChange={e => {
+                                                setFieldValue("employeeId", e.target.value);
+                                            }} 
+                                            required 
+                                            readOnly={isEmployeeId} 
+                                        ></EmployeeDropdown>
+                                    }} ></Field>
+                                    <ErrorMessage name="employeeId">
+                                        {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                    </ErrorMessage>
+                                </div>
                                 <div className="col-6">
                                     <FormGroup>
                                         <label>Goal Name
@@ -315,21 +328,6 @@ export default class PerformanceGoalsForm extends Component {
                                 </div>
                             </div>
                             {/* {this.state.self && <Field type="hidden" name="employeeId" defaultValue="0"></Field>} */}
-                            <div className="row">
-                                <div className="col-12">
-                                    <label>Assigned Person(s)
-                                        <span style={{ color: "red" }}>*</span>
-                                    </label>
-                                    <Field name="employeeId" render={field => {
-                                        return <EmployeeDropdown defaultValue={values.employeeId} onChange={e => {
-                                            setFieldValue("employeeId", e.target.value);
-                                        }} required></EmployeeDropdown>
-                                    }} ></Field>
-                                    <ErrorMessage name="employeeId">
-                                        {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                                    </ErrorMessage>
-                                </div>
-                            </div>
                             <br />
                             <div className="row">
                                 <div className="col-md-4">
@@ -351,10 +349,10 @@ export default class PerformanceGoalsForm extends Component {
                             </div>
                             {/*  sub goals forms */}
 
-                            {this.state.subGoalsData.length  > 0  && this.state.subGoalsData.map((res, index) => {
+                            {this.state.subGoalsData.length > 0 && this.state.subGoalsData.map((res, index) => {
                                 return <div style={{ padding: "20px 0" }}>
                                     <div >
-                                        {index == 0 ?<h3>Sub Goals</h3>:null}
+                                        {index == 0 ? <h3>Sub Goals</h3> : null}
                                         <PerformanceSubGoalsForm PerformanceSubGoalsForm={res} index={index} multiForm={true} updateState={this.updateState} removeRow={this.removeRow}> </PerformanceSubGoalsForm>
                                         <hr />
                                     </div>
@@ -363,10 +361,10 @@ export default class PerformanceGoalsForm extends Component {
                             {/* sub form */}
                             <div className="row">
                                 <div className="col">
-                                    <input type="submit" className="btn btn-success" value= {(this.props.PerformanceGoalsForm == undefined || this.props.PerformanceGoalsForm?.id == 0 )?"Publish":"Update"} />
+                                    <input type="submit" className="btn btn-success" value={(this.props.PerformanceGoalsForm == undefined || this.props.PerformanceGoalsForm?.id == 0) ? "Publish" : "Update"} />
                                 </div>
-                              {(this.props.PerformanceGoalsForm == undefined || this.props.PerformanceGoalsForm?.id == 0 ) &&  <div className="col text-end">
-                                    <input type='button'  className="btn btn-primary" onClick={() => this.handleSubGoals()} value="Add Sub Goal"/>
+                                {(this.props.PerformanceGoalsForm == undefined || this.props.PerformanceGoalsForm?.id == 0) && <div className="col text-end">
+                                    <input type='button' className="btn btn-primary" onClick={() => this.handleSubGoals()} value="Add Sub Goal" />
                                 </div>}
 
                             </div>

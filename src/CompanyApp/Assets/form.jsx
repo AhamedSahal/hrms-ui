@@ -7,6 +7,7 @@ import { saveAssets } from './service';
 import AssetsCategoryDropDown from '../ModuleSetup/Dropdown/AssetsCategoryDropDown';
 import AssetSetupDropDown from '../ModuleSetup/Dropdown/AssetSetupDropDown';
 import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown';
+import { verifyEditPermission, verifyViewPermission } from '../../utility';
 import { AssetSchema } from './validation';
 
 
@@ -74,7 +75,7 @@ export default class Assets extends Component {
     }
     save = (data, action) => {
         action.setSubmitting(true);
-        saveAssets(data).then(res => {
+        verifyEditPermission("Manage Assets") && saveAssets(data).then(res => {
             if (res.status == "OK") {
                 toast.success(res.message); 
             } else {
@@ -83,7 +84,7 @@ export default class Assets extends Component {
             if (res.status == "OK") {
                 setTimeout(function () {
                     window.location.reload()
-                  }, 6000)
+                  }, 1000)
             }
             action.setSubmitting(false)
         }).catch(err => {
@@ -92,6 +93,8 @@ export default class Assets extends Component {
             action.setSubmitting(false);
         })
     }
+
+ 
     render() {
         return (
             <div>
@@ -250,8 +253,8 @@ export default class Assets extends Component {
                                 <div className="row">
                                     <div className="col-md-6">
                                     <FormGroup>
-                                        <label>Assign Date<span style={{ color: "red" }}>*</span></label>
-                                        <Field name="assignDate" type="date" defaultValue={values.assignDate} className="form-control" ></Field>
+                                        <label>Assign Date<span style={{ color: "red" }}></span></label>
+                                        <Field name="assignDate" type="date"  className="form-control" ></Field>
                                         <ErrorMessage name="assignDate">
                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                         </ErrorMessage>
@@ -259,23 +262,22 @@ export default class Assets extends Component {
                                     </div>
                                     <div className="col-md-6">
                                     <FormGroup>
-                                        <label>Assign to<span style={{ color: "red" }}>*</span></label>
+                                        <label>Assign to<span style={{ color: "red" }}></span></label>
                                         <Field name="employeeId" className="col-md-12" render={field => {
-                                            return <EmployeeDropdown  permission="ORGANIZATION" defaultValue={values.employee?.id} onChange={e => {
+                                                return <EmployeeDropdown  permission="ORGANIZATION"  onChange={e => {
                                                 setFieldValue("employeeId", e.target.value);
                                                 setFieldValue("employee", { id: e.target.value });
                                             }}></EmployeeDropdown>
                                         }}></Field>
-                                        <ErrorMessage name="employeeId">
-                                            {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                                        </ErrorMessage>
+                                        
                                     </FormGroup>
                                     </div>
                                     <div className="col-md-6">
                                     <FormGroup>
                                         <label>Previous Owner</label>
                                         <Field name="prevemployeeId" className="col-md-12" render={field => {
-                                            return <EmployeeDropdown permission="ORGANIZATION" defaultValue={values.prevemployee?.id} onChange={e => {
+                                           
+                                                return <EmployeeDropdown permission="ORGANIZATION" onChange={e => {
                                                 setFieldValue("prevemployeeId", e.target.value);
                                                 setFieldValue("prevemployee", { id: e.target.value });
                                             }}></EmployeeDropdown>

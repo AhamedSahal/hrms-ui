@@ -14,7 +14,6 @@ import { getSalaryEmploymentStatusIdInformation,updateSalaryEmploymentStatusIdIn
 import { SalaryBasicAndModeSchema } from '../validation';
 import ComparatioMap from './comparatioMap';
 import { getEmploymentStatusList } from '../../ModuleSetup/EmploymentStatus/service';
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION;
 const isEmployee = getUserType() == 'EMPLOYEE';
 

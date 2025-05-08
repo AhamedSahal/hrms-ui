@@ -31,7 +31,6 @@ import EntityDropdown from '../../ModuleSetup/Dropdown/EntityDropdown';
 import { getOrgSettings } from '../../ModuleSetup/OrgSetup/service';
 
 
-
 const { Header, Body, Footer, Dialog } = Modal;
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -115,7 +114,7 @@ export default class PayrollTable extends Component {
                 },
                 tooltip: {
                     enabled: true,
-                    custom: function ({ series, seriesIndex, w }) {
+                    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                         const value = series[seriesIndex];
                         const total = series.reduce((acc, value) => acc + value, 0);
                         const percentage = ((value / total) * 100).toFixed(1);
@@ -379,6 +378,9 @@ export default class PayrollTable extends Component {
 
 
     getColumns = () => {
+        const { selected } = this.state || [];
+
+
         const menuItems = (text, record) => {
             const items = [];
 
@@ -412,7 +414,7 @@ export default class PayrollTable extends Component {
             // }
             return items;
         };
-        const getStyle = (text) => {
+        const getStyle = (text, record) => {
             if (text === 'PAID') {
                 return <span className='p-1 badge bg-inverse-success'><i className="pr-2 fa fa-check text-success"></i>SENT</span>;
             }
@@ -432,7 +434,7 @@ export default class PayrollTable extends Component {
                 fixed: 'left',
                 width: 300,
                 key: '1',
-                render: (text) => {
+                render: (text, record) => {
                     return <>
                         <div >
                             <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
@@ -465,7 +467,7 @@ export default class PayrollTable extends Component {
                 align: 'center',
                 width: 120,
                 key: '3',
-                render: (text) => {
+                render: (text, record) => {
                     return <span>{getReadableMonthYear(text.salaryMonth)}<br /></span>
                 }
             },
@@ -502,7 +504,7 @@ export default class PayrollTable extends Component {
                 align: 'center',
                 width: 100,
                 key: '7',
-                render: (text) => {
+                render: (text, record) => {
                     return <span >{parseFloat(text.allowance + text.otherAllowances).toFixed(2)}<br /></span>
                 }
             },
@@ -557,10 +559,11 @@ export default class PayrollTable extends Component {
             {
                 title: 'Payroll Status',
                 dataIndex: 'status',
+                key: 'status',
                 align: 'center',
                 width: 100,
                 key: '13',
-                render: (text) => {
+                render: (text, record) => {
                     return <><div >{getStyle(text)}</div>
                     </>
                 }
@@ -592,6 +595,7 @@ export default class PayrollTable extends Component {
             {
                 title: 'Action',
                 dataIndex: 'action',
+                key: 'action',
                 align: 'center',
                 width: 100,
                 key: '17',
@@ -809,6 +813,7 @@ export default class PayrollTable extends Component {
     };
     rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
+            let { selected } = this.state;
             const rowsId = selectedRows.map(item => item.id)
             this.setState({ selected: rowsId });
         },
@@ -823,7 +828,7 @@ export default class PayrollTable extends Component {
     ];
 
 
-    handleMonthPicker = (date) => {
+    handleMonthPicker = (date, dateString) => {
         if (date) {
             const selectedMonth = date.month() + 1;
             const selectedYear = date.year();
@@ -834,7 +839,7 @@ export default class PayrollTable extends Component {
 
     render() {
         const { showChart, checkedList, isHovered,previousMonthdashboardInfoData,dashboardInfoData } = this.state;
-        const { data, totalRecords, currentPage, size, payslip, selected } = this.state
+        const { data, totalPages, totalRecords, currentPage, size, payslip, selected, closeMonths, monthlyData, isDownArrow } = this.state
 
         let startRange = ((currentPage - 1) * size) + 1;
         let endRange = ((currentPage) * (size + 1)) - 1;
@@ -1169,7 +1174,7 @@ export default class PayrollTable extends Component {
                                             rowSelection={this.rowSelection}
                                             pagination={{
                                                 total: totalRecords,
-                                                showTotal: () => {
+                                                showTotal: (total, range) => {
                                                     return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                                                 },
                                                 showSizeChanger: true, onShowSizeChange: this.pageSizeChange,
@@ -1216,7 +1221,14 @@ export default class PayrollTable extends Component {
                         >
                             {({
                                 values,
+                                errors,
+                                touched,
+                                handleChange,
+                                handleBlur,
+                                handleSubmit,
+                                isSubmitting,
                                 setFieldValue,
+                                setSubmitting
                                 /* and other goodies */
                             }) => (
                                 <Form>

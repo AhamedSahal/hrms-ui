@@ -9,7 +9,6 @@ import { saveCompositePayscale, getPayCompositeList, getPayScaleType, getGrading
 import { getAllwoanceTypeList } from '../../ModuleSetup/Allowance/service';
 import * as Yup from 'yup';
 import { Input, Table } from 'antd';
-
 export default class PayScaleGenaratorForm extends Component {
     constructor(props) {
         super(props)

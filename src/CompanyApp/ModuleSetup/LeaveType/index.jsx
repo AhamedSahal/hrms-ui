@@ -175,7 +175,7 @@ export default class LeaveType extends Component {
         width: 50,
         render: (text, record) => {
           return <span>
-            {text.entStartMode == 0 ? "Calender" : "Work Anniversary"}</span>
+            {text.entStartMode == 0 ? "Calendar" : "Work Anniversary"}</span>
         }
       },
       {

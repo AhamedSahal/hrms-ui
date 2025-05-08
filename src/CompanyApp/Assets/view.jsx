@@ -17,8 +17,11 @@ export default class AssetView extends Component {
         }
 
     }; 
+
+  
     render() {
-        const { id, employee, assets,category,modelNo,imeiNo,prevState,serialno,ram,ipAddress,purchaseDate,pEmployee,tag,storagecapacity,currentlocation,wstartDate,brandName,isStatus,purchasefrom,wendDate,assignDate} = this.state.AssetView;
+        const { id, employee, assets,category,modelNo,imeiNo,prevState,serialno,ram,ipAddress,purchaseDate,pEmployee,tag,storagecapacity,currentlocation,wstartDate,brandName,isStatus,purchasefrom,wendDate,assignDate,createdBy,createdOn,modifiedBy,modifiedOn,} = this.state.AssetView;
+        
         return (
             <div className="card" >
                 <div className="card-body"> 
@@ -32,9 +35,19 @@ export default class AssetView extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-3">
-                                        <div style={{  color: "#999", fontSize: "14px" }}>Category
+                                        <div style={{  color: "#999", fontSize: "14px", paddingTop: "10px" }}>Category
                                             <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", paddingTop: "0px" }}>  
                                                 {category?.name}
+                                            </div>
+                                        </div>
+                                        <div style={{  color: "#999", fontSize: "14px",paddingTop: "10px" }}>Brand Name
+                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", paddingTop: "0px" }}> 
+                                                { brandName != "" ? brandName : "-" } 
+                                            </div>
+                                        </div>
+                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Serial Number
+                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", paddingTop: "0px" }}>
+                                                { serialno != "" ? serialno : "-" } 
                                             </div>
                                         </div>
                                         <div style={{ color: "#999", fontSize: "14px", paddingTop: "10px" }}>Model Number
@@ -47,22 +60,13 @@ export default class AssetView extends Component {
                                                 { imeiNo != "" ? imeiNo : "-" }
                                             </div>
                                         </div>
-                                        { <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Previous State
-                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
-                                                { prevState != "" ? prevState : "-" }
-                                            </div>
-                                        </div>}
-                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Assigned to
-                                            {employee != null ? <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
-                                             <EmployeeListColumn id={employee.id} ></EmployeeListColumn>
-                                                    <b>{employee.name}</b>
-                                            </div>  : <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}> {"-"}</div>}
-                                        </div>
+                                       
+                                        
                                     </div>
                                     <div className="col-md-3"  >
-                                        <div style={{    color: "#999", fontSize: "14px" }}>Serial Number
-                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", paddingTop: "0px" }}>
-                                                { serialno != "" ? serialno : "-" } 
+                                    <div style={{    color: "#999", fontSize: "14px",paddingTop: "10px" }}>Tag
+                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", paddingTop: "0px" }}>  
+                                                { tag != "" ? tag : "-" } 
                                             </div>
                                         </div>
                                         <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>RAM
@@ -70,62 +74,15 @@ export default class AssetView extends Component {
                                                 { ram != "" ? ram : "-" } 
                                             </div>
                                         </div>
-                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>IP Address 
-                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
-                                                { ipAddress != "" ? ipAddress : "-" } 
-                                            </div>
-                                        </div>
-                                        { <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Purchased Date
-                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
-                                                {purchaseDate != null ? getCustomizedDate(purchaseDate) : "-"}
-                                            </div>
-                                        </div>}
-                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Previous Owner
-                                        {pEmployee != null ? <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
-                                             <EmployeeListColumn id={pEmployee.id} ></EmployeeListColumn>
-                                                    <b>{pEmployee.name}</b>
-                                            </div>  : <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}> {"-"}</div>}
-                                        </div>
-                                    </div>
-                                    <div className="col-md-3"  >
-                                        <div style={{    color: "#999", fontSize: "14px" }}>Tag
-                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", paddingTop: "0px" }}>  
-                                                { tag != "" ? tag : "-" } 
-                                            </div>
-                                        </div>
+                                       
                                         <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Storage Capacity
                                             <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
                                                 { storagecapacity != "" ? storagecapacity : "-" } 
                                             </div>
                                         </div>
-                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Current Location  
-                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}> 
-                                             { currentlocation != "" ? currentlocation : "-" } 
-                                            </div>
-                                        </div>
-                                        { <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Warranty Start Date
+                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>IP Address 
                                             <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
-                                                {wstartDate != null ? getCustomizedDate(wstartDate) : "-"}
-                                            </div>
-                                        </div>}
-                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Created by
-                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
-                                               {"Admin"}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-3"  >
-                                        <div style={{  color: "#999", fontSize: "14px" }}>Brand Name
-                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", paddingTop: "0px" }}> 
-                                                { brandName != "" ? brandName : "-" } 
-                                            </div>
-                                        </div>
-                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Status
-                                            <div style={{ color: "#55687d", fontSize: "18px",fontWeight:"bolder" }}>
-                                               <b> <span className={ isStatus == "APPROVED" ?  "badge bg-inverse-success " : "badge bg-inverse-danger"}>
-                                                { isStatus == "APPROVED" ? <i className="pr-2 fa fa-lock text-success"></i> : <i className="pr-2 fa fa-check text-danger"></i>}{
-                                                     isStatus == "APPROVED" ? 'Allocated' : 'Available'
-                                                }</span></b>   
+                                                { ipAddress != "" ? ipAddress : "-" } 
                                             </div>
                                         </div>
                                         <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Purchased From
@@ -133,16 +90,62 @@ export default class AssetView extends Component {
                                                 { purchasefrom != "" ? purchasefrom : "-" } 
                                             </div>
                                         </div>
+                                       
+                                       
+                                    </div>
+                                    <div className="col-md-3"  >
+                                    { <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Purchased Date
+                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
+                                                {purchaseDate != null ? getCustomizedDate(purchaseDate) : "-"}
+                                            </div>
+                                        </div>}
+                                    { <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Warranty Start Date
+                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
+                                                {wstartDate != null ? getCustomizedDate(wstartDate) : "-"}
+                                            </div>
+                                        </div>}
+                                        
                                         { <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Warranty End Date
                                             <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
                                                 {wendDate != null ? getCustomizedDate(wendDate) : "-"}
                                             </div>
                                         </div>}
-                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Assigned On
+                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Current Location  
                                             <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}> 
-                                                {assignDate != null ? getCustomizedDate(assignDate) : "-"}
+                                             { currentlocation != "" ? currentlocation : "-" } 
                                             </div>
                                         </div>
+                                
+                                    </div>
+                                    <div className="col-md-3"  >
+                                    { <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Previous State
+                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}>
+                                                { prevState != "" ? prevState : "-" }
+                                            </div>
+                                        </div>}
+                                    
+                                        
+
+                                        <div style={{    color: "#999", fontSize: "14px", paddingTop: "10px" }}>Status
+                                            <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", paddingTop: "0px"}}>
+                                               <b> <span>
+                                               {isStatus === "APPROVED" ? (
+                                                <i className="pr-2 fa fa-lock text-primary"></i>
+                                                ) : isStatus === "AVAILABLE" ? (
+                                                <i className="pr-2 fa fa-check text-success"></i>
+                                                ) : (
+                                                <i className="pr-2 fa fa-spinner text-warning"></i>
+                                                )}
+                                                </span></b>
+                                                <span> {isStatus === "APPROVED" ? "Allocated" : isStatus === "AVAILABLE" ? "Available" : "Pending"}</span>   
+                                            </div>
+                                        </div>
+
+                                        <div style={{ display: "block", color: "#999", fontSize: "12px", paddingTop: "10px" }}>Assigned to
+                                       {pEmployee != null ? <div style={{ color: "#55687d", fontSize: "14px", paddingTop: "4px", display: "flex" }}> <EmployeeListColumn id={pEmployee.id} ></EmployeeListColumn>
+                                            {pEmployee.name}
+                                        </div>:<div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}> {"-"}</div>}
+                                    </div>
                                     </div> 
                                     </div>
                             </div> 

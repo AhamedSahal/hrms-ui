@@ -213,7 +213,7 @@ export default class SystemFields extends Component {
 
     return (
       <div style={{ padding: "15px", background: "white" }}>
-        <h3>
+        <h3 style={{wordSpacing: "-4px"}}>
           <BsPeople size={30} style={{ color: "#1DA8D5" }} /> Define Fields For
           Applicants
         </h3>

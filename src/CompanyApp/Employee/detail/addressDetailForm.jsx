@@ -10,7 +10,6 @@ import CountryDropdown from '../../ModuleSetup/Dropdown/CountryDropdown';
 import { getAddressInformation, updateAddressInformation } from './service';
 import { AddressDetailEmployeeSchema } from '../validation';
 
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 const isEmployee = getUserType() == 'EMPLOYEE';
 

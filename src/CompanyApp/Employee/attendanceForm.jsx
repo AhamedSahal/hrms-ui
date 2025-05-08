@@ -7,7 +7,6 @@ import { getUserType, toUTCCalendarTime,verifyApprovalPermission, getPermission,
 import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown';
 import { saveAttendance } from './service';
 import { attendanceByAdminSchema } from './validation';
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 
 export default class AttendanceForm extends Component {

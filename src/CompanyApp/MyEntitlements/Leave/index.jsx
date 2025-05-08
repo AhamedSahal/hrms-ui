@@ -13,7 +13,6 @@ import { Tooltip } from 'antd';
 const { Header, Body, Footer, Dialog } = Modal;
 const isCompanyAdmin = getUserType() === 'COMPANY_ADMIN';
 const isCompanyId = getCompanyId();
-
 export default class Leave extends Component {
   constructor(props) {
     super(props);

@@ -71,6 +71,11 @@ export default class OrgAttendanceList extends Component {
         }
     }
 
+    isLate(time) {
+        const date = convertToUserTimeZoneForAttendance(time);
+
+    }
+
     updateList = (attendance) => {
         let { data } = this.state;
         let index = data.findIndex(d => d.id == attendance.id);
@@ -101,7 +106,7 @@ export default class OrgAttendanceList extends Component {
             {
                 title: 'Employee',
                 sorter: false,
-                render: (text) => {
+                render: (text, record) => {
                     return <EmployeeListColumn id={text.employee.id} name={text.employee.name} employeeId={text.employeeId}></EmployeeListColumn>
                 }
             },
@@ -110,7 +115,7 @@ export default class OrgAttendanceList extends Component {
                 dataIndex: 'date',
                 sorter: true,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     const date = moment(text);
                     return <>
                         <div>{date.isSame(moment(), 'day') ? <span style={{ fontWeight: '600', color: '#4DC2DD' }}>Today</span> : date.format('ddd, DD MMMM YYYY')}</div>
@@ -121,7 +126,7 @@ export default class OrgAttendanceList extends Component {
                 title: 'Clock In',
                 sorter: false,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return (
                         <div style={{ fontWeight: '600' }}>
                             {text.clockInSource === "WEB" && <i className="fa fa-desktop" aria-hidden="true" title="WEB" style={{ fontSize: '15px' }}></i>}
@@ -140,7 +145,7 @@ export default class OrgAttendanceList extends Component {
                 title: 'Clock Out',
                 sorter: true,
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <div style={{ fontWeight: '600' }}>  {text.actualClockOut ? <>
                         {text.clockOutSource === "WEB" && <i className="fa fa-desktop" aria-hidden="true" title="WEB" style={{ fontSize: '15px' }}></i>}
                         {text.clockOutSource === "ANDROID" && <i className="fa fa-android" title="ANDROID" style={{ fontSize: '20px' }}></i>}
@@ -168,7 +173,7 @@ export default class OrgAttendanceList extends Component {
             {
                 title: 'Status',
                 className: "text-center",
-                render: () => {
+                render: (text, record) => {
                     const color = 'green'
                     return (
                         <Tag style={{ borderRadius: '5px' }} color={color}>
@@ -180,7 +185,7 @@ export default class OrgAttendanceList extends Component {
             {
                 title: 'Location & Selfie',
                 className: "text-center",
-                render: (text) => {
+                render: (text, record) => {
                     return <LocationListColumn location={text.location} locationOut={text.locationOut} id={text.id}></LocationListColumn>
                 }
             },
@@ -291,7 +296,7 @@ export default class OrgAttendanceList extends Component {
                                     <Table id='Table-style' className="table-striped"
                                         pagination={{
                                             total: totalRecords,
-                                            showTotal: () => {
+                                            showTotal: (total, range) => {
                                                 return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                                             },
                                             showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

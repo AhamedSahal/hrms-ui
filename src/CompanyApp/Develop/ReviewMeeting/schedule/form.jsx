@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { talentMeetingSchema } from './validation';
 import { saveTalentReviewMeeting } from './service';
 
-
 export default class MeetingSchedule extends Component {
     constructor(props) {
         super(props)

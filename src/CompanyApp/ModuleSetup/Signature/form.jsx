@@ -17,9 +17,10 @@ export default class SignatureForm extends Component {
     this.state = {
       signature: props.signature || {
         id: 0,
-        employeeId: props.employeeId,
+        employeeId: props.employeeId || 0,
         signature: "",
       },
+      employeeId : this.props.employeeId? this.props.employeeId :0,
     };
   }
 
@@ -39,6 +40,9 @@ export default class SignatureForm extends Component {
   }
   save = (data, action) => {
     action.setSubmitting(true);
+    if (!data.employeeId || data.employeeId != this.state.employeeId || data.employeeId == '') {
+      data.employeeId = this.state.employeeId;
+    }    
     saveSignature(data)
       .then((res) => {
         if (res.status == "OK") {
@@ -70,6 +74,13 @@ export default class SignatureForm extends Component {
     };
     reader.readAsDataURL(file);
   };
+  handleEmployeeChange = (e) => {
+    const employeeId = e.target.value;
+    this.setState({
+        employeeId: Number(employeeId),
+      });
+  };
+  
   render() {
     const { signature, image } = this.state;
 
@@ -100,9 +111,11 @@ export default class SignatureForm extends Component {
                       return (
                         <EmployeeDropdown
                           defaultValue={values.employeeId}
+                          readOnly={values.id > 0}
                           onChange={(e) => {
                             setFieldValue("employeeId", e.target.value);
                             setFieldValue("employee", { id: e.target.value });
+                            this.handleEmployeeChange(e)
                           }}
                         ></EmployeeDropdown>
                       );

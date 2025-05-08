@@ -22,9 +22,6 @@ export default class AssetsReportLanding extends Component {
         };
     }
 
-    componentDidMount() {
-        // this.fetchList();
-    }
 
     render() {
         let {assetsReport} = this.state;

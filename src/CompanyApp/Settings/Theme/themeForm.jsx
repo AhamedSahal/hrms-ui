@@ -10,7 +10,6 @@ import { updateTheme, getByCompanyId } from './service';
 import { ThemeSchema } from './validation';
 import CompanyDropdown from '../../ModuleSetup/Dropdown/CompanyDropdown';
 
-
 export default class ThemeForm extends Component {
     constructor(props) {
         super(props);

@@ -13,7 +13,6 @@ import { Button, styled, Tooltip, Typography } from '@mui/material';
 import SuccessAlert from '../../../MainPage/successToast';
 const { Header, Body, Footer, Dialog } = Modal;
 
-
 const WtTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} componentsProps={{ tooltip: { className: className } }} />
 ))(`
@@ -115,19 +114,19 @@ export default class PerformanceReviewDetailsForm extends Component {
     }
     setRating = (e, groupId, objectId, taskId) => {
         let val = e.target.value;
-        if (val === "") {
+        if (val == "") {
             return;
         }
-        if (isNaN(Number(val))) {
+        if (NaN == Number(val)) {
             e.target.value = "";
             e.target.focus();
-            toast.error("Please enter a valid Rating");
+            toast.error("Please enter valid Rating");
             return;
         }
         if (val > 5 || val < 1) {
             e.target.value = "";
             e.target.focus();
-            toast.error("Please enter a valid Rating (Between 1 to 5)");
+            toast.error("Please enter valid Rating (Between 1 to 5)");
             return;
         }
         let performanceReview = this.state.performanceReview;
@@ -163,19 +162,19 @@ export default class PerformanceReviewDetailsForm extends Component {
     }
     setWeightage = (e, groupId, objectId, taskId) => {
         let val = e.target.value;
-        if (val === "") {
+        if (val == "") {
             return;
         }
-        if (isNaN(Number(val))) {
+        if (NaN == Number(val)) {
             e.target.value = "";
             e.target.focus();
-            toast.error("Please enter a valid Weightage");
+            toast.error("Please enter valid Weightage ");
             return;
         }
         if (val > 100 || val < 1) {
             e.target.value = "";
             e.target.focus();
-            toast.error("Please enter a valid Weightage (Between 1 to 100)");
+            toast.error("Please enter valid Weightage (Between 1 to 100)");
             return;
         }
         let performanceReview = this.state.performanceReview;
@@ -281,8 +280,8 @@ export default class PerformanceReviewDetailsForm extends Component {
                 <div className="content container-fluid">
                     <div className="row">
                         {/* <h3 className="col-11 page-title">Performance Review : {this.state.performanceReview?.employee?.name} {this.state.performanceReview?.employeesId}</h3> */}
-                        <div className='mt-2 text-end' onMouseLeave={() => { this.setState({ display: false }) }}>
-                            <Button variant="outlined" onMouseOver={() => {
+                        <div className='mt-2 text-end' onMouseLeave={e => { this.setState({ display: false }) }}>
+                            <Button variant="outlined" onMouseOver={e => {
                                 this.setState({ display: true });
                             }}
                                 size='sm' color="success" sx={{ textTransform: 'none' }} >Rating <BsFillInfoCircleFill className='ml-2' size={16} style={{ color: "#1DA8D5" }} /></Button>

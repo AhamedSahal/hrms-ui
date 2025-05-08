@@ -7,7 +7,6 @@ import { saveAssetsSetup } from './service';
 import AssetsCategoryDropDown from '../Dropdown/AssetsCategoryDropDown';
 import { AssetCategorySchema } from './validation';
 
-
 export default class AssetsSetupForm extends Component {
     constructor(props) {
         super(props)

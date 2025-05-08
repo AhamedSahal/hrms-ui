@@ -36,8 +36,9 @@ export default class PerformGoals extends Component {
   constructor(props) {
     super(props);
     var today = new Date();
-    var firstDay = new Date(today.getFullYear(), today.getMonth(), 2);
-    var lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    var year = today.getFullYear();
+    var firstDay = `${year}-01-01`;
+    var lastDay = `${year}-12-31`; 
     this.state = {
       data: [],
       subGoalsList: [],
@@ -47,8 +48,8 @@ export default class PerformGoals extends Component {
       departmentId: "",
       designationId: "",
       jobTitleId: "",
-      fromDate: firstDay.toISOString().split('T')[0],
-      toDate: lastDay.toISOString().split('T')[0],
+      fromDate: firstDay,
+      toDate: lastDay,
       page: 0,
       size: 0,
       subSize: 1000,
@@ -281,10 +282,24 @@ export default class PerformGoals extends Component {
     });
   }
 
+  RelativeTimeTemp = (timestamp) => {
+    if (timestamp != null && timestamp != "") {
+
+
+      let date = getReadableDate(timestamp);
+      let time = convertToUserTimeZone(timestamp);
+      let dateAndTime = date + "-" + time
+      let parsedDate = parse(dateAndTime, "dd-MM-yyyy-hh:mm a", new Date());
+      const formattedTime = formatDistanceToNow(new Date(parsedDate), {
+        addSuffix: true,
+      });
+      return formattedTime;
+    } // if end
+  };
 
 
 
-  RelativeTime = () => {
+  RelativeTime = (timestamp) => {
     if (this.state.dashboard.lastUpdate != null && this.state.dashboard.lastUpdate != "") {
 
 
@@ -363,7 +378,8 @@ export default class PerformGoals extends Component {
 
     const isAdmin = (verifyOrgLevelViewPermission("Performance Review") || getUserType() == 'COMPANY_ADMIN');
 
-    const { data, filteredData, visiblePopover, subGoalsList, expandedRows, totalRecords, currentPage, size, goalsView, goalsViewHistory, hasMore } = this.state
+    const { data, filteredData, visiblePopover, subGoalsList, expandedRows, totalPages, totalRecords, currentPage, size, goalsView, goalsViewHistory, subGoalsData, hasMore } = this.state
+    let startRange = ((currentPage - 1) * size) + 1;
     let endRange = ((currentPage) * (size + 1)) - 1;
     if (endRange > totalRecords) {
       endRange = totalRecords;
@@ -471,12 +487,12 @@ export default class PerformGoals extends Component {
           < div className='goalPageHead' id='page-head' >
 
             <div className=''>
-              <div className="goalHeader-container">
+              <div style={{ height: '100px' }} className="goalHeader-container">
                 <div className="goalHeaderInnerContent-section">
 
                   <div>
                     {this.props.goalStatus === 0 ? null : <div className="add-goals-dropdown">
-                      <button className="add-goals-btn"><i class="fa fa-plus" aria-hidden="true"></i> Add Goal</button>
+                      <button className="add-goals-btn"><i class="fa fa-plus" aria-hidden="true"></i> Add </button>
                       <div className="Goal_dropdown-menu">
                         <button onClick={() => {
                           this.setState({
@@ -491,7 +507,7 @@ export default class PerformGoals extends Component {
                         }}>Add Sub Goal</button>
                       </div>
                     </div>}
-                    <div className="mt-4 goal_status-indicators">
+                    <div className="mt-2 goal_status-indicators">
                       <div onClick={() => this.handleFilteredData('all')} className="filteredGoalsBtn">
                         <i style={{ color: '#BF40BF' }} class="fa fa-list " aria-hidden="true"> </i> All
                       </div>
@@ -513,8 +529,10 @@ export default class PerformGoals extends Component {
 
                 <div className="goal_progress-section">
                   <div className="goal_progress-info">
-                    <span>OVERALL PROGRESS</span>
-                    <span className="goal_progress-percentage">{this.state.dashboard.progress != null ? this.state.dashboard.progress : 0}%</span>
+                    <div style={{ width: '215px' }} className='checklistProgHead'>
+                      <span className="checklistTask_progress-title">OVERALL PROGRESS</span>
+                      <span className="checklistTask_progress-percentage">{this.state.dashboard.progress != null ? this.state.dashboard.progress : 0}%</span>
+                    </div>
                     <div className="goal_progress-bar">
                       <div className="goal_progress-fill" style={{ backgroundColor: getColorByAchievement(this.state.dashboard.progress), width: `${this.state.dashboard.progress != null ? this.state.dashboard.progress : 0}%` }}></div>
                     </div>
@@ -612,25 +630,27 @@ export default class PerformGoals extends Component {
                                 placement="top"
                               >
                                 <div >
-                                  {item.subGoalsCount > 0 ? <Tooltip title={'Progress for Goals with Sub-Goals cannot be updated directly, kindly update progress of Sub-Goal to change this.'}>
+                                  {(item.subGoalsCount > 0 && item.active === false) || (item.subGoalsCount === 0 && item.active === false) || item.subGoalsCount > 0 ? (
+                                    <Tooltip title={'Progress for Goals with Sub-Goals cannot be updated directly, kindly update progress of Sub-Goal to change this.'}>
 
-                                    <div>
-                                      <Slider
-                                        value={weightStatusValidation}
-                                        tooltip={{ open: false }}
-                                        trackStyle={{ cursor: 'no-drop', borderRadius: '20px', backgroundColor: getColorByAchievement(weightStatusValidation), height: 8 }}
-                                        handleStyle={{
-                                          borderColor: getColorByAchievement(weightStatusValidation),
-                                          backgroundColor: "#fff",
-                                          borderWidth: 2,
-                                          width: 20,
-                                          height: 20,
-                                          cursor: 'no-drop',
-                                        }}
-                                        railStyle={{ cursor: 'no-drop', backgroundColor: "#f0f0f0", height: 8 }}
-                                      />
-                                    </div>
-                                  </Tooltip> :
+                                      <div>
+                                        <Slider
+                                          value={weightStatusValidation}
+                                          tooltip={{ open: false }}
+                                          trackStyle={{ cursor: 'no-drop', borderRadius: '20px', backgroundColor: getColorByAchievement(weightStatusValidation), height: 8 }}
+                                          handleStyle={{
+                                            borderColor: getColorByAchievement(weightStatusValidation),
+                                            backgroundColor: "#fff",
+                                            borderWidth: 2,
+                                            width: 20,
+                                            height: 20,
+                                            cursor: 'no-drop',
+                                          }}
+                                          railStyle={{ cursor: 'no-drop', backgroundColor: "#f0f0f0", height: 8 }}
+                                        />
+                                      </div>
+                                    </Tooltip>
+                                  ) : (
                                     <Slider
                                       value={weightStatusValidation}
                                       tooltip={{ open: false }}
@@ -644,10 +664,11 @@ export default class PerformGoals extends Component {
                                         cursor: 'pointer',
                                       }}
                                       railStyle={{ cursor: 'pointer', backgroundColor: "#f0f0f0", height: 8 }}
-                                    />}
+                                    />
+                                  )}
                                   <div className='m-1'>
                                     <span className="last-updated">{weightStatusValidation}%</span>
-                                    <span className="last-updated float-right">Last updated: {this.state.lastUpdatedTime}</span>
+                                    {/* <span className="last-updated float-right">Last updated: {this.RelativeTimeTemp(item.modifiedOn)}</span> */}
                                   </div>
 
                                 </div>
@@ -831,7 +852,7 @@ export default class PerformGoals extends Component {
 
             </Header>
             <Body>
-              {!this.state.isSubform ? <PerformanceSubGoalsForm multiForm={false} updateList={this.updateList} goalsStatusPopupMessage={this.goalsStatusPopupMessage} >
+              {!this.state.isSubform ? <PerformanceSubGoalsForm enableGoalDropdown={true} multiForm={false} updateList={this.updateList} goalsStatusPopupMessage={this.goalsStatusPopupMessage} >
 
               </PerformanceSubGoalsForm> :
 

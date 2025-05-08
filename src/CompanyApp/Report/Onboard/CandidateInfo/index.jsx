@@ -3,8 +3,12 @@ import React, { Component } from 'react';
 import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
+import moment from "moment";
 import { camelize, exportToCsv, getTitle,verifyViewPermission,setAllChecked, getCompanyId, getMultiEntityCompanies } from '../../../../utility';
+import BranchDropdown from '../../../ModuleSetup/Dropdown/BranchDropdown';
+import DepartmentDropdown from '../../../ModuleSetup/Dropdown/DepartmentDropdown';
 import PdfDocument from '../../pdfDocument';
+import JobTitlesDropdown from '../../../ModuleSetup/Dropdown/JobTitlesDropdown';
 import PreviewTable from '../../previewTable';
 import AccessDenied from '../../../../MainPage/Main/Dashboard/AccessDenied';
 import { getCandidateInfoReport } from '../service';
@@ -76,7 +80,7 @@ export default class CandidateInfoReport extends Component {
   }));
   };
   render() {
-    const { data, selectedProperties, showPdf, sortedProperties } = this.state;
+    const { data, selectedProperties, showPdf, showCsv, sortedProperties } = this.state;
     let selectedData = [];
 
     if (data && selectedProperties) {

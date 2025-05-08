@@ -14,7 +14,6 @@ import { SalaryBasicAndModeSchema } from '../validation';
 import ComparatioMap from './comparatioMap';
 import { getPayScaleType } from '../../ModuleSetupPage/CompensationSettings/service';
 import { getCurrencyList } from '../../ModuleSetup/Currency/service';
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION;
 const isEmployee = getUserType() == 'EMPLOYEE';
 

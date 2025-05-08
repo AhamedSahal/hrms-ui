@@ -100,7 +100,7 @@ export default class BudgetAction extends Component {
                         <div className="row">
                             <div className="col-md-6">
                                 <FormGroup>
-                                    <label>Approved No of resources
+                                    <label>Approved no of resources
                                         <span style={{ color: "red" }}>*</span>
                                     </label>
                                     <input name="appnoofresources" type="number" className="form-control" defaultValue={budget.appnoofresources}

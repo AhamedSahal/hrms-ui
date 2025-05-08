@@ -8,7 +8,6 @@ import { FormGroup } from 'reactstrap';
 import { updateDocument } from './service';
 // import { LeaveSchema } from './validation';
 
-
 export default class BenefitUploadDocument extends Component {
     constructor(props) {
         super(props)
@@ -112,9 +111,9 @@ export default class BenefitUploadDocument extends Component {
                         this.updateDocument();
                     }} className="btn btn-primary">Submit</Anchor>
 
-                    {/*   <SafeAnchor onClick={() => {
+                    {/*   <Anchor onClick={() => {
                         this.updateStatus(leave.id, "REJECTED");
-                    }} className="btn btn-warning">Reject</SafeAnchor>  */}
+                    }} className="btn btn-warning">Reject</Anchor>  */}
                 </>}
 
             </div>

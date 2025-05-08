@@ -7,7 +7,6 @@ import { saveHoliday} from './service';
 import{getBranchInformation} from '../Branch/service';
 import { HolidaySchema } from './validation';
 
-
 export default class HolidayForm extends Component {
     constructor(props) {
         super(props)

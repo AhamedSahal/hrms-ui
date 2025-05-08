@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveOverallScore, savePotentialScore } from './service';
 import { OverallScoreSchema } from './validation';
 
-
 export default class PotentialScoreForm extends Component {
     constructor(props) {
         super(props)

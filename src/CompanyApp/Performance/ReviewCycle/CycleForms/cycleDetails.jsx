@@ -10,7 +10,6 @@ import { cycleDetailsvalidationSchema } from './validation';
 
 
 
-
 class CycleDetails extends Component {
   constructor(props) {
     super(props)

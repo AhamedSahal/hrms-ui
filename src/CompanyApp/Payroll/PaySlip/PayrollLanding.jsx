@@ -7,7 +7,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Switch, TextField, Tooltip } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField, Tooltip } from '@mui/material';
 import { VscChecklist, VscCheck } from "react-icons/vsc";
 import { MdRemoveDone, MdTableView, MdPlaylistRemove, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { TbListSearch } from "react-icons/tb";
@@ -16,7 +16,7 @@ import { IoClose } from "react-icons/io5";
 import { downloadPayslipCsv, downloadPayslipSif } from '../../../HttpRequest';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 import { itemRender } from '../../../paginationfunction';
-import { getTitle, getUserType, verifyViewPermission, verifyApprovalPermission, getSyncPeoplehumCustomField, getPayrollType, getReadableMonthYear } from '../../../utility';
+import { getTitle, getUserType, getPermission, verifyViewPermission, verifyApprovalPermission, getSyncPeoplehumCustomField, getPayrollType, getReadableMonthYear } from '../../../utility';
 import EmployeeListColumn from '../../Employee/employeeListColumn';
 import { closePayrollMonth, deletePayslip, generatePayslips, getPayrollCloseMonths, getPayslips, updateAllPayslipStatus, updatePayslipStatus, getMonthlyData } from './service';
 import PayslipViewer from './view';
@@ -32,10 +32,10 @@ import EntityDropdown from '../../ModuleSetup/Dropdown/EntityDropdown';
 import { getOrgSettings } from '../../ModuleSetup/OrgSetup/service';
 
 
-
 const { Header, Body, Footer, Dialog } = Modal;
 
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
+const isEmployee = getUserType() == 'EMPLOYEE';
 
 
 const Months = {
@@ -209,8 +209,36 @@ export default class PayrollLanding extends Component {
       }
 
     getColumns = () => {
-        
-        const getStyle = (text) => {
+        const { selected } = this.state || [];
+        const menuItems = (text, record) => {
+            const items = [];
+            items.push(
+                <div>
+                    <a className="muiMenu_item" href="#" onClick={() => {
+                        this.setState({ payslip: record, showPayslip: true })
+                    }}  ><i className="fa fa-eye m-r-5" /> View Payslip</a>
+                </div>
+            );
+            if (verifyApprovalPermission("Payroll Run Payroll")) {
+                items.push(
+                    <div>
+                        <a className="muiMenu_item" href="#" onClick={() => {
+                            this.setState({ payslip: record, showStatusForm: true })
+                        }}><i className="fa fa-pencil m-r-5" /> Update Status</a>
+                    </div>
+                );
+            }
+            if (verifyApprovalPermission("Payroll Run Payroll")) {
+                items.push(
+                    <div>
+                        <a className="muiMenu_item" href="#" onClick={() => { this.delete(record) }}>
+                            <i className="fa fa-trash-o m-r-5"></i> Delete</a>
+                    </div>
+                );
+            }
+            return items;
+        };
+        const getStyle = (text, record) => {
             if (text === 'PAID') {
                 return <span className='p-1 badge bg-inverse-success'><i className="pr-2 fa fa-check text-success"></i>SENT</span>;
             }
@@ -230,7 +258,7 @@ export default class PayrollLanding extends Component {
                 hidden: true,
                 fixed: 'left',
                 key: '1',
-                render: (text) => {
+                render: (text, record) => {
                     return <EmployeeListColumn id={text.employee.id} name={text.employee.name} employeeId={text.employeeId}></EmployeeListColumn>
                 }
             },
@@ -248,7 +276,7 @@ export default class PayrollLanding extends Component {
                 align: 'center',
                 width: 120,
                 key: '3',
-                render: (text) => {
+                render: (text, record) => {
                     return <span>{getReadableMonthYear(text.salaryMonth)}<br /></span>
                 }
             }, {
@@ -280,7 +308,7 @@ export default class PayrollLanding extends Component {
                 align: 'center',
                 width: 100,
                 key: '7',
-                render: (text) => {
+                render: (text, record) => {
                     return <span >{parseFloat(text.allowance + text.otherAllowances).toFixed(2)}<br /></span>
                 }
             },
@@ -334,10 +362,11 @@ export default class PayrollLanding extends Component {
             {
                 title: 'Status',
                 dataIndex: 'status',
+                key: 'status',
                 align: 'center',
                 width: 100,
                 key: '13',
-                render: (text) => {
+                render: (text, record) => {
                     return <><div >{getStyle(text)}</div>
                     </>
                 }
@@ -369,6 +398,7 @@ export default class PayrollLanding extends Component {
             {
                 title: 'Action',
                 dataIndex: 'action',
+                key: 'action',
                 align: 'center',
                 width: 100,
                 key: '17',
@@ -638,7 +668,7 @@ export default class PayrollLanding extends Component {
       }
     render() {
         const { checkedList, isChecked, isHovered,orgsetup } = this.state;
-        const { data, totalPages, totalRecords, currentPage, size, payslip, selected, closeMonths, monthlyData } = this.state
+        const { data, totalPages, totalRecords, currentPage, size, payslip, selected, closeMonths, monthlyData, isDownArrow } = this.state
         const payrollTypes = closeMonths && closeMonths.map((p) => p.payrollType);
         let startRange = ((currentPage - 1) * size) + 1;
         let endRange = ((currentPage) * (size + 1)) - 1;
@@ -755,7 +785,7 @@ export default class PayrollLanding extends Component {
                                                     >
 
                                                         <option value="">Select Year</option>
-                                                        {this.years.map((year) => (
+                                                        {this.years.map((year, index) => (
                                                             <option value={year} >{year}</option>
                                                         ))}
 
@@ -898,7 +928,7 @@ export default class PayrollLanding extends Component {
                                                                     <Table id='Table-style' className="table-striped "
                                                                         pagination={{
                                                                             total: totalRecords,
-                                                                            showTotal: () => {
+                                                                            showTotal: (total, range) => {
                                                                                 return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                                                                             },
                                                                             showSizeChanger: true, onShowSizeChange: this.pageSizeChange,
@@ -1003,7 +1033,7 @@ export default class PayrollLanding extends Component {
                                                             this.setState({ generateYear: e.target.value })
                                                         }}>
                                                         <option value="">Year</option>
-                                                        {this.years.map((year) => (
+                                                        {this.years.map((year, index) => (
                                                             <option value={year.toString()} >{year}</option>
                                                         ))}
 
@@ -1049,7 +1079,7 @@ export default class PayrollLanding extends Component {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                {Object.keys(Months).sort((a, b) => parseInt(a) - parseInt(b)).map((m) => {
+                                                                {Object.keys(Months).sort((a, b) => parseInt(a) - parseInt(b)).map((m, i) => {
                                                                     const yearMonth = `${this.state.closeYear}-${m}`;
                                                                     const isClosed = closeYearMonth.indexOf(`${this.state.closeYear}-${m}`) > -1;
                                                                     const payrollType = payrollTypes.length > 0 && (payrollTypes.includes("UAE") || payrollTypes.includes("UAE02")) ? "UAE" : "";
@@ -1127,7 +1157,14 @@ export default class PayrollLanding extends Component {
                         >
                             {({
                                 values,
+                                errors,
+                                touched,
+                                handleChange,
+                                handleBlur,
+                                handleSubmit,
+                                isSubmitting,
                                 setFieldValue,
+                                setSubmitting
                                 /* and other goodies */
                             }) => (
                                 <Form>

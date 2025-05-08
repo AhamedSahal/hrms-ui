@@ -9,7 +9,6 @@ import { getTitle,toLocalDateTime } from '../../../utility';
 import { getTicketReplies, saveTicketReply } from './service';
 import { TicketSchema } from './validation';
 
-
 export default class TicketAction extends Component {
     constructor(props) {
         super(props)

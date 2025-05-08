@@ -6,7 +6,7 @@ import { FormGroup } from 'reactstrap';
 import { getSurveySettings, saveSurveySettings, getLanguages } from './service';
 import { SurveySettingsSchema } from './validation';
 import { getSurveyById } from '../service';
-import { convertToUserDateTimeZone, convertToUTC, getUserType } from '../../../../utility';
+import { convertToUserDateTimeZone, convertToUTC, getUserType, toLocalCalendarTime } from '../../../../utility';
 
 
 export default class Settings extends Component {
@@ -114,13 +114,13 @@ export default class Settings extends Component {
                     toast.error(res.message);
                 }
                 action.setSubmitting(false)
-            }).catch(() => {
+            }).catch(err => {
                 action.setSubmitting(false);
             })
     }
 
     onSelect = (e) => {
-        const {  value  } = e.target;
+        const { name, value, type, checked } = e.target;
         this.setState((prevState) => {
             const updatedObject = { ...prevState.surveySetting };
             const updatedArray = [...prevState.surveySetting.selectedLanguages];
@@ -142,8 +142,14 @@ export default class Settings extends Component {
             >
                 {({
                     values,
+                    errors,
+                    touched,
                     handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    isSubmitting,
                     setFieldValue,
+                    setSubmitting
                     /* and other goodies */
                 }) => (
                     <Form autoComplete='off'>
@@ -245,7 +251,7 @@ export default class Settings extends Component {
                                                         checked={isEnglish || isChecked}
                                                         disabled={isEnglish || getUserType() !== 'SUPER_ADMIN' && (surveyData?.surveyStatus === 'TEMPLATE' || false) || surveyData.isPublished || isPublished}
                                                         className="pointer form-check-input"
-                                                        onChange={() => {
+                                                        onChange={(e) => {
                                                             const languageId = dbLanguage.id;
                                                             const updatedSelectedLanguages = isChecked
                                                                 ? values.selectedLanguages.filter((id) => id !== languageId)
@@ -273,7 +279,7 @@ export default class Settings extends Component {
                             </div>
                         </div>
                     </Form>
-                )    
+                )
                 }
             </Formik>
         )

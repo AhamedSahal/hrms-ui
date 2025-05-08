@@ -7,7 +7,6 @@ import { saveEntity } from './service';
 
 
 
-
 export default class EntityForm extends Component {
     constructor(props) {
         super(props)

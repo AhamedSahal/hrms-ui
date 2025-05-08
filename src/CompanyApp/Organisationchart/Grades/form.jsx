@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveGrades } from './service';
  import { GradesSchema } from './validation'; 
 
-
 export default class GradesForm extends Component {
     constructor(props) {
         super(props)

@@ -9,7 +9,6 @@ import LeaveTypeDropdown from '../../ModuleSetup/Dropdown/LeaveTypeDropdown';
 import ProjectDropdown from '../../ModuleSetup/Dropdown/ProjectDropdown';
 import ExpenseCategoryDropdown from '../../ModuleSetup/Dropdown/ExpenseCategoryDropdown';
 import { saveWorkExpenses } from './service'; 
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 
 export default class WorkExpensesForm extends Component {

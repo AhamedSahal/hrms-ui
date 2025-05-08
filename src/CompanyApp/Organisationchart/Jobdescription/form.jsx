@@ -11,7 +11,6 @@ import BranchDropdown from '../../ModuleSetup/Dropdown/BranchDropdown';
 import EmployeeDropdown from '../../ModuleSetup/Dropdown/EmployeeDropdown';
  import { JobDescriptionSchema } from './validation'; 
 
-
 export default class JobDescriptionForm extends Component {
     constructor(props) {
         super(props)
@@ -87,6 +86,7 @@ export default class JobDescriptionForm extends Component {
                     noofreports: "",
                     financialParameters: "",
                     externalInterfaces: "",
+                    externalInterfaces: "",
                     keyAccResp: "",
                     qualiExper: "",
                     keyskills: "",
@@ -126,7 +126,14 @@ export default class JobDescriptionForm extends Component {
                 >
                     {({
                         values,
+                        errors,
+                        touched,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        isSubmitting,
                         setFieldValue,
+                        setSubmitting
                         /* and other goodies */
                     }) => (
                         <Form autoComplete='off'>
@@ -154,7 +161,7 @@ export default class JobDescriptionForm extends Component {
                                 <label>Job Titles
                                     <span style={{ color: "red" }}>*</span>
                                 </label>
-                                <Field  name="jobTitlesId" render={() => {
+                                <Field  name="jobTitlesId" render={field => {
                                     
                                     return <JobTitlesDropdown defaultValue={values.jobTitles?.id} onChange={e => {
                                         setFieldValue("jobTitlesId", e.target.value);
@@ -173,7 +180,7 @@ export default class JobDescriptionForm extends Component {
                                     <label>Department
                                         <span style={{ color: "red" }}>*</span>
                                     </label>
-                                    <Field name="departmentId" render={() => {
+                                    <Field name="departmentId" render={field => {
                                         return <DepartmentDropdown defaultValue={values.department?.id} onChange={e => {
                                             setFieldValue("departmentId", e.target.value);
                                             setFieldValue("department", { id: e.target.value }); 
@@ -189,7 +196,7 @@ export default class JobDescriptionForm extends Component {
                                <label>Reporting To
                                     <span style={{ color: "red" }}>*</span>
                                 </label>
-                                <Field  name="repToId"  render={() => {
+                                <Field  name="repToId"  render={field => {
                                     return <EmployeeDropdown defaultValue={values.repTo?.id} onChange={e => {
                                         setFieldValue("repToId", e.target.value);
                                         setFieldValue("repTo", { id: e.target.value });
@@ -207,7 +214,7 @@ export default class JobDescriptionForm extends Component {
                                     <label>Grades
                                         <span style={{ color: "red" }}>*</span>
                                     </label>
-                                    <Field name="gradesId" render={() => {
+                                    <Field name="gradesId" render={field => {
                                         return <GradesDropdown defaultValue={values.grades?.id} onChange={e => {
                                             setFieldValue("gradesId", e.target.value);
                                             setFieldValue("grades", { id: e.target.value }); 
@@ -223,7 +230,7 @@ export default class JobDescriptionForm extends Component {
                                     <label>Location
                                         <span style={{ color: "red" }}>*</span>
                                     </label>
-                                    <Field name="branchId" render={() => {
+                                    <Field name="branchId" render={field => {
                                         return <BranchDropdown defaultValue={values.branch?.id} onChange={e => {
                                             setFieldValue("branchId", e.target.value);
                                             setFieldValue("branch", { id: e.target.value }); 

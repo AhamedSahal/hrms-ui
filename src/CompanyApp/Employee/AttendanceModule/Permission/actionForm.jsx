@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Button, Stack } from '@mui/material';
 
-
 export default class PermissionAction extends Component {
     constructor(props) {
         super(props)

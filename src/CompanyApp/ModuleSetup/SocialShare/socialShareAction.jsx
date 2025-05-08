@@ -6,7 +6,6 @@ import MediaComponent from '../../../MainPage/MediaComponent';
 import { approvePost } from './service';
 import { Button, Stack } from '@mui/material';
 
-
 export default class SocialShareAction extends Component {
     constructor(props) {
         super(props)

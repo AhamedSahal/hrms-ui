@@ -6,7 +6,6 @@ import { FormGroup } from "reactstrap";
 import TemplateDropdown from "../Dropdown/TemplateDropdown";
 import { saveDocumentRequest } from "./service";
 import { DocumentRequestSchema } from "./validation";
-
 export default class DocumentRequestForm extends Component {
   constructor(props) {
     super(props);
@@ -80,7 +79,7 @@ export default class DocumentRequestForm extends Component {
               </FormGroup>
 
               <FormGroup>
-                <label>Detail</label>
+                <label>Detail <span style={{ color: "red" }}>*</span></label>
                 <Field name="details" className="form-control" placeholder="Enter Details..." />
                 <ErrorMessage name="details">
                   {(msg) => <div style={{ color: "red" }}>{msg}</div>}

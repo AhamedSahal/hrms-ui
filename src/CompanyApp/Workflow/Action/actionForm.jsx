@@ -12,7 +12,6 @@ import { getEmployeeId, getRoleId, getUserType } from '../../../utility';
 import {getWorkFlowStepList} from "./service"
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 
-
 export default class WorkflowActionForm extends Component {
     constructor(props) {
         super(props)

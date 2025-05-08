@@ -124,7 +124,29 @@ class OffboardMSTaskForm extends Component {
             OffboardMSTaskList.branches = data.branches.map(brnch => brnch.id);
         }
 
-        
+        const subtaskList = {
+            taskId: data.id,
+            subTask: data.subtasks.map(subtask => {
+                const subtaskData = {
+                    id: subtask.id,
+                    name: subtask.name,
+                    active: subtask.active,
+                    assignId: subtask.assign,
+                    dueOn: subtask.dueOn,
+                    numberofDays: subtask.numberofDays
+                };
+                if (subtask.employeeId && subtask.employeeId.length > 0) {
+                    subtaskData.employeeId = subtask.employeeId;
+                }
+                if (subtask.departments && subtask.departments.length > 0) {
+                    subtaskData.departments = subtask.departments.map(dept => dept.id);
+                }
+                if (subtask.branches && subtask.branches.length > 0) {
+                    subtaskData.branches = subtask.branches.map(brnch => brnch.id);
+                }
+                return subtaskData;
+            })
+        };
         action.setSubmitting(true);
         // saveOffboardMSTask(OffboardMSTaskList).then(res => {
         //     if (res.status == "OK") {
@@ -236,7 +258,14 @@ class OffboardMSTaskForm extends Component {
                 >
                     {({
                         values,
+                        errors,
+                        touched,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        isSubmitting,
                         setFieldValue,
+                        setSubmitting
                     }) => (
                         <Form autoComplete='off'>
                             <div className='row'>

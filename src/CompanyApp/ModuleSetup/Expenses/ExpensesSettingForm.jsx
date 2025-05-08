@@ -7,7 +7,6 @@ import { saveExpenses } from './service';
 import { GratuitySchema } from './validation';
 import { verifyOrgLevelViewPermission, verifyOrgLevelEditPermission } from '../../../utility';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
-
 export default class ExpensesSettingForm extends Component {
     constructor(props) {
         super(props)

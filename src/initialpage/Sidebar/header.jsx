@@ -84,7 +84,7 @@ class Header extends Component {
 
   handleCompanyChange = (companyId) => {
     getChangeCompany(companyId)
-      .then(() => {
+      .then(response => {
         this.setState({ companyId }, () => {
           document.cookie = `companyId=${companyId}; path=/`;
           this.props.dispatch(authService.getCompanyWiseMenuList(companyId))

@@ -11,7 +11,6 @@ import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown';
 import RecognitionCategoryDropdown from '../ModuleSetup/Dropdown/RecognitionCategoryDropdown';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
 
-
 export default class RecognitionMain extends Component {
     constructor(props) {
         super(props)

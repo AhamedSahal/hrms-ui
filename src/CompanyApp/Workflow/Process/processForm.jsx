@@ -11,7 +11,6 @@ import WorkFlowStepAutomateDropdown from '../../ModuleSetup/Dropdown/WorkFlowSte
 import { getEmployeeId, getRoleId,getUserType } from '../../../utility';
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 
-
 export default class WorkflowProcessForm extends Component {
     constructor(props) {
         super(props)

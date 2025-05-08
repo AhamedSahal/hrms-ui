@@ -8,7 +8,6 @@ import { getUserType } from '../../../utility';
 import EnumDropdown from '../../ModuleSetup/Dropdown/EnumDropdown';
 import { saveTicket } from './service';
 import { TicketSchema } from './validation';
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 
 export default class TicketForm extends Component {

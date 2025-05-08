@@ -7,7 +7,6 @@ import { multiApprovalLeaveSchema } from './multiApprovalLeaveSchema';
 import { saveMultiApprovalMaster, saveMultiApprovallist, getMultiApprovalMaster,getMultiApprovalMasterList,saveMultiApprovalPatch } from './service';
 
 
-
 export default class LeaveMultiApproval extends Component {
     constructor(props) {
         super(props)

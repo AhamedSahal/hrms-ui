@@ -52,16 +52,16 @@ export default class Company extends Component {
     })
   }
   handleFormSave = () => {
-  };
-  getCompanyDetails = (company) => {
-  }
+};
+getCompanyDetails =(company) => {
+}
   updateList = (company) => {
     let { data } = this.state;
     let index = data.findIndex(d => d.id == company.id);
     if (index > -1)
       data[index] = company;
     else {
-      data = [company, ...data];
+      data=[company,...data];
     }
     this.setState({ data },
       () => {
@@ -81,11 +81,11 @@ export default class Company extends Component {
   hideForm = () => {
     this.setState({
       showForm: false,
-      showSettingForm: false,
-      showSSOKeyForm: false,
-      company: undefined,
+      showSettingForm : false,
+      showSSOKeyForm : false,
+      company: undefined,     
     })
-  }
+  } 
   delete = (company) => {
     confirmAlert({
       title: `Delete Company ${company.name}`,
@@ -158,14 +158,14 @@ export default class Company extends Component {
     ]
     return (
       <div className="adminInsidePageDiv">
-
-        < div className="page-container content container-fluid" >
-          <Helmet>
-            <title>Company Management - WorkPlus</title>
-          </Helmet>
-          {/* Page Content */}
-          < div className="tablePage-header" >
-            <div className="row pageTitle-section">
+      
+      < div className = "page-container content container-fluid" >
+        <Helmet>
+          <title>Company Management - WorkPlus</title>
+        </Helmet>
+        {/* Page Content */}
+        < div className = "tablePage-header" >
+          <div className="row pageTitle-section">
               <div className="col">
                 <h3 className="tablePage-title">Company</h3>
                 <ul className="breadcrumb">
@@ -229,13 +229,13 @@ export default class Company extends Component {
                         <div className="pt-2 pb-2 col-md-6">
                           <span className="badge bg-inverse-success m-t-5">{d.planName}</span></div>
                         <div className="pt-2 pb-2 col-md-6 border-left">
-                          <a className="mr-1 btn btn-white btn-sm" href="#" onClick={() => {
-                            let company = d;
-                            d.companyName = d.name;
-                            this.setState({ company, showForm: true })
-                          }} >Upgrade Plan</a>
+                          <a className="mr-1 btn btn-white btn-sm" href="#"  onClick={() => {
+                          let company = d;
+                          d.companyName = d.name;
+                          this.setState({ company, showForm: true })
+                        }} >Upgrade Plan</a>
                         </div>
-
+                        
                       </> : <></>}
                       <div className="pt-2 pb-2 col-md-6 center">
                         Employees
@@ -268,23 +268,23 @@ export default class Company extends Component {
 
           </div>
 
+        
+        {/* /Page Content */}
 
-          {/* /Page Content */}
+        {/* Manage Department Modal */}
+        <Modal enforceFocus={false} size={"lg"} show={this.state.showForm} onHide={this.hideForm} >
 
-          {/* Manage Department Modal */}
-          <Modal enforceFocus={false} size={"lg"} show={this.state.showForm} onHide={this.hideForm} >
+          <Header closeButton>
+            <h5 className="modal-title">{this.state.company ? 'Edit' : 'Add'} Company</h5>
 
-            <Header closeButton>
-              <h5 className="modal-title">{this.state.company ? 'Edit' : 'Add'} Company</h5>
+          </Header>
+          <Body>
+            <CompanyForm updateList={this.fetchList} company={this.state.company} getCompanyDetails={this.getCompanyDetails} onFormSave={this.handleFormSave}>
+            </CompanyForm>
+          </Body>
+        </Modal>
 
-            </Header>
-            <Body>
-              <CompanyForm updateList={this.fetchList} company={this.state.company} getCompanyDetails={this.getCompanyDetails} onFormSave={this.handleFormSave}>
-              </CompanyForm>
-            </Body>
-          </Modal>
-
-        </div>
+      </div>
       </div>
     );
   }

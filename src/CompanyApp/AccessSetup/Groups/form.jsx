@@ -7,7 +7,6 @@ import { saveGroups } from './service';
 import { RoleSchema } from '../Role/validation';
 import { GroupSchema } from './validation';
 
-
 export default class GroupForm extends Component {
     constructor(props) {
         super(props)
@@ -58,7 +57,18 @@ export default class GroupForm extends Component {
                     onSubmit={this.save}
                     validationSchema={GroupSchema}
                 >
-                    {() => (
+                    {({
+                        values,
+                        errors,
+                        touched,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        isSubmitting,
+                        setFieldValue,
+                        setSubmitting
+                        /* and other goodies */
+                    }) => (
                         <Form>
                             <FormGroup>
                                 <label>Group Name

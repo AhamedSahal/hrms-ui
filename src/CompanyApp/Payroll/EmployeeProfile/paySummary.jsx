@@ -1,13 +1,31 @@
 import React, { Component } from 'react'
 import { toLocalDateTime,toLocalDate,formatDate } from '../../../utility'
+import { getSalaryInformation } from '../../Employee/detail/service';
 
 export default class PaySummary extends Component {
+    
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            salaryInfo: []
+        }
+    }
 
     componentDidMount (){
-        console.log("summaryData",this.props.summaryData)
+       this.fetchList();
+    }
+    
+    fetchList = () => {
+        getSalaryInformation(this.props?.summaryData?.employee?.id).then(res => {
+            this.setState({
+                salaryInfo: res.data
+            })
+        })
     }
     render() {
         let {summaryData} = this.props
+        let {salaryInfo} = this.state
         return (
             <div className="EmpProfile-home-page">
                 <div className="mr-4 EmpProfileCenter">
@@ -20,8 +38,8 @@ export default class PaySummary extends Component {
                             <div class="row">
                                 <div class="col">
                                     <div className="gnInfodetail">
-                                        <span className="gnInfolabel">Designation</span>
-                                        <span className="gnInfovalue">{summaryData?.designation == null?"-":summaryData?.designation}</span>
+                                        <span className="gnInfolabel">Job Title</span>
+                                        <span className="gnInfovalue">{summaryData?.jobTitle == null?"-":summaryData?.jobTitle}</span>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -43,7 +61,7 @@ export default class PaySummary extends Component {
                                 <div class="col">
                                     <div className="gnInfodetail">
                                         <span className="gnInfolabel">Date Of Joining</span>
-                                        <span className="gnInfovalue">{summaryData?.dateOfJoining == null?"-":formatDate(summaryData?.dateOfJoining)}</span>
+                                        <span className="gnInfovalue">{summaryData?.dateOfJoining == null?"-": new Date(summaryData?.dateOfJoining).toLocaleDateString('en-GB').replace(/\//g, '-')}</span>
                                     </div>
 
                                 </div>
@@ -109,21 +127,21 @@ export default class PaySummary extends Component {
                         <div className="mt-3 ctc-breakup-card">
                             <div className="ctc-card-header">
                                 <span className="ctc-card-title">Salary Breakup</span> <br />
-                                <span className="ctc-revision-date">Revised on {formatDate(summaryData?.modifiedOn)}</span>
+                                <span className="ctc-revision-date">Revised on {new Date(summaryData?.modifiedOn).toLocaleDateString('en-GB').replace(/\//g, '-')}</span>
                             </div>
                             <div className="ctc-card-details">
                                 <div className="ctc-detail-row">
                                     <span className="ctclabel">Basic Salary</span>
-                                    <span className="ctcvalue">{summaryData?.basicSalary}</span>
+                                    <span className="ctcvalue">{salaryInfo?.basicSalary}</span>
                                 </div>
                                 <div className="ctc-detail-row">
                                     <span className="ctclabel">Allowance</span>
-                                    <span className="ctcvalue">{summaryData?.allowance}</span>
+                                    <span className="ctcvalue">{salaryInfo?.allowance}</span>
                                 </div>
 
                                 <div className="ctc-detail-row ctc-net-pay">
                                     <span className="ctclabel">Net Pay</span>
-                                    <span className="ctcvalue">{summaryData?.netSalary == null?"-":summaryData?.netSalary}</span>
+                                    <span className="ctcvalue">{salaryInfo?.monthyPayment}</span>
                                 </div>
                             </div>
                         </div>
@@ -142,7 +160,7 @@ export default class PaySummary extends Component {
                                 </div>
                                 <div className="bank-detail">
                                     <span className="bank-label">Account number</span>
-                                    <div className="bank-value" style={{width: '100px',overflowX:'auto'}}>{summaryData?.ibanNumber == null?"-":summaryData?.ibanNumber}</div>
+                                    <div className="bank-value" style={{width: '100px',overflowX:'auto'}}>{summaryData?.accountNumber == null?"-":summaryData?.accountNumber}</div>
                                 </div>
                                 <div className="bank-detail">
                                     <span className="bank-label">Branch Name</span>

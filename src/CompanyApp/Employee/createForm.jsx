@@ -12,7 +12,7 @@ import { Helmet } from 'react-helmet';
 import NationalityDropdown from './../ModuleSetup/Dropdown/NationalityDropdown';
 import ReligionDropdown from './../ModuleSetup/Dropdown/ReligionDropdown';
 import LanguageDropdown from '../ModuleSetup/Dropdown/LanguageDropdown';
-import { getTitle } from '../../utility';
+import { getPasswordPolicy, getTitle } from '../../utility';
 import PasswordField from '../../initialpage/PasswordField';
 import BranchDropdown from '../ModuleSetup/Dropdown/BranchDropdown';
 
@@ -46,7 +46,8 @@ export default class CreateEmployeeForm extends Component {
                 orgSetup:{
                     id: 1,
                 }
-            }
+            },
+            isValid: false,
         }
     }
 
@@ -101,7 +102,14 @@ export default class CreateEmployeeForm extends Component {
     }
     redirectToList = () => {
         this.props.history.goBack();
-    }  
+    }
+    handlePasswordChange = (value,setFieldValue) => {
+        console.log(value)
+        const regex = new RegExp(getPasswordPolicy());
+        const isValid = regex.test(value);
+        setFieldValue("password", value); 
+        this.setState({ isValid });
+    };
     render() {
         let {employee} = this.state;
         return (
@@ -143,18 +151,15 @@ export default class CreateEmployeeForm extends Component {
                                                     <div className="col-md-12" style={{display:"flex", alignItems:"end", justifyContent:"end"}}>
                                                         <div className="col-md-3" style={{display:"flex", alignItems:"end", justifyContent:"end"}}>
                                                             <FormGroup>
-                                                            
                                                                 <Checkbox
                                                                     checked = {employee.autoGenerateEmployeeId}
                                                                     onChange={(e) => {
                                                                         setFieldValue("autoGenerateEmployeeId", employee.autoGenerateEmployeeId?false:true)
                                                                         employee.autoGenerateEmployeeId =  employee.autoGenerateEmployeeId?false:true
-                                                                      
                                                                     }}
                                                                     inputProps={{ "aria-label": "controlled" }}
                                                                 />
                                                                 <label>Auto-Generate Employee Id  </label>
-                                                               
 
                                                             </FormGroup>
                                                         </div>
@@ -183,7 +188,13 @@ export default class CreateEmployeeForm extends Component {
                                                             <label>First Name
                                                                 <span style={{ color: "red" }}>*</span>
                                                             </label>
-                                                            <Field name="firstName" capitalize-first-letter className="form-control"></Field>
+                                                            <Field
+                                                                name="firstName"
+                                                                className="form-control"
+                                                                onInput={(e) => {
+                                                                    e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+                                                                }}
+                                                            ></Field>
                                                             <ErrorMessage name="firstName">
                                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                                             </ErrorMessage>
@@ -195,7 +206,9 @@ export default class CreateEmployeeForm extends Component {
                                                             <label>Last Name
                                                                 <span style={{ color: "red" }}>*</span>
                                                             </label>
-                                                            <Field name="lastName" capitalize-first-letter className="form-control"></Field>
+                                                            <Field name="lastName" capitalize-first-letter onInput={(e) => {
+                                                                e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+                                                            }} className="form-control"></Field>
                                                             <ErrorMessage name="lastName">
                                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                                             </ErrorMessage>
@@ -238,7 +251,7 @@ export default class CreateEmployeeForm extends Component {
                                                             </ErrorMessage>
                                                         </FormGroup>
                                                     </div>
-                                                    </div>
+                                                </div>
                                                 <div className="row">
                                                     <div className="col-md-12">
                                                         <h3>Credentials</h3>
@@ -257,14 +270,13 @@ export default class CreateEmployeeForm extends Component {
                                                             <label>Password
                                                                 <span style={{ color: "red" }}>*</span>
                                                             </label>
-                                                            <PasswordField name="password" type = 'password' onChange={(value) => {
-                                                                setFieldValue("password", value);
-                                                            }} />
+                                                            <PasswordField name="password" type = 'password' 
+                                                            onChange={(value) => this.handlePasswordChange(value, setFieldValue)} />
                                                         </FormGroup>
                                                     </div>
                                                 </div>
 
-                                                <input type="submit" className="btn btn-primary" value="Create" />
+                                                <input type="submit" className="btn btn-primary" disabled={!this.state.isValid} value="Create" />
                                                 &nbsp;
                                                 <input type="button" className="btn btn-secondary btn-sm" onClick={this.redirectToList} value="Cancel"></input>
                                             </Form>

@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveRecognition } from './service';
 import { RecognitionSetupSchema } from './validation';
 
-
 export default class RecognitionForm extends Component {
     constructor(props) {
         super(props)

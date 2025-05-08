@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { getDocumentInformation, updateDocumentInformation } from '../../../CompanyApp/Employee/detail/service';
 import { getEmployeeId, getUserName, verifyEditPermission } from '../../../utility';
-
 export default class UploadDocsEmployeeForm extends Component {
     constructor(props) {
         super(props)
@@ -86,7 +85,7 @@ export default class UploadDocsEmployeeForm extends Component {
                 }
                 action.setSubmitting(false)
             })
-        } catch {
+        } catch (err) {
             toast.error("Error while saving Document Detail");
             action.setSubmitting(false);
         }
@@ -121,7 +120,16 @@ export default class UploadDocsEmployeeForm extends Component {
                             // validationSchema={EmployeeSchema}
                             >
                                 {({
+                                    values,
+                                    errors,
+                                    touched,
+                                    handleChange,
+                                    handleBlur,
+                                    handleSubmit,
+                                    isSubmitting,
                                     setFieldValue,
+                                    setSubmitting
+                                    /* and other goodies */
                                 }) => (
                                     <Form autoComplete='off'>
                                         <FormGroup>

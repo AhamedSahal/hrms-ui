@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getAllowanceInformation, getPersonalInformation, getSalaryInformation, updateAllowanceInformation } from '../service';
 import { getUserType } from '../../../../utility';
-
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 
 export default class AllowanceStatus extends Component {

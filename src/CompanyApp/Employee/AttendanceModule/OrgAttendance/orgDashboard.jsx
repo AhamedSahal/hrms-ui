@@ -20,7 +20,7 @@ const { Header, Body, Footer, Dialog } = Modal;
 
 const LightTooltip = styled(({ className, ...props }) => (
   <Tooltipmui {...props} classes={{ popper: className }} />
-))(() => ({
+))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: 'grey',
     color: 'white',
@@ -31,7 +31,6 @@ const LightTooltip = styled(({ className, ...props }) => (
     border: "1px solid #D3D3D3"
   },
 }));
-
 
 
 export default class OrgDashboard extends Component {
@@ -207,7 +206,7 @@ export default class OrgDashboard extends Component {
 
 
   render() {
-    const { ontimeData, dashboard, toDateOntime, overTimeData, fromDateOntime, fromDate, toDate } = this.state;
+    const { currentWeek, currentMonth, ontimeData, dashboard, toDateOntime, overTimeData, fromDateOntime, fromDate, toDate } = this.state;
   
 
     const data = [

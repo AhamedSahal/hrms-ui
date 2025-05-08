@@ -148,7 +148,7 @@ export default class AuditLog extends Component {
                 <Table className="table-striped table-border"
                   pagination={{
                     total: totalRecords,
-                    showTotal: () => { 
+                    showTotal: (total, range) => { 
                       return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                     },
                     showSizeChanger: true, onShowSizeChange: this.pageSizeChange,

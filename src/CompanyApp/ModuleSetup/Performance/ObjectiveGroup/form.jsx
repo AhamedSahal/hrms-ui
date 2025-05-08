@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveObjectiveGroup } from './service';
 import { ObjectiveGroupSchema } from './validation';
 
-
 export default class ObjectiveGroupForm extends Component {
     constructor(props) {
         super(props)

@@ -17,18 +17,13 @@ export default class AssetsAction extends Component {
             AssetsAction: props.AssetsAction || {
                 id: 0,
                 returnDate: "",
-                confidentiality: "",
-                integrity: "",
-                availability: "",
+                reasonOfReturn:"",
                 remarks: "",
                 employeeId: 0
-
             }
         }
     }
-
     static getDerivedStateFromProps(nextProps, prevState) {
-
         if (nextProps.AssetsAction && nextProps.AssetsAction != prevState.AssetsAction) {
             return ({ AssetsAction: nextProps.AssetsAction })
         } else if (!nextProps.AssetsAction) {
@@ -36,32 +31,27 @@ export default class AssetsAction extends Component {
                 AssetsAction: {
                     id: 0,
                     returnDate: "",
-                    confidentiality: "",
-                    integrity: "",
-                    availability: "",
                     remarks: "",
                     employeeId: 0
 
                 }
             })
         }
-
         return null;
     }
-    updateAsset = (id,assignDate) => {  
-        let assignedDate = new Date(assignDate).getTime();
-        let returnedDate = new Date(this.state.returnDate).getTime(); 
-        if(this.state.returnDate == undefined){
-            toast.error("Return Date should be empty.");
+    updateAsset = (id) => {  
+     
+        if(this.state.returnDate == undefined || this.state.returnDate == "" ){
+            toast.error("Return Date should not be empty.");
         }
-        else if(assignedDate > returnedDate) {
-            toast.error("Return Date should be less than assigned date.");
-        } 
-        else if( this.state.returnDate != "" && this.state.remarks == undefined) {
-            toast.error("Comments should not be empty.");
+      
+        else if(this.state.reasonOfReturn == "" || this.state.reasonOfReturn == undefined ){
+            toast.error("Reason of Return should not be empty");
+        }else if(this.state.reasonOfReturn == "Others" && (this.state.remarks == "" || undefined)){
+            toast.error("Add a comment");
         }
         else{ 
-            updateAsset(id,this.state.returnDate,this.state.AssetsAction.confidentiality ?? "",this.state.AssetsAction.integrity ?? "",this.state.AssetsAction.availability ?? "", this.state.remarks).then(res => {
+            returnAsset(id,this.state.returnDate,this.state.reasonOfReturn, this.state.remarks).then(res => {
                 if (res.status == "OK") {
                     toast.success(res.message); 
                 } else {
@@ -73,7 +63,7 @@ export default class AssetsAction extends Component {
                       }, 6000)
                 }
             }).catch(err => { 
-                toast.error("Error while updating assets");
+                toast.error("Error while returning assets");
             })
         }
     }
@@ -94,10 +84,7 @@ export default class AssetsAction extends Component {
                         <th>Serial No</th>
                         <td>{AssetsAction.serialno}</td>
                     </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td>{AssetsAction.isStatus == "APPROVED" ? "Allocated" : "Available"}</td>
-                    </tr>
+                   
                     <tr>
                         <th>Assigned To</th>
                         <td>{AssetsAction.employee?.name}</td>
@@ -125,61 +112,33 @@ export default class AssetsAction extends Component {
                             </td>
                     </tr>
                     <tr>
-                            <th>Confidentiality</th>
-                            <td>
-                                <FormGroup>  
-                                        <select id="confidentiality" className="form-control" name="confidentiality"
-                                            onChange={e => {
-                                                this.setState({
-                                                    confidentiality: e.target.value
-                                                }); 
-                                            }} defaultValue={AssetsAction.confidentiality}>
-                                            <option value="">Select Confidentiality</option>
-                                            <option value="0">High</option>
-                                            <option value="1">Medium</option>
-                                            <option value="2">Low</option>
-                                        </select> 
-                                </FormGroup>
-                            </td>
+                    <th>Reason for Return<span style={{ color: "red" }}>*</span></th>
+                        <td>
+                              <FormGroup>
+                                                                        
+                                    <select id="reasonOfReturn" className="form-control" name="reasonOfReturn"
+                                     onChange={e => {
+                                        this.setState(
+                                            {
+                                                reasonOfReturn:e.target.value
+                                            }
+                                        )
+
+                                            }}>
+                                            <option value="Select Reason">Select Reason</option>
+                                            <option value="Replacement">Replacement</option>
+                                            <option value="Termination">Termination</option>
+                                            <option value="Repair">Repair</option>
+                                            <option value="Others">Others Reasons</option>
+                                    </select>
+                             </FormGroup>
+                        </td>
+                                                               
+
                     </tr>
+
                     <tr>
-                            <th>Integrity</th>
-                            <td>
-                                <FormGroup>  
-                                        <select id="integrity" className="form-control" name="integrity"
-                                            onChange={e => {
-                                                this.setState({
-                                                    integrity: e.target.value
-                                                }); 
-                                            }} defaultValue={AssetsAction.integrity}>
-                                            <option value="">Select Integrity</option>
-                                            <option value="0">High</option>
-                                            <option value="1">Medium</option>
-                                            <option value="2">Low</option>
-                                        </select> 
-                                </FormGroup>
-                            </td>
-                    </tr>
-                    <tr>
-                            <th>Availability</th>
-                            <td>
-                                <FormGroup>  
-                                        <select id="availability" className="form-control" name="availability"
-                                            onChange={e => {
-                                                this.setState({
-                                                    availability: e.target.value
-                                                }); 
-                                            }} defaultValue={AssetsAction.availability}>
-                                            <option value="">Select Availability</option>
-                                            <option value="0">High</option>
-                                            <option value="1">Medium</option>
-                                            <option value="2">Low</option>
-                                        </select> 
-                                </FormGroup>
-                            </td>
-                    </tr>
-                    <tr>
-                            <th>Add your comments {this.state.returnDate != "" && <> <span style={{ color: "red" }}>*</span></>}</th>
+                        <th>Add your comment<span style={{ color: "red" }}>{this.state.reasonOfReturn == "Others"?'*':''}</span></th>
                             <td>
                                 <FormGroup>
                                     <input name="remarks"  type="text" className="form-control" defaultvalue={AssetsAction.remarks} onChange={e => {
@@ -195,8 +154,8 @@ export default class AssetsAction extends Component {
                 </table>
                     <hr />
                     <Anchor onClick={() => {
-                       this.updateAsset(AssetsAction.id,AssetsAction.assignDate);
-                    }} className="btn btn-primary">Deactivate</Anchor>
+                       this.updateAsset(AssetsAction.id);
+                    }} className="btn btn-primary">Return</Anchor>
                     &nbsp;
                 </>}
 

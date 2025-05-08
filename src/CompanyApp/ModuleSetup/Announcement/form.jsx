@@ -6,7 +6,6 @@ import { FormGroup } from 'reactstrap';
 import { saveAnnouncement } from './service';
 import { AnnouncementSchema } from './validation';
 
-
 export default class AnnouncementForm extends Component {
     constructor(props) {
         super(props)

@@ -42,7 +42,8 @@ export default class Regularization extends Component {
             showFilter: false,
             self: isCompanyAdmin ? 0 : 1,
             selected: [],
-            showViewForm: false
+            showViewForm: false,
+            status: ""
         };
 
     }
@@ -52,7 +53,7 @@ export default class Regularization extends Component {
 
     fetchList = () => {
         if (verifyViewPermission("ATTENDANCE")) {
-            getRegularizationList(this.state.q, this.state.regularizedDate, this.state.page, this.state.size, this.state.sort, this.state.self, this.state.fromDate, this.state.toDate).then(res => {
+            getRegularizationList(this.state.q, this.state.regularizedDate, this.state.page, this.state.size, this.state.sort, this.state.self, this.state.fromDate, this.state.toDate,this.state.status).then(res => {
                 if (res.status == "OK") {
                     this.setState({
                         data: res.data.list,

@@ -5,9 +5,9 @@ const servicePath = "/regularization";
 const servicePath1 = "/regularization/submit";
 const servicePath2 = "/regularization/statusUpdate";
 
-export function getRegularizationList(searchText, regularizedDate, pageNumber, pageSize, sort, self, fromDate, toDate) {
+export function getRegularizationList(searchText, regularizedDate, pageNumber, pageSize, sort, self, fromDate, toDate,status) {
     let path = `${servicePath}/All?${getPaginationQueryString(searchText, pageNumber, pageSize, sort)}&self=${self}`;
-    path += `&regularizedDate=${regularizedDate}&fromDate=${fromDate}&toDate=${toDate}`;
+    path += `&regularizedDate=${regularizedDate}&fromDate=${fromDate}&toDate=${toDate}&status=${status}`;
     console.log(path);
     return getWithAuth(path).then(res => {
         return Promise.resolve(res.data);

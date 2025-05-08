@@ -1,52 +1,26 @@
 import { Empty, Popover, Progress, Slider, Table, Tooltip } from 'antd';
-import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
-import { Button, Modal, ProgressBar } from 'react-bootstrap';
+import { Button, Modal, ProgressBar,Anchor } from 'react-bootstrap';
+import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
-import { getReadableDate, getUserType, verifyOrgLevelViewPermission, getTitle } from '../../../../utility';
+import { toast } from 'react-toastify';
+import { getReadableDate, getUserType, verifyApprovalPermission, verifyOrgLevelEditPermission, verifyOrgLevelViewPermission, verifySelfViewPermission, verifyViewPermissionForTeam, convertToUserTimeZone, getTitle, toLocalDate } from '../../../../utility';
 
 
 import DepartmentDropdown from '../../../ModuleSetup/Dropdown/DepartmentDropdown';
 import BranchDropdown from '../../../ModuleSetup/Dropdown/BranchDropdown';
 import JobTitlesDropdown from '../../../ModuleSetup/Dropdown/JobTitlesDropdown';
 import { BsSliders } from 'react-icons/bs';
+import SuccessAlert from '../../../../MainPage/successToast';
 import EmployeeProfilePhoto from '../../../Employee/widgetEmployeePhoto';
+import { FcHighPriority, FcLowPriority, FcMediumPriority } from 'react-icons/fc';
+import { getOnboardChecklist } from './tasklist/service';
 
 
 
-const onboardTask = [
-    {
-        id: 1,
-        employeeName: "John Doe",
-        title: "Software Engineer",
-        startDate: "2025-02-01",
-        managerName: "Alice Smith",
-        subtaskCount: 5,
-        taskCount: 5,
-        taskProgress: 18, // Percentage
-    },
-    {
-        id: 2,
-        employeeName: "Jane Smith",
-        title: "UI/UX Designer",
-        startDate: "2025-02-05",
-        managerName: "Bob Johnson",
-        subtaskCount: 4,
-        taskCount: 5,
-        taskProgress: 50, // Percentage
-    },
-    {
-        id: 3,
-        employeeName: "Mike Brown",
-        title: "HR Specialist",
-        startDate: "2025-02-10",
-        managerName: "Sarah Lee",
-        subtaskCount: 6,
-        taskCount: 5,
-        taskProgress: 90, // Percentage
-    }
-];
+
+
 
 
 
@@ -78,14 +52,14 @@ export default class OnboardList extends Component {
         this.fetchList();
     }
     fetchList = () => {
-        // getOnboardChecklist(this.state.branchId,this.state.departmentId,this.state.jobTitleId, this.state.q, this.state.page, this.state.size, this.state.sort, this.state.fromDate ,this.state.toDate).then(res => {
-        //        if (res.status == "OK") {
-        //          this.setState({
-        //            data: res.data.list,
-        //            totalRecords: res.data.totalRecords,
-        //          })
-        //        }
-        //      })
+        getOnboardChecklist(this.state.branchId,this.state.departmentId,this.state.jobTitleId, this.state.q, this.state.fromDate ,this.state.toDate).then(res => {
+               if (res.status == "OK") {
+                 this.setState({
+                   data: res.data,
+                //    totalRecords: res.data.totalRecords,
+                 })
+               }
+             })
 
     }
 
@@ -103,8 +77,8 @@ export default class OnboardList extends Component {
     render() {
 
         const isAdmin = (verifyOrgLevelViewPermission("Onboard") || getUserType() == 'COMPANY_ADMIN');
-        const {  totalRecords, currentPage, size } = this.state
-       
+        const { formData, screenCount, visiblePopover, subGoalsList, expandedRows, totalPages, totalRecords, currentPage, size, goalsView, goalsViewHistory, subGoalsData } = this.state
+        let startRange = ((currentPage - 1) * size) + 1;
         let endRange = ((currentPage) * (size + 1)) - 1;
         if (endRange > totalRecords) {
             endRange = totalRecords;
@@ -242,36 +216,58 @@ export default class OnboardList extends Component {
                                 </thead>
 
                                 <tbody>
-                                    {onboardTask.length > 0 ? null : (
+                                    {this.state.data.length > 0 ? null : (
                                         <tr>
                                             <td colSpan="6">
                                                 <Empty />
                                             </td>
                                         </tr>
                                     )}
-                                    {onboardTask?.map((item) => {
+                                    {this.state.data.length > 0 && this.state.data?.map((item) => {
                                         return (
                                             <>
-                                                <tr onClick={() => this.props.handlePage('tasklist')} className='Goals_table_row' key={item.id}>
+                                                <tr onClick={() => this.props.handlePage('tasklist',item)} className='Goals_table_row' key={item.id}>
                                                     <td style={{ width: '300px' }} className='GoalName_tab' >
                                                         <div >
                                                             <div className="goal-title"><EmployeeProfilePhoto className='multiSelectImgSize' id={item.employeeId}></EmployeeProfilePhoto>{item.employeeName}</div>
 
                                                         </div>
                                                     </td>
-                                                    <td>{item.title}</td>
-                                                    <td style={{ textAlign: 'center' }}>{getReadableDate(item.startDate)}</td>
-                                                    <td><EmployeeProfilePhoto className='multiSelectImgSize' id={item.employeeId}></EmployeeProfilePhoto>{item.managerName}</td>
+                                                    <td>{item.jobTitle}</td>
+                                                    <td style={{ textAlign: 'center' }}>{getReadableDate(item.dateOfJoining)}</td>
+                                                    <td><EmployeeProfilePhoto className='multiSelectImgSize' id={item.employeeId}></EmployeeProfilePhoto>{item?.managerName}</td>
                                                     <td style={{ textAlign: 'center' }}>{item.taskCount}</td>
-                                                    <td style={{ textAlign: 'center' }}>{item.subtaskCount}</td>
+                                                    <td style={{ textAlign: 'center' }}>{item.subTaskCount}</td>
 
-                                                    <td>
+                                                    {/* <td>
                                                         <div className="onboardList_progress-bar">
-                                                            <div className="goal_progress-fill" style={{ backgroundColor: getColorByAchievement(item.taskProgress), width: `${item.taskProgress}%` }}></div>
+                                                            <div className="goal_progress-fill" style={{ backgroundColor: getColorByAchievement(item.progress == null?0:item.progress), width: `${item.progress == null?0:item.progress}%` }}>{item.progress == null?0:item.progress}</div>
                                                         </div>
-                                                    </td>
+                                                    </td> */}
+
+                                                     <div >
+                                                                                                                <Slider
+                                                                                                                    value={item.progress == null?0:item.progress}
+                                                                                                                    tooltip={{ open: false }}
+                                                                                                                    trackStyle={{ borderRadius: '20px', backgroundColor: getColorByAchievement(item.progress == null?0:item.progress), height: 8 }}
+                                                                                                                    handleStyle={{
+                                                                                                                        borderColor: getColorByAchievement(item.progress == null?0:item.progress),
+                                                                                                                        backgroundColor: "#fff",
+                                                                                                                        borderWidth: 2,
+                                                                                                                        width: 20,
+                                                                                                                        height: 20,
+                                                    
+                                                                                                                    }}
+                                                                                                                    railStyle={{ backgroundColor: "#f0f0f0", height: 8 }}
+                                                                                                                />
+                                                                                                                <div className='m-1 text-right'>
+                                                                                                                    <span className="last-updated">{(item.progress == null?0:item.progress).toFixed(2)}%</span>
+                                                                                                                </div>
+                                                    
+                                                                                                            </div>
+                                                    
                                                     <td style={{ textAlign: 'center' }}>
-                                                        <span className='badge bg-inverse-info'><i class="pr-2 fa fa-circle text-info"></i>In-Progress</span>
+                                                       {(item.progress == null?0:item.progress) == 100?<span className='badge bg-inverse-success'><i class="pr-2 fa fa-circle text-info"></i>Completed</span>:item.dueDate == null || toLocalDate(item.dueDate) >= toLocalDate(new Date())?<span className='badge bg-inverse-info'><i class="pr-2 fa fa-circle text-info"></i>In progress</span> :<span className='badge bg-inverse-danger'><i class="pr-2 fa fa-circle text-info"></i>OverDue</span>} 
 
 
                                                     </td>

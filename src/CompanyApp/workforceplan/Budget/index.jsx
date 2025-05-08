@@ -116,12 +116,12 @@ export default class Budget extends Component {
       },
 
       {
-        title: 'Requested No of Resources',
+        title: 'Requested no of Resources',
         dataIndex: 'persons',
         sorter: true,
       },
       {
-        title: 'Approved No of Resources',
+        title: 'Approved no of Resources',
         sorter: true,
         dataIndex: 'appnoofresources',
       },
