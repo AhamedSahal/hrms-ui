@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet';
 import { getTitle, verifyOrgLevelViewPermission, verifyOrgLevelEditPermission } from '../../../utility';
 import { getOrgSettings, updateOrgSettings } from './service';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
-
+import { Tooltip } from 'antd';
 
 export default class OrgSetupForm extends Component {
   constructor(props) {
@@ -131,7 +131,12 @@ export default class OrgSetupForm extends Component {
                                       });
                                     }
                                   }} >
-                                    <label>Entity</label>
+                                    <label>Entity<span style={{ paddingLeft: "5px" }}>
+                                                    <>
+                                                    <Tooltip title="Enable Local Multi-Entity to manage payroll, settings, and generate separate SIF files across multiple legal entities in one system.">
+                                                    <i className="fa fa-info-circle" style={{ marginLeft: '4px', cursor: 'pointer' }}></i>
+                                                    </Tooltip><br />
+                                                    </></span></label>
                                     <div className="status-toggle"><i className={`fa fa-3x ${this.state.orgsetup
                                       && this.state.orgsetup.entity
                                       ? 'fa-toggle-on text-success' :
@@ -274,10 +279,6 @@ export default class OrgSetupForm extends Component {
           </div>
         </div>
       </div>
-
-
-
-
     )
   }
 }

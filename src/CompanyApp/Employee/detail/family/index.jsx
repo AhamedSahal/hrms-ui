@@ -130,6 +130,20 @@ export default class Family extends Component {
           return <span>{text.relation == 1 ? "Spouse" : text.relation == 2 ? "Daughter" : text.relation == 3 ? "Son" : text.relation == 4 ? "Father" : text.relation == 5 ? "Mother" : text.relation == 6 ? "Brother" : text.relation == 7 ? "Sister" : "-"}</span>
         },
       },
+      {
+        title: 'Job Title/ Company',
+        render: (text, record) => {
+          return <span>{text.jobTitleOrCompany? text.jobTitleOrCompany : "-"}</span>
+        },
+       
+      },
+      {
+        title: 'Contact No',
+        render: (text, record) => {
+          return <span>{text.contactNo? text.contactNo : "-"}</span>
+        },
+       
+      },
 
       {
         title: 'Attachment',

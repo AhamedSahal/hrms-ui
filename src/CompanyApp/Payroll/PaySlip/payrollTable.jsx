@@ -158,7 +158,6 @@ export default class PayrollTable extends Component {
     }
     componentDidMount() {
         this.fetchData()
-       
         // this.getLastSixMonths()
         
     }
@@ -712,6 +711,7 @@ export default class PayrollTable extends Component {
         updatePayslipStatus(selected, status).then(res => {
             if (res.status == "OK") {
                 toast.success(res.message);
+              this.hideStatusForm();
                 this.fetchList();
             } else {
                 toast.error(res.message);

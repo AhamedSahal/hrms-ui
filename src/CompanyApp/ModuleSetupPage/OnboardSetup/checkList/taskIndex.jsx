@@ -424,7 +424,7 @@ class OnboardMSTaskView extends Component {
                         </OnboardMSTaskForm>
                     </Body>
                 </Modal>
-                <Modal enforceFocus={false} size={"md"} show={this.state.showSubtaskForm} onHide={this.hidesubtaskForm}>
+                <Modal size={"md"} show={this.state.showSubtaskForm} onHide={this.hidesubtaskForm}>
                     <Header closeButton>
                         <h5 className="modal-title">{this.state.subTask ? 'Edit' : 'Add'} Subtask</h5>
                     </Header>

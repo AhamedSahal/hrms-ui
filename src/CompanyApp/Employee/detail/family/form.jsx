@@ -84,7 +84,7 @@ export default class FamilyForm extends Component {
                         setSubmitting
                         /* and other goodies */
                     }) => (
-                        <Form autocomplete = "off">
+                        <Form autocomplete="off">
                             <FormGroup>
                                 <label>Name
                                     <span style={{ color: "red" }}>*</span>
@@ -106,17 +106,18 @@ export default class FamilyForm extends Component {
                                         onChange={(e) => {
                                             setFieldValue("relation", e.target.value);
                                             const tempRelation = e.target.value;
-                                            const { family} = this.state;
+                                            const { family } = this.state;
                                             this.setState({ selectButton: e.target.value });
-                                                if (tempRelation == "4" || tempRelation == "5" || tempRelation == "6" || tempRelation == "7") {
-                                                    setFieldValue('significantDate', " ");
-                                                    setFieldValue('file', " ");
-                                                }else{
-                                                    setFieldValue("siginificantDate",
-                                                    family.id == 0? " " : family.significantDate
-                                                    );
-                                                    setFieldValue("file", family.id == 0? " " : family.file);
-                                                }}}
+                                            if (tempRelation == "4" || tempRelation == "5" || tempRelation == "6" || tempRelation == "7") {
+                                                setFieldValue('significantDate', " ");
+                                                setFieldValue('file', " ");
+                                            } else {
+                                                setFieldValue("siginificantDate",
+                                                    family.id == 0 ? " " : family.significantDate
+                                                );
+                                                setFieldValue("file", family.id == 0 ? " " : family.file);
+                                            }
+                                        }}
                                     >
                                         <option value="">Select Relation</option>
                                         <option value="1">Spouse</option>
@@ -134,6 +135,26 @@ export default class FamilyForm extends Component {
                                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                 </ErrorMessage>
                             </FormGroup>
+                            <FormGroup>
+                                <label>Job Title/ Company 
+                                </label>
+                                <Field name="jobTitleOrCompany" className="form-control"></Field>
+                                <ErrorMessage name="jobTitleOrCompany">
+                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                </ErrorMessage>
+                            </FormGroup>
+                            <FormGroup>
+                                <label>Contact No
+                                  
+                                </label>
+                                <Field name="contactNo" className="form-control" required></Field>
+                                <ErrorMessage name="contactNo">
+                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                </ErrorMessage>
+                            </FormGroup>
+                           
+
+
                             {this.state.selectButton == 1 ? <div>
                                 <div className="row">
                                     <div className="col-md-12">
@@ -153,7 +174,7 @@ export default class FamilyForm extends Component {
                                 </div>
                                 <FormGroup>
                                     <label>Marriage certificate <span style={{ color: "red" }}>*</span></label>
-                                    <input name="file" type="file" required  className="form-control" onChange={e => {
+                                    <input name="file" type="file" required className="form-control" onChange={e => {
                                         setFieldValue('file', e.currentTarget.files[0]);
                                     }}></input>
                                     <ErrorMessage name="file">
@@ -179,7 +200,7 @@ export default class FamilyForm extends Component {
                                 </div>
                                 <FormGroup>
                                     <label> DOB certificate <span style={{ color: "red" }}>*</span></label>
-                                    <input name="file" type="file" required   className="form-control" onChange={e => {
+                                    <input name="file" type="file" required className="form-control" onChange={e => {
                                         setFieldValue('file', e.currentTarget.files[0]);
                                     }}></input>
                                     <ErrorMessage name="file">

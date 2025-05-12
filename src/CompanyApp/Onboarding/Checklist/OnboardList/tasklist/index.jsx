@@ -70,6 +70,7 @@ export default class OnboardTasklist extends Component {
                        });
                        getDepartmentLists().then(res => {
                            if (res.status === "OK") {
+                            console.log("department:",res.data);
                                this.setState({
                                    department: res.data,
                                });
@@ -85,23 +86,30 @@ export default class OnboardTasklist extends Component {
                
                 // for assing
                 if(res.data.length > 0 ){
+                    // let data = res.data;
+                    console.log("data task:",res.data);
                     let data = res.data.map((res) => {
-                        if(res.assign == 0 &&  this.state.department.length > 0){
-                            let department =  this.state.department.filter((dept) => res.assignInfo?.split(',').map(Number).includes(dept.id)) 
+                        let assignIds = res.assignInfo ? res.assignInfo.split(',').map(Number) : [];
+                      
+                        if(res.assign === 0 && this.state.department.length > 0){
+                            let department = this.state.department.filter((dept) => assignIds.includes(dept.id));
                             let arrname = department.map(dept => dept.name);
-                            let applicableFor = arrname.join(", ");
-                            return {...res,applicableFor : applicableFor}
+                            let applicableFor = arrname.length > 0 ? arrname.join(", ") : "N/A";
+                            return {...res, applicableFor};
                         }
-                        if(res.assign == 1 &&  this.state.branches.length > 0){
-                            let branches =  this.state.branches.filter((dept) => res.assignInfo?.split(',').map(Number).includes(dept.id))
-                        let arrname = branches.map(dept => dept.name);
-                        let applicableFor = arrname.join(", ");
-                        return {...res,applicableFor : applicableFor}
+                    
+                        if(res.assign === 1 && this.state.branches.length > 0){
+                            let branches = this.state.branches.filter((dept) => assignIds.includes(dept.id));
+                            let arrname = branches.map(dept => dept.name);
+                            let applicableFor = arrname.length > 0 ? arrname.join(", ") : "N/A";
+                            return {...res, applicableFor};
                         }
-                        if(res.assign == 2){
-                            return {...res,employeeId: res.assignInfo.split(",").map(Number)} ;
+                    
+                        if(res.assign === 2){
+                            return {...res, employeeId: assignIds};
                         }
                     })
+                    console.log("tasks datassss",data);
                       this.setState({
                     taskData: data,
              
@@ -113,7 +121,6 @@ export default class OnboardTasklist extends Component {
                      })
                 }
 
-                 // for assing
                }
              })
 
@@ -123,24 +130,28 @@ export default class OnboardTasklist extends Component {
                if (res.status == "OK") {
                
                 if(res.data.length > 0 ){
+                
                     let data = res.data.map((res) => {
-                        if(res.assign == 0 &&  this.state.department.length > 0){
-                            let department =  this.state.department.filter((dept) => res.assignInfo?.split(',').map(Number).includes(dept.id)) 
-                            let arrname = department.map(dept => dept.name);
-                            let applicableFor = arrname.join(", ");
-                            return {...res,applicableFor : applicableFor}
+                        const assignIds = res.assignInfo ? res.assignInfo.split(',').map(Number) : [];
+                    
+                        if (res.assign === 0 && this.state.department.length > 0) {
+                            let departments = this.state.department.filter((dept) => assignIds.includes(dept.id));
+                            let arrname = departments.map(dept => dept.name);
+                            let applicableFor = arrname.join(", ") || "N/A";
+                            return { ...res, applicableFor };
                         }
-                        if(res.assign == 1 &&  this.state.branches.length > 0){
-                            let branches =  this.state.branches.filter((dept) => res.assignInfo?.split(',').map(Number).includes(dept.id))
-                        let arrname = branches.map(dept => dept.name);
-                        let applicableFor = arrname.join(", ");
-                        return {...res,applicableFor : applicableFor}
+                    
+                        if (res.assign === 1 && this.state.branches.length > 0) {
+                            let branches = this.state.branches.filter((dept) => assignIds.includes(dept.id));
+                            let arrname = branches.map(dept => dept.name);
+                            let applicableFor = arrname.join(", ") || "N/A";
+                            return { ...res, applicableFor };
                         }
-                        if(res.assign == 2){
-                            return {...res,employeeId: res.assignInfo.split(",").map(Number)} ;
-                        }
-                    })
-                    console.log("datadatadata",data)
+                    
+                        if (res.assign === 2) {
+                            return { ...res, employeeId: assignIds };
+                        }})
+                    console.log("sub datasssssssss",data)
                       this.setState({
                         subTasks: data,
              
@@ -207,7 +218,10 @@ export default class OnboardTasklist extends Component {
                                 taskData: this.state.taskData.map(task => ({ ...task, progress: 100 })) // Set all task progress to 100
                             });
                             this.fetchList();
+                            window.location.reload();
+                
                         } else {
+                        
                             if(allTaskIds.length > 0){
                                 let data = allTaskIds.map((res) => {
                                     updateTaskStatus(res,false).then(res => {
@@ -226,6 +240,7 @@ export default class OnboardTasklist extends Component {
                                 taskData: this.state.taskData.map(task => ({ ...task, progress: 0 })) // Reset all task progress to 0
                             });
                             this.fetchList();
+                            window.location.reload();
                         }
                     },
                 }
@@ -239,7 +254,8 @@ export default class OnboardTasklist extends Component {
             updateTaskStatus(taskId,completed).then(res => {
                 if (res.status == "OK") {
                     toast.success(res.message);
-                    this.fetchList();
+               
+                    window.location.reload();
                 } else {
                     toast.error(res.message);
                 }
@@ -303,6 +319,9 @@ export default class OnboardTasklist extends Component {
             if (achievement > 75) return "#7ae58d";
             return "#65d0f2";
         };
+
+        const completedTasksCount = this.state.taskData.filter(task => task.completedDate !== null).length;
+        const completedSubTasksCount = this.state.subTasks.filter(subTask => subTask.completedDate !== null).length;
 
 
         return (
@@ -427,7 +446,7 @@ export default class OnboardTasklist extends Component {
                                         <th style={{ textAlign: 'center' }}>
                                             <Checkbox
                                                 onChange={this.handleSelectAll}
-                                                checked={this.state.selectedTasks.length === this.state.taskData.length && this.state.selectedSubTasks.length === this.state.subTasks.length}
+                                                checked={completedTasksCount === this.state.taskData.length && completedSubTasksCount === this.state.subTasks.length}
                                             />
                                         </th>
                                         <th></th>
@@ -452,8 +471,11 @@ export default class OnboardTasklist extends Component {
                                         const isExpanded = expandedRows[item.id];
                                         const taskStyle = item.completedDate != null ? { textDecoration: 'line-through' } : {};
                                         const isFirstTaskOfChecklist = index === 0 || this.state.taskData[index - 1].checklistName !== item.checklistName;
+                                        const taskCompletedPercentage = item?.subtaskCount === 0 && item.completedDate != null? 100: item.subtaskCompletedCount > 0? (item.subtaskCompletedCount / item.subtaskCount) * 100
+    : 0;
                                         return (
                                             <>
+
                                                 {isFirstTaskOfChecklist && (
                                                     <tr key={`header-${item.checklistName}`}>
                                                         <td colSpan="6" style={{ fontWeight: 'bold', backgroundColor: '#f0f0f0' }}>
@@ -465,7 +487,7 @@ export default class OnboardTasklist extends Component {
                                                     <td style={{ width: '0px' }}>
                                                         <Checkbox
                                                             onChange={() => this.handleTaskSelect(item.id,item.completedDate == null?true:false)}
-                                                            checked={item.completedDate}
+                                                            checked={taskCompletedPercentage === 100}
                                                         />
                                                     </td>
                                                     <td>
@@ -474,7 +496,7 @@ export default class OnboardTasklist extends Component {
                                                                 this.subGoalExpand(item.taskId)
                                                                 this.setState((prevState) => ({
                                                                     expandedRows: {
-                                                                        [item.id]: !prevState.expandedRows[item.id], // Toggle the state for the clicked ID
+                                                                        [item.id]: !prevState.expandedRows[item.id], 
                                                                     },
                                                                 }));
                                                             }

@@ -17,7 +17,6 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { FormGroup } from 'reactstrap';
 import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown';
 import { getPermission } from '../../utility';
-import { date } from 'yup';
 import moment from 'moment';
 import './attendanceList.css';
 import { getList } from '../ModuleSetup/Regularization/service.jsx';
@@ -227,6 +226,7 @@ export default class EmployeeAttendanceList extends Component {
   };
 
   render() {
+    console.log("cell state", this.props)
     const { data,isChecked , totalRecords, currentPage, size, buttonState, } = this.state
     const dashboardOvertime = this.props?.location?.fromDashboardOvertime;
     let startRange = ((currentPage - 1) * size) + 1;

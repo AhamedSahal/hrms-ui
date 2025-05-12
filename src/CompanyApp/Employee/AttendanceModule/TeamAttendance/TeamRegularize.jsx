@@ -405,7 +405,6 @@ export default class TeamRegularization extends Component {
                 key: 'action',
                 align: 'center',
                 width: 100,
-                key: '17',
                 render: (text, record) => {
                     return <>
                         <div className="menuIconDiv">

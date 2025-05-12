@@ -78,7 +78,7 @@ const CompanyAppRoute = () => {
          <Route path='settings' element={<CompanySettingModuleSetupRoute />} />
          <Route path='attendance' element={<EmployeeAttendanceList />} />
          <Route path='entitlements/*' element={<EntitlementRoute />} />
-         <Route path='team-approvals' element={<TeamApprovalLanding />} />
+         <Route path='team-approvals' element={<TeamApprovalSetupRoute />} />
          <Route path='payroll/*' element={<PayrollRoute />} />
          <Route path='report/*' element={<ReportRoute />} />
          <Route path='performance/*' element={<PerformanceRoute />} />

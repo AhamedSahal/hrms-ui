@@ -38,7 +38,6 @@ export default class TeamEmployeeList extends Component {
       totalRecords: 0,
       currentPage: 1,
       gridView: false,
-      gridView: false,
       status: "ACTIVE",
       showFilter: false,
     };

@@ -14,9 +14,9 @@ export function getFamilyList(employeeId, searchText, pageNumber, pageSize, sort
 }
 
 
-export function saveFamily(family) {
-    let post = family.id == 0 ? postWithAuth(`${servicePath}?id=${family.id}&employeeId=${family.employeeId}&name=${family.name}&relation=${family.relation}&significantDate=${family.significantDate}`, { file: family.file }, true)
-        : putWithAuth(`${servicePath}?id=${family.id}&employeeId=${family.employeeId}&name=${family.name}&relation=${family.relation}&significantDate=${family.significantDate}`, { file: family.file }, true);
+export function saveFamily(family) { 
+    let post = family.id == 0 ? postWithAuth(`${servicePath}?id=${family.id}&employeeId=${family.employeeId}&name=${family.name}&jobTitleOrCompany=${family.jobTitleOrCompany}&contactNo=${family.contactNo}&relation=${family.relation}&significantDate=${family.significantDate}`, { file: family.file }, true)
+        : putWithAuth(`${servicePath}?id=${family.id}&employeeId=${family.employeeId}&name=${family.name}&jobTitleOrCompany=${family.jobTitleOrCompany}&contactNo=${family.contactNo}&relation=${family.relation}&significantDate=${family.significantDate}`, { file: family.file }, true);
     return post.then(res => {
         return Promise.resolve(res.data);
     }).catch(err => {

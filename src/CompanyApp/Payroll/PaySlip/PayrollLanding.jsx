@@ -398,7 +398,6 @@ export default class PayrollLanding extends Component {
             {
                 title: 'Action',
                 dataIndex: 'action',
-                key: 'action',
                 align: 'center',
                 width: 100,
                 key: '17',

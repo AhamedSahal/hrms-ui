@@ -253,15 +253,15 @@ export default class MyPayslipCard extends Component {
         return `${formattedYear}-${formattedMonth}`;
     }
     
-    handlePayslipGenerator(date, dateString) {
-        getPayslips(dateString).then(res => {
-            if (res.status == "OK") {
-                toast.success(res.message);
-            } else {
-                toast.error(res.message);
-            }
-        })
-    }
+    // handlePayslipGenerator(date, dateString) {
+    //     getPayslips(dateString).then(res => {
+    //         if (res.status == "OK") {
+    //             toast.success(res.message);
+    //         } else {
+    //             toast.error(res.message);
+    //         }
+    //     })
+    // }
 
     handleSalaryComparison = (e) => {
         this.setState({ comparison: e.target.value })

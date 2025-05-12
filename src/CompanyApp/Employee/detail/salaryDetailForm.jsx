@@ -34,23 +34,28 @@ export default class SalaryDetailEmployeeForm extends Component {
             CountryList : [],
             defaultCurrency: '',
             defaultCurrencyId : 0,
-            defaultCurrencyCode: ''
+            defaultCurrencyCode: '',
+         
         }
     }
     componentDidMount() {
         this.reloadSalary(this.state.id);
-        this.fetchType()
+        
     }
     reloadSalary = (id) => {
         getSalaryInformation(id).then(res => {
             let employee = res.data;
+            
             this.setState({
                 employee,
                 salaryCalculationMode: res.data.salaryCalculationMode,
-                defaultCurrencyId : res.data.currency
-            })
-        })
+                defaultCurrencyId: res.data.currency
+            }, () => {
+                this.fetchType();
+            });
+        });
     }
+    
     handleCurrency = (id,setFieldValue) => {
         
             let data = this.state.CountryList.find(obj => obj.id == id);
@@ -90,6 +95,7 @@ export default class SalaryDetailEmployeeForm extends Component {
                     let data = this.state.CountryList.find(obj => obj.id == this.state.defaultCurrencyId);
                     this.setState({defaultCurrency: data.countryCode})
                     this.setState({defaultCurrencyCode: data.currencyCode})
+                    
                 }
                 else{
                     
@@ -99,7 +105,7 @@ export default class SalaryDetailEmployeeForm extends Component {
                     this.setState({employee})
                     this.setState({defaultCurrency: data.countryCode})
                     this.setState({defaultCurrencyCode: data.currencyCode})
-                  
+                 
                 }
             }
         })                                   
@@ -110,6 +116,7 @@ export default class SalaryDetailEmployeeForm extends Component {
         if (editable && !isEditAllowed) {
             editable = false;
         }
+       
         return (
             <>
                 <div className="row">
@@ -166,7 +173,7 @@ export default class SalaryDetailEmployeeForm extends Component {
                                                             </label>
 
                                                             <div  className="currency-select-box">
-                                                            {this.state.defaultCurrency != '' &&  <img src={`https://flagcdn.com/w320/${this.state.defaultCurrency.toLowerCase()}.png`} alt="Currency Flag" />}
+                                                            {this.state.defaultCurrency != '' && <img src={`https://flagcdn.com/w320/${this.state.defaultCurrency.toLowerCase()}.png`} alt="Currency Flag" />}
                                                                 <select
                                                                     onChange={(e) =>  this.handleCurrency(e.target.value, setFieldValue)}
                                                                     disabled={!editable}

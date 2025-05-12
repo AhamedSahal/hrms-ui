@@ -16,6 +16,7 @@ export default class PayslipViewer extends Component {
             logo: getLogo(),
             currency: props.payslip.payCurrencyName != ""?(props.payslip.payCurrencyName).split("-")[0]:getCurrency(),
             currencyCode: props.payslip.payCurrencyCode,
+            minorCode: props.payslip.payCurrencyMinorName,
             orgsetup: props.orgsetup  || false
         };
     }
@@ -48,14 +49,14 @@ export default class PayslipViewer extends Component {
 
     getNumberToWords = (number) => {
        
-        const { currency,currencyCode } = this.state 
+        const { currency,currencyCode,minorCode } = this.state 
         const amount = number;
         const integerPart = Math.trunc(amount);
         const decimalPart = amount % 1 !== 0 ? Math.round((amount % 1) * 100) : null;
         const integerWords = this.convertNumberToWords(integerPart);
         const decimalWords = decimalPart ? this.convertNumberToWords(decimalPart) : null;
       
-            return `${integerWords} ${currency} ${decimalWords ? ' and ' + decimalWords + ' ' + currencyCode  : ''}`
+            return `${integerWords} ${currencyCode} ${decimalWords ? ' and ' + decimalWords + ' ' + minorCode  : ''}`
         
 
     };

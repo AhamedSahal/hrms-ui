@@ -14,8 +14,8 @@ export default class TasksView extends Component {
             TasksView: props.TasksView || {
                 id: 0,
                 employeeId: 0,
-                taskname: "",
                 description: "",
+                taskname: "",
                 filename: "",
                 url: "",
                 startdate: "",

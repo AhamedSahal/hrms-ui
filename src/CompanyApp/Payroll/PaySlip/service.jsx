@@ -167,3 +167,11 @@ export function getOrganizationDashboardInfo(year,defaultCurrencyId,branchId,ent
     });
 }
 
+export function getYearlyData(year) {
+    let path = `${servicePath}/self-year?year=${year}`;
+    return getWithAuth(path).then(res => {
+        return Promise.resolve(res.data);
+    }).catch(err => {
+        return Promise.reject(err);
+    });
+}

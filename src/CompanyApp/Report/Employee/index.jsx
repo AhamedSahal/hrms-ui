@@ -31,7 +31,7 @@ export default class EmployeeReport extends Component {
       designationId: "",
       jobTitleId: "",
       entityId: "",
-      selectedPropertiestemp :["employeeId", "firstName", "middleName","lastName","email","doj","companyName","locationName","departmentName","designationName","reportingManager","shiftStart","shiftEnd","weeklyOffs","status","statusComment","totalExperience","probationPeriod","dob","fatherName","gender","maritalStatus","bloodGroup","phone","religion","nationality","labourCardNo","noticePeriod","lwd","bankAccountHolderName","bankAccountNumber","bankName","ibanNumber","bankBranchLocation","swiftCode","routingCode","employerId","createdOn","modifiedOn"],
+      selectedPropertiestemp :["employeeId", "firstName", "middleName","lastName","email","personalEmailAddress","doj","confirmationDate","companyName","locationName","departmentName","designationName","reportingManager","shiftStart","shiftEnd","weeklyOffs","status","statusComment","totalExperience","probationPeriod","dob","fatherName","motherName","gender","maritalStatus","bloodGroup","phone","religion","nationality","labourCardNo","noticePeriod","lwd","bankAccountHolderName","bankAccountNumber","bankName","ibanNumber","bankBranchLocation","swiftCode","routingCode","employerId","createdOn","modifiedOn"],
       selectedProperties:[],
       checkedValidation: true,
       orgsetup: false,
@@ -54,7 +54,7 @@ export default class EmployeeReport extends Component {
       if (res.status == "OK") {
         this.setState({ orgsetup: res.data.entity })
         if(res.data.entity){
-          let tempProperties = ["employeeId", "firstName", "middleName","lastName","email","doj","entityName","companyName","locationName","departmentName","designationName","reportingManager","shiftStart","shiftEnd","weeklyOffs","status","statusComment","totalExperience","probationPeriod","dob","fatherName","gender","maritalStatus","bloodGroup","phone","religion","nationality","labourCardNo","noticePeriod","lwd","bankAccountHolderName","bankAccountNumber","bankName","ibanNumber","bankBranchLocation","swiftCode","routingCode","employerId","createdOn","modifiedOn"];
+          let tempProperties = ["employeeId", "firstName", "middleName","lastName","email","personalEmailAddress","doj","confirmationDate","entityName","companyName","locationName","departmentName","designationName","reportingManager","shiftStart","shiftEnd","weeklyOffs","status","statusComment","totalExperience","probationPeriod","dob","fatherName","motherName","gender","maritalStatus","bloodGroup","phone","telephoneNo","religion","nationality","labourCardNo","noticePeriod","lwd","bankAccountHolderName","bankAccountNumber","bankName","ibanNumber","bankBranchLocation","swiftCode","routingCode","employerId","createdOn","modifiedOn"];
           this.setState({selectedPropertiestemp: tempProperties},() => {
             this.fetchList();
 
@@ -73,7 +73,7 @@ export default class EmployeeReport extends Component {
     if(verifyViewPermission("Employee Report")){
       getEmployeeReport(this.state.branchId, this.state.departmentId, this.state.jobTitleId, this.state.q, this.state.status,this.state.entityId, this.state.selectedCompanies).then(response => {
         let data = response.data;
-
+    
         this.setState({
           data
         }, () => {
@@ -125,6 +125,7 @@ export default class EmployeeReport extends Component {
           temp['doj'] =temp['doj']?.split('T')[0];
           temp['shiftEnd'] = toLocalTime(temp['shiftEnd']);
           temp['shiftStart'] = toLocalTime(temp['shiftStart']);
+          temp['confirmationDate'] = temp['confirmationDate']?.split('T')[0];      
         }
         selectedData.push(temp);
       })

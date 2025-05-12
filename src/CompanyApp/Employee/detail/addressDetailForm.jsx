@@ -32,7 +32,13 @@ export default class AddressDetailEmployeeForm extends Component {
             emergencyAddress: {
                 id: 0,
                 addressType: "EMERGENCY",
-            }
+            },
+            emergencyAddress2: {
+                id: 0,
+                addressType: "EMERGENCY2",
+            },
+
+            
         }
     }
 
@@ -42,13 +48,16 @@ export default class AddressDetailEmployeeForm extends Component {
             let localAddress = address.filter(a => a.addressType === "LOCAL")[0];
             let homeAddress = address.filter(a => a.addressType === "HOMETOWN")[0];
             let emergencyAddress = address.filter(a => a.addressType === "EMERGENCY")[0];
+            let emergencyAddress2 = address.filter(a => a.addressType === "EMERGENCY2")[0];
             this.setState({
                 localAddress,
                 homeAddress,
-                emergencyAddress
+                emergencyAddress,
+                emergencyAddress2
             });
         })
     }
+
     save = (data, action) => {
         action.setSubmitting(true);
         updateAddressInformation(data).then(res => {
@@ -57,7 +66,7 @@ export default class AddressDetailEmployeeForm extends Component {
                 this.setState({
                     editable: false
                 }, () => {
-                    let { localAddress, homeAddress, emergencyAddress } = this.state;
+                    let { localAddress, homeAddress, emergencyAddress, emergencyAddress2 } = this.state;
                     let address = res.data;
                     if (address.addressType === "LOCAL") {
                         localAddress = address;
@@ -67,10 +76,15 @@ export default class AddressDetailEmployeeForm extends Component {
                     else if (address.addressType === "EMERGENCY") {
                         emergencyAddress = address;
                     }
+                    else if (address.addressType === "EMERGENCY2") {
+                        emergencyAddress2 = address;
+                    }
                     this.setState({
                         localAddress,
                         homeAddress,
-                        emergencyAddress
+                        emergencyAddress,
+                        emergencyAddress2
+
                     });
 
                 })
@@ -98,7 +112,7 @@ export default class AddressDetailEmployeeForm extends Component {
 
                     <ul className="personal-info">
 
-                        {address.addressType == "EMERGENCY" && <><li>
+                        {(address.addressType == "EMERGENCY" ||  address.addressType == "EMERGENCY2") && <><li>
                             <div className="title">Contact Person</div>
                             <div className="text">{address.contactperson ?? "-"}</div>
                         </li>
@@ -114,7 +128,7 @@ export default class AddressDetailEmployeeForm extends Component {
                                 <div className="title">Mobile</div>
                                 <div className="text">{address.mobile ?? "-"}</div>
                             </li></>}
-                        {address.addressType != "EMERGENCY" && <><li>
+                        {address.addressType !== "EMERGENCY" && address.addressType !== "EMERGENCY2"  && <><li>
                             <div className="title">Building Name</div>
                             <div className="text">{address.buildingName ?? "-"}</div>
                         </li> </>}
@@ -130,49 +144,16 @@ export default class AddressDetailEmployeeForm extends Component {
                             <div className="title">Country</div>
                             <div className="text">{address.country?.name ?? "-"}</div>
                         </li>
+                        {address.addressType == "HOMETOWN" && <><li>
+                            <div className="title">Telephone No</div>
+                            <div className="text">{address.telephoneNo?? "-"}</div>
+                        </li> </>}
                         <li>
                             <div className="title">Zip/Postal Code</div>
                             <div className="text">{address.zipCode ?? "-"}</div>
                         </li>
-                        {address.addressType != "EMERGENCY" && <><li>
-                            <div className="title"> </div>
-                            <div className="text"> </div>
-                        </li>
-                            <li>
-                                <div className="title"> </div>
-                                <div className="text"> </div>
-                            </li>
-                            <li>
-                                <div className="title"> </div>
-                                <div className="text"> </div>
-                            </li>
-                            <li>
-                                <div className="title"> </div>
-                                <div className="text"> </div>
-                            </li>
-                            <li>
-                                <div className="title"> </div>
-                                <div className="text"> </div>
-                            </li>
-                            <li>
-                                <div className="title"> </div>
-                                <div className="text"> </div>
-                            </li><li>
-                                <div className="title"> </div>
-                                <div className="text"> </div>
-                            </li>
-                            <li>
-                                <div className="title"> </div>
-                                <div className="text"> </div>
-                            </li><li>
-                                <div className="title"> </div>
-                                <div className="text"> </div>
-                            </li>
-                            <li>
-                                <div className="title"> </div>
-                                <div className="text"> </div>
-                            </li>
-                        </>}
+                      
+                        
                     </ul>
                 </div>
             </div>
@@ -195,7 +176,10 @@ export default class AddressDetailEmployeeForm extends Component {
                             {this.view(this.state.homeAddress, "Home Country Address")}
                         </div>
                         <div className="col-md-4">
-                            {this.view(this.state.emergencyAddress, "Emergency Contact")}
+                            {this.view(this.state.emergencyAddress, "Emergency Contact 1")}
+                        </div>
+                        <div className="col-md-4">
+                            {this.view(this.state.emergencyAddress2, "Emergency Contact 2")}
                         </div>
                     </div>
 
@@ -227,7 +211,7 @@ export default class AddressDetailEmployeeForm extends Component {
                                         </FormGroup>
                                     </div>
                                 </div>
-                                {this.state.editAddress.addressType != "EMERGENCY" && <><div className="row">
+                                {((this.state.editAddress.addressType != "EMERGENCY") &&  (this.state.editAddress.addressType != "EMERGENCY2")) &&<><div className="row">
                                     <div className="col-md-6">
                                         <FormGroup>
                                             <label>Building Name
@@ -240,7 +224,8 @@ export default class AddressDetailEmployeeForm extends Component {
                                         </FormGroup>
                                     </div>
                                 </div></>}
-                                {this.state.editAddress.addressType == "EMERGENCY" && <><div className="row">
+                               
+                                {(this.state.editAddress.addressType == "EMERGENCY" ||  this.state.editAddress.addressType == "EMERGENCY2")  && <><div className="row">
                                     <div className="col-md-6">
                                         <FormGroup>
                                             <label>Contact Person
@@ -264,7 +249,7 @@ export default class AddressDetailEmployeeForm extends Component {
                                         </FormGroup>
                                     </div>
 
-                                </div>
+                                 </div>
                                     <div className="row">
                                         <div className="col-md-6">
                                             <FormGroup>
@@ -288,7 +273,9 @@ export default class AddressDetailEmployeeForm extends Component {
                                                 </ErrorMessage>
                                             </FormGroup>
                                         </div>
-                                    </div></>}
+                                    </div></>
+                                    }
+                               
                                 <div className="row">
                                     <div className="col-md-12">
                                         <FormGroup>
@@ -302,6 +289,21 @@ export default class AddressDetailEmployeeForm extends Component {
                                         </FormGroup>
                                     </div>
                                 </div>
+                                {((this.state.editAddress.addressType != "EMERGENCY") &&  (this.state.editAddress.addressType != "EMERGENCY2")) &&<><div className="row">
+                                    <div className="col-md-6">
+                                        <FormGroup>
+                                            <label>Telephone no  
+                                                <span style={{ color: "red" }}>*</span>
+                                            </label> 
+                                            <Field readOnly={!editable} name="telephoneNo" className="form-control" required></Field>
+                                            <ErrorMessage name="telephoneNo">
+                                                {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                            </ErrorMessage>
+                                        </FormGroup>
+                                    </div>
+                                </div></>}
+                               
+                                
                                 <div className="row">
                                     <div className="col-md-6">
                                         <FormGroup>
