@@ -120,6 +120,7 @@ class OnboardSubTaskForm extends Component {
         saveOnboardMSSubTask(subtask).then(res => {
             if (res.status === "OK") {
                 toast.success(res.message);
+                this.props.updateList(res.data);
             } else {
                 toast.error(res.message);
             }
@@ -289,7 +290,12 @@ class OnboardSubTaskForm extends Component {
                             {values.dueOn && values.dueOn !== '3' && (
                                 <FormGroup>
                                     <label>Enter number of days<span style={{ color: "red" }}>*</span></label>
-                                    <Field name="numberofDays" type="number" className="form-control" required />
+                                    <Field name="numberofDays" type="number" className="form-control" min="0" step="1" 
+                                    onKeyDown={(e) => {
+                                        const invalidChars = ['e', 'E', '+', '-', '.'];
+                                        if (invalidChars.includes(e.key)) {
+                                        e.preventDefault();
+                                        }}} required />
                                     <ErrorMessage name="numberofDays" component="div" style={{ color: 'red' }} />
                                 </FormGroup>
                             )}

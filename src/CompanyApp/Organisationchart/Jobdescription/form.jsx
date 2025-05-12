@@ -86,7 +86,6 @@ export default class JobDescriptionForm extends Component {
                     noofreports: "",
                     financialParameters: "",
                     externalInterfaces: "",
-                    externalInterfaces: "",
                     keyAccResp: "",
                     qualiExper: "",
                     keyskills: "",

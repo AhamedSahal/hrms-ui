@@ -121,7 +121,7 @@ export default class FinalSlipViewer extends Component {
         return (
             <div className="card">
                 <div className="card-body" id="card">
-                    <h4 className="payslip-title">Annual Leave Settlement</h4>
+                    <h4 className="payslip-title">Final Settlement</h4>
                     <div className="row">
                         <div className="p-0">
                            

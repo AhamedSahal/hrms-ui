@@ -117,7 +117,7 @@ export default class PerformanceReviewDetailsForm extends Component {
         if (val == "") {
             return;
         }
-        if (NaN == Number(val)) {
+        if (isNaN(Number(val))) {
             e.target.value = "";
             e.target.focus();
             toast.error("Please enter valid Rating");
@@ -165,7 +165,7 @@ export default class PerformanceReviewDetailsForm extends Component {
         if (val == "") {
             return;
         }
-        if (NaN == Number(val)) {
+        if (isNaN(Number(val))) {
             e.target.value = "";
             e.target.focus();
             toast.error("Please enter valid Weightage ");

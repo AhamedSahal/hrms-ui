@@ -56,6 +56,7 @@ export default class PersonalDetailEmployeeForm extends Component {
                     editable: false,
                     employee: res.data
                 })
+               
             } else {
                 toast.error(res.message);
             }
@@ -99,6 +100,10 @@ export default class PersonalDetailEmployeeForm extends Component {
                                     <div className="text">{employee.fatherName ? employee.fatherName : "-"}</div>
                                 </li>
                                 <li>
+                                    <div className="title">Mother Name</div>
+                                    <div className="text">{employee.motherName? employee.motherName : "-"}</div>
+                                </li>
+                                <li>
                                     <div className="title">Email</div>
                                     <div className="text">{employee.email ? employee.email : "-"}</div>
                                 </li>
@@ -109,6 +114,10 @@ export default class PersonalDetailEmployeeForm extends Component {
                                 <li>
                                     <div className="title">Date of Birth</div>
                                     <div className="text">{getReadableDate(employee.dob) ? getReadableDate(employee.dob) : "-"}</div>
+                                </li>
+                                <li>
+                                    <div className="title">Personal Email Address</div>
+                                    <div className="text">{employee.personalEmailAddress ? employee.personalEmailAddress : "-"}</div>
                                 </li>
                                 <li>
                                     <div className="title">Gender</div>
@@ -218,6 +227,18 @@ export default class PersonalDetailEmployeeForm extends Component {
 
                                         <div className="col-md-4">
                                             <FormGroup>
+                                                <label>Mother Name</label>
+                                                <Field readOnly={!editable} name="motherName" className="form-control"></Field>
+                                                <ErrorMessage name="motherName">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
+
+                                            </FormGroup>
+                                        </div>
+
+
+                                        <div className="col-md-4">
+                                            <FormGroup>
                                                 <label>Email
                                                     <span style={{ color: "red" }}>*</span>
                                                 </label>
@@ -242,6 +263,15 @@ export default class PersonalDetailEmployeeForm extends Component {
                                                 </label>
                                                 <Field readOnly={!editable} name="dob" type="date" className="form-control"></Field>
                                                 <ErrorMessage name="dob">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
+                                            </FormGroup>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <FormGroup>
+                                                <label>Personal Email Address </label>
+                                                <Field name="personalEmailAddress" className="form-control"></Field>
+                                                <ErrorMessage name="personalEmailAddress">
                                                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                                 </ErrorMessage>
                                             </FormGroup>
@@ -331,7 +361,16 @@ export default class PersonalDetailEmployeeForm extends Component {
                                                 </ErrorMessage>
                                             </FormGroup>
                                         </div>
-
+                                        <div className="col-md-4">
+                                            <FormGroup>
+                                                <label>Total Experience
+                                                </label>
+                                                <Field readOnly={!editable}  name="totalExperience"  min="0" className="form-control"></Field>
+                                                <ErrorMessage name="totalExperience">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
+                                            </FormGroup>
+                                        </div>
                                         <div className="col-md-8">
                                             <FormGroup>
                                                 <label>Language
@@ -354,16 +393,7 @@ export default class PersonalDetailEmployeeForm extends Component {
                                                 </ErrorMessage>
                                             </FormGroup>
                                         </div>
-                                        <div className="col-md-4">
-                                            <FormGroup>
-                                                <label>Total Experience
-                                                </label>
-                                                <Field readOnly={!editable}  name="totalExperience"  min="0" className="form-control"></Field>
-                                                <ErrorMessage name="totalExperience">
-                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                                                </ErrorMessage>
-                                            </FormGroup>
-                                        </div>
+                                       
                                     </div>
                                     <input disabled={!editable} type="submit" className="btn btn-primary" value={this.state.employee?.id > 0 ? "Update" : "Save"} />
                                     &nbsp;

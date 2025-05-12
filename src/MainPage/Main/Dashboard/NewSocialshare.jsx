@@ -5,6 +5,7 @@ import { Modal, Anchor } from 'react-bootstrap';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import { AiOutlineLike, AiOutlinePlusCircle } from "react-icons/ai";
 import { BiCommentDots, BiDotsHorizontalRounded, BiMedal, BiTask } from "react-icons/bi";
+import { BsThreeDots } from "react-icons/bs";
 import { FaBirthdayCake, FaChevronRight, FaFileDownload } from "react-icons/fa";
 import { MdOutlineCelebration } from "react-icons/md";
 import { TbCheckbox } from "react-icons/tb";
@@ -14,27 +15,32 @@ import 'react-multi-carousel/lib/styles.css';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormGroup } from 'reactstrap';
+import { getOvertimeActive } from '../../../CompanyApp/Employee/service.jsx';
 import EmployeeListColumn from '../../../CompanyApp/Employee/employeeListColumn.jsx';
+import EmployeePhoto from '../../../CompanyApp/Employee/employeePhoto.jsx';
 import LeaveForm from '../../../CompanyApp/Employee/leave/form.jsx';
 import { getLeaveList } from '../../../CompanyApp/Employee/leave/service.jsx';
 import DocumentRequestForm from '../../../CompanyApp/ModuleSetup/DocumentRequest/form.jsx';
 import { getPoliciesDocumentList } from '../../../CompanyApp/ModuleSetup/PoliciesDocuments/service.jsx';
+import { getRecognitionList } from '../../../CompanyApp/RecognitionMain/service.jsx';
 import { getMyTasksList, updateStatus } from '../../../CompanyApp/Tasks/service.jsx';
+import { getTeamLeaveList } from '../../../CompanyApp/TeamApproval/leave/service.jsx';
 import CreateTimesheetForm from '../../../CompanyApp/Timesheet/form.jsx';
 import { fileDownload } from '../../../HttpRequest.jsx';
 import greatWorkBg from '../../../assets/img/randomImg/GreatWork.png';
 import customerService from '../../../assets/img/randomImg/CustomerService.png';
 import teamPlayer from '../../../assets/img/randomImg/BestTeamPlayer.png';
 import EmployeeOftheMonth from '../../../assets/img/randomImg/EmployeeofTheMonth.png';
-import { convertToUserTimeZone, getCustomizedWidgetDate, getEmployeeId, getPermission, getProfilePicture, getRoleId, getUserName, getUserType, verifyViewPermission, verifyViewPermissionForTeam, verifyOrgLevelViewPermission, getLogo } from '../../../utility.jsx';
+import { convertToUserTimeZone, getCustomizedDate, getCustomizedWidgetDate, getDefaultProfilePicture, getEmployeeId, getPermission, getProfilePicture, getReadableDate, getRoleId, getUserName, getUserType, toLocalTime, verifyViewPermission, verifyViewPermissionForTeam, verifyOrgLevelViewPermission, getLogo, verifyApprovalPermission } from '../../../utility.jsx';
 import MediaComponent from '../../MediaComponent.jsx';
 import "../../SocialShare.css";
-import { deleteSocialPost, getAttendanceCount, getDocumentExpiryByMonth, getEmployeeDashboardDetail, getEmployeeMissingInfoCount, getMissingDocumentCount, getRoles, getSocialShareList, getTimesheet, getUpComingAnnouncements, getUpComingCelebration, getUpComingDocumentExpiry, getUpComingHire, getUpComingHolidays, getUpComingLeaving, postAttendance, postSocialShare, putRecognitionComment, putSocialShareComment, putSocialShareReactions, updateLeaveStatus, updateTimesheetStatus } from './service.jsx';
+import { deleteSocialPost, getAttendanceCount, getCompanyAdminDashboardDetail, getDocumentExpiryByMonth, getEmployeeDashboardDetail, getEmployeeMissingInfoCount, getMissingDocumentCount, getRoles, getSocialShareList, getTimesheet, getUpComingAnnouncements, getUpComingCelebration, getUpComingDocumentExpiry, getUpComingHire, getUpComingHolidays, getUpComingLeaving, postAttendance, postSocialShare, putRecognitionComment, putRecognitionLike, putSocialShareComment, putSocialShareLike, putSocialShareReactions, updateLeaveStatus, updateTimesheetStatus } from './service.jsx';
 import { PERMISSION_LEVEL } from '../../../Constant/enum.js';
 import Baloon from "../../../assets/img/baloon4.png"
 import confetti from "../../../assets/img/confetti.png"
 import { confirmAlert } from 'react-confirm-alert';
 import { getLeaveBalanceShowOnDashboard } from '../../../CompanyApp/MyEntitlements/Leave/service.jsx';
+import { getLeaveBalance } from '../../../CompanyApp/MyEntitlements/Leave/service.jsx';
 import { getTimeinLieuStatus, updateTimeinLieuStatus } from '../../../CompanyApp/MyEntitlements/TimeInLieu/service.jsx';
 import { getDashboardOtStatus, updateOverTimeForAttendance } from '../../../CompanyApp/Payroll/Overtime/service.jsx';
 import { Empty } from 'antd';
@@ -46,9 +52,12 @@ import reject from '../../../assets/img/rejectimg.gif';
 import SuccessAlert from '../../successToast.jsx';
 import Chart from "react-apexcharts";
 import ReactionList from './ReactionsList.jsx';
+import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsStopwatch } from "react-icons/bs";
 import { Card, Avatar, Typography, Input } from 'antd';
+import { ClockCircleOutlined } from '@ant-design/icons'
 import moment from 'moment';
+import { Sticky } from 'react-sticky';
 import UploadDocsEmployeeForm from './uploadDocsForm.jsx';
 import checkimg from '../../../assets/img/tickmarkimg.gif'
 import HolidayCalendar from './HolidaysList.jsx';
@@ -246,8 +255,15 @@ export default class NewSocialShare extends Component {
         this.getDocumentExpiryMonth();
         this.getMissingInfoCount();
         this.fetchMissingDocumentCount();
-        this.fetchApprovalList()
+        this.fetchApprovalList();
+        this.getOvertimeEnable();
+    }
 
+    getOvertimeEnable = () => {
+        getOvertimeActive().then(res => {
+            if (res.status == "OK") {
+               this.setState({overtimeEnable: res.data})
+            }});
     }
 
     fetchApprovalList = () => {
@@ -305,7 +321,8 @@ export default class NewSocialShare extends Component {
         {
              getMyTasksList(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.statusname, this.state.statname, this.state.dashboardView).then(res => {
                if(res.data != null){
-                console.log('Error')
+                const sortedArray = res.data.list
+                const array1 = sortedArray.sort((a, b) => a.enddate - b.enddate)
                }
                 
                 if (res.status == "OK") {
@@ -492,9 +509,13 @@ export default class NewSocialShare extends Component {
     }
 
     getSocialShareList = () => {
-        const { searchText, pageNumber, pageSize, sort } = this.state;
+        
+        const {currentPage, searchText, pageNumber , pageSize, sort,totalPages } = this.state;  
         const { socialShare } = this.state;
-
+        if (this.state.currentPage < this.state.totalPages) {
+            this.setState({ hasMore: false })
+            
+          }
         const startIndex = socialShare.length;
         return getSocialShareList(searchText, pageNumber, pageSize, sort, startIndex, pageSize).then(res => {
             const newSocialShare = res.data.list;
@@ -502,11 +523,12 @@ export default class NewSocialShare extends Component {
             this.setState({ hasMoreData });
 
             const uniqueRecords = newSocialShare.filter(item => socialShare.findIndex(record => record.id === item.id) === -1);
-            this.setState(() => ({
+            this.setState(prevState => ({
                 socialShare: newSocialShare,
                 totalPages: res.data.totalPages,
                 totalRecords: res.data.totalRecords,
-                currentPage: res.data.currentPage + 1
+                currentPage: res.data.currentPage,
+                pageSize: this.state.pageSize + 10,
             })
             );
             return uniqueRecords.length;
@@ -560,12 +582,17 @@ export default class NewSocialShare extends Component {
         })
     }
     login = () => {
+        var today = new Date();
+        var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
         this.postAttendance();
         this.setState({
             isLoggedIn: true,
         })
     }
     logout = () => {
+        var today = new Date();
+        var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+
         const startDate = moment.utc(this.state.dashboard.actualClockIn+"Z")
         const endDate = moment.utc();
         const duration = moment.duration(endDate.diff(startDate));
@@ -1213,7 +1240,7 @@ export default class NewSocialShare extends Component {
                                     </div>
                                 ) : (
 
-                                    this.state.upComingDocumentExpiry.map((data) => (
+                                    this.state.upComingDocumentExpiry.map((data, index) => (
 
 
                                         <div onClick={() => {
@@ -1350,7 +1377,7 @@ export default class NewSocialShare extends Component {
                                             <p className='viewAllBtn'>View All</p>
                                         </Link>
                                     }
-                                    {activeButton === 2 &&
+                                    {this.state.overtimeEnable && activeButton === 2 &&
                                         <Link to='/app/company-app/attendance'
                                             state={{fromDashboardOvertime: true}}
                                         >
@@ -2370,8 +2397,8 @@ export default class NewSocialShare extends Component {
                                                             placeholder="Write a comment..."
                                                         />
                                                         <div className="input-group-append recComment-group">
-                                                            <p className="p-2 btn btn-secondary send-btn" type="button" onClick={() => {
-                                                                putRecognitionComment(item.id, this.state.commentText[item.id]).then(res => {
+                                                            <p className="p-2 btn btn-secondary send-btn" type="button" onClick={e => {
+                                                                putSocialShareComment(item.id, this.state.commentText[item.id]).then(res => {
                                                                     if (res.status === "OK") {
                                                                         this.getSocialShareList();
                                                                         let { socialShare } = this.state;
@@ -2502,8 +2529,7 @@ export default class NewSocialShare extends Component {
                                             onMouseOver={() => this.handleMouseOver(item.id)}
                                             style={{ position: 'relative', display: 'inline-block' }}
                                         >
-                                            {console.log('cell --- reactionIdByemployee', reactionIdByemployee)}
-                                            {reactionIdByemployee === 0 ?
+                                            {reactionIdByemployee == 0 ?
                                                 <li onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} className='h5 likeHover'>
                                                     <span className=' mr-1 p-0' > <AiOutlineLike size={25} /></span> Likes
 

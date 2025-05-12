@@ -94,6 +94,8 @@ export default class CompanyDetailEmployeeForm extends Component {
     bindState = (company) => {
         try {
             company.doj = company.doj.substr(0, 10);
+            company.confirmationDate = company.confirmationDate.substr(0, 10);
+           
         } catch (err) {
             console.log(err);
         }
@@ -104,6 +106,8 @@ export default class CompanyDetailEmployeeForm extends Component {
 
     save = (data, action) => {
         data["doj"] = new Date(`${data["doj"]} GMT`);
+        data["confirmationDate"] = new Date(`${data["confirmationDate"]} GMT`);
+        
         try {
             data["jobTitleId"] = data["jobTitle"]["id"];
             data["branchId"] = data["branch"]["id"];
@@ -195,6 +199,10 @@ export default class CompanyDetailEmployeeForm extends Component {
                                 <li>
                                     <div className="title">Date of Joining</div>
                                     <div className="text">{getReadableDate (company.doj) ?? "-"}</div>
+                                </li>
+                                <li>
+                                    <div className="title">Confirmation Date</div>
+                                    <div className="text">{getReadableDate (company.confirmationDate) ?? "-"}</div>
                                 </li>
 
                                 <li>
@@ -408,6 +416,13 @@ export default class CompanyDetailEmployeeForm extends Component {
                                                         setFieldValue("employmentStatus", { id: e.target.value });
                                                     }}></EmploymentStatusDropdown>
                                                 }}></Field>
+                                            </FormGroup>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <FormGroup>
+                                                <label>Confirmation Date</label>
+                                                <Field readOnly={!editable} name="confirmationDate" type="date" defaultValue={values.confirmationDate} className="form-control"></Field>
+                                          
                                             </FormGroup>
                                         </div>
                                     </div>

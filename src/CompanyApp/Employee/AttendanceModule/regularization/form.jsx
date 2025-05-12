@@ -60,6 +60,7 @@ export default class RegularizeAttendance extends Component {
         return null;
     }
     updateStatus = (id, status) => {
+        
         if (this.state.firstHalf == '') {
             toast.error("First Half Should not be empty");
         }
@@ -69,7 +70,18 @@ export default class RegularizeAttendance extends Component {
         if (this.state.Reason == '') {
             toast.error("Reason Should not be empty");
         }
-        if(this.state.firstHalf != '' && this.state.secondHalf != '' && this.state.Reason != ''){
+        if(this.state.firstHalf != '' && this.state.secondHalf != '' && this.state.Reason != ''){  
+
+            const clockInTime = new Date(this.state.firstHalf);
+        const clockOutTime = new Date(this.state.secondHalf);
+
+        const differenceInHours = (clockOutTime - clockInTime) / (1000 * 60 * 60);
+       
+        if (differenceInHours >= 24) {
+            toast.error("Requested Clock-Out Time cannot be more than 24 hours after Requested Clock-In Time");
+            return; 
+        }
+
             let firHalf = convertToUTC(this.state.firstHalf);
             let secHalf = convertToUTC(this.state.secondHalf);
             updateRegularizeData(id, firHalf, secHalf, this.state.Reason, status).then(res => {

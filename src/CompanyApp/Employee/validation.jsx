@@ -71,7 +71,15 @@ export const EmployeeSchema = Yup.object().shape({
         .nullable()
         .matches(/^[a-zA-Z._ ]+$/,'Father name should not contain numbers/special characters' ),
     totalExperience: Yup.string()
-         .matches(/^[0-9\b]+(\.[0-9]{0,2})?$/,'please valid experience')
+         .matches(/^[0-9\b]+(\.[0-9]{0,2})?$/,'please valid experience'),
+    motherName: Yup.string()
+         .nullable()
+         .matches(/^[a-zA-Z._ ]+$/,'Mother name should not contain numbers/special characters' ),
+         
+    personalEmailAddress: Yup.string()
+           .nullable()
+         .email('Invalid personal email')
+       
 });
 
 export const ResetPasswordSchema = Yup.object().shape({
@@ -166,5 +174,10 @@ export const AddressDetailEmployeeSchema = Yup.object().shape({
     personalPhone: Yup.string()
     .matches(/^[0-9+() -]*$/,'Phone number should contain only numbers').nullable('Phone number should contain only numbers'),
     mobile: Yup.string()
-    .matches(/^[0-9+() -]*$/,'Mobile number should contain only numbers').nullable('Mobile number should contain only numbers')
+    .matches(/^[0-9+() -]*$/,'Mobile number should contain only numbers').nullable('Mobile number should contain only numbers'),
+   telephoneNo: Yup.string()
+    .nullable()
+    .matches(/^\+?[0-9]*$/, "Only numbers are allowed, and '+' must be the first character if present.")
+    .matches(/^\+?[0-9]{10,15}$/, "Telephone number must be between 10 and 15 digits.")
+
 })

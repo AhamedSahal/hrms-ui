@@ -311,7 +311,6 @@ export default class OrgRegularization extends Component {
                 sorter: true,
                 width: 200,
                 className: "text-center",
-                className: 'pre-wrap',
                 render: (text, record) => {
                     return <div>{record.actualOutTimeBeforeRegularize != null ? convertToUserTimeZone(record.actualOutTimeBeforeRegularize) : "-"}</div>
                 }
@@ -402,10 +401,8 @@ export default class OrgRegularization extends Component {
             {
                 title: 'Action',
                 dataIndex: 'action',
-                key: 'action',
                 align: 'center',
                 width: 100,
-                key: '17',
                 render: (text, record) => {
                     return <>
                         <div className="menuIconDiv">

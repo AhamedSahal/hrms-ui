@@ -233,9 +233,10 @@ export default class OnboardList extends Component {
 
                                                         </div>
                                                     </td>
-                                                    <td>{item.jobTitle}</td>
+                                                    <td>{(item.jobTitle)?(item?.jobTitle):'-'}</td>
                                                     <td style={{ textAlign: 'center' }}>{getReadableDate(item.dateOfJoining)}</td>
-                                                    <td><EmployeeProfilePhoto className='multiSelectImgSize' id={item.employeeId}></EmployeeProfilePhoto>{item?.managerName}</td>
+                                                    <td>{item?.managerName ? <><EmployeeProfilePhoto className='multiSelectImgSize' id={item.employeeId} />{item.managerName}</> : '-'}</td>
+
                                                     <td style={{ textAlign: 'center' }}>{item.taskCount}</td>
                                                     <td style={{ textAlign: 'center' }}>{item.subTaskCount}</td>
 
