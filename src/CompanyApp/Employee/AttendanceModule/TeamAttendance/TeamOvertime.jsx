@@ -351,9 +351,7 @@ export default class TeamOvertimeApproval extends Component {
         render: (text, record) => {
           return <>
             <div className="menuIconDiv">
-              <i onClick={() => {
-                this.setState({ payslip: record, showPayslip: true })
-              }} className="menuIconFa fa fa-eye" aria-hidden="true"></i>
+              
               {verifyApprovalPermission("ATTENDANCE") && <TableActionDropDown menuItems={menuItems(text, record)} />}
             </div>
           </>

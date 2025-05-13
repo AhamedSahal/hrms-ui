@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar_02, Avatar_03, Avatar_05, Avatar_06, Avatar_08, Avatar_09, Avatar_13, Avatar_17, Avatar_21, } from '../../Entryfile/imagepath';
-import { getUserName, getUserType, getProfilePicture, getTitle, getLogo, getReadableDate, getChatbotEnabled, getMultiEntityCompanies, getCompanyIdCookie } from '../../utility';
+import { getUserName, getUserType, getProfilePicture, getTitle, getLogo, getReadableDate, getChatbotEnabled, getMultiEntityCompanies, getCompanyIdCookie, getTokenCookie } from '../../utility';
 import { getChangeCompany, getHeaderNotifications } from '../service';
 import { authService } from '../authService';
 import { connect } from 'react-redux';
@@ -12,6 +12,7 @@ import { FaRobot } from "react-icons/fa";
 import Chatbot from './openAiChatbot';
 import chatbotGif from '../../assets/img/chatbotgif.gif'
 import { companyLogoURL } from '../../HttpRequest';
+import RasaChat from './rasaChat';
 
 class Header extends Component {
   constructor(props) {
@@ -120,21 +121,21 @@ class Header extends Component {
   toggleChatbot = () => {
     this.setState(prevState => ({ showChatbot: !prevState.showChatbot, showOptions: !prevState.showChatbot }));
   };
-  
-  triggerCompanyLogoLoad = (id)=>{
-        companyLogoURL(id)
-            .then((url) => {
-             window.bindProfilePhoto(id,url);
-            })
-            .catch((error) => {
-              console.warn('Error retrieving employee profile photo:', error);
-            });
-        }
+
+  triggerCompanyLogoLoad = (id) => {
+    companyLogoURL(id)
+      .then((url) => {
+        window.bindProfilePhoto(id, url);
+      })
+      .catch((error) => {
+        console.warn('Error retrieving employee profile photo:', error);
+      });
+  }
 
   handleClickOutside = (event) => {
     if (
       this.aibotContainerRef &&
-      !this.aibotContainerRef.contains(event.target) 
+      !this.aibotContainerRef.contains(event.target)
     ) {
       this.handleCloseChatbot();
     }
@@ -142,7 +143,7 @@ class Header extends Component {
 
   render() {
     const { logo, notifications, showChatbot, showOptions, companyId } = this.state;
-    
+
     let isSuperAdmin = getUserType() == 'SUPER_ADMIN';
     let companies = getMultiEntityCompanies();
     const selectedCompany = companies.find((company) => company.id === parseInt(companyId));
@@ -150,7 +151,7 @@ class Header extends Component {
 
     return (
       <>
-       {!isSuperAdmin && getChatbotEnabled() ? <div
+        {!isSuperAdmin && getChatbotEnabled() ? <div
           className="aibot-container"
           ref={(refValue) => (this.aibotContainerRef = refValue)}
         >
@@ -167,26 +168,12 @@ class Header extends Component {
             </div>
           }
 
-
-          {showOptions && <div className={` aibot-rasa ${showOptions ? 'aibot-visible' : ''}`}>
-            {/* <Widget
-              initPayload={"/greet"}
-              socketUrl={"https://chatbot-service.workplus-hrms.com"}
-              customData={{ "language": "en", "access_token": getTokenCookie() }}
-              title={"Workplus Chatbot"}
-              killSession={true}
-              params={{
-                images: {
-                  dims: {
-                    width: 300,
-                    height: 200,
-                  }
-                },
-                storage: "session"
-              }}
-            /> */}
-            <h4>Rasa chat</h4>
-          </div>}
+          {console.log("cell --- showOptions", showOptions)}
+          {showOptions === true &&
+          <div className={` aibot-rasa ${showOptions ? 'aibot-visible' : ''}`}>
+            <RasaChat />
+            </div>
+          }
           {showChatbot && <Chatbot closeChatbot={this.closeChatbot} />}
         </div> : <></>}
 
@@ -223,8 +210,8 @@ class Header extends Component {
                     </a>
                     <div className="dropdown-menu dropdown-menu-new profile-dropdown" style={{ width: "250px" }}>
                       {companies.map((company) => (
-                        <a 
-                          key={company.id} 
+                        <a
+                          key={company.id}
                           className="dropdown-item"
                           onClick={() => this.handleCompanyChange(company.id)}
                           style={{ display: "flex", alignItems: "center", gap: "10px" }}

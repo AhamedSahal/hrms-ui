@@ -19,7 +19,6 @@ const ManageActionsLanding = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const surveyFromState = location.state?.data;
-console.log('cell surveyFromState', surveyFromState);
 
     const [survey, setSurvey] = useState(surveyFromState || {
         name: "",
@@ -131,7 +130,6 @@ console.log('cell surveyFromState', surveyFromState);
     useEffect(() => {
         fetchCompanyName();
         getSurveySetting(survey.id);
-        console.log('cell survey    ID', survey);
     }, [survey.id]);
 
     const steps = [

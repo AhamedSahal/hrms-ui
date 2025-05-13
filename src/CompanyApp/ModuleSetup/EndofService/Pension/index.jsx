@@ -62,7 +62,6 @@ export default class PensionSettings extends Component {
             branchId: this.props.pensionData[0]?.branchId,
             id: 0 
         };
-        console.log(this.props.pensionData, 'cell Data ', payload);
         action.setSubmitting(true);
         confirmAlert({
             message: `Are you sure you want to Save?`,

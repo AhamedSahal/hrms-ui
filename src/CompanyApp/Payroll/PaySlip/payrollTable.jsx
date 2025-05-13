@@ -429,7 +429,6 @@ export default class PayrollTable extends Component {
             {
                 title: 'Employee',
                 sorter: false,
-                hidden: true,
                 fixed: 'left',
                 width: 300,
                 key: '1',
@@ -456,7 +455,6 @@ export default class PayrollTable extends Component {
                 title: 'Department',
                 dataIndex: 'department',
                 sorter: false,
-                hidden: true,
                 width: 150,
                 key: '2',
             },
@@ -846,12 +844,14 @@ export default class PayrollTable extends Component {
         if (endRange > totalRecords) {
             endRange = totalRecords;
         }
+       
         const salaryPercentage = this.calculatePercentageChange(previousMonthdashboardInfoData?.grossSalary != null?Number(previousMonthdashboardInfoData?.grossSalary):0, dashboardInfoData?.grossSalary != null?Number(dashboardInfoData?.grossSalary):0);
-        const employeeCount = this.calculatePercentageChange(previousMonthdashboardInfoData?.employeesCount != 0?Number(previousMonthdashboardInfoData?.employeesCount):0  , dashboardInfoData?.employeesCount != 0?Number(dashboardInfoData?.employeesCount):0  );
+        const employeeCount = Number(dashboardInfoData?.employeesCount) - Number(previousMonthdashboardInfoData?.employeesCount);
+        const employeeCountIcon = employeeCount >= 0 ? <i class="fa fa-plus" aria-hidden="true"></i> : <i class="fa fa-minus" aria-hidden="true"></i>;
         let totalNetPay = this.calculatePercentageChange(previousMonthdashboardInfoData?.netPay != null?Number(previousMonthdashboardInfoData?.netPay):0, dashboardInfoData?.netPay != null?Number(dashboardInfoData?.netPay):0);
         let totalDeductionPay = this.calculatePercentageChange(previousMonthdashboardInfoData?.deduction != null?Number(previousMonthdashboardInfoData?.deduction):0, dashboardInfoData?.deduction != null?Number(dashboardInfoData?.deduction):0);
         const columns = this.getColumns();
-
+        console.log("cell emp ---data", employeeCount)
         const checkedOptions = columns.map(({ key, title }) => ({
             label: title,
             value: key,
@@ -1004,9 +1004,9 @@ export default class PayrollTable extends Component {
                                                     <span className="payroll-widget-icon"><IoIosPeople /></span>
                                                 </div>
 
-                                                <div className={salaryPercentage < 0 ? 'trandingIconDownStyle' : 'trandingIconStyle'}>
-                                                    {salaryPercentage < 0 ? <IoMdTrendingDown /> : <IoMdTrendingUp />}
-                                                    <span>{Math.abs(employeeCount).toFixed(2)}</span>
+                                                <div className={employeeCount < 0 ? 'trandingIconDownStyle' : 'trandingIconStyle'}>
+                                                    
+                                                    <span>{employeeCountIcon} {Math.abs(employeeCount)}</span>
                                                 </div>
 
                                             </div>

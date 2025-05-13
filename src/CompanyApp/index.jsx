@@ -53,7 +53,6 @@ import EmployeeDetail from './Employee/detail/detail.jsx';
 
 const CompanyAppRoute = () => {
    let employeeId = getEmployeeId();
-   console.log('cell employeeId');
 
    return (
       <Routes>

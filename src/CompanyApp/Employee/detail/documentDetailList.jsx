@@ -57,7 +57,6 @@ export default class DocumentDetailList extends Component {
   render() {
     const { data } = this.state;
 
-    console.log('cell : --', data)
     
     const isEditAllowed =true;// verifyEditPermission("EMPLOYEE");
      return (

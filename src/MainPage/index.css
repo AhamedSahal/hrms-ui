@@ -3974,4 +3974,21 @@ input[data-id="cbColor"] {
     border: #d1d1d1 1px solid;
     border-radius: 4px;
   }
+
+  .rw-widget-container.rw-full-screen.rw-chat-open {
+    height: 100%;
+    margin: 0;
+    width: 100%;
+    padding: 42px;
+    top: 40px;
+    min-height: 450px !important;
+    max-height: 450px !important;
+    width: 30% !important;
+    margin-right: 0 !important;
+}
+
+.rw-full-screen.rw-widget-container .rw-conversation-container {
+    margin-bottom: 0;
+    border-radius: 9px !important;
+}
   

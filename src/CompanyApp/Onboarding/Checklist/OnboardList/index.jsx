@@ -1,6 +1,6 @@
 import { Empty, Popover, Progress, Slider, Table, Tooltip } from 'antd';
 import React, { Component } from 'react';
-import { Button, Modal, ProgressBar,Anchor } from 'react-bootstrap';
+import { Button, Modal, ProgressBar, Anchor } from 'react-bootstrap';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
@@ -52,14 +52,14 @@ export default class OnboardList extends Component {
         this.fetchList();
     }
     fetchList = () => {
-        getOnboardChecklist(this.state.branchId,this.state.departmentId,this.state.jobTitleId, this.state.q, this.state.fromDate ,this.state.toDate).then(res => {
-               if (res.status == "OK") {
-                 this.setState({
-                   data: res.data,
-                //    totalRecords: res.data.totalRecords,
-                 })
-               }
-             })
+        getOnboardChecklist(this.state.branchId, this.state.departmentId, this.state.jobTitleId, this.state.q, this.state.fromDate, this.state.toDate).then(res => {
+            if (res.status == "OK") {
+                this.setState({
+                    data: res.data,
+                    //    totalRecords: res.data.totalRecords,
+                })
+            }
+        })
 
     }
 
@@ -226,49 +226,49 @@ export default class OnboardList extends Component {
                                     {this.state.data.length > 0 && this.state.data?.map((item) => {
                                         return (
                                             <>
-                                                <tr onClick={() => this.props.handlePage('tasklist',item)} className='Goals_table_row' key={item.id}>
+                                                <tr onClick={() => this.props.handlePage('tasklist', item)} className='Goals_table_row' key={item.id}>
                                                     <td style={{ width: '300px' }} className='GoalName_tab' >
                                                         <div >
                                                             <div className="goal-title"><EmployeeProfilePhoto className='multiSelectImgSize' id={item.employeeId}></EmployeeProfilePhoto>{item.employeeName}</div>
 
                                                         </div>
                                                     </td>
-                                                    <td>{(item.jobTitle)?(item?.jobTitle):'-'}</td>
+                                                    <td>{(item.jobTitle) ? (item?.jobTitle) : '-'}</td>
                                                     <td style={{ textAlign: 'center' }}>{getReadableDate(item.dateOfJoining)}</td>
                                                     <td>{item?.managerName ? <><EmployeeProfilePhoto className='multiSelectImgSize' id={item.employeeId} />{item.managerName}</> : '-'}</td>
 
                                                     <td style={{ textAlign: 'center' }}>{item.taskCount}</td>
                                                     <td style={{ textAlign: 'center' }}>{item.subTaskCount}</td>
 
-                                                    {/* <td>
+                                                    <td>
                                                         <div className="onboardList_progress-bar">
-                                                            <div className="goal_progress-fill" style={{ backgroundColor: getColorByAchievement(item.progress == null?0:item.progress), width: `${item.progress == null?0:item.progress}%` }}>{item.progress == null?0:item.progress}</div>
+                                                            <div className="goal_progress-fill" style={{ backgroundColor: getColorByAchievement(item.progress == null ? 0 : item.progress), width: `${item.progress == null ? 0 : item.progress}%` }}></div>
                                                         </div>
-                                                    </td> */}
+                                                    </td>
 
-                                                     <div >
-                                                                                                                <Slider
-                                                                                                                    value={item.progress == null?0:item.progress}
-                                                                                                                    tooltip={{ open: false }}
-                                                                                                                    trackStyle={{ borderRadius: '20px', backgroundColor: getColorByAchievement(item.progress == null?0:item.progress), height: 8 }}
-                                                                                                                    handleStyle={{
-                                                                                                                        borderColor: getColorByAchievement(item.progress == null?0:item.progress),
-                                                                                                                        backgroundColor: "#fff",
-                                                                                                                        borderWidth: 2,
-                                                                                                                        width: 20,
-                                                                                                                        height: 20,
-                                                    
-                                                                                                                    }}
-                                                                                                                    railStyle={{ backgroundColor: "#f0f0f0", height: 8 }}
-                                                                                                                />
-                                                                                                                <div className='m-1 text-right'>
-                                                                                                                    <span className="last-updated">{(item.progress == null?0:item.progress).toFixed(2)}%</span>
-                                                                                                                </div>
-                                                    
-                                                                                                            </div>
-                                                    
+                                                    {/* <div >
+                                                        <Slider
+                                                            value={item.progress == null ? 0 : item.progress}
+                                                            tooltip={{ open: false }}
+                                                            trackStyle={{ borderRadius: '20px', backgroundColor: getColorByAchievement(item.progress == null ? 0 : item.progress), height: 8 }}
+                                                            handleStyle={{
+                                                                borderColor: getColorByAchievement(item.progress == null ? 0 : item.progress),
+                                                                backgroundColor: "#fff",
+                                                                borderWidth: 2,
+                                                                width: 20,
+                                                                height: 20,
+
+                                                            }}
+                                                            railStyle={{ backgroundColor: "#f0f0f0", height: 8 }}
+                                                        />
+                                                        <div className='m-1 text-right'>
+                                                            <span className="last-updated">{(item.progress == null ? 0 : item.progress).toFixed(2)}%</span>
+                                                        </div>
+
+                                                    </div> */}
+
                                                     <td style={{ textAlign: 'center' }}>
-                                                       {(item.progress == null?0:item.progress) == 100?<span className='badge bg-inverse-success'><i class="pr-2 fa fa-circle text-info"></i>Completed</span>:item.dueDate == null || toLocalDate(item.dueDate) >= toLocalDate(new Date())?<span className='badge bg-inverse-info'><i class="pr-2 fa fa-circle text-info"></i>In progress</span> :<span className='badge bg-inverse-danger'><i class="pr-2 fa fa-circle text-info"></i>OverDue</span>} 
+                                                        {(item.progress == null ? 0 : item.progress) == 100 ? <span className='badge bg-inverse-success'><i class="pr-2 fa fa-circle text-info"></i>Completed</span> : item.dueDate == null || toLocalDate(item.dueDate) >= toLocalDate(new Date()) ? <span className='badge bg-inverse-info'><i class="pr-2 fa fa-circle text-info"></i>In progress</span> : <span className='badge bg-inverse-danger'><i class="pr-2 fa fa-circle text-info"></i>OverDue</span>}
 
 
                                                     </td>

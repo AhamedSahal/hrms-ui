@@ -64,7 +64,6 @@ export default class AttendancePermissionForm extends Component {
         return null;
     }
     save = (data, action) => {
-        console.log('cell ===', data)
         // action.setSubmitting(true);
         // savePermissionType(data).then(res => {
         //     if (res.status == "OK") {

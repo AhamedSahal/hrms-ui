@@ -1090,7 +1090,7 @@ export default class NewSocialShare extends Component {
                                     </div>
                                     <div style={{ justifyContent: 'center' }} className='d-flex'>
                                         <div className="attendance-total">
-                                            <Chart options={this.state.options} series={series} type="donut" width="150" height="150" />
+                                            <Chart options={this.state.options} series={series} type="donut" width="110" height="110" />
                                         </div>
                                         <div className="attendance-details">
                                             <div onClick={() => {
@@ -1129,7 +1129,7 @@ export default class NewSocialShare extends Component {
 
                                     <div style={{ justifyContent: 'center' }} className='d-flex'>
                                         <div className="attendance-total">
-                                            <Chart options={this.state.options} series={series} type="donut" width="150" height="150" />
+                                            <Chart options={this.state.options} series={series} type="donut" width="110" height="110" />
                                         </div>
                                         <div className="attendance-details">
                                             <div onClick={() => {

@@ -131,7 +131,6 @@ export default class IndividualProfile extends Component {
     };
 
     deleteProfile = (item, name) => {
-        console.log(name, 'cell : 996', item);
         confirmAlert({
             title: `Delete ${name}`,
             message: 'Are you sure, you want to delete this Data?',
@@ -156,7 +155,6 @@ export default class IndividualProfile extends Component {
     }
 
     handleEdit = (item, form) => {
-        console.log(item, 'cell : ', form);
         if (form === 1) {
             this.setState({ formData: item })
             this.formHandling('qualificationForm')

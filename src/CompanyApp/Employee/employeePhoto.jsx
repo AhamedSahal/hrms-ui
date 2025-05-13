@@ -54,7 +54,6 @@ export default class EmployeePhoto extends Component {
         const name = this.props.alt;
         const initials = this.getInitials(name);
         const backgroundColor = this.hashStringToColor(name);
-        // console.log(this.props.alt ,'cell : ', this.props.name)
         return (
             this.state.profileImg ? (
                 <img className={className} data-id={id} alt={this.state.imgAlt} src={this.state.profileImg} />

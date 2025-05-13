@@ -376,9 +376,7 @@ export default class OrgOvertimeApproval extends Component {
         render: (text, record) => {
           return <>
             <div className="menuIconDiv">
-              <i onClick={() => {
-                this.setState({ payslip: record, showPayslip: true })
-              }} className="menuIconFa fa fa-eye" aria-hidden="true"></i>
+              
               {verifyOrgLevelEditPermission("ATTENDANCE") && <TableActionDropDown menuItems={menuItems(text, record)} />}
             </div>
           </>

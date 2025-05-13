@@ -25,7 +25,6 @@ export default class CompositeForm extends Component {
 
 
     save = (data, action) => {
-        console.log('cell : DATA', data)
         saveCompositePayscale(data).then(res => {
             if (res.status == "OK") {
                 toast.success(res.message);

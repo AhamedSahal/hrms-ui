@@ -179,20 +179,20 @@ export default class MyOvertimeApproval extends Component {
           </>
         }
       },
-      {
-        title: 'Action',
-        width: 50,
-        className: "text-center",
-        render: (text, record) => {
-          return <>
-            <div className="menuIconDiv">
-              <i onClick={() => {
-                this.setState({ payslip: record, showPayslip: true })
-              }} className="menuIconFa fa fa-eye" aria-hidden="true"></i>
-            </div>
-          </>
-        },
-      }
+      // {
+      //   title: 'Action',
+      //   width: 50,
+      //   className: "text-center",
+      //   render: (text, record) => {
+      //     return <>
+      //       <div className="menuIconDiv">
+      //         <i onClick={() => {
+      //           this.setState({ payslip: record, showPayslip: true })
+      //         }} className="menuIconFa fa fa-eye" aria-hidden="true"></i>
+      //       </div>
+      //     </>
+      //   },
+      // }
 
     ]
     return (

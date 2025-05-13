@@ -92,7 +92,6 @@ export default class Approve extends Component {
     if (endRange > totalRecords) {
       endRange = totalRecords;
     }
-    console.log('cell',data)
     const menuItems = (text, record) => [
       <div ><a className="muiMenu_item" href="#"
         onClick={() => this.handleViewForm(text)} ><i className="fa fa-eye m-r-5" /><b>View</b></a></div>,
