@@ -10,7 +10,7 @@ import TicketActionSetupRoute from './ticket';
 const SupportModuleSetupRoute = () => {
    return (
    <Routes>
-      <Route path="ticket" element={<TicketActionSetupRoute />} /> 
+      <Route path="ticket/*" element={<TicketActionSetupRoute />} /> 
    </Routes>
 )};
 export default SupportModuleSetupRoute;

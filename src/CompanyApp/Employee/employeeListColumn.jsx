@@ -19,7 +19,7 @@ export default class EmployeeListColumn extends Component {
         
      }
     render() {
-        return <h2 style={{wordSpacing: '-5px'}} className="table-avatar">
+        return <h2 className="table-avatar">
             <Link className="avatar" to={`/app/company-app/employee/detail/${this.state.id}`}>
             <EmployeePhoto id={this.state.id} alt={this.state.name}></EmployeePhoto>
             </Link>

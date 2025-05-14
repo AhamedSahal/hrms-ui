@@ -7,7 +7,7 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { itemRender } from "../../../paginationfunction";
-import { getTitle, isEmployee, toLocalDateTime, verifyOrgLevelViewPermission, verifyOrgLevelEditPermission, verifySelfViewPermission, verifySelfEditPermission } from "../../../utility";
+import { getTitle, isEmployee, toLocalDateTime, verifyOrgLevelViewPermission, verifyOrgLevelEditPermission, verifySelfViewPermission, verifySelfEditPermission, getEmployeeId } from "../../../utility";
 import DocumentRequestForm from "./form";
 import { cancelDocumentRequest, downloadDocument, getDocumentRequestList } from "./service";
 import TableDropDown from "../../../MainPage/tableDropDown";
@@ -185,7 +185,7 @@ export default class DocumentRequest extends Component {
       );
       if (verifyOrgLevelEditPermission("Manage Document Request")) {
         items.push(<div>
-          <Link className="muiMenu_item" to={{pathname : `employee-document-request`, state : text}}>
+          <Link className="muiMenu_item" to="/app/company-app/employee-document-request" state={text}>
             <i className="fa fa-eye m-r-5"></i> View
           </Link>
         </div>

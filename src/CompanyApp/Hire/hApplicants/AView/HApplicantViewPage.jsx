@@ -7,9 +7,9 @@ import HApplicantEvaluationHistory from "./HApplicantEvaluationHistory";
 const HApplicantViewPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-
-    const [applicantInformation] = useState(location.state?.text || {});
-
+    
+    const [applicantInformation] = useState(location.state || {});
+    console.log("cell ====location", applicantInformation);
     const redirectToList = () => {
         navigate(-1);
     };

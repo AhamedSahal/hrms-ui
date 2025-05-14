@@ -5,6 +5,9 @@ import {  getPrimaryGradientColor, getPrimaryColor, getReadableDate, verifyOrgLe
 import "../../index.css"
 import { getCompanyAdminDashboardDetail } from './service.jsx';
 import AccessDenied from './AccessDenied.jsx';
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Tooltip } from 'antd';
+import { Link } from 'react-router-dom';
 
 function CompanyAnalyticsDashboard() {
   

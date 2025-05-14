@@ -67,7 +67,7 @@ export default class JobCandidateInformationForm extends Component {
     const { jobInfo } = this.state;
     return (
       <div style={{ paddingTop: "70px" }}>
-        <div style={{ padding: "10px 0 0 10px", color: "#fff", borderBottom: "2px solid #E7ECF2" }}>
+        <div style={{ padding: "10px 0 0 10px", color: "black", borderBottom: "2px solid #E7ECF2" }}>
           <h4 >Job Details</h4>
         </div>
         <Formik

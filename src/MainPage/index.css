@@ -3991,4 +3991,22 @@ input[data-id="cbColor"] {
     margin-bottom: 0;
     border-radius: 9px !important;
 }
-  
+
+.modal-header .btn-close {
+    border: solid;
+    border-radius: 49px;
+    filter: brightness(0) invert(1);
+  }
+
+/* Custom styles for the Ant Design Spin component */
+.custom-spin .ant-spin-dot {
+    font-size: 45px; 
+}
+
+.custom-spin .ant-spin-dot-item {
+    width: 50px;
+    height: 50px;
+}
+
+
+

@@ -1,35 +1,36 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import JobCandidateApplicantForm from "./JobCandidateApplicantForm";
 import JobCandidateInformationForm from "./JobCandidateInformationForm";
 import JobResponse from "./JobResponse";
 
-export default class JobCandidateFormIndex extends Component {
-    constructor(props) {
-        super(props);
+const JobCandidateFormIndex = () => {
+    const { id: jobId } = useParams();
+    const [candidateForm, setCandidateForm] = useState(true);
+    const [responseForm, setResponseForm] = useState(false);
+    const [jobInfo, setJobInfo] = useState(null);
+ console.log("cell ---jobId", jobId);
+ 
+    const handleCandidateForm = (data) => {
+        setJobInfo(data);
+        setCandidateForm(false);
+    };
 
-        this.state = {
-            jobId: props.match.params.id,
-            candidateForm: true,
-            responseForm: false
+    const handleResponsForm = () => {
+        setResponseForm(true);
+    };
 
-        }
-    }
-    handleCandidateForm = (data) => {
-        this.setState({jobInfo: data})
-        this.setState({candidateForm: false})
+    return (
+        <div>
+            {candidateForm ? (
+                <JobCandidateInformationForm nextForm={handleCandidateForm} jobId={jobId} />
+            ) : !responseForm ? (
+                <JobCandidateApplicantForm jobInfo={jobInfo} jobId={jobId} handleResponsForm={handleResponsForm} />
+            ) : (
+                <JobResponse />
+            )}
+        </div>
+    );
+};
 
-    }
-
-    handleResponsForm = () => {
-        this.setState({responseForm: true})
-    }
-
-    render() {
-        const {candidateForm} = this.state;
-        return(
-            <div>
-                {candidateForm?<JobCandidateInformationForm  nextForm ={this.handleCandidateForm} jobId={this.state.jobId} />:!this.state.responseForm?<JobCandidateApplicantForm  jobInfo={this.state.jobInfo} jobId={this.state.jobId} handleResponsForm ={this.handleResponsForm}/>:<JobResponse />}
-            </div>
-        )
-    }
-}
+export default JobCandidateFormIndex;
