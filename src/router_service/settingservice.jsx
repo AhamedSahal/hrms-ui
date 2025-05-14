@@ -1,4 +1,3 @@
-
 import ApprovalSetting from '../MainPage/Administration/Settings/approvalsetting';
 import ChangePassword from '../MainPage/Administration/Settings/changepassword';
 import Companysettings from '../MainPage/Administration/Settings/companysettings';
@@ -18,58 +17,58 @@ import Localization from './../MainPage/Administration/Settings/localization';
 export default [  
    {
       path: 'companysetting',
-      component: Companysettings
+      element: <Companysettings />
    },
    {
       path: 'localization',
-      component: Localization
+      element: <Localization />
    },
    {
       path: 'theme-settings',
-      component: Themesettings
+      element: <Themesettings />
    },
    {
       path: 'roles-permissions',
-      component: Rolepermission
+      element: <Rolepermission />
    },
    {
       path: 'email-settings',
-      component: Emailsettings
+      element: <Emailsettings />
    },
    {
       path: 'invoice-settings',
-      component: Invoicesettings
+      element: <Invoicesettings />
    },
    {
       path: 'salary-settings',
-      component: Salarysettings
+      element: <Salarysettings />
    },
    {
       path: 'notifications',
-      component: Notification
+      element: <Notification />
    },
    {
       path: 'change-password',
-      component: ChangePassword
+      element: <ChangePassword />
    },
    {
       path: 'leave-type',
-      component: Leavetype
+      element: <Leavetype />
    },
    {
       path: 'approval-setting',
-      component: ApprovalSetting
+      element: <ApprovalSetting />
    },
    {
       path: 'performance-setting',
-      component: PerformanceSetting
+      element: <PerformanceSetting />
    },
    {
       path: 'toxbox-setting',
-      component: Toxboxsetting
+      element: <Toxboxsetting />
    },
    {
       path: 'cron-setting',
-      component: CronSetting
+      element: <CronSetting />
    }
 ]

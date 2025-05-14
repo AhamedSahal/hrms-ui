@@ -12,13 +12,12 @@ import SidebarContent from './settingsidebar';
 
 class SettingsLayout extends Component {
 	render() {
-		const { match } = this.props;
 		return (
 			<div className="main-wrapper">
 				<Header/>
 				<div>
-					{settingservice && settingservice.map((route,key)=>
-						<Route key={key} path={`${match.url}/${route.path}`} component={route.component} />
+					{settingservice && settingservice.map(({path , element},key)=>
+						<Route key={key} path={path} element={element} />
 					)}
 				</div>				
 				<SidebarContent/>

@@ -28,7 +28,7 @@ const LoadingIndicator = () => {
             justifyContent: 'center',
             alignItems: 'center'
         }}>
-            <Spin size="large" />
+            <Spin size="large" className="custom-spin" />
 
         </div>
     );

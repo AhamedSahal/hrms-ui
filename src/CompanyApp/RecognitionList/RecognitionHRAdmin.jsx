@@ -14,6 +14,7 @@ import EmployeePhoto from '../Employee/employeePhoto';
 import { height } from '@mui/system';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
 import RecognitionProfilePhoto from '../Employee/recognitionProfile';
+import { Pagination } from 'antd';
 
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 export default class RecognitionMainList extends Component {
@@ -127,46 +128,25 @@ export default class RecognitionMainList extends Component {
 
 
             </div>
-            <ul className="ant-pagination ant-table-pagination ant-table-pagination-right">
-              <li className="ant-pagination-total-text">{`Showing ${startRange} to ${endRange} of ${totalRecords} entries`}</li>
-              <li className={`ant-pagination-prev ${currentPage == 1 ? 'ant-pagination-disabled' : ''}`}>
-                <a href="#" disabled={currentPage == 1} onClick={() => {
-                  if (currentPage > 1) {
-                    this.setState({
-                      page: currentPage - 2
-                    }, () => {
-                      this.fetchList();
-                    })
-                  }
-                }} tabIndex={-1}>Previous</a>
-              </li>
-              {Array.from(Array(totalPages).keys()).map((e, i) => {
-                return <>
-                  <li className={`ant-pagination-item ant-pagination-item-${i + 1} ${currentPage - 1 == i ? 'ant-pagination-item-active' : ''}`}>
-                    <Anchor href="#" onClick={() => {
-                      this.setState({
-                        page: i
-                      }, () => {
-                        this.fetchList();
-                      })
-                    }
-                    }>{i + 1}</Anchor>
-                  </li>
-
-                </>
-              })}
-              <li className={`ant-pagination-next ${currentPage == totalPages ? 'ant-pagination-disabled antpagination' : ''}`} style={{marginRight: "550px"}}>
-                <a href="#" disabled={currentPage == totalPages} onClick={() => {
-                  if (currentPage != totalPages) {
-                    this.setState({
-                      page: currentPage
-                    }, () => {
-                      this.fetchList();
-                    })
-                  }
-
-                }}>Next</a>
-              </li>
+            <ul style={{placeItems: 'center'}} className="p-1 ant-pagination ant-table-pagination ">
+              <Pagination
+                current={currentPage}
+                total={totalRecords}
+                pageSize={size}
+                onChange={(page, pageSize) => {
+                  this.setState({
+                    page: page - 1,
+                    size: pageSize
+                  }, () => {
+                    this.fetchList();
+                  });
+                }}
+                showSizeChanger
+                onShowSizeChange={(current, size) => {
+                  this.pageSizeChange(current, size);
+                }}
+                showTotal={(total, range) => `Showing ${range[0]} to ${range[1]} of ${total} entries`}
+              />
             </ul>
           </>}
           {!verifyOrgLevelViewPermission("Engage Recognition") && <AccessDenied></AccessDenied>}

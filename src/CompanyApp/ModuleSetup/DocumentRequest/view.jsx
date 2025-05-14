@@ -129,7 +129,7 @@ const DocumentRequestView = () => {
                     <title>DocumentRequest | {getTitle()}</title>
                     <meta name="description" content="Role page" />
                 </Helmet>
-                <div className="content container-fluid">
+                <div className="ml-3 pr-4 content container-fluid">
                     <div className="page-header">
                         <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
                             <Button className="btn btn-primary">

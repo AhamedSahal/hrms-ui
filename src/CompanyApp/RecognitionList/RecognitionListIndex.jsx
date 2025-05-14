@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { getTitle, getUserType } from '../../utility';
 import RecognitionGiven from './RecognitionGiven.jsx';
 import RecognitionReceive from './RecognitionReceive.jsx';
-import RecognitionMainList from './RecognitionHRAdmin.jsx';
 import RecognitionMain from '../RecognitionMain/form.jsx';
+import RecognitionMainList from './RecognitionHRAdmin.jsx';
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 export default class RecognitionListIndex extends Component {
     constructor(props) {

@@ -104,9 +104,7 @@ export default class Timesheet extends Component {
     this.setState({ data },
       () => {
         this.hideForm();
-        setTimeout(function () {
-          window.location.reload()
-       }, 2000)
+        this.fetchList();
       });
   }
   showAlert = (status) => {

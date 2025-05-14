@@ -135,7 +135,7 @@ export default class Ticket extends Component {
       endRange = totalRecords;
     }
     const menuItems = (text, record) => [
-      <div > <Link className="muiMenu_item" to={`./ticket/${record.id}`}>
+      <div > <Link className="muiMenu_item" to={`/app/company-app/support/ticket/${record.id}`}>
         <i className="las la-check-double m-r-5"></i> Ticket Action</Link></div>,
       <div ><a className="muiMenu_item" href="#" onClick={() => {
         let { ticket } = this.state;
@@ -200,12 +200,12 @@ export default class Ticket extends Component {
 
     ]
     return (
-      <div className="insidePageDiv">
+      <div className="mr-3 ml-3 insidePageDiv">
         <Helmet>
           <title>Ticket | {getTitle()}</title>
           <meta name="description" content="Login page" />
         </Helmet>
-        <div className="page-containerDocList content container-fluid">
+        <div className="mr-3 ml-3 page-containerDocList content container-fluid">
           <div className="tablePage-header">
             <div className="row pageTitle-section">
               <div className="col">

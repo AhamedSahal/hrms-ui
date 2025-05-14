@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { getMultiEntityCompanies, getTitle } from '../../utility';
+import { getDefaultOwner, getMultiEntityCompanies, getTitle } from '../../utility';
 import DepartmentChart from './Organization Chart/OrganizationDepartmentChart';
 import OrganizationEmployee from './Organization Chart/OrganizationEmployee';
 import OrganizationCompany from './Organization Chart/OrganizationCompanyChart';
@@ -11,7 +11,7 @@ export default class OrganizationChartLanding extends Component {
         super(props);
         this.state = {
             req: true,
-            defaultOwner: getMultiEntityCompanies(),
+            defaultOwner: getDefaultOwner(),
         };
     }
     render() {

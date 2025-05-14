@@ -3,7 +3,7 @@ import jsPDF from 'jspdf';
 import { Table } from 'antd'; 
 import EmployeeListColumn from '../Employee/employeeListColumn';
 import { itemRender } from "../../paginationfunction";
-import { getCurrency, getLogo, getReadableDate } from '../../utility';
+import { getCurrency, getLogo, getReadableDate, verifyViewPermission } from '../../utility';
 import { getAssetHistory } from './service'
 export default class AssetsHistory extends Component {
     constructor(props) {

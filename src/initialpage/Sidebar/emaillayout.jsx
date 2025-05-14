@@ -12,13 +12,12 @@ import SidebarContent from './emailsidebar';
 
 class EmailLayout extends Component {
 	render() {
-		const { match } = this.props;
 		return (
 			<div className="main-wrapper">
 				<Header/>
 				<div>
-					{emailService && emailService.map((route,key)=>
-						<Route key={key} path={`${match.url}/${route.path}`} component={route.component} />
+					{emailService && emailService.map(({path , element} ,key)=>
+						<Route key={key} path={path} element={element} />
 					)}
 				</div>				
 				<SidebarContent/>

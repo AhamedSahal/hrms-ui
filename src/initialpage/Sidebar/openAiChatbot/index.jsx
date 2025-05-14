@@ -12,12 +12,12 @@ const Chatbot = ({ closeChatbot }) => {
 
     const sendMessage = async () => {
         if (!input.trim()) return;
-    
+
         const newMessages = [...messages, { role: "user", content: input }];
         setMessages(newMessages);
         setInput("");
         setLoading(true);
-    
+
         try {
             const response = await axios.post(
                 "https://api.openai.com/v1/chat/completions",
@@ -28,18 +28,18 @@ const Chatbot = ({ closeChatbot }) => {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+                        Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
                         "Content-Type": "application/json",
                     },
                 }
             );
-    
+
             const botReply = response.data.choices[0].message;
             setMessages([...newMessages, botReply]);
         } catch (error) {
             console.error("Error fetching response:", error);
         }
-    
+
         setLoading(false);
     };
 
@@ -52,7 +52,7 @@ const Chatbot = ({ closeChatbot }) => {
     return (
         <div className="chat-container">
             <div className="chat-header">
-                <h4 className="mb-0" style={{wordSpacing: '-4px', color: 'white' }}>Workplus OpenAI Chatbot</h4>
+                <h4 className="mb-0" style={{color: 'white' }}>Workplus AIChatbot</h4>
                 <span className="chat-closeBtn" onClick={closeChatbot}><i className="fa fa-times-circle-o" aria-hidden="true"></i></span>
             </div>
             <div className="chat-messages" >
