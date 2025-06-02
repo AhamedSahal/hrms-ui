@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { updateRegularizeData } from './service';
-import { convertToUserTimeZone, toDateTime, getReadableDate, convertToUTC } from '../../../../utility';
+import { convertToUserTimeZone, toDateTime, getReadableDate, convertToUTC, toDateWithGMT } from '../../../../utility';
 //import { LeaveSchema } from './validation';
 
 export default class RegularizeAttendance extends Component {
@@ -82,8 +82,8 @@ export default class RegularizeAttendance extends Component {
             return; 
         }
 
-            let firHalf = convertToUTC(this.state.firstHalf);
-            let secHalf = convertToUTC(this.state.secondHalf);
+            let firHalf = toDateWithGMT(convertToUTC(this.state.firstHalf));
+            let secHalf = toDateWithGMT(convertToUTC(this.state.secondHalf));
             updateRegularizeData(id, firHalf, secHalf, this.state.Reason, status).then(res => {
                 if (res.status == "OK") {
                     toast.success(res.message);

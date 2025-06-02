@@ -183,6 +183,7 @@ fetchData = () => {
           if (res.status == "OK") {
             this.setState({
               dataWA: res.data,
+              defaultYear:res.data.year,
               showForm: false
             })
           } else {

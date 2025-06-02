@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { FormGroup } from 'reactstrap';
-import {  saveOnboardMSSubTask, saveOnboardMSTask } from './service';
+import { saveOnboardMSSubTask, saveOnboardMSTask } from './service';
 import { toast } from 'react-toastify';
 import Select from "react-select";
-import { getBranchLists, getDepartmentLists, getFunctionLists } from '../../../Performance/ReviewCycle/CycleForms/service';
+import { getBranchLists, getDepartmentLists } from '../../../Performance/ReviewCycle/CycleForms/service';
 import { taskValidationSchema } from './validation';
 import EmpMultiSelectDropDown from '../../../ModuleSetup/Dropdown/EmpMultiSelectDropDown';
 
@@ -97,6 +97,29 @@ class OnboardMSTaskForm extends Component {
         subtaskAssign[index] = event.target.value;
         this.setState({ subtaskAssign });
     }
+
+    onChangeSubtaskAssign(event, index, setFieldValue, setFieldTouched) {
+    const value = event.target.value;
+
+    const subtaskAssign = [...this.state.subtaskAssign];
+    subtaskAssign[index] = value;
+    this.setState({ subtaskAssign });
+
+    
+    setFieldValue(`subtasks[${index}].assign`, value);
+    setFieldValue(`subtasks[${index}].departments`, []);
+    setFieldValue(`subtasks[${index}].branches`, []);
+    setFieldValue(`subtasks[${index}].employeeId`, []);
+
+    if (value === "0") {
+        setFieldTouched(`subtasks[${index}].departments`, true);
+    } else if (value === "1") {
+        setFieldTouched(`subtasks[${index}].branches`, true);
+    } else if (value === "2") {
+        setFieldTouched(`subtasks[${index}].employeeId`, true);
+    }
+}
+
 
     save = (data, action) => {
         const onboardMSTaskList = {
@@ -199,7 +222,17 @@ class OnboardMSTaskForm extends Component {
         }
 
         const CustomSelect = ({ field, setFieldValue }) => {
-            const { name } = field;
+            const { name, value } = field;
+        
+             let selectedOptions = [];
+
+            if (typeof value === "string") {
+                const ids = value.split(",").map(id => id.trim()).filter(id => id !== "");
+                selectedOptions = options.filter(opt => ids.includes(String(opt.id)));
+            } else if (Array.isArray(value)) {
+                selectedOptions = value;
+            }
+
 
             const handleChange = (data) => {
                 const ids = data.map(option => option.id);
@@ -224,6 +257,7 @@ class OnboardMSTaskForm extends Component {
                     isMulti
                     getOptionValue={(options) => options.id}
                     getOptionLabel={(options) => options.name}
+                    value={selectedOptions}
                 />
             );
         };
@@ -270,7 +304,7 @@ class OnboardMSTaskForm extends Component {
                 <Formik
                     enableReinitialize={true}
                     initialValues={this.state.task}
-                    // validationSchema={taskValidationSchema}
+                    validationSchema={taskValidationSchema}
                     onSubmit={this.save}
                 >
                     {({
@@ -282,7 +316,8 @@ class OnboardMSTaskForm extends Component {
                         handleSubmit,
                         isSubmitting,
                         setFieldValue,
-                        setSubmitting
+                        setSubmitting,
+                        setFieldTouched
                     }) => (
                         <Form autoComplete='off'>
                             <div className='row'>
@@ -292,13 +327,13 @@ class OnboardMSTaskForm extends Component {
                                     <ErrorMessage style={{ color: 'red' }} name="name" component="div" />
                                 </FormGroup>
                                 <FormGroup style={{ placeItems: 'center', alignContent: 'center' }} className='col-md-6'>
-                                    <div name="active" onClick={() => {
+                                    <div name="active"  className="toggles-btn-view" id="button-container">
+
+                                        <div id="my-button" className="toggle-button-element" style={{ transform: active ? 'translateX(0px)' : 'translateX(80px)' }} onClick={() => {
                                        
                                         this.setState({ active: !active });
                                         setFieldValue("active", active);
-                                    }} className="toggles-btn-view" id="button-container">
-
-                                        <div id="my-button" className="toggle-button-element" style={{ transform: active ? 'translateX(0px)' : 'translateX(80px)' }}>
+                                    }}>
                                             <p className='m-0 self-btn'>{active ? 'Active' : 'Inactive'}</p>
 
                                         </div>
@@ -357,8 +392,11 @@ class OnboardMSTaskForm extends Component {
                                             <EmpMultiSelectDropDown
                                                 name="employeeId"
                                                 setFieldValue={setFieldValue}
-                                                defaultValue={values.employeeId}
+                                                defaultValue={values.employeeId || []}
                                             />
+                                             <ErrorMessage name="employeeId">
+                                                {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                            </ErrorMessage>
                                         </FormGroup>
                                     </div>
                                 }
@@ -420,7 +458,7 @@ class OnboardMSTaskForm extends Component {
                                                 subtasks[index].active = !subtasks[index].active;
                                                 setFieldValue("subtasks", subtasks);
                                             }}>
-                                                <i className={`fa fa-2x ${subtask.active ? 'fa-toggle-on text-success' : 'fa-toggle-off text-danger'}`}></i>
+                                                <i className={`fa fa-2x ${!active?'fa-toggle-off text-danger':subtask.active ? 'fa-toggle-on text-success' : 'fa-toggle-off text-danger'}`}></i>
                                             </div>
                                             <button type="button" className="btn btn-light ml-2" onClick={() => {
                                                 let subtasks = [...values.subtasks];
@@ -437,7 +475,7 @@ class OnboardMSTaskForm extends Component {
                                             </label>
 
                                             <div className='d-flex mb-2' onChange={(e) => {
-                                                this.onChangeSubtaskAssign(e, index);
+                                                this.onChangeSubtaskAssign(e, index, setFieldValue, setFieldTouched);
                                                 setFieldValue(`subtasks[${index}].assign`, e.target.value);
                                             }}>
                                                 {/* <Field className='mr-1' type="radio" value="1" name={`subtasks[${index}].assign`} /> Everyone */}
@@ -479,6 +517,9 @@ class OnboardMSTaskForm extends Component {
                                                             setFieldValue={setFieldValue}
                                                             defaultValue={values.subtaskEmpId}
                                                         />
+                                                         <ErrorMessage name={`subtasks[${index}].employeeId`}>
+                                                            {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                        </ErrorMessage>
                                                     </FormGroup>
                                                 </div>
                                             }
@@ -514,13 +555,13 @@ class OnboardMSTaskForm extends Component {
                                         {subtask.dueOn && subtask.dueOn !== '3' && (
                                             <FormGroup>
                                                 <label>Enter number of days<span style={{ color: "red" }}>*</span></label>
-                                                <Field name={`subtasks[${index}].numberofDays`} type="number" className="form-control" required />
+                                                <Field name={`subtasks[${index}].numberofDays`} type="number" className="form-control" />
                                                 <ErrorMessage style={{ color: 'red' }} name={`subtasks[${index}].numberofDays`} component="div" />
                                             </FormGroup>
                                         )}
                                     </div>
                                 ))}
-                                {!this.state.task.id > 0 && <span onClick={() => {
+                                {!this.state.task.id > 0 && active && <span onClick={() => {
                                     let subtasks = values.subtasks || [];
                                     subtasks.push({ id: 0, name: '', active: true, assign: '', dueOn: '', numberofDays: '' });
                                     setFieldValue("subtasks", subtasks);

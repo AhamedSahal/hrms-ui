@@ -243,7 +243,11 @@ export default class LeaveApproval extends Component {
       {
         title: 'Leave',
         dataIndex: 'leaveType.name',
-        sorter: true,
+        sorter: (a, b) => {
+          const nameA = a.leaveType?.name || '';
+          const nameB = b.leaveType?.name || '';
+          return nameA.localeCompare(nameB);
+        },
         render: (text, record) => {
           return <>
             <div>{record.leaveType?.name}</div>
@@ -262,7 +266,6 @@ export default class LeaveApproval extends Component {
           </div>
         ),
         dataIndex: 'startDate',
-        sorter: true,
         render: (text, record) => {
           return <>
             <div>{getReadableDate(record.startDate)} {this.getStyle(record.startDateDayType)}</div>
@@ -281,7 +284,6 @@ export default class LeaveApproval extends Component {
           </div>
         ),
         dataIndex: 'endDate',
-        sorter: true,
         render: (text, record) => {
           return <>
             <div>{getReadableDate(record.endDate)}  {this.getStyle(record.endDateDayType)}</div>
@@ -291,7 +293,6 @@ export default class LeaveApproval extends Component {
       {
         title: 'Reason',
         dataIndex: 'leaveReason',
-        sorter: true,
         render: (text, record) => {
           return <>
             <div>{record.leaveReason}</div>
@@ -309,7 +310,6 @@ export default class LeaveApproval extends Component {
       },
       {
         title: 'Approved on',
-        sorter: true,
         render: (text, record) => {
           return <>
             <div>{text.approvedOn != null?toLocalDateTime(text.approvedOn):"-"}</div>
@@ -319,7 +319,6 @@ export default class LeaveApproval extends Component {
       {
         title: 'Status',
         dataIndex: 'status',
-        sorter: true,
         render: (text, record) => {
           return <>
             <div>{record.status}</div>

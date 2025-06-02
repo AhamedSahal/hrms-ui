@@ -15,9 +15,15 @@ import LanguageDropdown from '../ModuleSetup/Dropdown/LanguageDropdown';
 import { getPasswordPolicy, getTitle } from '../../utility';
 import PasswordField from '../../initialpage/PasswordField';
 import BranchDropdown from '../ModuleSetup/Dropdown/BranchDropdown';
+import {toDateWithGMT} from '../../utility';
+import { useNavigate } from 'react-router-dom';
 
+export default function CreateEmployeeFormWrapper(props) {
+    const navigate = useNavigate();
+    return <CreateEmployeeForm {...props} navigate={navigate} />;
+}
 
-export default class CreateEmployeeForm extends Component {
+export class CreateEmployeeForm extends Component {
     constructor(props) {
         super(props)
 
@@ -83,7 +89,7 @@ export default class CreateEmployeeForm extends Component {
         data.firstName = capitalizeFirstLetter(data.firstName);
         data.lastName = capitalizeFirstLetter(data.lastName);
 
-        data["doj"] = new Date(data["doj"]);
+        data["doj"] = toDateWithGMT(data["doj"]);
         data["orgSetupId"] = data["orgSetup"]["id"];
         action.setSubmitting(true);
         saveEmployee(data).then(res => {
@@ -101,7 +107,7 @@ export default class CreateEmployeeForm extends Component {
         })
     }
     redirectToList = () => {
-        this.props.history.goBack();
+        this.props.navigate(-1); // Navigate back to the previous page
     }
     handlePasswordChange = (value,setFieldValue) => {
         console.log(value)

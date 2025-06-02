@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { PERMISSION_LEVEL, STATUS } from '../../../Constant/enum';
-import { getPermission, getRoleId, getUserType, verifyEditPermission } from '../../../utility';
+import { getPermission, getRoleId, getUserType, verifyEditPermission,toDateWithGMT } from '../../../utility';
 import EnumDropdown from '../../ModuleSetup/Dropdown/EnumDropdown';
 import { getStatusInformation, updateStatusInformation } from './service';
 
@@ -38,7 +38,7 @@ export default class StatusDetailEmployeeForm extends Component {
     }
     save = (data, action) => {
         if (data["lwd"] && data["lwd"].length > 0)
-            data["lwd"] = new Date(data["lwd"]);
+            data["lwd"] = toDateWithGMT(data["lwd"]);
         action.setSubmitting(true);
         updateStatusInformation(data).then(res => {
             if (res.status == "OK") {

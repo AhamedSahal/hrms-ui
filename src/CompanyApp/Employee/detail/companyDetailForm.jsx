@@ -105,8 +105,8 @@ export default class CompanyDetailEmployeeForm extends Component {
     }
 
     save = (data, action) => {
-        data["doj"] = new Date(`${data["doj"]} GMT`);
-        data["confirmationDate"] = new Date(`${data["confirmationDate"]} GMT`);
+        data["doj"] = toDateWithGMT(data["doj"]);
+        data["confirmationDate"] = toDateWithGMT(data["confirmationDate"]);
         
         try {
             data["jobTitleId"] = data["jobTitle"]["id"];
@@ -198,21 +198,29 @@ export default class CompanyDetailEmployeeForm extends Component {
                                 </li>
                                 <li>
                                     <div className="title">Date of Joining</div>
-                                    <div className="text">{getReadableDate (company.doj) ?? "-"}</div>
+                                    <div className="text">
+                                        {getReadableDate(company.doj) || "-"}
+                                    </div>
                                 </li>
                                 <li>
                                     <div className="title">Confirmation Date</div>
-                                    <div className="text">{getReadableDate (company.confirmationDate) ?? "-"}</div>
+                                    <div className="text">
+                                        {getReadableDate(company.confirmationDate) || "-"}
+                                    </div>
                                 </li>
 
                                 <li>
                                     <div className="title">Employment Status</div>
-                                    <div className="text">{company.employmentStatus?.name ?? "-"}</div>
+                                    <div className="text">
+                                        {company.employmentStatus?.name ?? "-"}
+                                    </div>
                                 </li>
 
                                 <li>
                                     <div className="title">Probation Period</div>
-                                    <div className="text">{company.probationPeriod ?? "-"} Days</div>
+                                    <div className="text">
+                                        {company.probationPeriod ?? "-"} Days
+                                    </div>
                                 </li>
                                 <li>
                         

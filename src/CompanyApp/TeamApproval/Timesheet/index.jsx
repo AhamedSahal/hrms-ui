@@ -66,14 +66,18 @@ export default class TimesheetApproval extends Component {
       }
     })
   }
-  onTableDataChange = (d, filter, sorter) => {
+  onTableDataChange = (pagination, filters, sorter) => {
+    const { current, pageSize } = pagination;
+    const sortField = sorter.field;
+    const sortOrder = sorter.order === 'ascend' ? 'asc' : 'desc';
+
     this.setState({
-      page: d.current - 1,
-      size: d.pageSize,
-      sort: sorter && sorter.field ? `${sorter.field},${sorter.order == 'ascend' ? 'asc' : 'desc'}` : this.state.sort
+      page: current - 1,
+      size: pageSize,
+      sort: sortField ? `${sortField},${sortOrder}` : this.state.sort,
     }, () => {
       this.fetchList();
-    })
+    });
   }
   updateList = (timesheetObj) => {
     let { data } = this.state;
@@ -221,7 +225,7 @@ export default class TimesheetApproval extends Component {
       {
         title: 'Date',
         dataIndex: 'date',
-        sorter: true
+        sorter: (a, b) => new Date(a.date) - new Date(b.date),
       },
       {
         title: 'Project',
@@ -247,7 +251,7 @@ export default class TimesheetApproval extends Component {
       {
         title: 'Status',
         dataIndex: 'approvalStatus',
-        sorter: true,
+        sorter: false,
       },
       {
         title: 'Description',

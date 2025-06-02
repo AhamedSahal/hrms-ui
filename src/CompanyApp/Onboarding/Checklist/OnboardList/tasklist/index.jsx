@@ -1,6 +1,6 @@
 import { Checkbox, Empty, Popover, Progress, Avatar, Slider, Table, Tooltip } from 'antd';
 import React, { Component } from 'react';
-import { Anchor, Button, Modal, ProgressBar } from 'react-bootstrap';
+import { Button, Modal, ProgressBar, Anchor } from 'react-bootstrap';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import { getReadableDate, getTitle, getUserType, verifyApprovalPermission, verifyOrgLevelEditPermission, verifyOrgLevelViewPermission, verifySelfViewPermission, verifyViewPermissionForTeam, convertToUserTimeZone } from '../../../../../utility';
@@ -70,7 +70,6 @@ export default class OnboardTasklist extends Component {
         });
         getDepartmentLists().then(res => {
             if (res.status === "OK") {
-                console.log("department:", res.data);
                 this.setState({
                     department: res.data,
                 });
@@ -87,7 +86,6 @@ export default class OnboardTasklist extends Component {
                 // for assing
                 if (res.data.length > 0) {
                     // let data = res.data;
-                    console.log("data task:", res.data);
                     let data = res.data.map((res) => {
                         let assignIds = res.assignInfo ? res.assignInfo.split(',').map(Number) : [];
 
@@ -109,7 +107,6 @@ export default class OnboardTasklist extends Component {
                             return { ...res, employeeId: assignIds };
                         }
                     })
-                    console.log("tasks datassss", data);
                     this.setState({
                         taskData: data,
 
@@ -152,7 +149,6 @@ export default class OnboardTasklist extends Component {
                             return { ...res, employeeId: assignIds };
                         }
                     })
-                    console.log("sub datasssssssss", data)
                     this.setState({
                         subTasks: data,
 
@@ -217,9 +213,11 @@ export default class OnboardTasklist extends Component {
                             this.setState({
 
                                 taskData: this.state.taskData.map(task => ({ ...task, progress: 100 })) // Set all task progress to 100
+                            }, () => {
+                                this.fetchData();
                             });
-                            this.fetchList();
-                            window.location.reload();
+
+                            // window.location.reload();
 
                         } else {
 
@@ -236,12 +234,16 @@ export default class OnboardTasklist extends Component {
                                 })
 
                             }
-                            this.setState({
+                            this.setState(
+                                {
+                                    taskData: this.state.taskData.map(task => ({ ...task, progress: 0 })) // Reset all task progress to 0
+                                },
+                                () => {
+                                    this.fetchData();
+                                }
+                            );
 
-                                taskData: this.state.taskData.map(task => ({ ...task, progress: 0 })) // Reset all task progress to 0
-                            });
-                            this.fetchList();
-                            window.location.reload();
+                            // window.location.reload();
                         }
                     },
                 }
@@ -256,7 +258,7 @@ export default class OnboardTasklist extends Component {
                 if (res.status == "OK") {
                     toast.success(res.message);
 
-                    window.location.reload();
+                    this.fetchData();
                 } else {
                     toast.error(res.message);
                 }
@@ -272,15 +274,18 @@ export default class OnboardTasklist extends Component {
             updateSubTaskStatus(subTaskId, completed).then(res => {
                 if (res.status == "OK") {
                     toast.success(res.message);
-
-                    window.location.reload();
+                    this.fetchSubTask(taskId);
+                    this.fetchData()
+                    //  window.location.reload();
                 } else {
                     toast.error(res.message);
                 }
+
+
             })
 
 
-        });
+        },);
     };
 
     updateTaskProgress = () => {
@@ -520,22 +525,14 @@ export default class OnboardTasklist extends Component {
                                                         this.setState({ editable: true, historyId: item.id, historyStatus: true })
                                                     }}><i className="fa fa-edit"></i></Anchor> : "-"}</td>
                                                     <td style={{ textAlign: 'center' }}>{getReadableDate(item.completedDate)}</td>
-
-                                                    <td>
-                                                        <div className="onboardList_progress-bar">
-                                                            <div className="goal_progress-fill" style={{
-                                                                backgroundColor: getColorByAchievement(item?.subtaskCount == 0 && item.completedDate != null ? 100 : item.subtaskCompletedCount > 0 ? item.subtaskCompletedCount / item.subtaskCount * 100 : 0),
-                                                                width: `${item?.subtaskCount == 0 && item.completedDate != null ? 100 : item.subtaskCompletedCount > 0 ? item.subtaskCompletedCount / item.subtaskCount * 100 : 0}%`
-                                                            }}></div>
-                                                        </div>
-                                                    </td>
-                                                    {/* <div >
+                                                    <td style={{ width: '235px' }}>
+                                                        <div >
                                                             <Slider
-                                                                value={item?.subtaskCount == 0 && item.completedDate != null?100: item.subtaskCompletedCount > 0?item.subtaskCompletedCount/item.subtaskCount*100:0}
+                                                                value={item?.subtaskCount == 0 && item.completedDate != null ? 100 : item.subtaskCompletedCount > 0 ? item.subtaskCompletedCount / item.subtaskCount * 100 : 0}
                                                                 tooltip={{ open: false }}
-                                                                trackStyle={{ borderRadius: '20px', backgroundColor: getColorByAchievement(item?.subtaskCount == 0 && item.completedDate != null?100: item.subtaskCompletedCount > 0?item.subtaskCompletedCount/item.subtaskCount*100:0), height: 8 }}
+                                                                trackStyle={{ borderRadius: '20px', backgroundColor: getColorByAchievement(item?.subtaskCount == 0 && item.completedDate != null ? 100 : item.subtaskCompletedCount > 0 ? item.subtaskCompletedCount / item.subtaskCount * 100 : 0), height: 8 }}
                                                                 handleStyle={{
-                                                                    borderColor: getColorByAchievement(item?.subtaskCount == 0 && item.completedDate != null?100: item.subtaskCompletedCount > 0?item.subtaskCompletedCount/item.subtaskCount*100:0),
+                                                                    borderColor: getColorByAchievement(item?.subtaskCount == 0 && item.completedDate != null ? 100 : item.subtaskCompletedCount > 0 ? item.subtaskCompletedCount / item.subtaskCount * 100 : 0),
                                                                     backgroundColor: "#fff",
                                                                     borderWidth: 2,
                                                                     width: 20,
@@ -545,10 +542,11 @@ export default class OnboardTasklist extends Component {
                                                                 railStyle={{ backgroundColor: "#f0f0f0", height: 8 }}
                                                             />
                                                             <div className='m-1 text-right'>
-                                                                <span className="last-updated">{item?.subtaskCount == 0 && item.completedDate != null?100: item.subtaskCompletedCount > 0?item.subtaskCompletedCount/item.subtaskCount*100:0}%</span>
+                                                                <span className="last-updated">{item?.subtaskCount == 0 && item.completedDate != null ? 100 : item.subtaskCompletedCount > 0 ? item.subtaskCompletedCount / item.subtaskCount * 100 : 0}%</span>
                                                             </div>
 
-                                                        </div> */}
+                                                        </div>
+                                                    </td>
                                                     {/* <td style={{ textAlign: 'center' }}><EmployeeProfilePhoto className='multiSelectImgSize' id={982}></EmployeeProfilePhoto></td> */}
                                                     {item.employeeId ? <td style={{ textAlign: 'center' }}>
                                                         <Avatar.Group
@@ -590,7 +588,7 @@ export default class OnboardTasklist extends Component {
                                                                             <tbody style={{ height: '40px' }}>
                                                                                 <td style={{ textAlign: 'center', width: '40px' }}>
                                                                                     <Checkbox
-                                                                                        onChange={() => this.handleSubTaskSelect(sub.id, sub.completedDate == null ? true : false, item.id)}
+                                                                                        onChange={() => this.handleSubTaskSelect(sub.id, sub.completedDate == null ? true : false, item.taskId)}
                                                                                         checked={sub.completedDate != null}
                                                                                     />
                                                                                 </td>

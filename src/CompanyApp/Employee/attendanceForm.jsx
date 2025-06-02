@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
-import { getUserType, toUTCCalendarTime,verifyApprovalPermission, getPermission,convertToUTC } from '../../utility';
+import { getUserType, toUTCCalendarTime,verifyApprovalPermission, getPermission,convertToUTC, toDateWithGMT } from '../../utility';
 import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown';
 import { saveAttendance } from './service';
 import { attendanceByAdminSchema } from './validation';
@@ -22,9 +22,9 @@ export default class AttendanceForm extends Component {
         }
     }
     save = (data, action) => {
-        data["date"] = new Date(`${data["date"]}Z`); // UTC
-        data["inTiming"] = convertToUTC(data["inTiming"]);
-        data["outTiming"] = convertToUTC(data["outTiming"]);
+        data["date"] = new Date(toDateWithGMT(data["date"])); 
+        data["inTiming"] = toDateWithGMT(convertToUTC(data["inTiming"]));
+        data["outTiming"] = toDateWithGMT(convertToUTC(data["outTiming"]));
         action.setSubmitting(true);
         saveAttendance(data).then(res => {
             if (res.status == "OK") {

@@ -14,7 +14,7 @@ import AssetAction from './AssetAction';
 import AssetHistory from './AssetHistory';
 import AssetActive from './AssetActive';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
-import { getReadableDate,getCustomizedDate,getTitle,getUserType,verifyViewPermission } from '../../utility';
+import { getReadableDate,getCustomizedDate,getTitle,getUserType,verifyViewPermission, verifyEditPermission} from '../../utility';
 import {  getAssetList,updateStatus } from './service';  
 import TableDropDown from '../../MainPage/tableDropDown';
 const { Header, Body, Footer, Dialog } = Modal;
@@ -211,6 +211,7 @@ export default class AssetAvailable extends Component{
         },
        
       ]
+
         return(
         <> 
           <div className="content container-fluid">
@@ -240,7 +241,7 @@ export default class AssetAvailable extends Component{
                       q: e.target.value
                     })
                   }} type="text" className="form-control floating" />
-                  <label className="focus-label">Search by Name / Category / Serial Number / Employee Name / Employee Number </label>
+                  <label className="focus-label">Search by Name / Category / Location  </label>
                 </div>
               </div>
               <div className="col-md-3">

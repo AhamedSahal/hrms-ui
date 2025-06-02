@@ -5,8 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import Select from "react-select";
 import { getBranchLists, getDepartmentLists } from '../../../Performance/ReviewCycle/CycleForms/service';
-import { getJobTitles } from './service';
-
+import { getJobTitles, saveMSChecklist } from './service';
+import { CheckListSchema } from './validation';
 
 export default class OnboardMSchecklistForm extends Component {
     constructor(props) {
@@ -21,7 +21,11 @@ export default class OnboardMSchecklistForm extends Component {
                 id: 0,
                 name: "",
                 description: "",
+                assign: "",
                 active: true,
+                departments: [],
+                branches: [],
+                jobtitle: [],
             }
 
         }
@@ -135,30 +139,42 @@ export default class OnboardMSchecklistForm extends Component {
             options.push(...this.state.jobtitle);
         }
 
-        const CustomSelect = ({ field, setFieldValue }) => {
-            const { name } = field;
+        const CustomSelect = ({ field, form, options, applicable }) => {
 
-            const handleChange = (data) => {
-                const ids = data.map(option => option.id);
-                if (applicable === '1') {
-                    setFieldValue("departments", [])
-                } else if (applicable === '2') {
-                    setFieldValue("branches", [])
-                }else if (applicable === '3') {
-                    setFieldValue("departments", [])
-                    setFieldValue("branches", [])
-                  }
-
-                setFieldValue(name, data);
+            const handleChange = (selectedOptions) => {
+            if (applicable === '1') {
+                form.setFieldValue("departments", selectedOptions);
+                form.setFieldValue("branches", []);
+                form.setFieldValue("jobtitle", []);
+                form.setFieldTouched("departments", true);
+            } else if (applicable === '2') {
+                form.setFieldValue("branches", selectedOptions);
+                form.setFieldValue("departments", []);
+                form.setFieldValue("jobtitle", []);
+                form.setFieldTouched("branches", true);
+            } else if (applicable === '3') {
+                form.setFieldValue("jobtitle", selectedOptions);
+                form.setFieldValue("departments", []);
+                form.setFieldValue("branches", []);
+                form.setFieldTouched("jobtitle", true);
+            }
             };
+
+
+            const value =
+                applicable === '1' ? form.values.departments :
+                    applicable === '2' ? form.values.branches :
+                        applicable === '3' ? form.values.jobtitle :
+                            [];
+
             return (
                 <Select
-                    {...field}
+                    value={value}
                     onChange={handleChange}
                     options={options}
                     isMulti
-                    getOptionValue={(options) => options.id}
-                    getOptionLabel={(options) => options.name}
+                    getOptionValue={(option) => option.id}
+                    getOptionLabel={(option) => option.name}
                 />
             );
         };
@@ -169,6 +185,7 @@ export default class OnboardMSchecklistForm extends Component {
                     enableReinitialize={true}
                     initialValues={this.state.checklist}
                     onSubmit={this.save}
+                    validationSchema={CheckListSchema}
                 >
                     {({
                         values,
@@ -179,7 +196,8 @@ export default class OnboardMSchecklistForm extends Component {
                         handleSubmit,
                         isSubmitting,
                         setFieldValue,
-                        setSubmitting
+                        setSubmitting,
+                        validateForm
                         /* and other goodies */
                     }) => (
                         <Form autoComplete='off'>
@@ -187,7 +205,10 @@ export default class OnboardMSchecklistForm extends Component {
                                 <label>Name
                                     <span style={{ color: "red" }}>*</span>
                                 </label>
-                                <Field name="name" className="form-control" required></Field>
+                                <Field name="name" className="form-control" ></Field>
+                                <ErrorMessage name="name">
+                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                </ErrorMessage>
 
                             </FormGroup>
 
@@ -195,7 +216,10 @@ export default class OnboardMSchecklistForm extends Component {
                                 <label>Description
                                     <span style={{ color: "red" }}>*</span>
                                 </label>
-                                <Field name="description" className="form-control" required></Field>
+                                <Field name="description" className="form-control"></Field>
+                                <ErrorMessage name="description">
+                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                </ErrorMessage>
 
                             </FormGroup>
                             <FormGroup>
@@ -206,6 +230,7 @@ export default class OnboardMSchecklistForm extends Component {
                                 <div className='d-flex mb-2' onChange={(e) => {
                                     this.onChangeApplicable(e);
                                     setFieldValue("assign", e.target.value);
+                                    setTimeout(() => validateForm(), 0);
                                 }}>
                                     <Field className='mr-1' type="radio" value="0" name="assign" /> Everyone
                                     <Field className='ml-4 mr-1' type="radio" value="1" name="assign" /> Department
@@ -222,13 +247,16 @@ export default class OnboardMSchecklistForm extends Component {
                                             <label>Select Department
                                                 <span style={{ color: "red" }}>*</span>
                                             </label>
-                                            <Field
-                                                name="departments"
-                                                component={CustomSelect}
-                                                isMulti
-                                                options={options}
-                                                setFieldValue={setFieldValue}
-                                            />
+                                            <Field name="departments">
+                                                {({ field, form }) => (
+                                                    <CustomSelect
+                                                        field={field}
+                                                        form={form}
+                                                        options={options}
+                                                        applicable={applicable}
+                                                    />
+                                                )}
+                                            </Field>
                                             <ErrorMessage name="departments">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
@@ -239,14 +267,18 @@ export default class OnboardMSchecklistForm extends Component {
                                 {applicable === '2' &&
                                     <div className='pl-0 col-md-12'>
                                         <FormGroup >
-                                            <label>Select Location  <span style={{ color: "red" }}>*</span></label>
-                                            <Field
-                                                name="branches"
-                                                component={CustomSelect}
-                                                isMulti
-                                                options={options}
-                                                setFieldValue={setFieldValue}
-                                            />
+                                            <label>Select Location<span style={{ color: "red" }}>*</span></label>
+
+                                            <Field name="branches">
+                                                {({ field, form }) => (
+                                                    <CustomSelect
+                                                        field={field}
+                                                        form={form}
+                                                        options={options}
+                                                        applicable={applicable}
+                                                    />
+                                                )}
+                                            </Field>
                                             <ErrorMessage name="branches">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
@@ -256,14 +288,17 @@ export default class OnboardMSchecklistForm extends Component {
                                 {applicable === '3' &&
                                     <div className='pl-0 col-md-12'>
                                         <FormGroup >
-                                            <label>Select Job Title  <span style={{ color: "red" }}>*</span></label>
-                                            <Field
-                                                name="jobtitle"
-                                                component={CustomSelect}
-                                                isMulti
-                                                options={options}
-                                                setFieldValue={setFieldValue}
-                                            />
+                                            <label>Select Job Title<span style={{ color: "red" }}>*</span></label>
+                                            <Field name="jobtitle">
+                                                {({ field, form }) => (
+                                                    <CustomSelect
+                                                        field={field}
+                                                        form={form}
+                                                        options={options}
+                                                        applicable={applicable}
+                                                    />
+                                                )}
+                                            </Field>
                                             <ErrorMessage name="jobtitle">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
@@ -273,19 +308,19 @@ export default class OnboardMSchecklistForm extends Component {
 
                             </FormGroup>
                             <FormGroup>
-                                <div type="checkbox" name="active" onClick={e => {
+                                <div type="checkbox" name="active"  >
+                                    <label>Is Active</label><br />
+                                    <i className={`fa fa-2x ${this.state.checklist
+                                        && this.state.checklist.active
+                                        ? 'fa-toggle-on text-success' :
+                                        'fa fa-toggle-off text-danger'}`} onClick={e => {
                                     let { checklist } = this.state;
                                     checklist.active = !checklist.active;
                                     setFieldValue("active", checklist.active);
                                     this.setState({
                                         checklist
                                     });
-                                }} >
-                                    <label>Is Active</label><br />
-                                    <i className={`fa fa-2x ${this.state.checklist
-                                        && this.state.checklist.active
-                                        ? 'fa-toggle-on text-success' :
-                                        'fa fa-toggle-off text-danger'}`}></i>
+                                }}></i>
                                 </div>
                             </FormGroup>
                             <input type="submit" className="btn btn-primary" value={this.state.checklist.id > 0 ? "Update" : "Save"} />

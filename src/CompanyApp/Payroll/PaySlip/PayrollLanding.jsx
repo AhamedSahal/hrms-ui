@@ -7,7 +7,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField, Tooltip } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Switch, TextField, Tooltip } from '@mui/material';
 import { VscChecklist, VscCheck } from "react-icons/vsc";
 import { MdRemoveDone, MdTableView, MdPlaylistRemove, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { TbListSearch } from "react-icons/tb";
@@ -28,8 +28,9 @@ import MyPayslipCard from '../empPaySlip';
 import BranchDropdown from '../../ModuleSetup/Dropdown/BranchDropdown';
 import PayrollTable from './payrollTable';
 import { getRegularizationCount } from '../../Employee/regularization/service';
-import EntityDropdown from '../../ModuleSetup/Dropdown/EntityDropdown'; 
+import EntityDropdown from '../../ModuleSetup/Dropdown/EntityDropdown';
 import { getOrgSettings } from '../../ModuleSetup/OrgSetup/service';
+import { getCurrentUserEntity } from "../../Organisationchart/Entity/service";
 
 
 const { Header, Body, Footer, Dialog } = Modal;
@@ -82,17 +83,37 @@ export default class PayrollLanding extends Component {
             regularizationValidation: false,
             entityId: 0,
             orgsetup: "",
-            entityValidationMonth: ""
+            entityValidationMonth: "",
+            entityName: ""
         };
     }
     componentDidMount() {
         this.fetchList();
         getOrgSettings().then(res => {
-                if (res.status == "OK") {
+            if (res.status == "OK") {
                 this.setState({ orgsetup: res.data })
-                }
-            })
+            }
+        })
+        this.getEntityInfo();
+
+
     }
+
+    getEntityInfo = () => {
+        return new Promise((resolve, reject) => {
+            getCurrentUserEntity(this.state.entityId).then((res) => {
+                this.setState({ entityName: res.data.name }, () => {
+                    resolve();
+                });
+            }).catch((err) => {
+                console.error("Error fetching entity info:", err);
+                reject(err);
+            });
+        });
+    };
+
+
+
     fetchList = () => {
         let salaryMonth = this.getSalaryMonth();
         (verifyViewPermission("Payroll Payslip") || verifyApprovalPermission("Payroll Run Payroll")) && getPayslips(salaryMonth, this.state.q, this.state.page, this.state.size, this.state.sort,0,0,0,0).then(res => {
@@ -183,20 +204,21 @@ export default class PayrollLanding extends Component {
     // regularization popup message
     regularizationPopupMessage = () => {
         if (this.state.regularizationValidation) {
-          confirmAlert({
-            title: `Attendance regularization is not regularized `,
-            message: 'Are you sure, you want to run the payroll?',
-            buttons: [
-              {
-                label: 'Yes',
-                onClick: () => {this.generate()
-                    return null
-                }
-                
-              },
-              {
-                label: 'No',
-                onClick: () => { }
+            confirmAlert({
+                title: `Attendance regularization is not regularized `,
+                message: 'Are you sure, you want to run the payroll?',
+                buttons: [
+                    {
+                        label: 'Yes',
+                        onClick: () => {
+                            this.generate()
+                            return null
+                        }
+
+                    },
+                    {
+                        label: 'No',
+                        onClick: () => { }
 
 
 
@@ -649,19 +671,20 @@ export default class PayrollLanding extends Component {
             title: `Close Payroll?`,
             message: 'Are you sure, you want to close the payroll?',
             buttons: [
-              {
-                label: 'Yes',
-                className: "btn btn-success",
-                onClick: () => {this.closePayroll(month)
-                    return null
+                {
+                    label: 'Yes',
+                    className: "btn btn-success",
+                    onClick: () => {
+                        this.closePayroll(month)
+                        return null
+                    }
+
+                },
+                {
+                    label: 'No',
+                    className: "btn btn-danger",
+                    onClick: () => { }
                 }
-                
-              },
-              {
-                label: 'No',
-                className: "btn btn-danger",
-                onClick: () => { }
-              }
             ]
           }); 
       }
@@ -1085,43 +1108,56 @@ export default class PayrollLanding extends Component {
                                                                     return (<tr>
                                                                         <td>{Months[m]}</td>
                                                                         <td>
-                                                                            {!isClosed && (<Anchor className='badge bg-inverse-primary' onClick={() => {
+                                                                            {!isClosed && (<Anchor className='badge bg-inverse-primary' onClick={e => {
                                                                                 this.closePayrollPopupMessage(m)
                                                                             }}>Open</Anchor>)}
                                                                             {isClosed && <strong className='badge bg-inverse-success'>Close</strong>}
                                                                         </td>
-                                                                        {(payrollType === "UAE" || payrollType === "UAE02") && isClosed &&  (orgsetup.entity == false) && (
+                                                                        {(payrollType === "UAE" || payrollType === "UAE02") && isClosed && (orgsetup.entity == false) && (
                                                                             <td>
-                                                                            <button className='btn btn-info mr-5' onClick={() => downloadPayslipSif(yearMonth,this.state.entityId)}>
-                                                                                <i className="fa fa-download mr-2"></i>Download SIF File
-                                                                            </button>
-                                                                            <button className='btn btn-success' onClick={() => downloadPayslipCsv(yearMonth,this.state.entityId)}>
-                                                                                <i className="fa fa-download mr-2"></i>Download CSV File
-                                                                            </button>
+
+                                                                                <button className='btn btn-info mr-5' onClick={async () => {
+                                                                                    await this.getEntityInfo()
+                                                                                    downloadPayslipSif(yearMonth, this.state.entityId, this.state.entityName, Months[m])
+                                                                                }}>
+                                                                                    <i className="fa fa-download mr-2"></i>Download SIF File
+                                                                                </button>
+                                                                                <button className='btn btn-success' onClick={async () => {
+                                                                                    await this.getEntityInfo()
+                                                                                    downloadPayslipCsv(yearMonth, this.state.entityId, this.state.entityName, Months[m])
+                                                                                }}>
+                                                                                    <i className="fa fa-download mr-2"></i>Download CSV File
+                                                                                </button>
                                                                             </td>
-                                                                 
+
                                                                         )}
-                                                                          {(payrollType === "UAE" || payrollType === "UAE02") && isClosed &&  (orgsetup.entity ) && (<td>
-                                                                                
-                                                                                <tr className="pedo">
+                                                                        {(payrollType === "UAE" || payrollType === "UAE02") && isClosed && (orgsetup.entity) && (<td>
+
+                                                                            <tr className="pedo">
                                                                                 <td className='col-md-6'>
-                                                                                <EntityDropdown defaultValue={this.state.entityValidationMonth == Months[m]?this.state.entityId:0} onChange={e => {
-                                                                                    this.setState({
-                                                                                        entityId: e.target.value,
-                                                                                        entityValidationMonth: Months[m]
-                                                                                    })  
-                                                                                     
-                                                                                }}></EntityDropdown></td>
-                                                                                
-                                                                                
-                                                                                {(this.state.entityId > 0) && this.state.entityValidationMonth == Months[m] && <> <td className='col-md-3'> <button className='btn btn-info mr-5' onClick={() => downloadPayslipSif(yearMonth,this.state.entityId)}>
+                                                                                    <EntityDropdown defaultValue={this.state.entityValidationMonth == Months[m] ? this.state.entityId : 0} onChange={e => {
+                                                                                        this.setState({
+                                                                                            entityId: e.target.value,
+                                                                                            entityValidationMonth: Months[m]
+                                                                                        })
+                                                                                    }}></EntityDropdown></td>
+
+
+                                                                                {(this.state.entityId > 0) && this.state.entityValidationMonth == Months[m] && <> <td className='col-md-3'> 
+                                                                                    <button className='btn btn-info mr-5' onClick={async () => {
+                                                                                            await this.getEntityInfo();
+                                                                                            downloadPayslipSif(yearMonth, this.state.entityId, this.state.entityName, Months[m])
+                                                                                        }}>
                                                                                     <i className="fa fa-download mr-2"></i>Download SIF File
                                                                                 </button></td><td className='col-md-3'>
-                                                                                <button className='btn btn-success' onClick={() => downloadPayslipCsv(yearMonth,this.state.entityId)}>
-                                                                                    <i className="fa fa-download mr-2"></i>Download CSV File
-                                                                                </button></td></>}
-                                                                                </tr>
-                                                                            </td>)}
+                                                                                        <button className='btn btn-success' onClick={async () => {
+                                                                                            await this.getEntityInfo();
+                                                                                            downloadPayslipCsv(yearMonth, this.state.entityId, this.state.entityName, Months[m])
+                                                                                        }}>
+                                                                                            <i className="fa fa-download mr-2"></i>Download CSV File
+                                                                                        </button></td></>}
+                                                                            </tr>
+                                                                        </td>)}
                                                                     </tr>
                                                                     );
                                                                 })}

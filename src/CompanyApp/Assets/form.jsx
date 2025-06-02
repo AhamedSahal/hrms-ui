@@ -9,7 +9,7 @@ import AssetSetupDropDown from '../ModuleSetup/Dropdown/AssetSetupDropDown';
 import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown';
 import { verifyEditPermission, verifyViewPermission } from '../../utility';
 import { AssetSchema } from './validation';
-
+import { Tooltip } from 'antd';
 
 export default class Assets extends Component {
     constructor(props) {
@@ -144,7 +144,7 @@ export default class Assets extends Component {
                                             setFieldValue("assetId", e.currentTarget.value);
                                         }}></AssetSetupDropDown>}}></Field> 
                                         <ErrorMessage name="assetId">
-                                            {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                            {msg => <div style={{ color: 'red', marginTop: '5px' }}>{msg}</div>}
                                         </ErrorMessage>
                                     </FormGroup>
                                 </div>
@@ -152,10 +152,20 @@ export default class Assets extends Component {
                                 <div className="row">
                                     <div className="col-md-6">
                                     <FormGroup>
-                                        <label>Serial Number<span style={{ color: "red" }}>*</span></label>
+                                       <div className="d-flex align-items-center">
+                                        <label>
+                                            Serial Number <span style={{ color: "red" }}>*</span>
+                                        </label>
+                                        <Tooltip title="Serial number is only allowed to contain (A-Z, a-z, 0-9, - _ . /)">
+                                            <i
+                                                className="fa fa-info-circle"
+                                                style={{ marginLeft: '8px',marginBottom:'5px', cursor: 'pointer' }}
+                                            ></i>
+                                        </Tooltip>
+                                    </div>
                                         <Field name="serialno" className="form-control"></Field>
                                         <ErrorMessage name="serialno">
-                                            {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                            {msg => <div style={{ color: 'red', marginTop: '5px' }}>{msg}</div>}
                                         </ErrorMessage>
                                     </FormGroup>
                                     </div>
@@ -256,7 +266,7 @@ export default class Assets extends Component {
                                         <label>Assign Date<span style={{ color: "red" }}></span></label>
                                         <Field name="assignDate" type="date"  className="form-control" ></Field>
                                         <ErrorMessage name="assignDate">
-                                            {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                            {msg => <div style={{ color: 'red', marginTop: '5px' }}>{msg}</div>}
                                         </ErrorMessage>
                                     </FormGroup>
                                     </div>

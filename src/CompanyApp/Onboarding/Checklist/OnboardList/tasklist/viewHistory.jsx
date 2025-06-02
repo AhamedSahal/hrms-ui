@@ -35,8 +35,12 @@ export default class TaskAuditHistory extends Component {
                 <div className="GoalAudit-container">
                     
                     <div className="GoalAudit-timeline">
-                       
-                        {this.state.taskData.length > 0 && this.state.taskData.map((audit, index) => {
+                        {(!this.state.taskData || this.state.taskData.length === 0) ? (
+                            <div className="alert alert-warning alert-dismissible fade show" role="alert">
+                                <span>No Records Found</span>
+                            </div>
+                          ) :
+                        (this.state.taskData.map((audit, index) => {
                             const descendingIndex = this.state.taskData.length - index;
                             return (
                                 <div className="GoalAudit-timelineItem" key={index}>                   
@@ -60,7 +64,7 @@ export default class TaskAuditHistory extends Component {
                                     </div>
                                 </div>
                             );
-                        })}
+                        }))}
                     </div>
                 </div>
 

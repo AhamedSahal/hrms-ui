@@ -79,14 +79,14 @@ const SideNavbar = ({ menu: initialMenu }) => {
                                 <div>
                                     {isSubMenuPresent ? (
                                         <div>
-                                            <a onClick={() => { dropDownShow(item.id); handleLinkClick(item); }} style={{ color: 'white', width: '166px' }}
+                                            <a onClick={() => { dropDownShow(item.id); handleLinkClick(item); }} style={{ color: 'white', width: '160px' }}
                                                 className={`${parseInt(showdropId) === item.id ? 'menuBackgroud' : ''} p-2 mr-3 sideNavMenu nav-link`} >
                                                 <em className={menuIcon}></em> <span className='ml-2 '>{item.name}</span>
                                             </a>
                                         </div>
                                     ) : (
                                         <Link to={item.url !== '/' ? `/app/${appUrl}${item.url}` : '/app/main/dashboard'} target={item.target} id='navText' className='text-white'>
-                                            <a onClick={() => dropDownShow(item.id)} style={{ color: 'white', width: '166px' }}
+                                            <a onClick={() => dropDownShow(item.id)} style={{ color: 'white', width: '160px' }}
                                                 className={`${showdropId === item.id ? 'menuBackgroud' : ''} p-2 mr-3 sideNavMenu nav-link`} >
                                                 <em className={menuIcon}></em> <span className='ml-2 '>{item.name}</span>
                                             </a>

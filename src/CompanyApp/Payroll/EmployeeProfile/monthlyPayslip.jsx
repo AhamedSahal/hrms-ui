@@ -25,13 +25,6 @@ export default class MonthlyPayslip extends Component {
     componentDidMount() {
         this.fetchList();
        
-        getDocumentInformation(551).then(res => {
-            if (res.status == "OK") {
-                this.setState({
-                    data: res.data,
-                })
-            }
-        })
     }
 
     fetchList = () => {
@@ -68,7 +61,7 @@ export default class MonthlyPayslip extends Component {
       
         let salaryMonth = `${payslipYear}-${value.month}`
 
-        let payslipNametemp = 'paylip_'+salaryMonth+'_'+this.props.employeeId+'.pdf'
+        let payslipNametemp = 'payslip_'+salaryMonth+'_'+this.props.employeeId+'.pdf'
        getPayslipsPdfView(salaryMonth,this.props.employeeId).then((res) => {
         
         this.setState({pdfUrl: res,payslipName: payslipNametemp})
@@ -93,8 +86,7 @@ export default class MonthlyPayslip extends Component {
             { name: 'Dec',month:'12', value: false }
         ];
        
-        const { selectedMonth, data } = this.state
-        const file = data[1]?.fileName
+        const { selectedMonth } = this.state
         return (
             <div className="EmpPay-home-page">
                 <div className="slipSidebar">

@@ -15,5 +15,5 @@ export const FamilySchema = Yup.object().shape({
         .nullable()
         .matches(/^\+?[0-9]*$/, "Only numbers are allowed, and '+' must be the first character if present.")
         .matches(/^\+?[0-9]{10,15}$/, "Contact number must be between 10 and 15 digits.")
-    
+   
 });  

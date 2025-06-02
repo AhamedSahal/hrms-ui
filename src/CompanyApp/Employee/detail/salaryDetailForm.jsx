@@ -56,12 +56,15 @@ export default class SalaryDetailEmployeeForm extends Component {
         });
     }
     
-    handleCurrency = (id,setFieldValue) => {
-        
-            let data = this.state.CountryList.find(obj => obj.id == id);
-            this.setState({defaultCurrency: data != null?data.countryCode:''})
-            setFieldValue('currency', data != null?data.id:0);
-           
+    handleCurrency = (id, setFieldValue) => {
+        let data = this.state.CountryList.find(obj => obj.id == id);
+        if (data) {
+            this.setState({ defaultCurrency: data.countryCode });
+            setFieldValue('currency', data.id);
+        } else {
+            this.setState({ defaultCurrency: '' });
+            setFieldValue('currency', 0);
+        }
     }
 
     save = (data, action) => {
@@ -83,33 +86,44 @@ export default class SalaryDetailEmployeeForm extends Component {
     fetchType = () => {
         getPayScaleType(this.state.q, this.state.page, this.state.size, this.state.sort).then((res) => {
             if (res.status === 'OK') {
-                this.setState({ payScaleType: res.data[0].payScaleType == "COMPOSITE" ? 0 : res.data[0].payScaleType == "FIXED" ? 1 : null })
+                this.setState({ payScaleType: res.data[0].payScaleType == "COMPOSITE" ? 0 : res.data[0].payScaleType == "FIXED" ? 1 : null });
             }
         });
+
         getCurrencyList().then(res => {
             if (res.status == "OK") {
                 this.setState({
                     CountryList: res.data,
-                })
-                if(this.state.defaultCurrencyId > 0){
-                    let data = this.state.CountryList.find(obj => obj.id == this.state.defaultCurrencyId);
-                    this.setState({defaultCurrency: data.countryCode})
-                    this.setState({defaultCurrencyCode: data.currencyCode})
-                    
-                }
-                else{
-                    
-                    let data = res.data[0]
-                    let employee = this.state.employee
-                    employee.currency = res.data[0].id
-                    this.setState({employee})
-                    this.setState({defaultCurrency: data.countryCode})
-                    this.setState({defaultCurrencyCode: data.currencyCode})
-                 
+                });
+
+                if (this.state.defaultCurrencyId > 0) {
+                    let data = res.data.find(obj => obj.id == this.state.defaultCurrencyId);
+                    if (data) {
+                        this.setState({
+                            defaultCurrency: data.countryCode,
+                            defaultCurrencyCode: data.currencyCode
+                        });
+                    } else {
+                        this.setState({
+                            defaultCurrency: '',
+                            defaultCurrencyCode: ''
+                        });
+                    }
+                } else {
+                    let data = res.data[0];
+                    if (data) {
+                        let employee = this.state.employee;
+                        employee.currency = data.id;
+                        this.setState({
+                            employee,
+                            defaultCurrency: data.countryCode,
+                            defaultCurrencyCode: data.currencyCode
+                        });
+                    }
                 }
             }
-        })                                   
-    }
+        });
+    };
     render() {
         let { editable, payScaleType } = this.state;
         const isEditAllowed = getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION
@@ -206,6 +220,28 @@ export default class SalaryDetailEmployeeForm extends Component {
                                                             }}
                                                         ></Field>
                                                         <ErrorMessage name="salaryCalculationMode">
+                                                            {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                        </ErrorMessage>
+                                                    </FormGroup>
+                                                </div>
+                                                <div className="col-md-4">
+                                                    <FormGroup>
+                                                        <label>End of Service Mode
+                                                            <span style={{ color: "red" }}>*</span>
+                                                        </label>
+                                                        <Field
+                                                            as="select"
+                                                            name="endOfServiceMode"
+                                                            className="form-control"
+                                                            disabled={!editable}
+                                                        >
+                                                            <option value="">Select End of Service Mode</option>
+                                                            <option value="0">Pension</option>
+                                                            <option value="1">Gratuity</option>
+                                                            <option value="2">Both</option>
+                                                            <option value="3">None</option>
+                                                        </Field>
+                                                        <ErrorMessage name="endOfServiceMode">
                                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                                         </ErrorMessage>
                                                     </FormGroup>

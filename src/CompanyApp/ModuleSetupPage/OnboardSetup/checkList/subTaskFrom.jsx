@@ -11,8 +11,13 @@ import EmpMultiSelectDropDown from '../../../ModuleSetup/Dropdown/EmpMultiSelect
 import { getBranchLists, getDepartmentLists, getFunctionLists } from '../../../Performance/ReviewCycle/CycleForms/service';
 
 const subTaskValidationSchema = Yup.object().shape({
-   
-    name: Yup.string().required('Subtask Name is required'),
+    selectedTask: Yup.string().required('Please select Task'),
+    name: Yup.string().required('Subtask Name is required')
+    .max(200, 'Sub Task name should be up to 200 characters.')
+    .matches(
+      /^[a-zA-Z0-9 _.,\-(){}\[\]/']+$/,
+      "Sub Task name contains only letters, numbers, space, _ , . - ( ) { } [ ] / '"
+    ),
     assign: Yup.string().required('Assign To is required'),
     dueOn: Yup.string().required('Due Date is required'),
     // numberofDays: Yup.number().when('dueOn', {
@@ -28,7 +33,7 @@ class OnboardSubTaskForm extends Component {
             function: [],
             department: [],
             branch: [],
-            taskId:this.props?.taskId || 0,
+            taskId: this.props?.taskId || 0,
             assign: this.props.subTask?.assign,
             subTask: this.props.subTask || {
                 id: 0,
@@ -54,9 +59,9 @@ class OnboardSubTaskForm extends Component {
                 }, () => {
                     if (this.props.subTask?.branches != null) {
                         const brancheData = res.data.filter(br => this.props.subTask.branches.split(',').map(Number).includes(br.id));
-                       let {subTask} = this.state;
-                       subTask.branches = brancheData
-                       this.setState({subTask});
+                        let { subTask } = this.state;
+                        subTask.branches = brancheData
+                        this.setState({ subTask });
                     }
 
                 })
@@ -69,9 +74,9 @@ class OnboardSubTaskForm extends Component {
                 }, () => {
                     if (this.props.subTask?.departments != null) {
                         const departmentData = res.data.filter(dept => this.props.subTask.departments.split(',').map(Number).includes(dept.id));
-                        let {subTask} = this.state;
+                        let { subTask } = this.state;
                         subTask.departments = departmentData
-                       this.setState({subTask});
+                        this.setState({ subTask });
                     }
                 })
             }
@@ -101,7 +106,7 @@ class OnboardSubTaskForm extends Component {
         };
 
         if (data.employeeId && data.employeeId.length > 0) {
-           let arr = data.employeeId;
+            let arr = data.employeeId;
             subtask.employeeId = arr.join(", ");
         }
         if (data.departments && data.departments.length > 0) {
@@ -142,7 +147,16 @@ class OnboardSubTaskForm extends Component {
         }
 
         const CustomSelect = ({ field, setFieldValue }) => {
-            const { name } = field;
+            const { name, value } = field;
+
+            let selectedOptions = [];
+
+            if (typeof value === "string") {
+                const ids = value.split(",").map(id => id.trim()).filter(id => id !== "");
+                selectedOptions = options.filter(opt => ids.includes(String(opt.id)));
+            } else if (Array.isArray(value)) {
+                selectedOptions = value;
+            }
 
             const handleChange = (data) => {
                 if (assign === '1') {
@@ -163,6 +177,7 @@ class OnboardSubTaskForm extends Component {
                     isMulti
                     getOptionValue={(options) => options.id}
                     getOptionLabel={(options) => options.name}
+                    value={selectedOptions}
                 />
             );
         };
@@ -187,15 +202,15 @@ class OnboardSubTaskForm extends Component {
                         setSubmitting
                     }) => (
                         <Form autoComplete='off'>
-                        {this.state.subTask.id == 0 &&    <FormGroup className=''>
+                            {this.state.subTask.id == 0 && <FormGroup className=''>
                                 <label htmlFor="selectedTask">Select task<span style={{ color: "red" }}>*</span></label>
-                                <select  name="selectedTask"  className="form-control" onChange={e=> this.setState({  taskId: e.target.value})}>
+                                <select name="selectedTask" className="form-control" onChange={e => this.setState({ taskId: e.target.value })}>
                                     <option value="">Select Task</option>
                                     {this.props.taskList?.length > 0 && this.props.taskList?.filter(e => e.active).map((res) => {
-                                       return  <option key={res.id} value={res.id} >{res.name}</option>
+                                        return <option key={res.id} value={res.id} >{res.name}</option>
                                     })}
                                 </select>
-                                {/* <ErrorMessage name="selectedTask" component="div" style={{ color: 'red' }} /> */}
+                                <ErrorMessage name="selectedTask" component="div" style={{ color: 'red' }} />
                             </FormGroup>}
                             <div className='row'>
                                 <FormGroup className='col-md-6'>
@@ -251,12 +266,12 @@ class OnboardSubTaskForm extends Component {
                                             <label>Select Employees
                                                 <span style={{ color: "red" }}>*</span>
                                             </label>
-                                            
+
                                             <EmpMultiSelectDropDown
-                                                                                            name="employeeId"
-                                                                                            setFieldValue={setFieldValue}
-                                                                                            defaultValue={values.employeeId}
-                                                                                        />
+                                                name="employeeId"
+                                                setFieldValue={setFieldValue}
+                                                defaultValue={values.employeeId || []}
+                                            />
                                         </FormGroup>
                                     </div>
                                 }
@@ -290,12 +305,13 @@ class OnboardSubTaskForm extends Component {
                             {values.dueOn && values.dueOn !== '3' && (
                                 <FormGroup>
                                     <label>Enter number of days<span style={{ color: "red" }}>*</span></label>
-                                    <Field name="numberofDays" type="number" className="form-control" min="0" step="1" 
-                                    onKeyDown={(e) => {
-                                        const invalidChars = ['e', 'E', '+', '-', '.'];
-                                        if (invalidChars.includes(e.key)) {
-                                        e.preventDefault();
-                                        }}} required />
+                                    <Field name="numberofDays" type="number" className="form-control" min="0" step="1"
+                                        onKeyDown={(e) => {
+                                            const invalidChars = ['e', 'E', '+', '-', '.'];
+                                            if (invalidChars.includes(e.key)) {
+                                                e.preventDefault();
+                                            }
+                                        }} />
                                     <ErrorMessage name="numberofDays" component="div" style={{ color: 'red' }} />
                                 </FormGroup>
                             )}
