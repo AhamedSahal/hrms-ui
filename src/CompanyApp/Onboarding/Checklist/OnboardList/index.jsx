@@ -12,17 +12,8 @@ import DepartmentDropdown from '../../../ModuleSetup/Dropdown/DepartmentDropdown
 import BranchDropdown from '../../../ModuleSetup/Dropdown/BranchDropdown';
 import JobTitlesDropdown from '../../../ModuleSetup/Dropdown/JobTitlesDropdown';
 import { BsSliders } from 'react-icons/bs';
-import SuccessAlert from '../../../../MainPage/successToast';
 import EmployeeProfilePhoto from '../../../Employee/widgetEmployeePhoto';
-import { FcHighPriority, FcLowPriority, FcMediumPriority } from 'react-icons/fc';
 import { getOnboardChecklist } from './tasklist/service';
-
-
-
-
-
-
-
 
 const { Header, Body, Footer, Dialog } = Modal;
 export default class OnboardList extends Component {
@@ -240,13 +231,13 @@ export default class OnboardList extends Component {
                                                     <td style={{ textAlign: 'center' }}>{item.taskCount}</td>
                                                     <td style={{ textAlign: 'center' }}>{item.subTaskCount}</td>
 
-                                                    <td>
+                                                    {/* <td>
                                                         <div className="onboardList_progress-bar">
-                                                            <div className="goal_progress-fill" style={{ backgroundColor: getColorByAchievement(item.progress == null ? 0 : item.progress), width: `${item.progress == null ? 0 : item.progress}%` }}></div>
+                                                            <div className="goal_progress-fill" style={{ backgroundColor: getColorByAchievement(item.progress == null?0:item.progress), width: `${item.progress == null?0:item.progress}%` }}>{item.progress == null?0:item.progress}</div>
                                                         </div>
-                                                    </td>
+                                                    </td> */}
 
-                                                    {/* <div >
+                                                    <div >
                                                         <Slider
                                                             value={item.progress == null ? 0 : item.progress}
                                                             tooltip={{ open: false }}
@@ -265,10 +256,10 @@ export default class OnboardList extends Component {
                                                             <span className="last-updated">{(item.progress == null ? 0 : item.progress).toFixed(2)}%</span>
                                                         </div>
 
-                                                    </div> */}
+                                                    </div>
 
                                                     <td style={{ textAlign: 'center' }}>
-                                                        {(item.progress == null ? 0 : item.progress) == 100 ? <span className='badge bg-inverse-success'><i class="pr-2 fa fa-circle text-info"></i>Completed</span> : item.dueDate == null || toLocalDate(item.dueDate) >= toLocalDate(new Date()) ? <span className='badge bg-inverse-info'><i class="pr-2 fa fa-circle text-info"></i>In progress</span> : <span className='badge bg-inverse-danger'><i class="pr-2 fa fa-circle text-info"></i>OverDue</span>}
+                                                        {(item.progress == null ? 0 : item.progress) == 100 ? <span className='badge bg-inverse-success'><i class="pr-2 fa fa-circle bg-inverse-success"></i>Completed</span> : item.dueDate == null || toLocalDate(item.dueDate) >= toLocalDate(new Date()) ? <span className='badge bg-inverse-info'><i class="pr-2 fa fa-circle text-info"></i>In progress</span> : <span className='badge bg-inverse-danger'><i class="pr-2 fa fa-circle bg-inverse-danger"></i>OverDue</span>}
 
 
                                                     </td>

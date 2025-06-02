@@ -8,7 +8,7 @@ import { saveRoster } from './service';
 import { RosterSchema } from './validation';
 import WeekOffDropdown from '../../../ModuleSetup/Dropdown/WeekOffDropdown';
 import ShiftsDropdown from '../../../ModuleSetup/Dropdown/ShiftsDropdown';
-
+import {toDateWithGMT} from '../../../../utility';
 
 
 export default class Roster extends Component {
@@ -73,6 +73,8 @@ export default class Roster extends Component {
             data["shiftId"] = data["shifts"]["id"];
  
         }
+        data.enddate = toDateWithGMT(data.enddate)
+        data.effectivedate = toDateWithGMT(data.effectivedate)
         action.setSubmitting(true);
         saveRoster(data).then(res => {
             if (res.status == "OK") {

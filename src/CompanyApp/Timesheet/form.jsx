@@ -1,166 +1,123 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FormGroup } from 'reactstrap';
 import { saveTimesheet } from './service';
 import { TimesheetSchema } from './validation';
-import { getUserType, verifyApprovalPermission, getPermission, getEmployeeId } from '../../utility';
-import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown';
-import ActivityDropdown from '../ModuleSetup/Dropdown/ActivityDropdown';
-import ProjectDropdown from './../ModuleSetup/Dropdown/ProjectDropdown';
+import { getEmployeeId } from '../../utility';
 import TimesheetRow from './timesheetRow';
 
-const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
-export default class CreateTimesheetForm extends Component {
-    constructor(props) {
-        super(props)
+const CreateTimesheetForm = ({ timesheet: initialTimesheet, self, employeeId, showAlert, updateList }) => {
+    const [timesheets, setTimesheets] = useState([]);
+    const [count, setCount] = useState(0);
 
-        this.state = {
-            timesheet: props.timesheet || {
+    const addRecord = React.useCallback(() => {
+        setTimesheets(prevTimesheets => [
+            ...prevTimesheets,
+            {
                 id: 0,
-                employeeId: 0,
+                employeeId: employeeId || getEmployeeId(),
                 date: "",
                 hours: 0,
                 project: "",
                 activity: "",
                 description: ""
-            },
-            timesheets:[],
-            self : props.self,
-            count:0,
+            }
+        ]);
+        setCount(prevCount => prevCount + 1);
+    }, [employeeId]);
+
+    useEffect(() => {
+        if (!initialTimesheet || initialTimesheet.id === 0) {
+            addRecord();
+        } else {
+            setTimesheets([initialTimesheet]);
         }
-    }
-    componentDidMount(){
-        if(this.state.timesheet.id==0){
-            this.addRecord();
-        }else{
-            let tmp = this.state.timesheets;
-            tmp.push(this.state.timesheet);
-            this.setState({   
-                timesheets:tmp
-             });
-        }
-    }
-    addRecord() {
-        let tmp = this.state.timesheets;
-        tmp.push({id:0,employeeId:this.props.employeeId || getEmployeeId(),  
-            date: "",
-            hours: 0,
-            project: "",
-            activity: "",
-            description: ""});
-        this.setState({   
-            timesheets:tmp,
-            count :this.state.count + 1
+    }, [initialTimesheet, addRecord]);
+
+    const updateState = (updatedTimesheet, index) => {
+        setTimesheets(prevTimesheets => {
+            const newTimesheets = [...prevTimesheets];
+            newTimesheets[index] = updatedTimesheet;
+            return newTimesheets;
         });
-    }
-    static getDerivedStateFromProps(nextProps, prevState) {
+    };
 
-        if (nextProps.timesheet && nextProps.timesheet != prevState.timesheet) {
-            return ({ timesheet: nextProps.timesheet })
-        } else if (!nextProps.timesheet) {
-
-            return prevState.timesheet || ({
-                timesheet: {
-                    id: 0,
-                    employeeId: 0,
-                    date: "",
-                    hours: 0,
-                    project: "",
-                    activity: "",
-                    description: ""
-                }
-            })
-        }
-        return null;
-    }
-    updateState = (updatedTimesheet, index) =>{
-        let {timesheets} = this.state;
-        timesheets[index] = updatedTimesheet;
-        this.setState({   
-            timesheets:timesheets
-         });
-    }
-    save = (data, action) => {
-        data.map((a,i)=>{
-            a["date"] = new Date(`${a["date"]} GMT`).toISOString().substring(0, 10);
-            console.log(a);
+    const save = (data, action) => {
+        data.forEach((a, i) => {
+            a.date = new Date(`${a.date} GMT`).toISOString().substring(0, 10);
             action.setSubmitting(true);
             saveTimesheet(a).then(res => {
-               
-                if (res.status == "OK") {
-                    if(i == data.length -1){
-                        // toast.success(res.message);
-                        this.props.showAlert('submit');
+                if (res.status === "OK") {
+                    if (i === data.length - 1) {
+                        showAlert('submit');
                     }
-                    
-                    this.props.updateList(res.data);
+                    updateList(res.data);
                 } else {
                     toast.error(res.message);
-                   
                 }
-                if(i == data.length -1){
-                action.setSubmitting(false)
+                if (i === data.length - 1) {
+                    action.setSubmitting(false);
                 }
-            }).catch(err => {
+            }).catch(() => {
                 toast.error("Error while submitting timesheet.");
                 action.setSubmitting(false);
-            })
-        })
-        
-    }
-    removeRow = (index) => {
-        const tmp = [...this.state.timesheets];
-        tmp.splice(index, 1);
-        this.setState({
-          timesheets: tmp,
-          count: this.state.count - 1,
+            });
         });
-      };
-    render() {
-        let {timesheets,count} = this.state;
-        return (
-            <div>
+    };
 
-                <Formik
-                    enableReinitialize={true}
-                    initialValues={this.state.timesheets}
-                    onSubmit={this.save}
-                    validationSchema={TimesheetSchema}
-                >
-                    {({
-                        values,
-                        errors,
-                        touched,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        isSubmitting,
-                        setFieldValue,
-                        setSubmitting
-                        /* and other goodies */
-                    }) => (
-                        <Form>
-                            {
-                                timesheets && timesheets.length> 0 && timesheets.map((timesheet,index)=>{
-                                    return  <TimesheetRow  key={`${index}-${this.state.count}`} self={ this.props.self} timesheet={timesheet} index={index} updateState={this.updateState} removeRow={this.removeRow}></TimesheetRow>
-                                })
-                            }
-                           
-                            <div className="row">                             
+    const removeRow = (index) => {
+        setTimesheets(prevTimesheets => {
+            const newTimesheets = [...prevTimesheets];
+            newTimesheets.splice(index, 1);
+            return newTimesheets;
+        });
+        setCount(prevCount => prevCount - 1);
+    };
+
+    return (
+        <div>
+            <Formik
+                enableReinitialize={true}
+                initialValues={timesheets}
+                onSubmit={save}
+                validationSchema={TimesheetSchema}
+            >
+                {() => (
+                    <Form>
+                        {timesheets && timesheets.length > 0 && timesheets.map((timesheet, index) => (
+                            <TimesheetRow
+                                key={`${index}-${count}`}
+                                self={self}
+                                timesheet={timesheet}
+                                index={index}
+                                updateState={updateState}
+                                removeRow={removeRow}
+                            />
+                        ))}
+
+                        <div className="row">
                             <div className="col-md-3">
-                            <input type="submit" className="btn btn-primary" value={this.state.timesheet.id > 0 ? "Update" : "Submit"} />
+                                <input
+                                    type="submit"
+                                    className="btn btn-primary"
+                                    value={initialTimesheet && initialTimesheet.id > 0 ? "Update" : "Submit"}
+                                />
                             </div>
-                            {this.state.timesheet.id == 0 && count < 7 && <div className="col-md-9 text-right">
-                            <i className="text-success fa fa-plus fa-2x pointer" onClickCapture={()=>this.addRecord()}></i>
-                            </div>}
-                            </div>
-                        </Form>
-                )
-                    }
+                            {(!initialTimesheet || initialTimesheet.id === 0) && count < 7 && (
+                                <div className="col-md-9 text-right">
+                                    <i
+                                        className="text-success fa fa-plus fa-2x pointer"
+                                        onClickCapture={addRecord}
+                                    ></i>
+                                </div>
+                            )}
+                        </div>
+                    </Form>
+                )}
             </Formik>
-            </div >
-        )
-    }
-}
+        </div>
+    );
+};
+
+export default CreateTimesheetForm;

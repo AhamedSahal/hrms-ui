@@ -1023,7 +1023,7 @@ export default class NewSocialShare extends Component {
                         </Tooltip>
                     </div>
                 </div>
-                <div style={{ padding: '24px' }} className="mt-5 container-fluid">
+                <div style={{ padding: '15px 17px 25px 32px' }} className="mt-5 container-fluid">
                     <div className="row">
                         {/* Left Section */}
                         <div className="col-xs-auto col-xl-homeLeft col-md-12 col-lg-12  col-sm-12 mb-3">
@@ -1202,7 +1202,7 @@ export default class NewSocialShare extends Component {
                         {/* Emp policyCard */}
                          <div className="policyCard">
                             <div className="Title">
-                                <h2 style={{wordSpacing: '-3px'}}  className="TitleAction">Policies & Documents</h2>
+                                <h2 className="TitleAction">Policies & Documents</h2>
                                 {/* <img src={quickActionIcon} alt="" /> */}
                             </div>
                             <div className="qui">
@@ -1721,7 +1721,7 @@ export default class NewSocialShare extends Component {
                                                 <div >
                                                     <EmployeeProfilePhoto className="events-proPic" id={data.id} alt={data.firstName} />
                                                 </div>
-                                                <label className='cardsProPicLabel'>{data.firstName + ' ' + data.middleName + ' ' + data.lastName}<br />{data.date && getCustomizedWidgetDate(data.date)}</label>
+                                                <label className='cardsProPicLabel'>{this.reduceString(`${data.firstName} ${data.middleName} ${data.lastName}`, 14)}<br />{data.date && getCustomizedWidgetDate(data.date)}</label>
 
                                             </div>)) : <div style={{ placeSelf: 'center' }} hidden={!this.state.newHire}><Empty /></div>
                                         }
@@ -1731,7 +1731,7 @@ export default class NewSocialShare extends Component {
                                             <div >
                                                 <EmployeeProfilePhoto className="events-proPic" id={data.id} alt={data.firstName} />
                                             </div>
-                                            <label className='cardsProPicLabel'>{data.firstName + ' ' + data.middleName + ' ' + data.lastName}<br />{data.date && getCustomizedWidgetDate(data.date)}</label>
+                                            <label className='cardsProPicLabel'>{this.reduceString(`${data.firstName} ${data.middleName} ${data.lastName}`, 15)}<br />{data.date && getCustomizedWidgetDate(data.date)}</label>
 
                                             </div>)) : <div style={{ placeSelf: 'center' }} hidden={this.state.newHire}><Empty /></div>
                                         }
@@ -1753,7 +1753,7 @@ export default class NewSocialShare extends Component {
                                                     <div className='holidaysElements'>
 
                                                         <div className='fcontainer d-flex createPostInsideDivlex-container' >
-                                                            <h5 style={{ wordSpacing: '-5px', color: colors[index % colors.length] }} className='mb-0'>{data.occasion}</h5>
+                                                            <h5 style={{  color: colors[index % colors.length] }} className='mb-0'>{data.occasion}</h5>
                                                             { }
 
                                                         <h5 style={{ color: colors[index % colors.length], paddingLeft: "6px" }} className='mb-0'>{`(${data.branch?.name ? data.branch?.name : " - "})`}</h5>
@@ -1876,8 +1876,8 @@ export default class NewSocialShare extends Component {
                                                         <div >
                                                             <EmployeeProfilePhoto className='recEmployeePic' id={item.awardee?.id}></EmployeeProfilePhoto>
                                                         </div>
-                                                        <h4 style={{wordSpacing: '-3px'}} className='m-0'>{item.awardee && item.awardee?.name}</h4>
-                                                        <h6 style={{wordSpacing: '-3px'}}>
+                                                        <h4 className='m-0'>{item.awardee && item.awardee?.name}</h4>
+                                                        <h6 >
                                                             <MediaComponent mediaPath={item.mediaPath} mediaType={item.mediaType} />
                                                             &nbsp;{item.recognitionSetup?.name}</h6>
                                                     </div>
@@ -2203,7 +2203,7 @@ export default class NewSocialShare extends Component {
                                                         {item.type == "BIRTHDAY" && <img className='birthdayimg' src={Baloon} alt="" />}
                                                         <img className='birthdayimg' src={confetti} alt="" />
 
-                                                        <h5 style={{ color: ' #fff27d' }} className="m-0">{formattedDate}</h5>
+                                                        <h5 style={{wordSpacing: '5px', color: ' #fff27d' }} className="m-0">{formattedDate}</h5>
                                                         <p className='mb-0 BirthdaypostDiscription' style={{ fontFamily: "sans-serif" }}>{item.description}</p>
                                                     </article>
                                                 </div>

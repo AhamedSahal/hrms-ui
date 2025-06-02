@@ -50,7 +50,6 @@ const HJobFormView = () => {
     applicantField: [],
   });
 
-  console.log("cell ---state", location);
   
 
   useEffect(() => {

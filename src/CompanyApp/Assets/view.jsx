@@ -1,9 +1,5 @@
 
 import React, { Component } from 'react';
-import { BsFillPencilFill } from "react-icons/bs";
-import { toast } from 'react-toastify';
-import { fileDownload } from '../../HttpRequest';
-import { Anchor } from 'react-bootstrap';
 import EmployeeListColumn from '../../CompanyApp/Employee/employeeListColumn';
 import { getReadableDate,getCustomizedDate } from '../../utility'; 
 export default class AssetView extends Component {
@@ -141,7 +137,7 @@ export default class AssetView extends Component {
                                             </div>
                                         </div>
 
-                                        <div style={{ display: "block", color: "#999", fontSize: "12px", paddingTop: "10px" }}>Assigned to
+                                        <div style={{ display: "block", color: "#999", fontSize: "12px", paddingTop: "10px" }}>Previous Owner
                                        {pEmployee != null ? <div style={{ color: "#55687d", fontSize: "14px", paddingTop: "4px", display: "flex" }}> <EmployeeListColumn id={pEmployee.id} ></EmployeeListColumn>
                                             {pEmployee.name}
                                         </div>:<div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder" }}> {"-"}</div>}

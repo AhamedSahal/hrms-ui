@@ -256,7 +256,7 @@ export default class MyTasks extends Component {
                         <h5 className="modal-title">Edit Task</h5>
                     </Header>
                     <Body>
-                        <Tasksform updateList={this.updateList} Tasks={this.state.Tasks}>
+                        <Tasksform hideForm={this.hideForm} updateList={this.updateList} Tasks={this.state.Tasks}>
                         </Tasksform>
                     </Body>
                 </Modal>

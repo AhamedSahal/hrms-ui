@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { BLOOD_GROUP, GENDER, MARITAL_STATUS } from '../../../Constant/enum';
-import { getEmployeeId, getOrDefault, getReadableDate, getUserType, verifyEditPermission } from '../../../utility';
+import { getEmployeeId, getOrDefault, getReadableDate, getUserType, verifyEditPermission,toDateWithGMT } from '../../../utility';
 import EnumDropdown from '../../ModuleSetup/Dropdown/EnumDropdown';
 import LanguageDropdown from '../../ModuleSetup/Dropdown/LanguageDropdown';
 import NationalityDropdown from '../../ModuleSetup/Dropdown/NationalityDropdown';
@@ -47,7 +47,7 @@ export default class PersonalDetailEmployeeForm extends Component {
         data.lastName = capitalizeFirstLetter(data.lastName);
         data.middleName = data.middleName ? capitalizeFirstLetter(data.middleName) : '';
         data.fatherName = data.fatherName ? capitalizeFirstLetter(data.fatherName) : '';
-        data["dob"] = data["dob"] == "" ? "" : new Date(data["dob"]);
+        data["dob"] = data["dob"] == "" ? "" : toDateWithGMT(data["dob"]);
         action.setSubmitting(true);
         updatePersonalInformation(data).then(res => {
             if (res.status == "OK") {

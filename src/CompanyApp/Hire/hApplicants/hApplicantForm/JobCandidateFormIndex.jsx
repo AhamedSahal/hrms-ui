@@ -9,7 +9,6 @@ const JobCandidateFormIndex = () => {
     const [candidateForm, setCandidateForm] = useState(true);
     const [responseForm, setResponseForm] = useState(false);
     const [jobInfo, setJobInfo] = useState(null);
- console.log("cell ---jobId", jobId);
  
     const handleCandidateForm = (data) => {
         setJobInfo(data);

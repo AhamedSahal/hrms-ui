@@ -234,13 +234,14 @@ export const fileDownload = (downloadId, referenceId, type, fileName) => {
             link.click();
         });
 }
-export const downloadPayslipCsv = (salaryMonth,entityId) => {
+export const downloadPayslipCsv = (salaryMonth,entityId, entityName, month) => {
     http.get(`/payslip/download-csv?salaryMonth=${salaryMonth}&entityId=${entityId}`, { responseType: 'blob' })
         .then((response) => {
+            let filename = `${entityName}_${month}_${salaryMonth.split("-")[0]}.csv`; 
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `${salaryMonth}paylisp.csv`);
+            link.setAttribute('download', filename);
             document.body.appendChild(link);
             link.click();
         });
@@ -288,13 +289,14 @@ export const getPayslipsPdfView = (salaryMonth,employeeId) => {
     });
 };
 
-export const downloadPayslipSif = (salaryMonth,entityId) => {
+export const downloadPayslipSif = (salaryMonth,entityId, entityName, month) => {
     http.get(`/payslip/download-sif?salaryMonth=${salaryMonth}&entityId=${entityId}`, { responseType: 'blob' })
         .then((response) => {
+            let filename = `${entityName}_${month}_${salaryMonth.split("-")[0]}.sif`; 
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `${salaryMonth}paylisp.sif`);
+            link.setAttribute('download', filename);
             document.body.appendChild(link);
             link.click();
         });

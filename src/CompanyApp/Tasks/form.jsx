@@ -1,7 +1,5 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { Component } from "react";
-import axios from 'axios'
-import Select from "react-select";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FormGroup } from "reactstrap";
@@ -81,7 +79,7 @@ export default class TasksForm extends Component {
         })
     };
     redirectToList = () => {
-        this.props.history.goBack();
+         window.location.href = '/app/company-app/tasks';
     } 
     render() {
         return (

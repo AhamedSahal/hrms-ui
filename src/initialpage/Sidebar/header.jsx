@@ -168,7 +168,6 @@ class Header extends Component {
             </div>
           }
 
-          {console.log("cell --- showOptions", showOptions)}
           {showOptions &&
           <div className={` aibot-rasa ${showOptions ? 'aibot-visible' : ''}`}>
             <RasaChat />

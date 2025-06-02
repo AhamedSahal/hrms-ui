@@ -5,6 +5,7 @@ import { getTitle } from '../utility';
 import { default as EmployeeLeave } from './Employee/leave';
 import { default as LeaveBalance } from './MyEntitlements/Leave/index';
 import Timeinlieu from './MyEntitlements/TimeInLieu';
+import AllHolidaysList from './Employee/leave/Holidays';
 
 const LeaveLanding = () => {
     const location = useLocation();
@@ -37,6 +38,9 @@ const LeaveLanding = () => {
                                         <li className="nav-item">
                                             <a href="#timeinlieu" data-toggle="tab" className={dashboardTimeInLieu ? "nav-link active" : "nav-link"}>Time in Lieu</a>
                                         </li>
+                                        <li className="nav-item">
+                                            <a href="#holidays" data-toggle="tab" className={"nav-link"}>Holidays</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -50,6 +54,9 @@ const LeaveLanding = () => {
                     </div>
                     <div id="timeinlieu" className={dashboardTimeInLieu ? "pro-overview insidePageDiv tab-pane fade show active" : "pro-overview insidePageDiv tab-pane fade"}>
                         <Timeinlieu data={dashboardTimeInLieu}></Timeinlieu>
+                    </div>
+                    <div id="holidays" className={"pro-overview insidePageDiv tab-pane fade"}>
+                        <AllHolidaysList ></AllHolidaysList>
                     </div>
                 </div>
             </div>

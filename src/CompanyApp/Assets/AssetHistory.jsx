@@ -3,7 +3,7 @@ import jsPDF from 'jspdf';
 import { Table } from 'antd'; 
 import EmployeeListColumn from '../Employee/employeeListColumn';
 import { itemRender } from "../../paginationfunction";
-import { getCurrency, getLogo, getReadableDate, verifyViewPermission } from '../../utility';
+import { getCurrency, getLogo, getReadableDate, verifyEditPermission, verifyViewPermission } from '../../utility';
 import { getAssetHistory } from './service'
 export default class AssetsHistory extends Component {
     constructor(props) {
@@ -62,6 +62,15 @@ export default class AssetsHistory extends Component {
       })
     }
 
+    reduceString = (str, maxLength) => {
+    if (typeof str !== 'string' || str.length <= maxLength) {
+        return str || '';
+    } else {
+        return str.slice(0, maxLength) + '...';
+    }
+    };
+
+
     render() { 
         
         const { data, totalPages, totalRecords, currentPage, size,AssetsHistory } = this.state
@@ -91,7 +100,11 @@ export default class AssetsHistory extends Component {
                     </div>
 
                     <div className="GoalAudit-timeline">
-                        {data.map((datas, index) => {
+                        {(!data || data.length === 0) ? (
+                            <div className="alert alert-warning alert-dismissible fade show" role="alert">
+                                <span>No Records Found</span>
+                            </div>
+                          ) : (data.map((datas, index) => {
                            
                             const descendingIndex = data.length - index;
                             return (
@@ -107,20 +120,58 @@ export default class AssetsHistory extends Component {
                                             <div>{datas.statusDef}</div>
                                         </div>
                                         {<>
-                                          <div style={{ width: '170px' }}>
-                                          <span className="text-muted">{datas.statusDef=="Assigned Request"?"Assigned On":datas.statusDef=="Allocated"?"Allocated On":datas.statusDef=="Return Request"?"Returned On":"Available from"}</span>
-                                            <div>{datas.statusDef=="Allocated"?new Date(datas.modifiedOn).toLocaleDateString('en-GB'): datas.statusDef=="Available"?new Date(datas.modifiedOn).toLocaleDateString('en-GB'):datas.assignedon}</div>
-                                        </div>
+                                         <div style={{ width: '170px' }}>
+                                            <span className="text-muted">
+                                                {datas.statusDef === "Assigned Request"
+                                                ? "Assigned On"
+                                                : datas.statusDef === "Allocated"
+                                                ? "Allocated On"
+                                                : datas.statusDef === "Return Request"
+                                                ? "Returned On"
+                                                : "Available from"}
+                                            </span>
+
+                                            <div>
+                                                {(() => {
+                                                const formatDate = (date) => {
+                                                    if (!date) return "";
+                                                    const d = new Date(date);
+                                                    const day = String(d.getDate()).padStart(2, '0');
+                                                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                                                    const year = d.getFullYear();
+                                                    return `${day}-${month}-${year}`;
+                                                };
+
+                                                if (datas.statusDef === "Allocated") {
+                                                    return formatDate(datas.modifiedOn);
+                                                } else if (datas.statusDef === "Available") {
+                                                    return formatDate(datas.modifiedOn);
+                                                } else {
+                                                    return formatDate(datas.assignedon);
+                                                }
+                                                })()}
+                                            </div>
+                                            </div>
+
                                         
-                                        <div style={{ width: '200px' }}>  
+                                      <div style={{ width: '200px' }}>  
                                         <div className="col-md-4" style={{ color: "#999", fontSize: "14px", paddingTop: "0px" }}>
                                             <span className="text-muted">Assigned To</span>
                                             <div>
-                                            {datas.employeeId != null ?
-                                             <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", display:"flex" }}>
-                                              <EmployeeListColumn
-                                               id={datas.employeeId}  ></EmployeeListColumn><span>{datas.employeeName}</span></div>: "-"
-                                                }
+                                            {datas.employeeId != null ? (
+                                                <div style={{ color: "#55687d", fontSize: "14px", fontWeight: "bolder", display: "flex" }}>
+                                                <EmployeeListColumn id={datas.employeeId} />
+                                                <span
+                                                   
+                                                    title={datas.employeeName} 
+                                                    style={{  marginLeft: "3px", marginTop:"8px" }}
+                                                >
+                                                    {this.reduceString(datas.employeeName, 10)}
+                                                </span>
+                                                </div>
+                                            ) : (
+                                                "-"
+                                            )}
                                             </div>
                                         </div>   
                                         </div>
@@ -132,7 +183,7 @@ export default class AssetsHistory extends Component {
                                             {datas.assignedEmp != null ? 
                                                 <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", display:"flex" }}>
                                                      <EmployeeListColumn
-                                                id={datas.assignedEmp} ></EmployeeListColumn> <span>{datas.assignedEmpName}</span></div>: "-"}
+                                                id={datas.assignedEmp} ></EmployeeListColumn> <span style={{ marginLeft: "3px", marginTop:"8px" }} title={datas.employeeName} > {this.reduceString(datas.assignedEmpName, 10)}</span></div>: "-"}
                                             </div>
                                             </div>
                                         </div> 
@@ -146,9 +197,9 @@ export default class AssetsHistory extends Component {
                                         <div className="col-md-4" style={{ color: "#999", fontSize: "14px", paddingTop: "0px" }}>
                                             <span className="text-muted">Previous Owner</span>
                                             <div>
-                                            {datas.prevemployeeId != null ?
-                                                <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", display:"flex" }}>
-                                                <EmployeeListColumn id={datas.prevemployeeId}></EmployeeListColumn><span>{datas.prevemployeename}</span>
+                                             {datas.prevemployeeId != null ?
+                                                <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", display:"flex"}}>
+                                                <EmployeeListColumn id={datas.prevemployeeId}></EmployeeListColumn><span style={{ marginLeft: "3px", marginTop:"8px" }}  title={datas.employeeName}> {this.reduceString(datas.prevemployeename, 10)}</span>
                                             </div>:'-'}
                                             </div>
                                         </div>
@@ -158,7 +209,7 @@ export default class AssetsHistory extends Component {
                                     </div>
                                 </div>
                             );
-                        })}
+                        }))}
                     </div>
                 </div>}
                     </div>

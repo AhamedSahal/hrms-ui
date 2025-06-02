@@ -11,6 +11,16 @@ export function getEntityList(searchText, pageNumber, pageSize, sort) {
         return Promise.reject(err);
     });
 }
+
+export function getCurrentUserEntity(entityId) {
+    let path = `${servicePath}/currentEntity?entityId=${entityId}`;
+    return getWithAuth(path).then(res => {
+        return Promise.resolve(res.data);
+    }).catch(err => {
+        return Promise.reject(err);
+    });
+}
+
 export function saveEntity(entity) {
     let post = entity.id == 0 ? postWithAuth(servicePath, entity,true)
         : putWithAuth(`${servicePath}?id=${entity.id}`, entity,true);

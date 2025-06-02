@@ -1,12 +1,16 @@
-
 import React, { Component } from 'react';
 import { Helmet } from "react-helmet";
 import {Avatar_03,Avatar_04} from "../../../Entryfile/imagepath"
-
+import {toLocalDateTime, fallbackLocalDateTime} from '../../../utility';
 import { Table } from 'antd';
 import "antd/dist/reset.css";
 import {itemRender,onShowSizeChange} from "../../paginationfunction"
 import "../../antdstyle.css"
+import Bowser from 'bowser';
+
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 
 class EmployeeReport extends Component {
   constructor(props) {
@@ -63,16 +67,38 @@ class EmployeeReport extends Component {
         dataIndex: 'designation',
         sorter: (a, b) => a.designation.length - b.designation.length,
       },      
-      {
-        title: 'Joining Date',
-        dataIndex: 'joiningdate',
-        sorter: (a, b) => a.joiningdate.length - b.joiningdate.length,
-      },      
-      {
-        title: 'DOB',
-        dataIndex: 'dob',
-        sorter: (a, b) => a.dob.length - b.dob.length,
-      },      
+     {
+          title: 'Joining Date',
+          dataIndex: 'joiningdate',
+          render: (text) => {
+            const date = text;
+            if (!date) return <div>-</div>;
+
+            if (isSafari) {
+              return <div>{fallbackLocalDateTime(date)}</div>;
+            } else {
+              const value = toLocalDateTime(date);
+              return <div>{value === null ? fallbackLocalDateTime(date) : value}</div>;
+            }
+          },
+          sorter: (a, b) => a.joiningdate.length - b.joiningdate.length,
+        },
+        {
+          title: 'DOB',
+          dataIndex: 'dob',
+           render: (text) => {
+            const date = text;
+            if (!date) return <div>-</div>;
+
+            if (isSafari) {
+              return <div>{fallbackLocalDateTime(date)}</div>;
+            } else {
+              const value = toLocalDateTime(date);
+              return <div>{value === null ? fallbackLocalDateTime(date) : value}</div>;
+            }
+          },
+          sorter: (a, b) => a.dob.length - b.dob.length,
+        },   
       {
         title: 'Martial Status',
         dataIndex: 'martialstatus',

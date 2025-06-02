@@ -3,35 +3,37 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
-import { saveHoliday} from './service';
-import{getBranchInformation} from '../Branch/service';
+import { saveHoliday } from './service';
+import { getBranchInformation } from '../Branch/service';
 import { HolidaySchema } from './validation';
+import { toDateWithGMT } from '../../../utility';
 
 export default class HolidayForm extends Component {
     constructor(props) {
         super(props)
- this.state = {
-               locationId: props.locationId || 0,
-               locationName: props.locationName || "",
-                holiday: props.holiday || {
+        this.state = {
+            locationId: props.locationId || 0,
+            locationName: props.locationName || "",
+            holiday: props.holiday || {
                 id: 0,
                 occasion: "",
-                date:"",
+                date: "",
                 branchId: props.locationId,
-            
-               }}
+
+            }
+        }
     }
-static getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(nextProps, prevState) {
 
         if (nextProps.holiday && nextProps.holiday != prevState.holiday) {
             return ({ holiday: nextProps.holiday })
-        } else if (!nextProps.holiday ) {
-            
+        } else if (!nextProps.holiday) {
+
             return prevState.holiday || ({
                 holiday: {
                     id: 0,
                     occasion: "",
-                    date:"",
+                    date: "",
                     branchId: prevState.locationId,
                 }
             })
@@ -39,12 +41,14 @@ static getDerivedStateFromProps(nextProps, prevState) {
         return null;
     }
     save = (data, action) => {
+        console.log("holidayyy: ", data.date)
+        data.date = toDateWithGMT(data.date);
         action.setSubmitting(true);
         saveHoliday(data).then(res => {
             if (res.status == "OK") {
                 toast.success(res.message);
                 this.props.updateList(res.data);
-             } else {
+            } else {
                 toast.error(res.message);
             }
             action.setSubmitting(false)
@@ -77,11 +81,11 @@ static getDerivedStateFromProps(nextProps, prevState) {
                         /* and other goodies */
                     }) => (
                         <Form autoComplete='off'>
-                             <FormGroup>
+                            <FormGroup>
                                 <label>Location</label>
                                 <p>
-                                <span style={{fontWeight: 'bold'}}>{this.state.locationName}</span></p>
-                               </FormGroup>
+                                    <span style={{ fontWeight: 'bold' }}>{this.state.locationName}</span></p>
+                            </FormGroup>
                             <FormGroup>
                                 <label>Date
                                     <span style={{ color: "red" }}>*</span>
@@ -100,7 +104,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                 </ErrorMessage>
                             </FormGroup>
-                            <input type="submit" className="btn btn-primary" value={this.state.holiday.id>0?"Update":"Save"}/>
+                            <input type="submit" className="btn btn-primary" value={this.state.holiday.id > 0 ? "Update" : "Save"} />
                         </Form>
                     )
                     }

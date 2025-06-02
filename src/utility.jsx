@@ -1,5 +1,6 @@
 import Cookies from 'universal-cookie';
 import { headerlogo, loginLogo } from './Entryfile/imagepath';
+import { parse, isValid } from 'date-fns';
 import { getWithAuth } from './HttpRequest';
 import * as XLSX from 'xlsx';
 import { PERMISSION_LEVEL } from './Constant/enum';
@@ -518,11 +519,19 @@ export function toLocalDate(date) {
 }
 export function toLocalDateTime(dateTime) {
     if (dateTime) {
+        try{
         dateTime = dateTime.replace('T', ' ');
+        console.log(new Date(dateTime + ' UTC').toLocaleString([], { timeStyle: 'short', dateStyle: 'medium', hourCycle: 'h12' }))
         return new Date(dateTime + ' UTC').toLocaleString([], { timeStyle: 'short', dateStyle: 'medium', hourCycle: 'h12' });
-
+        }catch (e) {
+            console.log("hitted mariiiiiiii")
+        return null;
+    }
     }
 }
+
+
+
 
 // reports local date
 export function toLocalDateTimeforReport(dateTime) {
@@ -709,3 +718,66 @@ export function formatDateTime(dateString) {
     const formattedTime = `${hours}:${minutes} ${ampm}`;
     return `${day}-${month}-${year} , ${formattedTime}`;
 }
+
+export function toDateWithGMT(inputDate) {
+    if (!inputDate) return null;
+
+    const formats = [
+    'yyyy-MM-dd', 'yyyy/MM/dd', 'yyyy.MM.dd', 'yyyy MM dd',
+    'dd-MM-yyyy', 'dd/MM/yyyy', 'dd.MM.yyyy', 'dd MM yyyy',
+    'MM-dd-yyyy', 'MM/dd/yyyy', 'MM.dd.yyyy', 'MM dd yyyy',
+    'yyyy-dd-MM', 'yyyy/dd/MM', 'yyyy.dd.MM', 'yyyy dd MM',
+    'dd-MMM-yyyy', 'dd MMM yyyy', 'MMM dd, yyyy', 'MMM dd yyyy'
+    ];
+
+
+    let parsedDate = null;
+
+    for (const fmt of formats) {
+        const d = parse(inputDate, fmt, new Date());
+        if (isValid(d)) {
+        parsedDate = d;
+        break;
+        }
+    }
+
+    if (!parsedDate) {
+        parsedDate = new Date(inputDate);
+        if (isNaN(parsedDate.getTime())) return null;
+    }
+
+    const hasTime = /T\d{2}:\d{2}/.test(inputDate);
+  if (hasTime) {
+    let dateStr = inputDate;
+    if (!inputDate.endsWith('Z')) {
+      dateStr = inputDate + 'Z';
+    }
+    return new Date(dateStr).toISOString();
+  } else {
+    const withGMT = new Date(parsedDate.toDateString() + ' GMT');
+    return withGMT.toISOString();
+  }
+}
+
+export function fallbackLocalDateTime(dateTime) {
+console.log("hello falled here")
+  const date = new Date(dateTime);
+  if (isNaN(date.getTime())) return 'Invalid Date';
+
+  const month = String(date.getMonth() + 1).padStart(2, '0'); 
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12; 
+
+  return `${month}-${day}-${year}, ${hours}:${minutes} ${ampm}`;
+}
+
+
+
+   
+
+ 

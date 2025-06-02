@@ -3956,11 +3956,11 @@ input[data-id="cbColor"] {
 .holiday-month-feb { background: #f08080; }
 .holiday-month-mar { background: #f4a460; }
 .holiday-month-apr { background: #87ceeb; }
-.holiday-month-may { background: #98fb98; }
+.holiday-month-may { background: #b6d5b6; }
 .holiday-month-jun { background: #ffb6c1; }
 .holiday-month-jul { background: #ffa07a; }
 .holiday-month-aug { background: #9370db; }
-.holiday-month-sep { background: #204baa; }
+.holiday-month-sep { background: #8a9abd; }
 .holiday-month-oct { background: #dc143c; }
 .holiday-month-nov { background: #ffdead; }
 .holiday-month-dec { background: #4682b4; } 
@@ -3996,6 +3996,8 @@ input[data-id="cbColor"] {
     border: solid;
     border-radius: 49px;
     filter: brightness(0) invert(1);
+    font-size: 11px;
+    margin-top: 0px;
   }
 
 /* Custom styles for the Ant Design Spin component */
@@ -4007,6 +4009,30 @@ input[data-id="cbColor"] {
     width: 50px;
     height: 50px;
 }
+
+.past-holiday {
+    background-color: #f0f0f0; /* Light grey background */
+    color: #a0a0a0; /* Grey text color */
+    text-decoration: line-through; /* Optional: strike-through text */
+}
+.page_layout {
+    margin-top: 50px;
+    padding: 40px;
+}
+.main_table_Head{
+    border: solid 1px #d7cbcb;
+    padding: 0 !important;
+    border-radius: 7px !important;
+
+}
+
+.Toastify__toast {
+  --toastify-toast-padding: 10px 17px;
+}
+
+
+
+
 
 
 

@@ -1,13 +1,12 @@
 import { Table } from 'antd';
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { Component, useCallback, useEffect, useState } from 'react';
 import { Modal, Col, Row, ButtonGroup, Anchor } from 'react-bootstrap';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { toast } from 'react-toastify';
 import { BsFillInfoCircleFill, BsSliders } from "react-icons/bs";
 import { itemRender } from '../../../paginationfunction';
-import { getReadableDate, getUserType, verifyEditPermission, verifySelfViewPermission, verifySelfEditPermission, verifyViewPermission, verifyApprovalPermission, verifyViewPermissionForTeam, toLocalDateTime, getCompanyId } from '../../../utility';
+import { getReadableDate, getUserType, verifyEditPermission, verifySelfViewPermission, verifySelfEditPermission, verifyViewPermission, verifyApprovalPermission, verifyViewPermissionForTeam, toLocalDateTime, getCompanyId, fallbackLocalDateTime } from '../../../utility';
 import BranchDropdown from '../../ModuleSetup/Dropdown/BranchDropdown';
 import DepartmentDropdown from '../../ModuleSetup/Dropdown/DepartmentDropdown';
 import DesignationDropdown from '../../ModuleSetup/Dropdown/DesignationDropdown';
@@ -29,15 +28,17 @@ import { getModuleSetupByCompanyId } from '../../../AdminApp/Company/service';
 import { getMultiApprovalMasterList } from '../../ModuleSetup/MultiApprove/LeaveMultiApproval/service';
 import { Tooltip } from 'antd';
 import { getHalfdayCount } from '../../ModuleSetup/LeaveType/service';
-
 import SuccessAlert from '../../../MainPage/successToast';
+import Bowser from 'bowser';
+import { useParams } from 'react-router-dom';
 
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 const { Header, Body, Footer, Dialog } = Modal;
-
 const Leave = () => {
   const { id } = useParams();
-  console.log("cell --- id", id);
   const [state, setState] = useState({
     employeeId: id,
     data: [],
@@ -51,7 +52,6 @@ const Leave = () => {
     page: 0,
     size: 10,
     sort: "id,desc",
-    totalPages: 0,
     totalRecords: 0,
     currentPage: 1,
     showFilter: false,
@@ -66,22 +66,16 @@ const Leave = () => {
     alertMsg: '',
     imgTag: '',
     buttonState: true,
-    preferredMethod: 'Self',
     halfDayCount: 0
   });
 
-  useEffect(() => {
-    fetchList();
-  }, []);
-
-  const fetchList = () => {
+  const fetchList = useCallback(() => {
     if (verifyViewPermission("LEAVE")) {
       getLeaveList(state.employeeId, state.branchId, state.departmentId, state.jobTitleId, state.q, state.fromDate, state.toDate, state.page, state.size, state.sort, state.self).then(res => {
-        if (res.status == "OK") {
+        if (res.status === "OK") {
           setState(prevState => ({
             ...prevState,
             data: res.data.list,
-            totalPages: res.data.totalPages,
             totalRecords: res.data.totalRecords,
             currentPage: res.data.currentPage + 1,
             employeeName: res.data.employeeName
@@ -97,9 +91,9 @@ const Leave = () => {
           ...prevState,
           multiApproveMasterData: res.data,
           leaveModuleValidation: res.data.moduleIsActive
-        }));
+        }))
       }
-    });
+    })
 
     // get module setup date
     getModuleSetupByCompanyId(state.companyId).then(res => {
@@ -107,7 +101,7 @@ const Leave = () => {
         setState(prevState => ({
           ...prevState,
           moduleSetup: res.data,
-        }));
+        }))
         let firstActiveModule = res.data.find(module => module.isActive === "1" && module.moduleName === "Multi Approve");
         if (firstActiveModule) {
           setState(prevState => ({
@@ -125,35 +119,39 @@ const Leave = () => {
         setState(prevState => ({
           ...prevState,
           halfDayCount: res.data,
-        }));
-      }
-    });
-  };
 
-  const updateList = (leave) => {
+        }))
+      }
+    })
+  }, [state.employeeId, state.branchId, state.departmentId, state.jobTitleId, state.q, state.fromDate, state.toDate, state.page, state.size, state.sort, state.self, state.companyId]);
+
+  useEffect(() => {
+    fetchList();
+  }, [fetchList]);
+
+  const updateList = () => {
     hideLeaveAction();
     hideForm();
     setTimeout(function () {
-      window.location.reload();
-    }, 2000);
-  };
-
+      window.location.reload()
+    }, 2000)
+  }
   const hideForm = () => {
     setState(prevState => ({
       ...prevState,
       showForm: false,
       leave: undefined
-    }));
-  };
+    }))
+  }
 
+  // view hide
   const hideViewForm = () => {
     setState(prevState => ({
       ...prevState,
       showViewForm: false,
       leave: undefined
-    }));
-  };
-
+    }))
+  }
   const pageSizeChange = (currentPage, pageSize) => {
     setState(prevState => ({
       ...prevState,
@@ -161,28 +159,26 @@ const Leave = () => {
       page: 0
     }), () => {
       fetchList();
-    });
-  };
+    })
 
+  }
   const onTableDataChange = (d, filter, sorter) => {
     setState(prevState => ({
       ...prevState,
       page: d.current - 1,
       size: d.pageSize,
-      sort: sorter && sorter.field ? `${sorter.field},${sorter.order == 'ascend' ? 'asc' : 'desc'}` : prevState.sort
+      sort: sorter && sorter.field ? `${sorter.field},${sorter.order == 'ascend' ? 'asc' : 'desc'}` : state.sort
     }), () => {
       fetchList();
-    });
-  };
-
+    })
+  }
   const hideLeaveAction = () => {
     setState(prevState => ({
       ...prevState,
       showLeaveAction: false,
       leave: undefined
-    }));
-  };
-
+    }))
+  }
   const showAlert = (status) => {
     if (status === 'APPROVED') {
       setState(prevState => ({
@@ -213,8 +209,7 @@ const Leave = () => {
         showAlert: false
       }));
     }, 3000);
-  };
-
+  }
   const deleteLeaveRecord = (data) => {
     confirmAlert({
       title: `Delete Leave`,
@@ -228,7 +223,7 @@ const Leave = () => {
               toast.success(res.message);
               fetchList();
             } else {
-              toast.error(res.message);
+              toast.error(res.message)
             }
           })
         },
@@ -238,17 +233,16 @@ const Leave = () => {
         }
       ]
     });
-  };
-
+  }
   const updateSelf = () => {
+
     setState(prevState => ({
       ...prevState,
       self: prevState.self == 1 ? 0 : 1
     }), () => {
       fetchList();
-    });
-  };
-
+    })
+  }
   const updateStatus = (selected, status) => {
     updateSelectedStatus(selected, status).then(res => {
       if (res.status == "OK") {
@@ -257,9 +251,8 @@ const Leave = () => {
       } else {
         toast.error(res.message);
       }
-    });
-  };
-
+    })
+  }
   const onSelect = (data) => {
     let { selected } = state;
     let index = selected.indexOf(data.id);
@@ -272,8 +265,7 @@ const Leave = () => {
       ...prevState,
       selected
     }));
-  };
-
+  }
   const updateSelected = (status) => {
     const { selected } = state;
     confirmAlert({
@@ -287,7 +279,7 @@ const Leave = () => {
             setState(prevState => ({
               ...prevState,
               selected: []
-            }));
+            }))
           }
         },
         {
@@ -296,10 +288,9 @@ const Leave = () => {
         }
       ]
     });
-  };
-
+  }
   const updateAll = (status) => {
-    const { data } = state;
+    const { data } = state
     if (data && data.length > 0) {
       confirmAlert({
         title: `Update Status for all as ${status}`,
@@ -308,10 +299,10 @@ const Leave = () => {
           {
             label: 'Yes',
             onClick: () => {
-              let selected = [];
-              let test = data.map((d) => {
+              let selected = []
+              data.map((d) => {
                 if (!d.approvalStatus) {
-                  selected.push(d.id);
+                  selected.push(d.id)
                   return d.id;
                 }
               });
@@ -320,7 +311,7 @@ const Leave = () => {
               setState(prevState => ({
                 ...prevState,
                 selected: []
-              }));
+              }))
             }
           },
           {
@@ -330,13 +321,12 @@ const Leave = () => {
         ]
       });
     }
-  };
+  }
 
   const handleButtonClick = () => {
     setState(prevState => ({
       ...prevState,
-      buttonState: !prevState.buttonState,
-      preferredMethod: prevState.buttonState ? 'Self' : 'Team'
+      buttonState: !prevState.buttonState
     }));
   };
 
@@ -356,23 +346,24 @@ const Leave = () => {
     if (text === 'PENDING') {
       return <span className='p-1 badge bg-inverse-warning'><i className="pr-2 fa fa-hourglass-o text-warning"></i>Pending</span>;
     }
-    if (text === 2){
+    if (text === 2) {
       return <span className='p-1 badge bg-inverse-success'>FH</span>;
     }
-    if (text === 3){
+    if (text === 3) {
       return <span className='p-1 badge bg-inverse-success'>SH</span>;
     }
     return ' ';
-  };
+  }
 
-  const { buttonState, data, totalPages, totalRecords, currentPage, size, selected } = state;
+  const { buttonState, data, totalRecords, currentPage, size, selected } = state
+
   let startRange = ((currentPage - 1) * size) + 1;
   let endRange = ((currentPage) * (size + 1)) - 1;
   if (endRange > totalRecords) {
     endRange = totalRecords;
   }
 
-  const menuItems = (text, record) => {
+  const menuItems = (text) => {
     const items = [];
     if (verifyApprovalPermission("LEAVE") && state.self != 1 && ((!text.approvalStatus && text.status != "REJECTED" && text.status != "APPROVED" && !text.multiApprovalNextLevelStatus) || !state.leaveModuleValidation)) {
       items.push(<div> <a className="muiMenu_item" href="#" onClick={() => {
@@ -382,14 +373,14 @@ const Leave = () => {
           leave.startDate = leave.startDate.substr(0, 10);
           leave.endDate = leave.endDate.substr(0, 10);
         } catch (error) {
-          console.error(error);
+          console.error(error)
         }
         setState(prevState => ({
           ...prevState,
           leave,
           showLeaveAction: true,
           showForm: false
-        }));
+        }))
       }} >
         <i className="las la-check-double m-r-5"></i> Leave Action</a>
       </div>
@@ -400,14 +391,14 @@ const Leave = () => {
       items.push(<div> <a className="muiMenu_item" href="#" onClick={() => {
         let { leave } = state;
         leave = text;
-        
+
         setState(prevState => ({
           ...prevState,
           leave,
           showLeaveAction: false,
           showForm: false,
           showViewForm: true
-        }));
+        }))
       }} >
         <i className="fa fa-eye m-r-5" />View</a>
       </div>
@@ -415,7 +406,7 @@ const Leave = () => {
     }
 
     // view
-    if (verifyEditPermission("LEAVE") && text.status != "APPROVED" && text.status != "REJECTED" && text.multiApprovalStatus <=1) {
+    if (verifyEditPermission("LEAVE") && text.status != "APPROVED" && text.status != "REJECTED" && text.multiApprovalStatus <= 1) {
       items.push(<div>
         <a className="muiMenu_item" href="#" onClick={() => {
           let { leave } = state;
@@ -424,19 +415,19 @@ const Leave = () => {
             leave.startDate = leave.startDate.substr(0, 10);
             leave.endDate = leave.endDate.substr(0, 10);
           } catch (error) {
-            console.error(error);
+            console.error(error)
           }
           setState(prevState => ({
             ...prevState,
             leave,
             showForm: true
-          }));
+          }))
         }} >
           <i className="fa fa-pencil m-r-5"></i> Edit</a>
       </div>
       );
     }
-    if (verifyEditPermission("LEAVE") && text.status != "APPROVED" && text.status != "REJECTED" && text.multiApprovalStatus <=1) {
+    if (verifyEditPermission("LEAVE") && text.status != "APPROVED" && text.status != "REJECTED" && text.multiApprovalStatus <= 1) {
       items.push(<div>
         <a className="muiMenu_item" href="#" onClick={() => {
           deleteLeaveRecord(text);
@@ -453,9 +444,9 @@ const Leave = () => {
     {
       title: 'Employee',
       sorter: false,
-      render: (text, record) => {
+      render: (text) => {
         return <EmployeeListColumn
-          id={text.employee.id} name={text.employee.name} employeeId={text.employeeId}></EmployeeListColumn>;
+          id={text.employee.id} name={text.employee.name} employeeId={text.employeeId}></EmployeeListColumn>
       }
     }, {
       title: 'Leave',
@@ -464,14 +455,14 @@ const Leave = () => {
       render: (text, record) => {
         return <>
           <div>{record.leaveType?.name}</div>
-        </>;
+        </>
       }
     },
     {
       title: (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span>Start Date</span>
-        {state.halfDayCount > 0 && <span style={{ paddingLeft: '8px' }}>
+          {state.halfDayCount > 0 && <span style={{ paddingLeft: '8px' }}>
             <Tooltip title="FH = First Half; SH = Second Half">
               <i className="fa fa-info-circle" style={{ marginLeft: '4px', cursor: 'pointer' }}></i>
             </Tooltip><br />
@@ -483,15 +474,15 @@ const Leave = () => {
       render: (text, record) => {
         return <>
           <div>{getReadableDate(record.startDate)} {getStyle(record.startDateDayType)}</div>
-        </>;
+        </>
       }
     },
     {
       title: (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span>End Date</span>
-          {state.halfDayCount > 0 &&    <span style={{ paddingLeft: '8px' }}>
-          <Tooltip title="FH = First Half; SH = Second Half">
+          {state.halfDayCount > 0 && <span style={{ paddingLeft: '8px' }}>
+            <Tooltip title="FH = First Half; SH = Second Half">
               <i className="fa fa-info-circle" style={{ marginLeft: '4px', cursor: 'pointer' }}></i>
             </Tooltip><br />
           </span>}
@@ -502,7 +493,7 @@ const Leave = () => {
       render: (text, record) => {
         return <>
           <div>{getReadableDate(record.endDate)}  {getStyle(record.endDateDayType)}</div>
-        </>;
+        </>
       }
     }, {
       title: 'Leave Count',
@@ -511,7 +502,7 @@ const Leave = () => {
       render: (text, record) => {
         return <>
           <div>{record.totalDays}</div>
-        </>;
+        </>
       }
     },
     {
@@ -522,7 +513,7 @@ const Leave = () => {
       render: (text, record) => {
         return <>
           <div>{record.leaveReason}</div>
-        </>;
+        </>
       }
     },
     {
@@ -530,48 +521,60 @@ const Leave = () => {
       sorter: true,
       width: 50,
       render: (text, record) => {
-        return <> {text.attachment && <Anchor style={{color: 'black'}} onClick={() => {
+        return <> {text.attachment && <Anchor style={{ color: 'black' }} onClick={() => {
           fileDownload(text.id, text.employee.id, "LEAVE_DOCUMENT", text.attachment);
         }} title={text.attachment}>
-          <i style={{color: '#45C56D'}} className='fa fa-download'></i> Download
+          <i style={{ color: '#45C56D' }} className='fa fa-download'></i> Download
         </Anchor>}
           {!text.attachment && <>-</>
           }
-        </>;
+        </>
       }
-    },   
+    },
     {
       title: 'Applied On',
       render: (text, record) => {
-        return <>
-          <div>{toLocalDateTime(text.createdDate)}</div>
-        </>;
+        if (!text.createdDate) return <div>-</div>;
+
+        if (isSafari) {
+          return <div>{fallbackLocalDateTime(text.createdDate)}</div>;
+        } else {
+          console.log(text.createdDate)
+          const value = toLocalDateTime(text.createdDate);
+          return <div>{value === null ? fallbackLocalDateTime(text.createdDate) : value}</div>;
+        }
       }
     },
     {
       title: 'Approved By',
       render: (text, record) => {
         return <>
-          {text.approvedBy != null?<EmployeeListColumn
-          id={text.approvedBy.id} name={text.approvedBy.name} employeeId={text.approverId}></EmployeeListColumn>:text.status == "APPROVED" || text.status== 'REJECTED'?"Admin":"-"}
-        </>;
+          {text.approvedBy != null ? <EmployeeListColumn
+            id={text.approvedBy.id} name={text.approvedBy.name} employeeId={text.approverId}></EmployeeListColumn> : text.status == "APPROVED" || text.status == 'REJECTED' ? "Admin" : "-"}
+        </>
       }
     },
     {
       title: 'Approved on',
       sorter: true,
       render: (text, record) => {
-        return <>
-          <div>{text.approvedOn != null?toLocalDateTime(text.approvedOn):"-"}</div>
-        </>;
+
+        if (!text.approvedOn) return <div>-</div>;
+
+        if (isSafari) {
+          return <div>{fallbackLocalDateTime(text.approvedOn)}</div>;
+        } else {
+          const value = toLocalDateTime(text.approvedOn);
+          return <div>{value === null ? fallbackLocalDateTime(text.approvedOn) : value}</div>;
+        }
       }
     },
     {
       title: 'Remarks',
       render: (text, record) => {
         return <>
-          <div>{text.status == "REJECTED" && text.status != "undefined"?text.remark:"-"}</div>
-        </>;
+          <div>{text.status == "REJECTED" && text.status != "undefined" ? text.remark : "-"}</div>
+        </>
       }
     },
     {
@@ -579,7 +582,7 @@ const Leave = () => {
       dataIndex: 'status',
       sorter: true,
       render: (text, record) => {
-        return <div>{getStyle(record.status)}</div>;
+        return <div>{getStyle(record.status)}</div>
       }
     },
     {
@@ -605,7 +608,7 @@ const Leave = () => {
         </div>
       ),
     },
-  ];
+  ]
   if (state.multiApproveValidation && state.leaveModuleValidation) {
     const index = columns.length - 1;
     const value = {
@@ -613,10 +616,12 @@ const Leave = () => {
       sorter: true,
       className: 'pre-wrap',
       render: (text, record) => {
-        return <div>{text.status == "APPROVED" ? <span className='p-1 badge bg-inverse-success'><i className="pr-2 fa fa-check text-success"></i>Approved</span> : text.status == "REJECTED" ? <span className='p-1 badge bg-inverse-danger'><i className="pr-2 fa fa-remove text-danger"></i>Rejected</span> : text.multiApprovalNextLevelStatus ? <span className='p-1 badge bg-inverse-warning' style={{ whiteSpace: "pre-wrap" }}><i className="pr-2 fa fa-hourglass-o text-warning"></i>Moved to next level</span> : text.status == "PENDING" ? <span className='p-1 badge bg-inverse-warning' style={{ whiteSpace: "pre-wrap" }}><i className="pr-2 fa fa-hourglass-o text-warning"></i>Waiting for approval level {text.multiApprovalStatus}</span> : "-"}</div>;
+        return <div>{text.status == "APPROVED" ? <span className='p-1 badge bg-inverse-success'><i className="pr-2 fa fa-check text-success"></i>Approved</span> : text.status == "REJECTED" ? <span className='p-1 badge bg-inverse-danger'><i className="pr-2 fa fa-remove text-danger"></i>Rejected</span> : text.multiApprovalNextLevelStatus ? <span className='p-1 badge bg-inverse-warning' style={{ whiteSpace: "pre-wrap" }}><i className="pr-2 fa fa-hourglass-o text-warning"></i>Moved to next level</span> : text.status == "PENDING" ? <span className='p-1 badge bg-inverse-warning' style={{ whiteSpace: "pre-wrap" }}><i className="pr-2 fa fa-hourglass-o text-warning"></i>Waiting for approval level {text.multiApprovalStatus}</span> : "-"}</div>
       }
-    };
+    }
     columns.splice(index, 0, value);
+
+
   }
   return (
     <>
@@ -635,20 +640,20 @@ const Leave = () => {
           <div className="float-right col-md-6 btn-group btn-group-sm">
             {/* {verifyViewPermissionForTeam("LEAVE") && !isCompanyAdmin && <>
               <div class="btn-group btn-cust-group" role="group" aria-label="Basic example">
-                {verifySelfViewPermission("LEAVE") && <button  type="button" className={state.self == 1 ? 'btn btn-sm btn-success btn-selected self-btn' : 'btn btn-sm btn-secondary'} onClick={e => {
-                  updateSelf();
+                {verifySelfViewPermission("LEAVE") && <button  type="button" className={this.state.self == 1 ? 'btn btn-sm btn-success btn-selected self-btn' : 'btn btn-sm btn-secondary'} onClick={e => {
+                  this.updateSelf()
                 }} > Self </button>}
 
-                <button  type="button" className={state.self != 1 ? 'btn btn-sm btn-primary btn-selected' : 'btn btn-sm btn-secondary'} onClick={e => {
-                  verifySelfViewPermission("LEAVE") && updateSelf();
+                <button  type="button" className={this.state.self != 1 ? 'btn btn-sm btn-primary btn-selected' : 'btn btn-sm btn-secondary'} onClick={e => {
+                  verifySelfViewPermission("LEAVE") && this.updateSelf()
                 }} > Team </button>
               </div>
             </>} */}
 
             {verifyViewPermissionForTeam("LEAVE") && !isCompanyAdmin && <div className="mr-2">
               <div onClick={e => {
-                updateSelf();
-                handleButtonClick();
+                updateSelf()
+                handleButtonClick()
               }} className="toggles-btn-view" id="button-container" >
 
                 <div id="my-button" className="toggle-button-element" style={{ transform: buttonState ? 'translateX(0px)' : 'translateX(80px)' }}>
@@ -665,7 +670,7 @@ const Leave = () => {
               setState(prevState => ({
                 ...prevState,
                 showForm: true
-              }));
+              }))
             }}><i className="fa fa-plus" /> Apply</button>}
             {verifyViewPermission("LEAVE") && <BsSliders className='filter-btn' size={30} onClick={() => setState(prevState => ({
               ...prevState,
@@ -682,7 +687,7 @@ const Leave = () => {
                   setState(prevState => ({
                     ...prevState,
                     branchId: e.target.value
-                  }));
+                  }))
                 }}></BranchDropdown>
                 <label className="focus-label">Location</label>
               </div>
@@ -693,20 +698,20 @@ const Leave = () => {
                   setState(prevState => ({
                     ...prevState,
                     departmentId: e.target.value
-                  }));
+                  }))
                 }}></DepartmentDropdown>
                 <label className="focus-label">Department</label>
               </div>
             </div>
             <div className="col-md-4">
               <div className="form-group form-focus">
-              <JobTitlesDropdown defaultValue={state.jobTitleId} onChange={e => {
-                        setState(prevState => ({
-                          ...prevState,
-                          jobTitleId: e.target.value
-                        }));
-                      }}></JobTitlesDropdown>
-                      <label className="focus-label">Job Titles</label>
+                <JobTitlesDropdown defaultValue={state.jobTitleId} onChange={e => {
+                  setState(prevState => ({
+                    ...prevState,
+                    jobTitleId: e.target.value
+                  }))
+                }}></JobTitlesDropdown>
+                <label className="focus-label">Job Titles</label>
               </div>
             </div>
           </div>}
@@ -718,7 +723,7 @@ const Leave = () => {
                     ...prevState,
                     q: e.target.value,
                     page: 0
-                  }));
+                  }))
                 }} type="text" className="form-control floating" />
                 <label className="focus-label">Search</label>
               </div>
@@ -729,7 +734,7 @@ const Leave = () => {
                   setState(prevState => ({
                     ...prevState,
                     fromDate: e.target.value
-                  }));
+                  }))
                 }} type="date" className="form-control floating" />
                 <label className="focus-label">From Date</label>
               </div>
@@ -740,7 +745,7 @@ const Leave = () => {
                   setState(prevState => ({
                     ...prevState,
                     toDate: e.target.value
-                  }));
+                  }))
                 }} type="date" className="form-control floating" />
                 <label className="focus-label">To Date</label>
               </div>
@@ -798,7 +803,7 @@ const Leave = () => {
                   {verifyViewPermission("LEAVE") && <Table id='Table-style' className="table-striped "
                     pagination={{
                       total: totalRecords,
-                      showTotal: (total, range) => {
+                      showTotal: () => {
                         return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
                       },
                       showSizeChanger: true, onShowSizeChange: pageSizeChange,
@@ -846,11 +851,11 @@ const Leave = () => {
           <h5 className="modal-title">Leave Details</h5>
         </Header>
         <Body>
-          <LeaveViewForm  leave={state.leave}></LeaveViewForm>
+          <LeaveViewForm leave={state.leave}></LeaveViewForm>
         </Body>
       </Modal>
     </>
   );
-};
+}
 
 export default Leave;

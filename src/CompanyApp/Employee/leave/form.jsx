@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
-import { getUserType, getEmployeeId, getPermission, verifyApprovalPermission } from '../../../utility';
+import { getUserType, getEmployeeId, getPermission, verifyApprovalPermission, toDateWithGMT } from '../../../utility';
 import EmployeeDropdown from '../../ModuleSetup/Dropdown/EmployeeDropdown';
 import LeaveTypeDropdown from '../../ModuleSetup/Dropdown/LeaveTypeDropdown';
 import { saveLeave,getEmployeeLeaveInformation } from './service';
@@ -51,9 +51,11 @@ export default class LeaveForm extends Component {
 
         return null;
     }
-    save = (data, action) => {
-        data["startDate"] = new Date(`${data["startDate"]} GMT`).toISOString();
-        data["endDate"] = new Date(`${data["endDate"]} GMT`).toISOString();
+
+  save = (data, action) => {
+         data["startDate"] = toDateWithGMT(data["startDate"]);
+        data["endDate"] = toDateWithGMT(data["endDate"]);
+
         action.setSubmitting(true);
         let leaveData = {...data, startDateDayType: data.startDateDayType == null?1:data.startDateDayType, endDateDayType: data.endDateDayType == null?1:data.endDateDayType}
         saveLeave(leaveData).then(res => {
@@ -335,7 +337,7 @@ export default class LeaveForm extends Component {
                                 <label>Leave Document
                                     <span style={{ color: "red" }}>*</span>
                                 </label>
-                                <input name="file" type="file" required className="form-control" onChange={e => {
+                                <input name="file" type="file" className="form-control" onChange={e => {
                                     setFieldValue('file', e.currentTarget.files[0]);
                                 }}></input>
                                 <ErrorMessage name="file">

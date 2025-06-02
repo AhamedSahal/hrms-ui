@@ -99,14 +99,26 @@ export default class RequestPermissionSettings extends Component {
   //     })
   //   }
   // }
-  onTableDataChange = (d, filter, sorter) => {
+  onTableDataChange = (pagination, filters, sorter) => {
+    const { field, order } = sorter;
+    let sortedData = [...permissionData];
+
+    if (field && order) {
+        sortedData.sort((a, b) => {
+            if (order === 'ascend') {
+                return a[field] > b[field] ? 1 : -1;
+            } else {
+                return a[field] < b[field] ? 1 : -1;
+            }
+        });
+    }
+
     this.setState({
-      page: d.current - 1,
-      size: d.pageSize,
-      sort: sorter && sorter.field ? `${sorter.field},${sorter.order == 'ascend' ? 'asc' : 'desc'}` : this.state.sort
-    }, () => {
-      this.fetchList();
-    })
+        data: sortedData,
+        page: pagination.current - 1,
+        size: pagination.pageSize,
+        sort: field ? `${field},${order === 'ascend' ? 'asc' : 'desc'}` : this.state.sort
+    });
   }
   updateList = (permissionType) => {
     let { data } = this.state;
@@ -194,7 +206,6 @@ export default class RequestPermissionSettings extends Component {
       },
       {
         title: 'Applicable Period',
-        sorter: true,
         key: '3',
         className: "text-center",
         dataIndex: 'allowedTime',

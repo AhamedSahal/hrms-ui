@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { Modal } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import { getOnboardSubtaskList, getOnboardMSTaskList,getJobTitles } from './service';
+import { getOnboardSubtaskList, getOnboardMSTaskList } from './service';
 import { getBranchLists, getDepartmentLists } from '../../../Performance/ReviewCycle/CycleForms/service';
 import OnboardTaskForm from './taskForm';
 import { Avatar, Empty, Tooltip } from 'antd';
 import OnboardSubTaskForm from './subTaskFrom';
 import OnboardMSTaskForm from './taskForm';
-import { sub } from 'date-fns';
 import EmployeeProfilePhoto from '../../../Employee/widgetEmployeePhoto';
 const { Header, Body } = Modal;
 
@@ -116,6 +114,7 @@ class OnboardMSTaskView extends Component {
         }
         this.setState({ taskList }, () => {
             this.hideForm();
+            this.fetchList();
         });
     }
     updateTaskList = (subTask) => {
@@ -128,6 +127,7 @@ class OnboardMSTaskView extends Component {
         }
         this.setState({ subTaskData }, () => {
             this.hidesubtaskForm();
+           this.fetchList();
         });
     }
 
@@ -277,7 +277,7 @@ class OnboardMSTaskView extends Component {
                                                 </td>
                                                 <td style={{ width: '380px' }} className='GoalName_tab'>
                                                     <div>
-                                                        <Tooltip title={<><strong style={{ textDecoration: 'underline' }}>{item.name}</strong><br />{item.description}</>}>
+                                                        <Tooltip title={<><strong >{item.name}</strong></>}>
                                                             <div className="goal-title">{this.reduceString(item.name, 45)}</div>
                                                         </Tooltip>
                                                         <div className="goal-details">

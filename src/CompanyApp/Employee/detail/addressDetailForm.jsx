@@ -129,7 +129,7 @@ export default class AddressDetailEmployeeForm extends Component {
                                 <div className="text">{address.mobile ?? "-"}</div>
                             </li></>}
                         {address.addressType !== "EMERGENCY" && address.addressType !== "EMERGENCY2"  && <><li>
-                            <div className="title">Building Name</div>
+                            <div className="title">Building Name/Number</div>
                             <div className="text">{address.buildingName ?? "-"}</div>
                         </li> </>}
                         <li>
@@ -144,9 +144,9 @@ export default class AddressDetailEmployeeForm extends Component {
                             <div className="title">Country</div>
                             <div className="text">{address.country?.name ?? "-"}</div>
                         </li>
-                        {address.addressType == "HOMETOWN" && <><li>
+                        {(address.addressType == "LOCAL" || address.addressType == "HOMETOWN") && <><li>
                             <div className="title">Telephone No</div>
-                            <div className="text">{address.telephoneNo?? "-"}</div>
+                            <div className="text">{address.telephoneNo || "-"}</div>
                         </li> </>}
                         <li>
                             <div className="title">Zip/Postal Code</div>
@@ -214,7 +214,7 @@ export default class AddressDetailEmployeeForm extends Component {
                                 {((this.state.editAddress.addressType != "EMERGENCY") &&  (this.state.editAddress.addressType != "EMERGENCY2")) &&<><div className="row">
                                     <div className="col-md-6">
                                         <FormGroup>
-                                            <label>Building Name
+                                            <label>Building Name/Number
                                                 <span style={{ color: "red" }}>*</span>
                                             </label>
                                             <Field readOnly={!editable} name="buildingName" className="form-control" required></Field>
@@ -293,7 +293,6 @@ export default class AddressDetailEmployeeForm extends Component {
                                     <div className="col-md-6">
                                         <FormGroup>
                                             <label>Telephone no  
-                                                <span style={{ color: "red" }}>*</span>
                                             </label> 
                                             <Field readOnly={!editable} name="telephoneNo" className="form-control" required></Field>
                                             <ErrorMessage name="telephoneNo">

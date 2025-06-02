@@ -92,10 +92,12 @@ class HolidayCalendar extends Component {
                             const day = formattedDate.format("dddd"); // Get full day name
                             const date = formattedDate.format("DD"); // Get date
 
+                            const isPastHoliday = formattedDate.isBefore(moment(), "day"); // Check if the holiday is in the past
+
                             return (
                                 <React.Fragment key={index}>
                                     <div className="col-md-6 mb-2">
-                                        <div className="holiday-item">
+                                        <div className={`holiday-item ${isPastHoliday ? 'past-holiday' : ''}`}> {/* Add conditional class */}
                                             <div className="month-date">
                                                 <div style={{ fontWeight: '600', color: ' white' }} className={`holiday-month-${month.toLowerCase()}`}>{month.toUpperCase()}</div>
                                                 <div className="holiday-date">{date}</div>

@@ -86,6 +86,7 @@ export default class AssetsActive extends Component {
           showAssetView: false,
           showAssetHistory: false,
           showAssetActive: false,
+          showAssetCondition:false,
           AssetsCondition: undefined
         })
       } 
@@ -104,6 +105,7 @@ export default class AssetsActive extends Component {
             this.hideAssetView(); 
             this.hideAssetAction();
             // this.hideAssetHistory();
+            // this.hideAssetCondition();
           });
       }
 
@@ -415,20 +417,3 @@ export default class AssetsActive extends Component {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

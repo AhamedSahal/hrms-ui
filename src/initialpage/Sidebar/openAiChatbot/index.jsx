@@ -19,23 +19,20 @@ const Chatbot = ({ closeChatbot }) => {
         setLoading(true);
 
         try {
-            const response = await axios.post(
-                "https://api.openai.com/v1/chat/completions",
-                {
-                    model: "gpt-4",
-                    messages: newMessages,
-                    temperature: 0.7,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+            const response = await axios.post("http://localhost:5000/api/chat", {
+                messages: newMessages,
+            }, {
+                headers: { "Content-Type": "application/json" },
+            });
 
-            const botReply = response.data.choices[0].message;
-            setMessages([...newMessages, botReply]);
+            const apiReply = response.data.botReply; // Extract the 'reply' from the API response
+            if (apiReply) {
+                const botReply = { role: "bot", content: apiReply }; // Map to the expected format
+                setMessages([...newMessages, botReply]);
+            } else {
+                console.error("Invalid API response format:", response.data);
+            }
+            
         } catch (error) {
             console.error("Error fetching response:", error);
         }

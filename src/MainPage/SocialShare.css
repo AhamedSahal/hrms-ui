@@ -157,7 +157,7 @@
 
 .policyIcon:hover{
     background: #f5efef;
-    color: #16427c;
+    color: #103769;
 }
 
 .addPost-div {
@@ -1850,7 +1850,7 @@ a.btn.btn-success.post-btn {
     background: #102746;
     position: fixed;
     top: 24%;
-    right: -5px;
+    right: -8px;
     z-index: 2;
     border-radius: 8px;
     cursor: pointer;
@@ -1867,7 +1867,7 @@ a.btn.btn-success.post-btn {
     white-space: nowrap;
     font-size: 16px;
     color: white;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .quickAccess:hover {

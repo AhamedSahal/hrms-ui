@@ -74,7 +74,6 @@ export default class OnboardingMSCheckList extends Component {
     fetchList = () => {
         getOnboardMSCheckList().then(res => {
             if (res.status == "OK") {
-           
             if(res.data.length > 0){
                 let data = res.data.map((res) => {
                     if(res.applicableId == 0){
@@ -119,6 +118,7 @@ export default class OnboardingMSCheckList extends Component {
         }
         this.setState({ data }, () => {
             this.hideForm();
+            this.fetchList();
         });
     }
 
@@ -178,20 +178,21 @@ export default class OnboardingMSCheckList extends Component {
                                 <div className="col-sm-12">
                                     <div className="card">
                                         <div className="card-header">
-                                            <h5 className="card-title">Onboard</h5>
+                                            <h3 className='mt-2 mb-0'>Onboard</h3>
+                                           
                                         </div>
                                         {/* body */}
                                         <div className="card-body">
                                             {/* onboard  active inactive */}
                                             <div className="mt-2 float-left col-auto ml-auto">
                                                 <label htmlFor="">Enable Onboard</label>
-                                                <div type="checkbox" name="onboardStatus" onClick={
-                                                    this.handleMasterRecordUpdate
-                                                } >
+                                                <div type="checkbox" name="onboardStatus"  >
 
                                                     <i className={`fa fa-2x ${this.state.onboardStatus
                                                         ? 'fa-toggle-on text-success' :
-                                                        'fa fa-toggle-off text-danger'}`}></i>
+                                                        'fa fa-toggle-off text-danger'}`} onClick={
+                                                    this.handleMasterRecordUpdate
+                                                }></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -208,16 +209,16 @@ export default class OnboardingMSCheckList extends Component {
                         <div style={{ height: '80px' }} className="goalHeader-container">
                             <div className="onboardTaskHead-section">
                                 <div className='mt-8 mb-0'>
-                                    <h3 className='mt-8 mb-0'>Checklist</h3>
+                                    <h3 className='mt-2 mb-0'>Checklist</h3>
                                 </div>
                                  
-                                <div className="mt-2 float-right col-auto ml-auto">
+                                <div className='mt-8 mb-0'>
 
                                     {verifyOrgLevelEditPermission("Module Setup Onboard") && <button onClick={() => {
                                         this.setState({
                                             showForm: true
                                         })
-                                    }} className="add-goals-btn"><i className="fa fa-plus" /> Add Checklist</button>}
+                                    }} className="add-goals-btn" ><i className="fa fa-plus" /> Add Checklist</button>}
                                 </div>
 
                             </div>

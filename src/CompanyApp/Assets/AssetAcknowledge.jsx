@@ -149,7 +149,7 @@ export default class AssetAcknowledge extends Component{
     render() {
         const { data, totalPages, totalRecords, currentPage, size,AssetView,AssetsAction,AssetsHistory,AssetsActive,showForm} = this.state
         let startRange = ((currentPage - 1) * size) + 1;
-        let endRange = ((currentPage) * (size)) - 1;
+        let endRange = ((currentPage) * (size));
         if (endRange > totalRecords) {
           endRange = totalRecords;
         }
