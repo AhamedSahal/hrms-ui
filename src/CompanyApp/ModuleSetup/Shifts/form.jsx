@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { Helmet } from 'react-helmet';
-import { convertToUTC, toUTCCalendarTime } from '../../../utility';
+import {  toUTCCalendarTime } from '../../../utility';
 import { saveShifts } from './service';
 import { ShiftsSchema } from './validation';
 import IconButton from '@mui/material/IconButton';

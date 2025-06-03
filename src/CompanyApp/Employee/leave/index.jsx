@@ -133,7 +133,7 @@ const Leave = () => {
     hideLeaveAction();
     hideForm();
     setTimeout(function () {
-      window.location.reload()
+      fetchList();
     }, 2000)
   }
   const hideForm = () => {
@@ -247,7 +247,7 @@ const Leave = () => {
     updateSelectedStatus(selected, status).then(res => {
       if (res.status == "OK") {
         toast.success(res.message);
-        window.location.reload();
+        fetchList();
       } else {
         toast.error(res.message);
       }

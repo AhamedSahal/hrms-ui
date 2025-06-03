@@ -400,7 +400,7 @@ export default class RequestPermissionSettings extends Component {
 
 
           {/* /Page Content */}
-          <Modal enforceFocus={false} size={"md"} show={this.state.showForm} onHide={this.hideForm} >
+          <Modal enforceFocus={false} size={"lg"} show={this.state.showForm} onHide={this.hideForm} >
             <Header closeButton>
               <h5 className="modal-title">{this.state.permissionType ? 'Edit' : 'Add'} Permission</h5>
             </Header>
