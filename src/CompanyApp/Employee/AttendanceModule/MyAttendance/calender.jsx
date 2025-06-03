@@ -60,7 +60,9 @@ export default class MyCalender extends Component {
     const selectedData = this.state.calenderData.find((item) => {
       return item.calenderDate === date.format('YYYY-MM-DD');
     });
-    const isToday = moment().isSame(date, 'day');
+    const isToday = date.isSame(moment(), 'day');
+    console.log("selectedData", selectedData, "isToday", isToday);
+    
     return (
       <div>
 

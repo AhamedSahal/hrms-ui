@@ -68,7 +68,7 @@ export default class TeamDetailedCalender extends Component {
         const selectedData = this.state.calenderData.find((item) => {
             return item.calenderDate === date.format('YYYY-MM-DD');
         });
-        const isToday = moment().isSame(date, 'day');
+       const isToday = date.isSame(moment(), 'day');
         return (
             <div>
                 {selectedData && (
