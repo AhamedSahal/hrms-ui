@@ -91,6 +91,8 @@ export default class LeaveTypeForm extends Component {
         }
     }
     save = (data, action) => {
+        console.log("cell --- data", data);
+        
         action.setSubmitting(true);
         saveLeaveType(data).then(res => {
             if (res.status == "OK") {

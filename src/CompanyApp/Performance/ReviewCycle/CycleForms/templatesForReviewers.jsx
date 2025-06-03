@@ -11,14 +11,14 @@ import { selectTemplateValidationSchema } from './validation';
 
 
 const selectTemplateValidationSchemas = Yup.object().shape({
-    assign: Yup.string().required("Select an option"),
-    cycleRatingScale: Yup.string().required('Select a rating scale'),
-    ratingValue: Yup.array().when('assign', {
-        is: (assign, schema) => assign === 'department',
-        then: Yup.array().min(1, 'At least one option must be selected'),
-        otherwise: Yup.array(),
-    }),
+  assign: Yup.string().required("Select an option"),
+  cycleRatingScale: Yup.string().required('Select a rating scale'),
 
+  ratingValue: Yup.array().when('assign', ([assign], schema) =>
+    assign === 'department'
+      ? schema.min(1, 'At least one option must be selected')
+      : schema
+  ),
 });
 
 class TemplatesForReviewers extends Component {

@@ -153,7 +153,7 @@ class GoalDetails extends Component {
         return (
             <div className="goalViewPage-details-container">
                 <div className="goalViewPage-header">
-                    <h3 style={{ wordSpacing: '-7px' }} className="m-0">{goalType == 'goal' ? 'View Goal' : "View Sub Goal"}</h3>
+                    <h3 className="m-0">{goalType == 'goal' ? 'View Goal' : "View Sub Goal"}</h3>
                     <div className="goalAuditTopBtn">
                         <p
                             onClick={() => {

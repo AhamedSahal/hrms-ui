@@ -3594,13 +3594,6 @@ input[data-id="cbColor"] {
     padding: 11px 24px;
   }
 
-  .ant-popover-title {
-      background: #102746;
-      color: green!important;
-      min-height: 60px;
-      font-size: 25px;
-      font-weight: bold;
-  }
 
   /*onboard*/ 
   .onboardList_progress-bar {
@@ -3690,6 +3683,9 @@ input[data-id="cbColor"] {
       min-height: 60px;
       font-size: 25px;
       font-weight: bold;
+      padding: 10px !important;
+      margin: -12px;
+      border-radius: 6px 6px 0px 0px;
   }
   
 
@@ -4029,6 +4025,8 @@ input[data-id="cbColor"] {
 .Toastify__toast {
   --toastify-toast-padding: 10px 17px;
 }
+
+
 
 
 

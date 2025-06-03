@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown'; 
-import { updateAsset } from './service'; 
+import { returnAsset } from './service'; 
 import { getReadableDate } from '../../utility';
 
 
