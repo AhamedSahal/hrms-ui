@@ -9,6 +9,7 @@ import EmployeeListColumn from '../Employee/employeeListColumn';
 import { getReadableDate,getDefaultProfilePicture, verifyOrgLevelViewPermission} from '../../utility';
 import { CONSTANT } from '../../constant';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
+import { Empty } from 'antd';
 
 
 export default class RecognitionReceive extends Component {
@@ -77,7 +78,7 @@ export default class RecognitionReceive extends Component {
     
                   {verifyOrgLevelViewPermission("Engage Recognition") &&    <>
                       <div className="pt-4 row staff-grid-row">
-                        {data && data.map((e, i) => {
+                        {data.length ? data.map((e, i) => {
                           return <div className="col-md-6 col-sm-5 col-12 col-lg-5 col-xl-6">
                             <div className="profile-widgets">
                             <div className="col-md-12" style={{textAlign : "Right"}}><h2 style={{textAlign : "right",fontFamily: 'Verdana',fontWeight:"bold",color : "#3A3A3A",fontSize: "12px",paddingRight: "25px"}}><b>
@@ -99,7 +100,7 @@ export default class RecognitionReceive extends Component {
                               <hr></hr>
                             </div>
                           </div>
-                        })}
+                        }) : <div> <Empty/> </div>}
     
     
                       </div>

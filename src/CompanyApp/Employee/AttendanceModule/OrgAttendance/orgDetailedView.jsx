@@ -69,10 +69,11 @@ export default class OrgDetailedCalender extends Component {
             return item.calenderDate === date.format('YYYY-MM-DD');
         });
         const isToday = date.isSame(moment(), 'day');
+        const isFutureDate = date.isAfter(moment(), 'day');
         return (
             <div>
 
-                {selectedData && (
+                {selectedData && !isFutureDate && (
                     <div>
                         <div>
                             {selectedData.inTime && <span className="badge  text-dark" style={{ width: '80%', height: '20px', fontSize: '12px' }}><FiArrowDownRight size={15} style={{ color: '#45C56D' }} />In Time: {convertToUserTimeZoneForAttendance(selectedData.inTime)}</span>} <br />
@@ -85,7 +86,8 @@ export default class OrgDetailedCalender extends Component {
                                 selectedData.typeOfDay == 'Weekoff' ? "badge bg-week-off" :
                                     selectedData.typeOfDay == 'Leave' ? "badge bg-leave" :
                                         selectedData.typeOfDay == 'Halfday' ? "badge bg-half-day" :
-                                            selectedData.typeOfDay == 'Half day leave - Half day absent' ? "badge bg-halfday-absent" : "badge bg-absent"}
+                                            selectedData.typeOfDay == 'Half day leave - Half day absent' ? "badge bg-halfday-absent" :
+                                                selectedData.typeOfDay == 'Absent' && !isFutureDate ? "badge bg-absent" : ""}
                             style={{ width: '100%', height: '20px', fontSize: '12px', placeContent: 'center' }}>{selectedData.typeOfDay == "Half day leave - Half day absent" ? "Half day leave & Absent" : selectedData.typeOfDay}</span>
                     </div>
                 )}
