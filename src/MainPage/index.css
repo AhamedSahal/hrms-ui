@@ -4026,11 +4026,22 @@ input[data-id="cbColor"] {
   --toastify-toast-padding: 10px 17px;
 }
 
+.ant-table-wrapper .ant-table-column-sorter {
+   
+    color: rgb(191 185 185 / 29%);
+}
 
+.ant-pagination-total-text{
+    margin-right: auto !important;
+}
 
+.ant-pagination-item {
+    border-radius: 30px !important;
+}
 
-
-
+.ant-pagination-next {
+    margin-right: auto !important;
+}
 
 
 
