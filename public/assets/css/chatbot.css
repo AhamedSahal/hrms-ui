@@ -5,13 +5,13 @@
     bottom: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    margin: 0 20px 20px 0 !important;
+    margin: 0 30px 22px 0 !important;
     position: fixed !important;
-    right: -44px !important;
+    right: 17px !important;
     width: auto !important;
     align-items: flex-end !important;
     justify-content: flex-end !important;
-    bottom: 28px !important;
+    bottom: 87px !important;
 }
 .rw-widget-container .rw-header {
 	background-color: #102746 !important;

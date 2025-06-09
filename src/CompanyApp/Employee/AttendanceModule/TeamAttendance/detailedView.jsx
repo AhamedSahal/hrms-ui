@@ -68,10 +68,11 @@ export default class TeamDetailedCalender extends Component {
         const selectedData = this.state.calenderData.find((item) => {
             return item.calenderDate === date.format('YYYY-MM-DD');
         });
-       const isToday = date.isSame(moment(), 'day');
+        const isToday = date.isSame(moment(), 'day');
+        const isFutureDate = date.isAfter(moment(), 'day');
         return (
             <div>
-                {selectedData && (
+                {selectedData && !isFutureDate && (
                     <div>
                         <div>
                             {selectedData.inTime && <span className="badge  text-dark" style={{ width: '80%', height: '20px', fontSize: '12px' }}><FiArrowDownRight size={15} style={{ color: '#45C56D' }} />In Time: {convertToUserTimeZoneForAttendance(selectedData.inTime)}</span>} <br />
@@ -101,7 +102,7 @@ export default class TeamDetailedCalender extends Component {
     render() {
         return (
             <div className="attendanceBadge">
-               
+
                 <div className="row">
                     <div className="mt-2 col-md-3">
 

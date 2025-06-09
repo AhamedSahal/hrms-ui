@@ -169,8 +169,8 @@ class Header extends Component {
           }
 
           {showOptions &&
-          <div className={` aibot-rasa ${showOptions ? 'aibot-visible' : ''}`}>
-            <RasaChat />
+          <div className={`aibot-rasa ${showOptions ? 'aibot-visible' : ''}`}>
+            <RasaChat onClose={this.handleCloseChatbot} />
             </div>
           }
           {showChatbot && <Chatbot closeChatbot={this.closeChatbot} />}
