@@ -6089,12 +6089,24 @@ a.close.disabled {
 .modal-header .close {
   padding: 1rem 1rem;
   margin: -1rem -1rem -1rem auto;
+  color: green;
+  background: #20c997;
 }
+
+.modal-header .btn-close {
+  border: solid;
+  border-radius: 49px;
+  filter: brightness(0) invert(1);
+  font-size: 11px;
+   margin-top: 0px;
+}
+
 
 .modal-title {
   margin-bottom: 0;
   line-height: 1.5;
 }
+
 
 .modal-body {
   position: relative;

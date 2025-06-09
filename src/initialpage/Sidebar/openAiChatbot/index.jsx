@@ -65,10 +65,10 @@ const Chatbot = ({ closeChatbot }) => {
                         className={`${msg.role === "user" ? "userChatSpace" : "botMsgSpace"}`}
                         key={index}
                     >
-                        {msg.content}
+                        {typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content.content)}
                     </div>
                 ))}
-                {loading && <div>AI HR is typing...</div>}
+                {loading && <div>Bot is typing...</div>}
             </div>
 
 
