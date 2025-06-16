@@ -142,7 +142,7 @@ console.log("cell performanceReview", location , id);
                         <div className="mb-4 row pageTitle-section">
                             <div style={{ justifyContent: 'space-between' }} className="d-flex col">
                                 <div>
-                                    <h3 style={{ wordSpacing: '-7px' }} className="tablePage-title">Performance Review</h3>
+                                    <h3  className="tablePage-title">Performance Review</h3>
                                     <ul className="breadcrumb">
                                         <li className="breadcrumb-item"><a href="/app/main/dashboard">Dashboard</a></li>
                                         <li className="breadcrumb-item active">Performance Review</li>

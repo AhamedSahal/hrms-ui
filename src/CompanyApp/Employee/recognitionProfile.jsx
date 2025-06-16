@@ -19,7 +19,7 @@ export default class RecognitionProfilePhoto extends Component {
         
      }
     render() {
-        return <h2 style={{wordSpacing: '-5px'}} className="table-avatar">
+        return <h2  className="table-avatar">
             <Link className="recognitionAvatar" to={`/app/company-app/employee/detail/${this.state.id}`}>
             <EmployeePhoto className="recognitionAvatar" id={this.state.id} alt={this.state.name}></EmployeePhoto>
             </Link>

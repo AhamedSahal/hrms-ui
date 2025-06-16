@@ -5,8 +5,7 @@ import {  getPrimaryGradientColor, getPrimaryColor, getReadableDate, verifyOrgLe
 import "../../index.css"
 import { getCompanyAdminDashboardDetail } from './service.jsx';
 import AccessDenied from './AccessDenied.jsx';
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import { Tooltip } from 'antd';
+import { Bar, BarChart,Tooltip, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { Link } from 'react-router-dom';
 
 function CompanyAnalyticsDashboard() {
@@ -165,11 +164,11 @@ function CompanyAnalyticsDashboard() {
                           <XAxis dataKey="Department" />
                           <YAxis />
                           <Tooltip />
-                          <Legend />
-                          <Bar dataKey="Total Employees" fill={getPrimaryColor()} />
+                          <Legend verticalAlign="top" height={36} />
+                          <Bar dataKey="Total Employees" fill={getPrimaryGradientColor()} radius={[10, 10, 0, 0]} />
+                          
                         </BarChart>
                       </ResponsiveContainer>
-
                     </div>
                   </div>
                 </div>
@@ -190,7 +189,7 @@ function CompanyAnalyticsDashboard() {
                           <YAxis />
                           <Tooltip />
                           <Legend />
-                          <Bar dataKey="Total Employees" fill={getPrimaryGradientColor()} />
+                          <Bar dataKey="Total Employees" fill={getPrimaryGradientColor()} radius={[10, 10, 0, 0]}/>
                         </BarChart>
                       </ResponsiveContainer>
 
@@ -215,7 +214,7 @@ function CompanyAnalyticsDashboard() {
                           <YAxis />
                           <Tooltip />
                           <Legend />
-                          <Bar dataKey="Total Employees" fill={getPrimaryGradientColor()} />
+                          <Bar dataKey="Total Employees" fill={getPrimaryGradientColor()} radius={[10, 10, 0, 0]} />
                         </BarChart>
                       </ResponsiveContainer>
 
@@ -239,7 +238,7 @@ function CompanyAnalyticsDashboard() {
                           <YAxis />
                           <Tooltip />
                           <Legend />
-                          <Bar dataKey="Total Employees" fill={getPrimaryColor()} />
+                          <Bar dataKey="Total Employees" fill={getPrimaryColor()}  radius={[10, 10, 0, 0]}/>
                         </BarChart>
                       </ResponsiveContainer>
 
@@ -314,10 +313,8 @@ function CompanyAnalyticsDashboard() {
                   <div className="card">
                     <div className="card-body">
                       <h3 className="card-title text-center">To Do List</h3>
-                      <ResponsiveContainer width='100%' height={200}>
+                      {/* <ResponsiveContainer width='100%' height={200}>
                         <div>
-                          {/* {toDos=> task,description and actionLink } */}
-                          {console.log("cell toDo", dashboardData.toDos)}
                           {dashboardData.toDos?.map((toDo, index) => {
                                     const resolvedLink = index < 3 ? '/app/company-app/settings' : (toDo.actionLink.startsWith('/') ? toDo.actionLink : `/app${toDo.actionLink}`);
                                     return (
@@ -334,7 +331,7 @@ function CompanyAnalyticsDashboard() {
                                     );
                                 })}
                         </div>
-                      </ResponsiveContainer>
+                      </ResponsiveContainer> */}
                     </div>
                   </div>
                 </div>
@@ -379,8 +376,8 @@ function CompanyAnalyticsDashboard() {
                           <YAxis />
                           <Tooltip />
                           <Legend />
-                          <Bar barSize={20} dataKey="presentCount" stackId="a" fill="#82ca9d" />
-                          <Bar barSize={20} dataKey="absentCount" stackId="a" fill={getPrimaryColor()} />
+                          <Bar barSize={20} dataKey="presentCount" stackId="a" fill="#82ca9d" radius={[10, 10, 0, 0]} />
+                          <Bar barSize={20} dataKey="absentCount" stackId="a" fill={getPrimaryColor()} radius={[10, 10, 0, 0]}/>
                         </BarChart>
                       </ResponsiveContainer>
 

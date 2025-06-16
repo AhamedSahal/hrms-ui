@@ -122,17 +122,17 @@ export default class MobileAttendanceLocationForm extends Component {
                                                         <td className="table-column">{index + 1}</td>
                                                         <td className="table-column">
                                                             <Row>
-                                                                <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                <h2  className="table-avatar">
                                                                     Name : <span style={{ paddingBottom: "3px", fontSize: "14px" }}> {item.name} </span>
                                                                 </h2>
                                                             </Row>
                                                             <Row>
-                                                                <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                <h2  className="table-avatar">
                                                                     Latitude : <span style={{ paddingBottom: "3px", fontSize: "14px" }}> {item.latitude} </span>
                                                                 </h2>
                                                             </Row>
                                                             <Row>
-                                                                <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                <h2  className="table-avatar">
                                                                     Longitude : <span style={{ paddingBottom: "3px", fontSize: "14px" }}> {item.longitude} </span>
                                                                 </h2>
                                                             </Row>

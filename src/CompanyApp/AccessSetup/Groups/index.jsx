@@ -386,18 +386,18 @@ export default class Groups extends Component {
                                                                         <tr key={`${item.empId}_${index}`} className="table-row">
                                                                             <td className="table-column">{index + 1}</td>
                                                                             <td className="table-column">
-                                                                                <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                                <h2  className="table-avatar">
                                                                                     <Link to={`/app/company-app/employee/detail/${item.empId}`}>{item.employeeName} <span>{item.employeeId}</span> </Link>
                                                                                 </h2>
                                                                             </td>
                                                                             <td className="table-column">
                                                                                 {item.email != '' && <Row>
-                                                                                    <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                                    <h2  className="table-avatar">
                                                                                         Email : <span style={{ paddingBottom: "3px", fontSize: "14px" }}>{item.email}</span>
                                                                                     </h2>
                                                                                 </Row>}
                                                                                 {item.phoneNumber != '' && <Row>
-                                                                                    <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                                    <h2  className="table-avatar">
                                                                                         Phone : <span style={{ paddingBottom: "3px", fontSize: "14px" }}>{item.phoneNumber}</span>
                                                                                     </h2>
                                                                                 </Row>}

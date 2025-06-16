@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { FormGroup } from "reactstrap";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -140,9 +139,11 @@ export default class ApplicantAdditionalForm extends Component {
                                                     </label>
                                                     <Field name="skillSet" className="form-control" placeholder="Skill Set"
                                                         onChange={(e) => {
-                                                            res.skillSet = e.currentTarget.value;
-                                                            this.updateSkillSetAdditionalForm(res, index)
-                                                            this.props.updateSkillSet(res, index);
+                                                            const value = e.currentTarget.value;
+                                                            setFieldValue("skillSet", value); // Update Formik's state
+                                                            res.skillSet = value; // Update local state
+                                                            this.updateSkillSetAdditionalForm(res, index);
+                                                            this.props.updateSkillSet(res, index); // Notify parent
                                                         }}
                                                     ></Field>
                                                     <ErrorMessage name="skillSet">
@@ -158,9 +159,11 @@ export default class ApplicantAdditionalForm extends Component {
                                                     </label>
                                                     <Field name="years" className="form-control" placeholder="Years" type="number"
                                                         onChange={(e) => {
-                                                            res.years = e.currentTarget.value;
-                                                            this.updateSkillSetAdditionalForm(res, index)
-                                                            this.props.updateSkillSet(res, index);
+                                                            const value = e.currentTarget.value;
+                                                            setFieldValue("years", value); // Update Formik's state
+                                                            res.years = value; // Update local state
+                                                            this.updateSkillSetAdditionalForm(res, index);
+                                                            this.props.updateSkillSet(res, index); // Notify parent
                                                         }}
                                                     ></Field>
                                                     <ErrorMessage name="years">
@@ -220,9 +223,11 @@ export default class ApplicantAdditionalForm extends Component {
                                                     </label>
                                                     <Field name="achievementDetails" className="form-control" placeholder="Achievement Details"
                                                         onChange={(e) => {
-                                                            res.achievementDetails = e.currentTarget.value;
-                                                            this.updateAchievementDetailsAdditionalForm(res, index)
-                                                            this.props.updateAchievementDetails(res, index);
+                                                            const value = e.currentTarget.value;
+                                                            setFieldValue("achievementDetails", value); // Update Formik's state
+                                                            res.achievementDetails = value; // Update local state
+                                                            this.updateAchievementDetailsAdditionalForm(res, index);
+                                                            this.props.updateAchievementDetails(res, index); // Notify parent
                                                         }}
                                                     ></Field>
                                                     <ErrorMessage name="achievementDetails">
@@ -238,9 +243,11 @@ export default class ApplicantAdditionalForm extends Component {
                                                     </label>
                                                     <Field name="date" className="form-control" placeholder="Date" type="date"
                                                         onChange={(e) => {
-                                                            res.date = e.currentTarget.value;
-                                                            this.updateAchievementDetailsAdditionalForm(res, index)
-                                                            this.props.updateAchievementDetails(res, index);
+                                                            const value = e.currentTarget.value;
+                                                            setFieldValue("date", value); // Update Formik's state
+                                                            res.date = value; // Update local state
+                                                            this.updateAchievementDetailsAdditionalForm(res, index);
+                                                            this.props.updateAchievementDetails(res, index); // Notify parent
                                                         }}
                                                     ></Field>
                                                     <ErrorMessage name="date">

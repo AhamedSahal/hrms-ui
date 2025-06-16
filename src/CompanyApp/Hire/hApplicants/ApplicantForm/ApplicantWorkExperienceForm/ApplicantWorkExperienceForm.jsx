@@ -1,8 +1,7 @@
-
 import React, { Component } from 'react';
 import { FormGroup } from "reactstrap";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { BsChatSquareText,BsDashCircle } from "react-icons/bs";
+import { BsChatSquareText, BsDashCircle } from "react-icons/bs";
 import { toast } from "react-toastify";
 import Checkbox from "@mui/material/Checkbox";
 
@@ -18,19 +17,19 @@ export default class ApplicantWorkExperienceForm extends Component {
         };
     }
 
-   
+
     render() {
-        let {index,workExperience} = this.props;
+        let { index, workExperience } = this.props;
         return (
-            <div style={{ background: "white"}}>
+            <div style={{ background: "white" }}>
                 <div className="row">
-                <div className="col-md-10">
-                <h3>Experience {index+1}</h3>
-                </div>
-                <div className="col-md-2 main_add_btn"><a className='add_applicant_btn' onClick={(e) => {this.props.handleWorkExperienceDelete(index)}}><BsDashCircle size={30}  color={"black"}/></a></div>
+                    <div className="col-md-10">
+                        <h3>Experience {index + 1}</h3>
+                    </div>
+                    <div className="col-md-2 main_add_btn"><a className='add_applicant_btn' onClick={(e) => { this.props.handleWorkExperienceDelete(index) }}><BsDashCircle size={30} color={"black"} /></a></div>
 
                 </div>
-                
+
                 <br />
                 <Formik
                     enableReinitialize={true}
@@ -58,11 +57,13 @@ export default class ApplicantWorkExperienceForm extends Component {
                                             Employer Name
                                         </label>
                                         <Field name="employerName" className="form-control" placeholder="Employer Name"
-                                        onChange ={(e) => {
-                                            workExperience.employerName = e.currentTarget.value;
-                                            this.props.updateWorkExperience(workExperience,index);
-                                        }}
-                                        required
+                                            onChange={(e) => {
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("employerName", value); // Update Formik's state
+                                                workExperience.employerName = value; // Update local state
+                                                this.props.updateWorkExperience(workExperience, index); // Notify parent
+                                            }}
+                                            required
                                         ></Field>
                                         <ErrorMessage name="employerName">
                                             {(msg) => <div style={{ color: "red" }}>{msg}</div>}
@@ -79,7 +80,7 @@ export default class ApplicantWorkExperienceForm extends Component {
                                         defaultValue={values.employmentType}
                                         onChange={(e) => {
                                             workExperience.employmentType = Number(e.target.value);
-                                            this.props.updateWorkExperience(workExperience,index);
+                                            this.props.updateWorkExperience(workExperience, index);
                                         }}
                                     >
                                         <option value="">Select Employment Type</option>
@@ -104,10 +105,12 @@ export default class ApplicantWorkExperienceForm extends Component {
                                             Designation
                                         </label>
                                         <Field name="designation" className="form-control" placeholder="Designation"
-                                         onChange ={(e) => {
-                                            workExperience.designation = e.currentTarget.value;
-                                            this.props.updateWorkExperience(workExperience,index);
-                                        }}
+                                            onChange={(e) => {
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("designation", value); // Update Formik's state
+                                                workExperience.designation = value; // Update local state
+                                                this.props.updateWorkExperience(workExperience, index); // Notify parent
+                                            }}
                                         ></Field>
                                         <ErrorMessage name="designation">
                                             {(msg) => <div style={{ color: "red" }}>{msg}</div>}
@@ -120,10 +123,12 @@ export default class ApplicantWorkExperienceForm extends Component {
                                             Location
                                         </label>
                                         <Field name="location" className="form-control" placeholder="Location"
-                                         onChange ={(e) => {
-                                            workExperience.location = e.currentTarget.value;
-                                            this.props.updateWorkExperience(workExperience,index);
-                                        }}
+                                            onChange={(e) => {
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("location", value); // Update Formik's state
+                                                workExperience.location = value; // Update local state
+                                                this.props.updateWorkExperience(workExperience, index); // Notify parent
+                                            }}
                                         ></Field>
                                         <ErrorMessage name="location">
                                             {(msg) => <div style={{ color: "red" }}>{msg}</div>}
@@ -136,10 +141,10 @@ export default class ApplicantWorkExperienceForm extends Component {
                                         <div style={{ display: "flex", alignItems: "center" }}>
                                             <Checkbox
                                                 onChange={(e) => {
-                                                    let {active} = this.state;
-                                                    this.setState({active: !active})
+                                                    let { active } = this.state;
+                                                    this.setState({ active: !active })
                                                     workExperience.currentlyWorking = !active;
-                                                    this.props.updateWorkExperience(workExperience,index);
+                                                    this.props.updateWorkExperience(workExperience, index);
                                                 }}
                                                 inputProps={{ "aria-label": "controlled" }}
                                             />
@@ -157,10 +162,12 @@ export default class ApplicantWorkExperienceForm extends Component {
                                             Start date <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <Field required placeholder="Select Date" name="startDate" className="form-control" type="date"
-                                         onChange ={(e) => {
-                                            workExperience.startDate = e.currentTarget.value;
-                                            this.props.updateWorkExperience(workExperience,index);
-                                        }}
+                                            onChange={(e) => {
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("startDate", value); // Update Formik's state
+                                                workExperience.startDate = value; // Update local state
+                                                this.props.updateWorkExperience(workExperience, index); // Notify parent
+                                            }}
                                         ></Field>
                                         <ErrorMessage name="startDate">
                                             {(msg) => <div style={{ color: "red" }}>{msg}</div>}
@@ -170,15 +177,17 @@ export default class ApplicantWorkExperienceForm extends Component {
 
                                 {/* end date */}
                                 <div className="col-md-6">
-                                  { !this.state.active && <FormGroup>
+                                    {!this.state.active && <FormGroup>
                                         <label>
                                             End date <span style={{ color: "red" }}>*</span>
                                         </label>
-                                        <Field  placeholder="Select Date" name="endDate" className="form-control" type="date"
-                                         onChange ={(e) => {
-                                            workExperience.endDate = e.currentTarget.value;
-                                            this.props.updateWorkExperience(workExperience,index);
-                                        }}
+                                        <Field placeholder="Select Date" name="endDate" className="form-control" type="date"
+                                            onChange={(e) => {
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("endDate", value); // Update Formik's state
+                                                workExperience.endDate = value; // Update local state
+                                                this.props.updateWorkExperience(workExperience, index); // Notify parent
+                                            }}
                                         ></Field>
                                         <ErrorMessage name="endDate">
                                             {(msg) => <div style={{ color: "red" }}>{msg}</div>}
@@ -192,10 +201,12 @@ export default class ApplicantWorkExperienceForm extends Component {
                                             Roles And Responsibilities
                                         </label>
                                         <Field name="rolesAndResponsibilities" className="form-control" placeholder="Enter roles and responsibilities associated with job" style={{ height: "80px" }}
-                                         onChange ={(e) => {
-                                            workExperience.rolesAndResponsibilities = e.currentTarget.value;
-                                            this.props.updateWorkExperience(workExperience,index);
-                                        }}
+                                            onChange={(e) => {
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("rolesAndResponsibilities", value); // Update Formik's state
+                                                workExperience.rolesAndResponsibilities = value; // Update local state
+                                                this.props.updateWorkExperience(workExperience, index); // Notify parent
+                                            }}
                                         ></Field>
                                         <ErrorMessage name="rolesAndResponsibilities">
                                             {(msg) => <div style={{ color: "red" }}>{msg}</div>}

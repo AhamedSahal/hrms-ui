@@ -35,7 +35,7 @@ export default class BudgetReport extends Component {
       toDate: lastDay.toISOString().split('T')[0],
       checkedValidation: true,
       sortedProperties:[],
-      selectedPropertiestemp:["employeeId", "fullName","email","code","name", "projectStartDate","projectEndDate","projectDuration","totalEmpCount", "projectaccuredCost","projectCostStatus","projectTotalCost","totalActivityCount","projectStatus"],
+      selectedPropertiestemp:["employeeId", "fullName","email","code","name", "projectStartDate","projectEndDate","projectDuration","totalEmpCount", "projectAccuredCost","projectCostStatus","projectTotalCost","totalActivityCount","projectStatus"],
       companyId: getCompanyId(),
       selectedCompanies: [],
       isFilter : true,

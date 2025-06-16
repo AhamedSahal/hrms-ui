@@ -275,7 +275,6 @@ fetchData = () => {
         render: (text, record) => {
           return <span>{record.leaveType?.name}</span>
         },
-        align: 'center',
         sorter: true,
       },
       {
@@ -369,7 +368,6 @@ fetchData = () => {
           return <span>{record.leaveType?.name}</span>
         },
         sorter: true,
-        align: 'center',
       },
       {
         title: ( 

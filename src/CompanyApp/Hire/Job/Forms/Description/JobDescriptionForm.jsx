@@ -159,7 +159,7 @@ export default class JobDescriptionForm extends Component {
     render(){
         return (
           <div style={{ padding: "15px", background: "white" }}>
-            <h3 style={{wordSpacing: "-4px"}}><BsChatSquareText size={30} style={{color: "#1DA8D5"}} /> Describe Your Job</h3>
+            <h3 ><BsChatSquareText size={30} style={{color: "#1DA8D5"}} /> Describe Your Job</h3>
             <br />
             <Formik
               enableReinitialize={true}

@@ -58,18 +58,21 @@ export default class GroupConfiguration extends Component {
     fetchList = () => {
         getConfigurationByGroupId(this.state.groupConfig.userGroupId).then(res => {
             if (res.status == "OK" && res.data != null) {
+                
                 this.setState({
                     groupConfig: res.data,
-                })
-                if (res.data?.webRestrictedIpAddress == true) {
-                    this.fetchWebAttendanceIp();
-                }
-                if (res.data?.restrictedGeoLocation == true) {
-                    this.fetchMobileAttendanceLoc();
-                }
-                if (res.data?.mobileRestrictedIpAddress == true) {
-                    this.fetchMobileAttendanceIPs();
-                }
+                }, () => {
+                    if (res.data?.webRestrictedIpAddress) {
+                       this.fetchWebAttendanceIp();
+                    }
+                    if (res.data?.restrictedGeoLocation) {
+                        this.fetchMobileAttendanceLoc();
+                    }
+                    if (res.data?.mobileRestrictedIpAddress) {
+                        this.fetchMobileAttendanceIPs();
+                    }
+                });
+               
             }
         })
     }
@@ -682,17 +685,17 @@ export default class GroupConfiguration extends Component {
                                                                     <td className="table-column">{item.name}</td>
                                                                     <td className='table-column'>
                                                                         <Row>
-                                                                            <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                            <h2  className="table-avatar">
                                                                                 Latitude : <span style={{ paddingBottom: "3px", fontSize: "14px" }}> {item.latitude} </span>
                                                                             </h2>
                                                                         </Row>
                                                                         <Row>
-                                                                            <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                            <h2  className="table-avatar">
                                                                                 Longitude : <span style={{ paddingBottom: "3px", fontSize: "14px" }}> {item.longitude} </span>
                                                                             </h2>
                                                                         </Row>
                                                                         <Row>
-                                                                            <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                            <h2  className="table-avatar">
                                                                                 Radius : <span style={{ paddingBottom: "3px", fontSize: "14px" }}> {item.radius} </span>
                                                                             </h2>
                                                                         </Row>

@@ -349,7 +349,7 @@ export default class OrgWeeklyListViewCalendar extends Component {
                                     {weeklyAttendance.map((item, rowIndex) => (
                                         <tr key={rowIndex}>
                                             <td scope="col" style={{ width: '15.4%' }}>
-                                                <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                <h2  className="table-avatar">
                                                     <div className="avatar">
                                                         <EmployeePhoto id={item.Id} alt={item.name}></EmployeePhoto>
                                                     </div>
