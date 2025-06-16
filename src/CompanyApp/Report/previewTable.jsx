@@ -59,7 +59,7 @@ import {itemRender} from "../../paginationfunction"
             <Table id='Table-style' className="table-striped "
                   pagination= { {total : selectedData.length,
                     showTotal : (total, range) => `Showing ${range[0]} to ${range[1]} of ${selectedData.length} entries`,
-                    showSizeChanger : false,itemRender : itemRender } }
+                    showSizeChanger : true,itemRender : itemRender } }
                   columns={columns}     
                   dataSource={selectedData}
                   // rowKey={record => record.id}

@@ -214,7 +214,7 @@ export default class EmployeeGroupForm extends Component {
                                                     <tr key={`${item.empId}_${index}`} className="table-row">
                                                         <td className="table-column">{index + 1}</td>
                                                         <td className="table-column">
-                                                            <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                            <h2  className="table-avatar">
                                                                 <Link to={`/app/company-app/employee/detail/${item.empId}`}>{item.employeeName}
                                                                     <span>{item.employeeId}</span>
                                                                 </Link>

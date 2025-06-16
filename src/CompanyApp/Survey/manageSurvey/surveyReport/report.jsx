@@ -38,7 +38,7 @@ const SurveyReport = () => {
 
   return (
     <>
-      {data.length > 0 && <CumulativeScore data={data} />}
+      {data && <CumulativeScore data={data} />}
       <SurveyReportLevel survey={survey} cumulativeReport={data} />
     </>
   );

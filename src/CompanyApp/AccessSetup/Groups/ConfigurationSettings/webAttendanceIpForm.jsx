@@ -124,12 +124,12 @@ export default class WebAttendanceIPForm extends Component {
                                                         <td className="table-column">{index + 1}</td>
                                                         <td className="table-column">
                                                             <Row>
-                                                                <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                <h2  className="table-avatar">
                                                                     Name : <span style={{ paddingBottom: "3px", fontSize: "14px" }}> {item.name} </span>
                                                                 </h2>
                                                             </Row>
                                                             <Row>
-                                                                <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                                                                <h2  className="table-avatar">
                                                                     IP : <span style={{ paddingBottom: "3px", fontSize: "14px" }}> {item.ip} </span>
                                                                 </h2>
                                                             </Row>

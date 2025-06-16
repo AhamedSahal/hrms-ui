@@ -19,6 +19,10 @@ export default class TicketForm extends Component {
                 id: 0,
                 employeeId: props.employeeId,
                 employee: { id: props.employeeId },
+                priority: '', 
+                subject: '',
+                description: '', 
+                endDate: '' 
             }
         }
     }
@@ -33,6 +37,10 @@ export default class TicketForm extends Component {
                     id: 0,
                     employeeId: nextProps.employeeId,
                     employee: { id: nextProps.employeeId },
+                    priority: '', // Default value for priority
+                    subject: '', // Default value for subject
+                    description: '', // Default value for description
+                    endDate: '' // Default value for endDate
                 }
             })
         }
@@ -60,7 +68,7 @@ export default class TicketForm extends Component {
     render() {
         const { ticket } = this.state;
         ticket.status = "OPEN";
-        console.log({ticket})
+        console.log({ ticket })
         return (
             <div>
 
@@ -73,70 +81,66 @@ export default class TicketForm extends Component {
                     {({
                         values,
                         errors,
-                        touched,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        isSubmitting,
-                        setFieldValue,
-                        setSubmitting
-                        /* and other goodies */
-                    }) => (
-                        <Form>
+                        setFieldValue
+                        /* Removed unused variables */
+                    }) => {
+                        console.log('Formik Errors:', errors); // Debugging validation errors
+                        return (
+                            <Form>
 
-                            <FormGroup>
-                                <label>Priority
-                                    <span style={{ color: "red" }}>*</span>
-                                </label>
-                                <Field name="priority" className="form-control"
-                                    render={field => {
-                                        return <EnumDropdown label={"Priority"} enumObj={PRIORITY} defaultValue={values.priority} onChange={e => {
-                                            setFieldValue("priority", e.target.value)
-                                        }}>
-                                        </EnumDropdown>
-                                    }}
-                                ></Field>
-                                <ErrorMessage name="priority">
-                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                                </ErrorMessage>
-                            </FormGroup>
+                                <FormGroup>
+                                    <label>Priority
+                                        <span style={{ color: "red" }}>*</span>
+                                    </label>
+                                    <Field name="priority" className="form-control"
+                                        render={() => {
+                                            return <EnumDropdown label={"Priority"} enumObj={PRIORITY} defaultValue={values.priority} onChange={e => {
+                                                setFieldValue("priority", e.target.value)
+                                            }}>
+                                            </EnumDropdown>
+                                        }}
+                                    ></Field>
+                                    <ErrorMessage name="priority">
+                                        {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                    </ErrorMessage>
+                                </FormGroup>
 
+                                <FormGroup>
+                                    <label>Subject
+                                        <span style={{ color: "red" }}>*</span>
+                                    </label>
+                                    <Field name="subject" defaultValue={values.subject} className="form-control"></Field>
+                                    <ErrorMessage name="subject">
+                                        {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                    </ErrorMessage>
+                                </FormGroup>
+                                <FormGroup>
+                                    <label>End Date
+                                        <span style={{ color: "red" }}>*</span>
+                                    </label>
+                                    <Field name="endDate" type="date" defaultValue={values.endDate} className="form-control"></Field>
+                                    <ErrorMessage name="endDate">
+                                        {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                    </ErrorMessage>
+                                </FormGroup>
 
+                                <FormGroup>
+                                    <label>Description
+                                       
+                                    </label>
+                                    <Field name="description"
+                                        component="textarea" rows="4"
+                                        className="form-control"
+                                        placeholder="Description"
+                                    >
+                                    </Field>
+                                    
+                                </FormGroup>
+                                <input type="submit" className="btn btn-primary" value={this.state.ticket.id > 0 ? "Update" : "Save"} />
 
-                            <FormGroup>
-                                <label>Subject
-                                    <span style={{ color: "red" }}>*</span>
-                                </label>
-                                <Field name="subject" defaultValue={values.subject} className="form-control"></Field>
-                                <ErrorMessage name="subject">
-                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                                </ErrorMessage>
-                            </FormGroup>
-                            <FormGroup>
-                                <label>End Date
-                                    <span style={{ color: "red" }}>*</span>
-                                </label>
-                                <Field name="endDate" type="date" defaultValue={values.endDate} className="form-control"></Field>
-                                <ErrorMessage name="endDate">
-                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                                </ErrorMessage>
-                            </FormGroup>
-
-                            <FormGroup>
-                                <label>Description</label>
-
-                                <Field name="description"
-                                    component="textarea" rows="4"
-                                    className="form-control"
-                                    placeholder="Description"
-                                >
-                                </Field>
-                            </FormGroup>
-                            <input type="submit" className="btn btn-primary" value={this.state.ticket.id > 0 ? "Update" : "Save"} />
-
-                        </Form>
-                    )
-                    }
+                            </Form>
+                        )
+                    }}
                 </Formik>
             </div>
         )

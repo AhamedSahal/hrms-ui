@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { FormGroup } from "reactstrap";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -84,9 +83,10 @@ export default class ApplicantEducationForm extends Component {
                                         </label>
                                         <Field name="degree" className="form-control" placeholder="Degree"
                                             onChange={(e) => {
-                                                educationDetails.degree = e.currentTarget.value;
-                                                this.props.updateEduationDetails(educationDetails, index);
-
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("degree", value); // Update Formik's state
+                                                educationDetails.degree = value; // Update local state
+                                                this.props.updateEduationDetails(educationDetails, index); // Notify parent
                                             }}
                                         ></Field>
                                         <ErrorMessage name="degree">
@@ -102,9 +102,10 @@ export default class ApplicantEducationForm extends Component {
                                         </label>
                                         <Field name="specialization" className="form-control" placeholder="Specialization"
                                             onChange={(e) => {
-                                                educationDetails.specialization = e.currentTarget.value;
-                                                this.props.updateEduationDetails(educationDetails, index);
-
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("specialization", value); // Update Formik's state
+                                                educationDetails.specialization = value; // Update local state
+                                                this.props.updateEduationDetails(educationDetails, index); // Notify parent
                                             }}
                                         ></Field>
                                         <ErrorMessage name="specialization">
@@ -121,9 +122,10 @@ export default class ApplicantEducationForm extends Component {
                                                 </label>
                                                 <Field name="score" className="form-control" placeholder="Score" type="number"
                                                     onChange={(e) => {
-                                                        educationDetails.score = e.currentTarget.value;
-                                                        this.props.updateEduationDetails(educationDetails, index);
-
+                                                        const value = e.currentTarget.value;
+                                                        setFieldValue("score", value); // Update Formik's state
+                                                        educationDetails.score = value; // Update local state
+                                                        this.props.updateEduationDetails(educationDetails, index); // Notify parent
                                                     }}
                                                 ></Field>
                                                 <ErrorMessage name="score">
@@ -142,9 +144,10 @@ export default class ApplicantEducationForm extends Component {
                                                 </label>
                                                 <Field name="scale" className="form-control" placeholder="Scale" type="number"
                                                     onChange={(e) => {
-                                                        educationDetails.scale = e.currentTarget.value;
-                                                        this.props.updateEduationDetails(educationDetails, index);
-
+                                                        const value = e.currentTarget.value;
+                                                        setFieldValue("scale", value); // Update Formik's state
+                                                        educationDetails.scale = value; // Update local state
+                                                        this.props.updateEduationDetails(educationDetails, index); // Notify parent
                                                     }}
                                                 ></Field>
                                                 <ErrorMessage name="scale">
@@ -164,9 +167,10 @@ export default class ApplicantEducationForm extends Component {
                                         </label>
                                         <Field name="schoolAndCollage" className="form-control" placeholder="School / Institute"
                                             onChange={(e) => {
-                                                educationDetails.schoolAndCollage = e.currentTarget.value;
-                                                this.props.updateEduationDetails(educationDetails, index);
-
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("schoolAndCollage", value); // Update Formik's state
+                                                educationDetails.schoolAndCollage = value; // Update local state
+                                                this.props.updateEduationDetails(educationDetails, index); // Notify parent
                                             }}
                                         ></Field>
                                         <ErrorMessage name="schoolAndCollage">
@@ -184,9 +188,10 @@ export default class ApplicantEducationForm extends Component {
                                         </label>
                                         <Field required placeholder="Select Date" name="startDate" className="form-control" type="date"
                                             onChange={(e) => {
-                                                educationDetails.startDate = e.currentTarget.value;
-                                                this.props.updateEduationDetails(educationDetails, index);
-
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("startDate", value); // Update Formik's state
+                                                educationDetails.startDate = value; // Update local state
+                                                this.props.updateEduationDetails(educationDetails, index); // Notify parent
                                             }}
                                         ></Field>
                                         <ErrorMessage name="startDate">
@@ -202,9 +207,10 @@ export default class ApplicantEducationForm extends Component {
                                         </label>
                                         <Field required placeholder="Select Date" name="endDate" className="form-control" type="date"
                                             onChange={(e) => {
-                                                educationDetails.endDate = e.currentTarget.value;
-                                                this.props.updateEduationDetails(educationDetails, index);
-
+                                                const value = e.currentTarget.value;
+                                                setFieldValue("endDate", value); // Update Formik's state
+                                                educationDetails.endDate = value; // Update local state
+                                                this.props.updateEduationDetails(educationDetails, index); // Notify parent
                                             }}
                                         ></Field>
                                         <ErrorMessage name="endDate">

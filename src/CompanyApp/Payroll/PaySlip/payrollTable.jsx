@@ -435,7 +435,7 @@ export default class PayrollTable extends Component {
                 render: (text, record) => {
                     return <>
                         <div >
-                            <h2 style={{ wordSpacing: '-5px' }} className="table-avatar">
+                            <h2 className="table-avatar">
                                 <div className="avatar">
                                     <EmployeePhoto id={text.employee.id} alt={text.employee.name}></EmployeePhoto>
                                 </div>

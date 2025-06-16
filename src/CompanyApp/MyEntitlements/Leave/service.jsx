@@ -32,6 +32,8 @@ export function saveOpeningBalance(openingBalance) {
     });
 }
 export function getLeaveBalance(employeeId ,year,calendar ) {
+    console.log({ employeeId, year, "cell ---": calendar });
+    
     let path = `${'leave/balance'}?&employeeId=${employeeId}&year=${year}&calendar=${calendar}`;
     return getWithAuth(path).then(res => {
         return Promise.resolve(res.data);
