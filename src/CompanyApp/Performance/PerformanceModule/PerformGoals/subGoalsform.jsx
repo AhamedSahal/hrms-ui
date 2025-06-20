@@ -9,7 +9,6 @@ import { saveSubGoals, getSubGoalWeightage, getGoalsActionList } from './service
 import { FcHighPriority, FcLowPriority, FcMediumPriority } from 'react-icons/fc';
 import { confirmAlert } from 'react-confirm-alert';
 import { PerformanceSubGoalSchema } from './validation';
-toast.configure();
 
 export default class PerformanceSubGoalsForm extends Component {
     constructor(props) {
