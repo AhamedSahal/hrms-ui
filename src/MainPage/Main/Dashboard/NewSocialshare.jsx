@@ -48,7 +48,7 @@ import TodaysAttendanceList from './todayAttendaceList.jsx';
 import { IoMdCheckmarkCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
 import EmployeeProfilePhoto from '../../../CompanyApp/Employee/widgetEmployeePhoto.jsx';
 import successimg from '../../../assets/img/successimg.gif';
-import reject from '../../../assets/img/rejectimg.gif'; 
+import reject from '../../../assets/img/rejectimg.gif';
 import SuccessAlert from '../../successToast.jsx';
 import Chart from "react-apexcharts";
 import ReactionList from './ReactionsList.jsx';
@@ -192,7 +192,7 @@ export default class NewSocialShare extends Component {
             logo: getLogo(),
             showLikeList: false,
             likeControl: 'like',
-            attendanceToggle: getEmployeeId() > 0?0:2,
+            attendanceToggle: getEmployeeId() > 0 ? 0 : 2,
             likeId: 0,
             options: {
 
@@ -243,7 +243,7 @@ export default class NewSocialShare extends Component {
         this.getPoliciesDocumentList();
         this.getSocialShareList();
         this.fetchList();
-        this.getTodayAttendance(getEmployeeId() > 0?0:2);
+        this.getTodayAttendance(getEmployeeId() > 0 ? 0 : 2);
         this.getupComingHolidays();
         this.getupComingAnnouncement();
         this.getUpComingCelebration();
@@ -262,8 +262,9 @@ export default class NewSocialShare extends Component {
     getOvertimeEnable = () => {
         getOvertimeActive().then(res => {
             if (res.status == "OK") {
-               this.setState({overtimeEnable: res.data})
-            }});
+                this.setState({ overtimeEnable: res.data })
+            }
+        });
     }
 
     fetchApprovalList = () => {
@@ -319,15 +320,15 @@ export default class NewSocialShare extends Component {
     }
     fetchList = () => {
         {
-             getMyTasksList(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.statusname, this.state.statname, this.state.dashboardView).then(res => {
-               if(res.data != null){
-                const sortedArray = res.data.list
-                const array1 = sortedArray.sort((a, b) => a.enddate - b.enddate)
-               }
-                
+            getMyTasksList(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.statusname, this.state.statname, this.state.dashboardView).then(res => {
+                if (res.data != null) {
+                    const sortedArray = res.data.list
+                    const array1 = sortedArray.sort((a, b) => a.enddate - b.enddate)
+                }
+
                 if (res.status == "OK") {
                     this.setState({
-                        myTaskList: res.data != null?res.data.list:[],
+                        myTaskList: res.data != null ? res.data.list : [],
 
                     })
                 }
@@ -509,13 +510,13 @@ export default class NewSocialShare extends Component {
     }
 
     getSocialShareList = () => {
-        
-        const {currentPage, searchText, pageNumber , pageSize, sort,totalPages } = this.state;  
+
+        const { currentPage, searchText, pageNumber, pageSize, sort, totalPages } = this.state;
         const { socialShare } = this.state;
         if (this.state.currentPage < this.state.totalPages) {
             this.setState({ hasMore: false })
-            
-          }
+
+        }
         const startIndex = socialShare.length;
         return getSocialShareList(searchText, pageNumber, pageSize, sort, startIndex, pageSize).then(res => {
             const newSocialShare = res.data.list;
@@ -593,11 +594,11 @@ export default class NewSocialShare extends Component {
         var today = new Date();
         var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
-        const startDate = moment.utc(this.state.dashboard.actualClockIn+"Z")
+        const startDate = moment.utc(this.state.dashboard.actualClockIn + "Z")
         const endDate = moment.utc();
         const duration = moment.duration(endDate.diff(startDate));
         const timeDifference = Math.floor(duration.asMinutes());
-        
+
         if (timeDifference < 120) {
             confirmAlert({
                 message: `Are you sure you want to clock-out?`,
@@ -608,7 +609,7 @@ export default class NewSocialShare extends Component {
                     },
                     {
                         label: "I'm Sure",
-                        className :"confirm-alert",
+                        className: "confirm-alert",
                         onClick: () => {
                             this.postAttendance();
                             this.setState({
@@ -780,7 +781,7 @@ export default class NewSocialShare extends Component {
     handleLikeClick = (value) => {
         this.setState({ likeControl: value })
         const reactionId = { iconId: value.id, id: value.postId }
-        putSocialShareReactions(reactionId.id,reactionId.iconId).then(res => {
+        putSocialShareReactions(reactionId.id, reactionId.iconId).then(res => {
             if (res.status == "OK") {
                 // toast.success(res.message);
                 this.getSocialShareList()
@@ -844,14 +845,14 @@ export default class NewSocialShare extends Component {
                 imgTag: reject,
                 showAlert: true
             });
-        }else if (status === 'submit') {
+        } else if (status === 'submit') {
             this.setState({
-              alertMsg: 'Submited!',
-              imgTag: checkimg,
-              desc: 'submited successfully',
-              showAlert: true
+                alertMsg: 'Submitted!',
+                imgTag: checkimg,
+                desc: 'Submitted successfully',
+                showAlert: true
             });
-          } else { }
+        } else { }
 
         setTimeout(() => {
             this.setState({ showAlert: false });
@@ -898,27 +899,27 @@ export default class NewSocialShare extends Component {
         }
     }
 
-   
+
     getLeaveDaytype = (type) => {
-        if(type ==2) return "FH";
-       else if(type ==3) return "SH";
-       return "";
-
-   }
-
-    getLeaveDaytypeHover = (type) => {
-         if(type ==2) return "First Half";
-        else if(type ==3) return "Second Half";
+        if (type == 2) return "FH";
+        else if (type == 3) return "SH";
         return "";
 
     }
- 
+
+    getLeaveDaytypeHover = (type) => {
+        if (type == 2) return "First Half";
+        else if (type == 3) return "Second Half";
+        return "";
+
+    }
+
     handleMouseOver = (id) => {
-        this.setState({likeId: id})
+        this.setState({ likeId: id })
     }
 
     handleForm = (id) => {
-        this.setState({likeId: id},() => {
+        this.setState({ likeId: id }, () => {
             this.setState({ showReactionList: true })
         })
     }
@@ -927,7 +928,7 @@ export default class NewSocialShare extends Component {
         const { documentExpiryByMonth, likeControl, logo, upComingDocumentExpiry, upComingBirthday, upComingAnniversary, upComingHolidays, todayAttendance, upComingAnnouncement, dashboard, dashboardData, socialShare, RecognitionSetup, policiesdocument, LeaveTrack, LeaveTrackSelf, LeaveTrackTeam, totalPages, currentPage, totalRecords, clockin, clockout, isLoggedIn } = this.state;
         const { item } = this.props;
         const { hideLoadMore } = this.state;
-        const { timeSheetList, attendanceToggle, roleName, newHire, showComments, clickedCommentId, clickedShareCommentId, leaveList, leaveBalanceList, overTimeList, timeInLieu , hasMore} = this.state;
+        const { timeSheetList, attendanceToggle, roleName, newHire, showComments, clickedCommentId, clickedShareCommentId, leaveList, leaveBalanceList, overTimeList, timeInLieu, hasMore } = this.state;
 
         const buttons = ['Leave', 'Timesheet', 'Overtime', 'Time in Lieu'];
         const { activeButton } = this.state;
@@ -949,7 +950,7 @@ export default class NewSocialShare extends Component {
             this.state.todayAttendance.onLate ?? 0
         ];
 
-       
+
 
         return (
             <div>
@@ -1067,8 +1068,8 @@ export default class NewSocialShare extends Component {
                                         <p className='viewAllBtn'>View All</p>
                                     </Link> :
                                         this.state.selfPermission == 1 ? <Link
-                                         to='/app/company-app/attendance'
-                                            state={{teamPermission: true}}
+                                            to='/app/company-app/attendance'
+                                            state={{ teamPermission: true }}
                                         >
                                             <p className='viewAllBtn'>View All</p>
                                         </Link> :
@@ -1079,13 +1080,13 @@ export default class NewSocialShare extends Component {
                                 <div className='attendance-body'>
                                     < div className='divBtnAtd d-flex'>
 
-                                    {this.state.defaultEmployeeId > 0 && <span
-                                        onClick={() => {
-                                            this.setState({ attendanceToggle: 0 }, this.getTodayAttendance(0))
+                                        {this.state.defaultEmployeeId > 0 && <span
+                                            onClick={() => {
+                                                this.setState({ attendanceToggle: 0 }, this.getTodayAttendance(0))
 
-                                        }} className={`teamBtnText ${attendanceToggle == 0 ? 'teamBtnTextActive' : ''}`}>Self</span>}
-                                    {this.state.defaultEmployeeId > 0 && verifyViewPermissionForTeam("ATTENDANCE") && <span onClick={() => { this.setState({ attendanceToggle: 1 }, this.getTodayAttendance(1)) }} className={`teamBtnText ${attendanceToggle == 1 ? 'teamBtnTextActive' : ''}`}>Team</span>}
-                                    {verifyOrgLevelViewPermission("ATTENDANCE") && <span onClick={() => { this.setState({ attendanceToggle: 2 }, this.getTodayAttendance(2)) }} className={`teamBtnText ${attendanceToggle == 2 ? 'teamBtnTextActive' : ''}`}>Org</span>}
+                                            }} className={`teamBtnText ${attendanceToggle == 0 ? 'teamBtnTextActive' : ''}`}>Self</span>}
+                                        {this.state.defaultEmployeeId > 0 && verifyViewPermissionForTeam("ATTENDANCE") && <span onClick={() => { this.setState({ attendanceToggle: 1 }, this.getTodayAttendance(1)) }} className={`teamBtnText ${attendanceToggle == 1 ? 'teamBtnTextActive' : ''}`}>Team</span>}
+                                        {verifyOrgLevelViewPermission("ATTENDANCE") && <span onClick={() => { this.setState({ attendanceToggle: 2 }, this.getTodayAttendance(2)) }} className={`teamBtnText ${attendanceToggle == 2 ? 'teamBtnTextActive' : ''}`}>Org</span>}
 
                                     </div>
                                     <div style={{ justifyContent: 'center' }} className='d-flex'>
@@ -1114,18 +1115,18 @@ export default class NewSocialShare extends Component {
                                         </div>
                                     </div>
 
-                            </div>
-
-                        </div> : <div className='AttendanceCards' >
-                            <div className='attendanceTitle Title' >
-                                <div>
-                                    <h2 className='newDashboardTitleAction'>Monthly Attendance</h2>
                                 </div>
-                                <Link to={`/app/company-app/attendance`}>
-                                    <p className='viewAllBtn'>View All</p>
-                                </Link>
-                            </div>
-                            <div className='attendance-body'>
+
+                            </div> : <div className='AttendanceCards' >
+                                <div className='attendanceTitle Title' >
+                                    <div>
+                                        <h2 className='newDashboardTitleAction'>Monthly Attendance</h2>
+                                    </div>
+                                    <Link to={`/app/company-app/attendance`}>
+                                        <p className='viewAllBtn'>View All</p>
+                                    </Link>
+                                </div>
+                                <div className='attendance-body'>
 
                                     <div style={{ justifyContent: 'center' }} className='d-flex'>
                                         <div className="attendance-total">
@@ -1155,103 +1156,103 @@ export default class NewSocialShare extends Component {
                                 </div>
                             </div>}
 
-                        {/* Employee Leave balance Widget */}
-                        {
-                            <div className='AttendanceCards' >
-                            <div className='attendanceTitle Title' >
-                                <h2 className='newDashboardTitleAction' >Leave Balance</h2>
-                                <Link to='/app/company-app/leave'
-                                    state={{fromDashboard: true}}
-                                >
-                                    <p className='viewAllBtn'>View All</p>
-                                </Link>
-                            </div>
-                            <div style={{ placeContent: 'space-evenly', marginBottom: '25px' }} className="d-flex">
-                                {this.state.leaveBalanceList?.length > 0 ? leaveBalanceList.map((data) => {
-                                    
-                                    return (
-                                        <div className='leaveCircle'>
-                                            <CircularProgressbarWithChildren
-                                                value={Math.round(data?.leaveBalance)}
-                                                maxValue={Math.round(data?.totalEligible)}
-                                                styles={buildStyles({
-                                                    strokeLinecap: 'butt',
-                                                    pathTransitionDuration: 0.5,
-                                                    pathColor: '#22b6ff',
-                                                    trailColor: '#c3c3c3',
-                                                    backgroundColor: '#3e98c7',
+                            {/* Employee Leave balance Widget */}
+                            {
+                                <div className='AttendanceCards' >
+                                    <div className='attendanceTitle Title' >
+                                        <h2 className='newDashboardTitleAction' >Leave Balance</h2>
+                                        <Link to='/app/company-app/leave'
+                                            state={{ fromDashboard: true }}
+                                        >
+                                            <p className='viewAllBtn'>View All</p>
+                                        </Link>
+                                    </div>
+                                    <div style={{ placeContent: 'space-evenly', marginBottom: '25px' }} className="d-flex">
+                                        {this.state.leaveBalanceList?.length > 0 ? leaveBalanceList.map((data) => {
 
-                                                })}
-                                            >
-                                                <div >
-                                                    <p style={{ marginBottom: '-10px', fontSize: '20px', fontWeight: 700 }}>{(data?.leaveBalance.toFixed(2)) > 0 ? (data?.leaveBalance.toFixed(2)) : '0'}</p>
-                                                    <span style={{ fontSize: '13px' }}>Balance</span>
-                                                </div>
-                                            </CircularProgressbarWithChildren>
-                                            <div style={{fontSize: '12px', width: '100px', marginLeft: '-16px' }}>
-                                                <span>{this.reduceString(data?.leaveType.name, 15)}</span>
-                                            </div>
+                                            return (
+                                                <div className='leaveCircle'>
+                                                    <CircularProgressbarWithChildren
+                                                        value={Math.round(data?.leaveBalance)}
+                                                        maxValue={Math.round(data?.totalEligible)}
+                                                        styles={buildStyles({
+                                                            strokeLinecap: 'butt',
+                                                            pathTransitionDuration: 0.5,
+                                                            pathColor: '#22b6ff',
+                                                            trailColor: '#c3c3c3',
+                                                            backgroundColor: '#3e98c7',
 
-                                        </div>)
-                                }) : <span><Empty /></span>}
+                                                        })}
+                                                    >
+                                                        <div >
+                                                            <p style={{ marginBottom: '-10px', fontSize: '20px', fontWeight: 700 }}>{(data?.leaveBalance.toFixed(2)) > 0 ? (data?.leaveBalance.toFixed(2)) : '0'}</p>
+                                                            <span style={{ fontSize: '13px' }}>Balance</span>
+                                                        </div>
+                                                    </CircularProgressbarWithChildren>
+                                                    <div style={{ fontSize: '12px', width: '100px', marginLeft: '-16px' }}>
+                                                        <span>{this.reduceString(data?.leaveType.name, 15)}</span>
+                                                    </div>
 
+                                                </div>)
+                                        }) : <span><Empty /></span>}
 
-                            </div>
-                            </div>
-                        }
-                        {/* Emp policyCard */}
-                         <div className="policyCard">
-                            <div className="Title">
-                                <h2 className="TitleAction">Policies & Documents</h2>
-                                {/* <img src={quickActionIcon} alt="" /> */}
-                            </div>
-                            <div className="qui">
-                                <div className="prog">
-                                    {this.state.policiesdocument?.map((item, index) => {
-                                        return (
-
-                                            <div className="Actionval" key={index}>
-
-                                                <Anchor className="saActionval" onClick={() => {
-                                                    fileDownload(item.id, item.id, "POLICY_DOCUMENT", item.fileName);
-                                                }} title={item.fileName}>
-                                                    <FaFileDownload className='policyIcon' /> <span className='policyName'>{item.policiesName}</span>
-                                                </Anchor>
-                                            </div>)
-                                    })}
-                                </div>
-                            </div>
-                        </div> 
-
-                        {/* Expiring Documents */}
-
-                        <div className='ExpiringDocuments' >
-                            <div className='attendanceTitle Title' >
-                                {!isEmployee ? <h2 className='newDashboardTitleAction'>Expiring Documents</h2>
-                                    : <h2 className='newEmpDashboardTitleAction'>My Expiring Documents</h2>}
-                                <Link to={`/app/company-app/documentExpiry`}>
-                                    <p className='viewAllBtn'>View All</p>
-                                </Link>
-                            </div>
-                            <div id='ExpireDocElements' className="container" >
-                                {this.state.upComingDocumentExpiry.length === 0 ? (
-                                    <div>No Upcoming Expiring Document.
 
                                     </div>
-                                ) : (
+                                </div>
+                            }
+                            {/* Emp policyCard */}
+                            <div className="policyCard">
+                                <div className="Title">
+                                    <h2 className="TitleAction">Policies & Documents</h2>
+                                    {/* <img src={quickActionIcon} alt="" /> */}
+                                </div>
+                                <div className="qui">
+                                    <div className="prog">
+                                        {this.state.policiesdocument?.map((item, index) => {
+                                            return (
 
-                                    this.state.upComingDocumentExpiry.map((data, index) => (
+                                                <div className="Actionval" key={index}>
+
+                                                    <Anchor className="saActionval" onClick={() => {
+                                                        fileDownload(item.id, item.id, "POLICY_DOCUMENT", item.fileName);
+                                                    }} title={item.fileName}>
+                                                        <FaFileDownload className='policyIcon' /> <span className='policyName'>{item.policiesName}</span>
+                                                    </Anchor>
+                                                </div>)
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Expiring Documents */}
+
+                            <div className='ExpiringDocuments' >
+                                <div className='attendanceTitle Title' >
+                                    {!isEmployee ? <h2 className='newDashboardTitleAction'>Expiring Documents</h2>
+                                        : <h2 className='newEmpDashboardTitleAction'>My Expiring Documents</h2>}
+                                    <Link to={`/app/company-app/documentExpiry`}>
+                                        <p className='viewAllBtn'>View All</p>
+                                    </Link>
+                                </div>
+                                <div id='ExpireDocElements' className="container" >
+                                    {this.state.upComingDocumentExpiry.length === 0 ? (
+                                        <div>No Upcoming Expiring Document.
+
+                                        </div>
+                                    ) : (
+
+                                        this.state.upComingDocumentExpiry.map((data, index) => (
 
 
-                                        <div onClick={() => {
-                                            this.getDocumentExpiryMonth(data.month);
-                                            this.setState({ showExpiringDocument: true });
-                                        }}
+                                            <div onClick={() => {
+                                                this.getDocumentExpiryMonth(data.month);
+                                                this.setState({ showExpiringDocument: true });
+                                            }}
 
-                                            className="expireDocs item col">
+                                                className="expireDocs item col">
 
-                                            <span className='p-1 float-left' >  {new Date(data.month + '-01').toLocaleString('default', { month: 'long' }) + ' '}
-                                            </span><b className='float-right' style={{ fontSize: '16px' }}>{data.expiryDocuments}</b>
+                                                <span className='p-1 float-left' >  {new Date(data.month + '-01').toLocaleString('default', { month: 'long' }) + ' '}
+                                                </span><b className='float-right' style={{ fontSize: '16px' }}>{data.expiryDocuments}</b>
 
                                             </div>
                                         ))
@@ -1379,14 +1380,14 @@ export default class NewSocialShare extends Component {
                                     }
                                     {this.state.overtimeEnable && activeButton === 2 &&
                                         <Link to='/app/company-app/attendance'
-                                            state={{fromDashboardOvertime: true}}
+                                            state={{ fromDashboardOvertime: true }}
                                         >
                                             <p className='viewAllBtn'>View All</p>
                                         </Link>
                                     }
                                     {activeButton === 3 &&
                                         <Link to='/app/company-app/leave'
-                                            state={{fromDashboardTimeInLieu: true}}
+                                            state={{ fromDashboardTimeInLieu: true }}
                                         >
                                             <p className='viewAllBtn'>View All</p>
                                         </Link>
@@ -1403,13 +1404,13 @@ export default class NewSocialShare extends Component {
                                                 >
                                                     {button}
 
-                                            </span>
+                                                </span>
 
-                                        </>
-                                    ))}
-                                </div>
-                                <div className="p-2 aprvScroll-div">
-                                    {/* Leave Action */}
+                                            </>
+                                        ))}
+                                    </div>
+                                    <div className="p-2 aprvScroll-div">
+                                        {/* Leave Action */}
 
                                         {activeButton === 0 ? leaveList.length > 0 ? leaveList.map((leave, index) => (
                                             <>
@@ -1430,248 +1431,248 @@ export default class NewSocialShare extends Component {
                                                                     <span> Leave Type :<b> {leave.leaveType?.name ? leave.leaveType.name.length > 10 ? leave.leaveType.name.slice(0, 10) + '...' : leave.leaveType.name : null} </b></span>
                                                                     <div>From: <b>{getCustomizedWidgetDate(leave.startDate)} {this.getLeaveDaytypeHover(leave.startDateDayType)}</b></div>
                                                                     <div>To: <b>{getCustomizedWidgetDate(leave.endDate)} {this.getLeaveDaytypeHover(leave.endDateDayType)}</b></div>
-                                                            </div>
-                                                            <div>No. of days: <b>{leave.totalDays} </b> </div>
-                                                            <div>Leave Reason: <b>{leave.leaveReason} </b></div>
-                                                            <div>Attachment: <> <b>  {leave.attachment && <Anchor style={{ color: 'black' }} onClick={() => {
-                                                                fileDownload(leave.id, leave.employee.id, "LEAVE_DOCUMENT", leave.attachment);
-                                                            }} title={leave.attachment}>
-                                                                <i style={{ color: '#45C56D' }} className='fa fa-download'></i> Download
-                                                            </Anchor>}
-                                                                {!leave.attachment && <>-</>
-                                                                }
-                                                            </b>
-                                                            </></div>
-                                                        </div>
-                                                    </div>
-                                                } >
-
-
-                                                    <div key={index} className="leave-request">
-                                                        <div className="widget-user-info">
-                                                            <EmployeeProfilePhoto className='user-avatar' id={leave.employee.id}></EmployeeProfilePhoto>
-                                                            <div className="approvalUser-details">
-                                                                <div className="user-name-aprv">{this.reduceString(leave.employee.name, 16)}</div>
-                                                                <div>From: <b>{getCustomizedWidgetDate(leave.startDate)} {this.getLeaveDaytype(leave.startDateDayType)} </b></div>
-                                                                <div>To: <b>{getCustomizedWidgetDate(leave.endDate)} {this.getLeaveDaytype(leave.endDateDayType)} </b></div>
-
+                                                                </div>
+                                                                <div>No. of days: <b>{leave.totalDays} </b> </div>
+                                                                <div>Leave Reason: <b>{leave.leaveReason} </b></div>
+                                                                <div>Attachment: <> <b>  {leave.attachment && <Anchor style={{ color: 'black' }} onClick={() => {
+                                                                    fileDownload(leave.id, leave.employee.id, "LEAVE_DOCUMENT", leave.attachment);
+                                                                }} title={leave.attachment}>
+                                                                    <i style={{ color: '#45C56D' }} className='fa fa-download'></i> Download
+                                                                </Anchor>}
+                                                                    {!leave.attachment && <>-</>
+                                                                    }
+                                                                </b>
+                                                                </></div>
                                                             </div>
                                                         </div>
-                                                        <div style={{ width: '95px' }} className="text-left">
-                                                            <span className='headTxt'>Leave Type</span> <br />
-                                                            <span className='aprv_items'> <b> {leave.leaveType?.name ? leave.leaveType.name.length > 10 ? leave.leaveType.name.slice(0, 10) + '...' : leave.leaveType.name : null} </b></span>
+                                                    } >
 
-                                                        </div>
 
-                                                        <div className="leave-actions">
-                                                            <Tooltip placement="top" title="Approve" arrow>
-                                                                <a onClick={() => {
-                                                                    this.updateLeaveStatus(leave.id, "APPROVED");
-                                                                }} > <IoMdCheckmarkCircleOutline className='widgetApproveIcon' size={26} /> </a>
+                                                        <div key={index} className="leave-request">
+                                                            <div className="widget-user-info">
+                                                                <EmployeeProfilePhoto className='user-avatar' id={leave.employee.id}></EmployeeProfilePhoto>
+                                                                <div className="approvalUser-details">
+                                                                    <div className="user-name-aprv">{this.reduceString(leave.employee.name, 16)}</div>
+                                                                    <div>From: <b>{getCustomizedWidgetDate(leave.startDate)} {this.getLeaveDaytype(leave.startDateDayType)} </b></div>
+                                                                    <div>To: <b>{getCustomizedWidgetDate(leave.endDate)} {this.getLeaveDaytype(leave.endDateDayType)} </b></div>
 
-                                                            </Tooltip>
-                                                            <Tooltip placement="top" title="Reject" arrow>
-                                                                <a onClick={() => {
-                                                                    this.setState({ showLeaveAction: true, showForm: false, leaveId: leave.id })
-                                                                }} > <IoMdCloseCircleOutline className='widgetRejectIcon' size={26} /> </a>
-
-                                                            </Tooltip>
-                                                        </div>
-                                                    </div>
-                                                </MeetingDashboardTooltip> : null}
-                                        </>
-
-                                    )) : <span ><Empty style={{ marginTop: '35px' }} /></span> : null}
-                                    {/* Timesheet Action */}
-
-                                    {activeButton === 1 ? timeSheetList.length > 0 ? timeSheetList.map((list, index) => (
-                                        <>
-                                            {index < 5 ?
-                                                <MeetingDashboardTooltip title={
-                                                    <div>
-                                                        <div className='pt-2 pb-2'>
-                                                            <div className='float-left'>
-                                                                <EmployeeProfilePhoto className='poolImg' id={list.employeeId}></EmployeeProfilePhoto>
+                                                                </div>
                                                             </div>
-                                                            <div className='ml-2 float-left'>
-                                                                <span className='font-weight-bold'>{list.employeeName}</span> <br />
-                                                                <span className="headTxt">{this.reduceString(list.jobTitle, 25)}</span>
+                                                            <div style={{ width: '95px' }} className="text-left">
+                                                                <span className='headTxt'>Leave Type</span> <br />
+                                                                <span className='aprv_items'> <b> {leave.leaveType?.name ? leave.leaveType.name.length > 10 ? leave.leaveType.name.slice(0, 10) + '...' : leave.leaveType.name : null} </b></span>
 
                                                             </div>
-                                                        </div> <br />
-                                                        <div className='ratingBody'>
-                                                            <div className='ratingContent'>
-                                                                <span > Project Name :<b> {list.projectName}</b> </span><br />
-                                                                <div>Activity Name: <b>{list.activityName} </b> </div>
 
+                                                            <div className="leave-actions">
+                                                                <Tooltip placement="top" title="Approve" arrow>
+                                                                    <a onClick={() => {
+                                                                        this.updateLeaveStatus(leave.id, "APPROVED");
+                                                                    }} > <IoMdCheckmarkCircleOutline className='widgetApproveIcon' size={26} /> </a>
 
-                                                                <div>No. of Hours: <b>{list.hours} </b> </div>
-                                                                <div>Description: <b>{list.description} </b> </div>
+                                                                </Tooltip>
+                                                                <Tooltip placement="top" title="Reject" arrow>
+                                                                    <a onClick={() => {
+                                                                        this.setState({ showLeaveAction: true, showForm: false, leaveId: leave.id })
+                                                                    }} > <IoMdCloseCircleOutline className='widgetRejectIcon' size={26} /> </a>
+
+                                                                </Tooltip>
                                                             </div>
-
-
                                                         </div>
-                                                    </div>
-                                                }>
-                                                    <div className="leave-request">
-                                                        <div className="widget-user-info">
-                                                            <EmployeeProfilePhoto className='user-avatar' id={list.employeeId}></EmployeeProfilePhoto>
+                                                    </MeetingDashboardTooltip> : null}
+                                            </>
+
+                                        )) : <span ><Empty style={{ marginTop: '35px' }} /></span> : null}
+                                        {/* Timesheet Action */}
+
+                                        {activeButton === 1 ? timeSheetList.length > 0 ? timeSheetList.map((list, index) => (
+                                            <>
+                                                {index < 5 ?
+                                                    <MeetingDashboardTooltip title={
+                                                        <div>
+                                                            <div className='pt-2 pb-2'>
+                                                                <div className='float-left'>
+                                                                    <EmployeeProfilePhoto className='poolImg' id={list.employeeId}></EmployeeProfilePhoto>
+                                                                </div>
+                                                                <div className='ml-2 float-left'>
+                                                                    <span className='font-weight-bold'>{list.employeeName}</span> <br />
+                                                                    <span className="headTxt">{this.reduceString(list.jobTitle, 25)}</span>
+
+                                                                </div>
+                                                            </div> <br />
+                                                            <div className='ratingBody'>
+                                                                <div className='ratingContent'>
+                                                                    <span > Project Name :<b> {list.projectName}</b> </span><br />
+                                                                    <div>Activity Name: <b>{list.activityName} </b> </div>
+
+
+                                                                    <div>No. of Hours: <b>{list.hours} </b> </div>
+                                                                    <div>Description: <b>{list.description} </b> </div>
+                                                                </div>
+
+
+                                                            </div>
+                                                        </div>
+                                                    }>
+                                                        <div className="leave-request">
+                                                            <div className="widget-user-info">
+                                                                <EmployeeProfilePhoto className='user-avatar' id={list.employeeId}></EmployeeProfilePhoto>
 
                                                                 <div className="approvalUser-details">
                                                                     <div className="user-name-aprv">{list.employeeName}</div>
                                                                     <div className="leave-date">{getCustomizedWidgetDate(list.date)}</div>
 
+                                                                </div>
+                                                            </div>
+                                                            <div style={{ width: '115px' }} className="text-left">
+                                                                <span className='headTxt'>Project</span> <br />
+                                                                <span> <b>{list.projectName} </b></span>
+
+                                                            </div>
+                                                            <div className="leave-actions">
+                                                                <Tooltip placement="top" title="Approve" arrow>
+                                                                    <a onClick={() => {
+                                                                        this.updateTimeSheetStatus(list.id, "APPROVED", list.hours);
+                                                                    }}  > <IoMdCheckmarkCircleOutline className='widgetApproveIcon' size={26} /> </a>
+
+                                                                </Tooltip>
+                                                                <Tooltip placement="top" title="Reject" arrow>
+                                                                    <a onClick={() => {
+                                                                        this.updateTimeSheetStatus(list.id, "REJECTED", list.hours);
+                                                                    }}  > <IoMdCloseCircleOutline className='widgetRejectIcon' size={26} /> </a>
+
+                                                                </Tooltip>
                                                             </div>
                                                         </div>
-                                                        <div style={{ width: '115px' }} className="text-left">
-                                                            <span className='headTxt'>Project</span> <br />
-                                                            <span> <b>{list.projectName} </b></span>
+                                                    </MeetingDashboardTooltip> : null}
+                                            </>
+                                        )) : <span><Empty style={{ marginTop: '35px' }} /></span> : null}
+                                        {/* Overtime Action */}
+
+                                        {this.state.overtimeEnable && activeButton === 2 ? overTimeList.length > 0 ? overTimeList.map((data, index) => (
+                                            <MeetingDashboardTooltip title={
+
+                                                <div>
+                                                    <div className='pt-2 pb-2'>
+                                                        <div className='float-left'>
+                                                            <EmployeeProfilePhoto className='poolImg' id={data.employeeId}></EmployeeProfilePhoto>
+                                                        </div>
+                                                        <div className='ml-2 float-left'>
+                                                            <span className='font-weight-bold'>{data?.employee.name}</span> <br />
+                                                            <span className="headTxt">{this.reduceString(data.employeeJobTitle, 25)}</span>
+                                                        </div>
+                                                    </div> <br />
+                                                    <div className='ratingBody'>
+                                                        <div className='ratingContent'>
+
+                                                            <span > Plan Hour :<b> {data.plannedHours}</b> </span><br />
+                                                            <div>Actual Hours: <b>{data.actualHours.toFixed(2)} </b> </div>
+                                                            <div>Overtime Hours: <b>{data.hours.toFixed(2)}</b> </div>
 
                                                         </div>
-                                                        <div className="leave-actions">
-                                                            <Tooltip placement="top" title="Approve" arrow>
-                                                                <a onClick={() => {
-                                                                    this.updateTimeSheetStatus(list.id, "APPROVED", list.hours);
-                                                                }}  > <IoMdCheckmarkCircleOutline className='widgetApproveIcon' size={26} /> </a>
 
-                                                            </Tooltip>
-                                                            <Tooltip placement="top" title="Reject" arrow>
-                                                                <a onClick={() => {
-                                                                    this.updateTimeSheetStatus(list.id, "REJECTED", list.hours);
-                                                                }}  > <IoMdCloseCircleOutline className='widgetRejectIcon' size={26} /> </a>
 
-                                                            </Tooltip>
+                                                    </div>
+                                                </div>
+                                            }>
+                                                <div className="leave-request">
+                                                    <div className="widget-user-info">
+                                                        <EmployeeProfilePhoto className='user-avatar' id={data.employeeId}></EmployeeProfilePhoto>
+
+                                                        <div className="approvalUser-details">
+                                                            <div className="user-name-aprv">{data?.employee.name}</div>
+                                                            <div className="overtime-date">{getCustomizedWidgetDate(data.forDate)}</div>
+
                                                         </div>
                                                     </div>
-                                                </MeetingDashboardTooltip> : null}
-                                        </>
-                                    )) : <span><Empty style={{ marginTop: '35px' }} /></span> : null}
-                                    {/* Overtime Action */}
-
-                                    { this.state.overtimeEnable && activeButton === 2 ? overTimeList.length > 0 ? overTimeList.map((data, index) => (
-                                        <MeetingDashboardTooltip title={
-
-                                            <div>
-                                                <div className='pt-2 pb-2'>
-                                                    <div className='float-left'>
-                                                        <EmployeeProfilePhoto className='poolImg' id={data.employeeId}></EmployeeProfilePhoto>
+                                                    <div style={{ width: '115px' }} className="text-left">
+                                                        <span className='headTxt'>Overtime Hours</span> <br />
+                                                        <span><b>{data.hours.toFixed(2)}</b></span>
                                                     </div>
-                                                    <div className='ml-2 float-left'>
-                                                        <span className='font-weight-bold'>{data?.employee.name}</span> <br />
-                                                        <span className="headTxt">{this.reduceString(data.employeeJobTitle, 25)}</span>
-                                                    </div>
-                                                </div> <br />
-                                                <div className='ratingBody'>
-                                                    <div className='ratingContent'>
+                                                    <div className="leave-actions">
+                                                        <Tooltip placement="top" title="Approve" arrow>
+                                                            <a onClick={() => {
+                                                                this.updateOverTimeForAttendanceStatus(data.id, data.hours, "APPROVED", data.employee.id);
+                                                            }}  > <IoMdCheckmarkCircleOutline className='widgetApproveIcon' size={26} /> </a>
 
-                                                        <span > Plan Hour :<b> {data.plannedHours}</b> </span><br />
-                                                        <div>Actual Hours: <b>{data.actualHours.toFixed(2)} </b> </div>
-                                                        <div>Overtime Hours: <b>{data.hours.toFixed(2)}</b> </div>
+                                                        </Tooltip>
+                                                        <Tooltip placement="top" title="Reject" arrow>
+                                                            <a onClick={() => {
+                                                                this.updateOverTimeForAttendanceStatus(data.id, data.hours, "REJECTED", data.employee.id);
+                                                            }}  > <IoMdCloseCircleOutline className='widgetRejectIcon' size={26} /> </a>
 
-                                                    </div>
-
-
-                                                </div>
-                                            </div>
-                                        }>
-                                            <div className="leave-request">
-                                                <div className="widget-user-info">
-                                                    <EmployeeProfilePhoto className='user-avatar' id={data.employeeId}></EmployeeProfilePhoto>
-
-                                                    <div className="approvalUser-details">
-                                                        <div className="user-name-aprv">{data?.employee.name}</div>
-                                                        <div className="overtime-date">{getCustomizedWidgetDate(data.forDate)}</div>
-
+                                                        </Tooltip>
                                                     </div>
                                                 </div>
-                                                <div style={{ width: '115px' }} className="text-left">
-                                                    <span className='headTxt'>Overtime Hours</span> <br />
-                                                    <span><b>{data.hours.toFixed(2)}</b></span>
-                                                </div>
-                                                <div className="leave-actions">
-                                                    <Tooltip placement="top" title="Approve" arrow>
-                                                        <a onClick={() => {
-                                                            this.updateOverTimeForAttendanceStatus(data.id, data.hours, "APPROVED", data.employee.id);
-                                                        }}  > <IoMdCheckmarkCircleOutline className='widgetApproveIcon' size={26} /> </a>
+                                            </MeetingDashboardTooltip>)) : <span><Empty style={{ marginTop: '35px' }} /></span> : null
+                                        }
+                                        {/* Time In Lieu Action */}
+                                        {activeButton === 3 ? timeInLieu.length > 0 ? timeInLieu.map((data, index) => (
+                                            <MeetingDashboardTooltip title={
 
-                                                    </Tooltip>
-                                                    <Tooltip placement="top" title="Reject" arrow>
-                                                        <a onClick={() => {
-                                                            this.updateOverTimeForAttendanceStatus(data.id, data.hours, "REJECTED", data.employee.id);
-                                                        }}  > <IoMdCloseCircleOutline className='widgetRejectIcon' size={26} /> </a>
+                                                <div>
+                                                    <div className='pt-2 pb-2'>
+                                                        <div className='float-left'>
+                                                            <EmployeeProfilePhoto className='poolImg' id={data.employeeId}></EmployeeProfilePhoto>
+                                                        </div>
+                                                        <div className='ml-2 float-left'>
+                                                            <span className='font-weight-bold'>{data?.employee.name}</span> <br />
+                                                            <span className="headTxt">{this.reduceString(data.employeeJobTitle, 25)}</span>
 
-                                                    </Tooltip>
-                                                </div>
-                                            </div>
-                                        </MeetingDashboardTooltip>)) : <span><Empty style={{ marginTop: '35px' }} /></span> : null
-                                    }
-                                    {/* Time In Lieu Action */}
-                                    {activeButton === 3 ? timeInLieu.length > 0 ? timeInLieu.map((data, index) => (
-                                        <MeetingDashboardTooltip title={
+                                                        </div>
+                                                    </div> <br />
+                                                    <div className='ratingBody'>
+                                                        <div className='ratingContent'>
+                                                            <span >Hours :<b> {data.hours.toFixed(2)}</b> </span><br />
 
-                                            <div>
-                                                <div className='pt-2 pb-2'>
-                                                    <div className='float-left'>
-                                                        <EmployeeProfilePhoto className='poolImg' id={data.employeeId}></EmployeeProfilePhoto>
-                                                    </div>
-                                                    <div className='ml-2 float-left'>
-                                                        <span className='font-weight-bold'>{data?.employee.name}</span> <br />
-                                                        <span className="headTxt">{this.reduceString(data.employeeJobTitle, 25)}</span>
 
-                                                    </div>
-                                                </div> <br />
-                                                <div className='ratingBody'>
-                                                    <div className='ratingContent'>
-                                                        <span >Hours :<b> {data.hours.toFixed(2)}</b> </span><br />
+                                                        </div>
 
 
                                                     </div>
-
-
                                                 </div>
-                                            </div>
-                                        }>
-                                            <div className="leave-request">
-                                                <div className="widget-user-info">
-                                                    <EmployeeProfilePhoto className='user-avatar' id={data.employeeId}></EmployeeProfilePhoto>
+                                            }>
+                                                <div className="leave-request">
+                                                    <div className="widget-user-info">
+                                                        <EmployeeProfilePhoto className='user-avatar' id={data.employeeId}></EmployeeProfilePhoto>
 
-                                                    <div className="approvalUser-details">
-                                                        <div className="user-name-aprv">{data?.employee.name}</div>
-                                                        <div className="leave-date">{getCustomizedWidgetDate(data.forDate)}</div>
+                                                        <div className="approvalUser-details">
+                                                            <div className="user-name-aprv">{data?.employee.name}</div>
+                                                            <div className="leave-date">{getCustomizedWidgetDate(data.forDate)}</div>
 
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div style={{ width: '115px' }} className="text-left">
-                                                    <span className='headTxt'>Hours</span> <br />
-                                                    <span><b>{data.hours.toFixed(2)}</b></span>
-                                                </div>
-                                                <div className="leave-actions">
-                                                    <Tooltip placement="top" title="Approve" arrow>
-                                                        <a onClick={() => {
-                                                            this.updateStatusForTimeinLieu(data.id, "APPROVED", data.hours);
-                                                        }}  > <IoMdCheckmarkCircleOutline className='widgetApproveIcon' size={26} /> </a>
+                                                    <div style={{ width: '115px' }} className="text-left">
+                                                        <span className='headTxt'>Hours</span> <br />
+                                                        <span><b>{data.hours.toFixed(2)}</b></span>
+                                                    </div>
+                                                    <div className="leave-actions">
+                                                        <Tooltip placement="top" title="Approve" arrow>
+                                                            <a onClick={() => {
+                                                                this.updateStatusForTimeinLieu(data.id, "APPROVED", data.hours);
+                                                            }}  > <IoMdCheckmarkCircleOutline className='widgetApproveIcon' size={26} /> </a>
 
-                                                    </Tooltip>
-                                                    <Tooltip placement="top" title="Reject" arrow>
-                                                        <a onClick={() => {
-                                                            this.updateStatusForTimeinLieu(data.id, "REJECTED", data.approvedHours);
-                                                        }}  > <IoMdCloseCircleOutline className='widgetRejectIcon' size={26} /> </a>
+                                                        </Tooltip>
+                                                        <Tooltip placement="top" title="Reject" arrow>
+                                                            <a onClick={() => {
+                                                                this.updateStatusForTimeinLieu(data.id, "REJECTED", data.approvedHours);
+                                                            }}  > <IoMdCloseCircleOutline className='widgetRejectIcon' size={26} /> </a>
 
-                                                    </Tooltip>
+                                                        </Tooltip>
+                                                    </div>
+
                                                 </div>
-
-                                            </div>
-                                        </MeetingDashboardTooltip>)) : <span><Empty style={{ marginTop: '35px' }} /></span> : null
-                                    }
+                                            </MeetingDashboardTooltip>)) : <span><Empty style={{ marginTop: '35px' }} /></span> : null
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                        </div> : null}
+                            </div> : null}
 
                             {/* Upcoming Celebrations */}
 
-                        <div className='celebrationCard'>
-                            <div className="Title d-flex">
-                                <h2 className='newDashboardTitleAction'>Upcoming Celebrations</h2>
+                            <div className='celebrationCard'>
+                                <div className="Title d-flex">
+                                    <h2 className='newDashboardTitleAction'>Upcoming Celebrations</h2>
 
                                 </div>
                                 <div>
@@ -1693,8 +1694,8 @@ export default class NewSocialShare extends Component {
                                                         </div>
                                                         <label>{this.reduceString(fullName, 13)}<br />{getCustomizedWidgetDate(data.dateOf)}</label>
 
-                                                </div>
-                                            )
+                                                    </div>
+                                                )
 
                                             })}
                                         </Carousel>
@@ -1703,7 +1704,7 @@ export default class NewSocialShare extends Component {
                             </div>
 
                             {/* UpComing Events everyone need to show */}
-                            <div  className='eventCardBody mr-0 ml-0 row'>
+                            <div className='eventCardBody mr-0 ml-0 row'>
                                 <div className='col-xl-upComingEvents'>
                                     <div className="Title d-flex">
                                         <h2 className='newDashboardTitleAction newDashboardTitleActionEvent'>Upcoming Events </h2>
@@ -1718,21 +1719,24 @@ export default class NewSocialShare extends Component {
                                     <div className='eventScroll'>
                                         {this.state.upComingLeaving.length > 0 ? this.state.upComingLeaving.map((data, index) => (
                                             <div hidden={!this.state.newHire} className='container-fluid' id='eventElements'>
-                                                <div >
-                                                    <EmployeeProfilePhoto className="events-proPic" id={data.id} alt={data.firstName} />
-                                                </div>
-                                                <label className='cardsProPicLabel'>{this.reduceString(`${data.firstName} ${data.middleName} ${data.lastName}`, 14)}<br />{data.date && getCustomizedWidgetDate(data.date)}</label>
-
+                                                <Tooltip className='d-flex' title={`${data.firstName} ${data.middleName} ${data.lastName}`} 
+                                                    placement="top">
+                                                    <div >
+                                                        <EmployeeProfilePhoto className="events-proPic" id={data.id} alt={data.firstName} />
+                                                    </div>
+                                                    <label className='cardsProPicLabel'>{this.reduceString(`${data.firstName} ${data.middleName} ${data.lastName}`, 14)}<br />{data.date && getCustomizedWidgetDate(data.date)}</label>
+                                                </Tooltip>
                                             </div>)) : <div style={{ placeSelf: 'center' }} hidden={!this.state.newHire}><Empty /></div>
                                         }
 
-                                    {this.state.upComingHire.length > 0 ? this.state.upComingHire.map((data, index) => (
-                                        <div hidden={this.state.newHire} className='container-fluid' id='eventElements'>
-                                            <div >
-                                                <EmployeeProfilePhoto className="events-proPic" id={data.id} alt={data.firstName} />
-                                            </div>
-                                            <label className='cardsProPicLabel'>{this.reduceString(`${data.firstName} ${data.middleName} ${data.lastName}`, 15)}<br />{data.date && getCustomizedWidgetDate(data.date)}</label>
-
+                                        {this.state.upComingHire.length > 0 ? this.state.upComingHire.map((data, index) => (
+                                            <div hidden={this.state.newHire} className='container-fluid' id='eventElements'>
+                                                <Tooltip className='d-flex' title={`${data.firstName} ${data.middleName} ${data.lastName}`}  placement="top">
+                                                    <div >
+                                                        <EmployeeProfilePhoto className="events-proPic" id={data.id} alt={data.firstName} />
+                                                    </div>
+                                                    <label className='cardsProPicLabel'>{this.reduceString(`${data.firstName} ${data.middleName} ${data.lastName}`, 15)}<br />{data.date && getCustomizedWidgetDate(data.date)}</label>
+                                                </Tooltip>
                                             </div>)) : <div style={{ placeSelf: 'center' }} hidden={this.state.newHire}><Empty /></div>
                                         }
                                     </div>
@@ -1740,7 +1744,7 @@ export default class NewSocialShare extends Component {
                                 <div className=' upCommingHolidays'>
                                     <div className='Title d-flex upCommingHolidaysTitle' >
                                         <h2 className='newDashboardTitleAction'>Upcoming Holidays </h2>
-                                        <div style={{cursor: 'pointer'}} onClick={() => this.setState({ showHolidays: true })} >
+                                        <div style={{ cursor: 'pointer' }} onClick={() => this.setState({ showHolidays: true })} >
                                             <p className='viewAllBtn viewAllBtnEvent'>View All</p>
                                         </div>
                                     </div>
@@ -1753,20 +1757,20 @@ export default class NewSocialShare extends Component {
                                                     <div className='holidaysElements'>
 
                                                         <div className='fcontainer d-flex createPostInsideDivlex-container' >
-                                                            <h5 style={{  color: colors[index % colors.length] }} className='mb-0'>{data.occasion}</h5>
+                                                            <h5 style={{ color: colors[index % colors.length] }} className='mb-0'>{data.occasion}</h5>
                                                             { }
 
-                                                        <h5 style={{ color: colors[index % colors.length], paddingLeft: "6px" }} className='mb-0'>{`(${data.branch?.name ? data.branch?.name : " - "})`}</h5>
+                                                            <h5 style={{ color: colors[index % colors.length], paddingLeft: "6px" }} className='mb-0'>{`(${data.branch?.name ? data.branch?.name : " - "})`}</h5>
 
+                                                        </div>
+                                                        <p>{`${getCustomizedWidgetDate(data.date)} ${dayOfWeek}`}</p>
                                                     </div>
-                                                    <p>{`${getCustomizedWidgetDate(data.date)} ${dayOfWeek}`}</p>
-                                                </div>
-                                                <div className='mb-2' id='borderDiv' ></div>
-                                            </div>)
-                                    })}
-                                </div> : <div style={{ placeSelf: 'center', marginTop: '48px' }} ><Empty /></div>}
+                                                    <div className='mb-2' id='borderDiv' ></div>
+                                                </div>)
+                                        })}
+                                    </div> : <div style={{ placeSelf: 'center', marginTop: '48px' }} ><Empty /></div>}
+                                </div>
                             </div>
-                        </div>
 
                         </div>
                         {/* right Section */}
@@ -1784,7 +1788,7 @@ export default class NewSocialShare extends Component {
                                         placeholder={`What's on your mind, ${getUserName()}?`}
                                         onClick={() => this.setState({ showForm: true })}
                                     />
-                                   
+
                                 </div>
                                 <div className="action-buttons">
                                     <button onClick={() => this.setState({ showForm: true })} className="action-button live-video">
@@ -1798,7 +1802,7 @@ export default class NewSocialShare extends Component {
                                     </button>
                                 </div>
                             </div>
-                           {this.state.socialShare?.map((item, index) => {
+                            {this.state.socialShare?.map((item, index) => {
                                 let reactionIdByemployee = 0
                                 // get employee reaction Id
                                 if (item.reactions != null && item.reactions?.length > 0) {
@@ -1836,69 +1840,69 @@ export default class NewSocialShare extends Component {
                                                         <EmployeeProfilePhoto className='createPostProPic' id={parseInt(item.recognizer?.profilePicture || 0)}></EmployeeProfilePhoto>
                                                         <p className='ml-2'> <b style={{ color: '#102746' }}>{item?.createdBy?.name || "WorkPlus"}</b>  <br />{getCustomizedWidgetDate(item.createdOn)}</p>
 
-                                                </div>
-
-                                            </div>
-                                            <div className='mr-2 float-right align-self-center mt-3 d-flex'>
-                                                <p role="button" className='p-0' id='socialPost'><BiMedal /> Recognition</p>
-
-                                                <div className="dropdow dropup">
-                                                    <a href="#" className="action-icon" data-toggle="dropdown" aria-expanded="false">
-                                                        <p className='postOptionMenu ml-2'><BiDotsHorizontalRounded size={25} /> </p>
-                                                    </a>
-                                                    {isCompanyAdmin && <div className="dropdown-menu dropdown-menu-right">
-                                                        <>
-
-                                                            <a
-                                                                onClick={() =>
-                                                                    this.handleDeletePost(item)
-                                                                }
-                                                                className="dropdown-item" href="#" >
-                                                                <i className="fa fa-trash-o m-r-5"></i> Delete</a>
-                                                        </>
-                                                    </div>}
-                                                </div>
-
-                                            </div>
-                                            <div className="recognitionBody" >
-                                                <div className=''>
-                                                    <div className="recHeadImg">
-                                                        <img className="recognitionbgImg" src={imageSrc} alt="responsive image" />
                                                     </div>
-                                                    <div className='recognitionHeadText'>
-                                                        <p className='recognitionText'>{item && item.recognitionSetup?.name}</p>
-                                                    </div>
+
                                                 </div>
+                                                <div className='mr-2 float-right align-self-center mt-3 d-flex'>
+                                                    <p role="button" className='p-0' id='socialPost'><BiMedal /> Recognition</p>
 
-                                                <div className='text-center'>
-                                                    <div className='mb-3' style={{ textAlign: "center" }}>
+                                                    <div className="dropdow dropup">
+                                                        <a href="#" className="action-icon" data-toggle="dropdown" aria-expanded="false">
+                                                            <p className='postOptionMenu ml-2'><BiDotsHorizontalRounded size={25} /> </p>
+                                                        </a>
+                                                        {isCompanyAdmin && <div className="dropdown-menu dropdown-menu-right">
+                                                            <>
 
-                                                        <div >
-                                                            <EmployeeProfilePhoto className='recEmployeePic' id={item.awardee?.id}></EmployeeProfilePhoto>
+                                                                <a
+                                                                    onClick={() =>
+                                                                        this.handleDeletePost(item)
+                                                                    }
+                                                                    className="dropdown-item" href="#" >
+                                                                    <i className="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                            </>
+                                                        </div>}
+                                                    </div>
+
+                                                </div>
+                                                <div className="recognitionBody" >
+                                                    <div className=''>
+                                                        <div className="recHeadImg">
+                                                            <img className="recognitionbgImg" src={imageSrc} alt="responsive image" />
                                                         </div>
-                                                        <h4 className='m-0'>{item.awardee && item.awardee?.name}</h4>
-                                                        <h6 >
-                                                            <MediaComponent mediaPath={item.mediaPath} mediaType={item.mediaType} />
-                                                            &nbsp;{item.recognitionSetup?.name}</h6>
+                                                        <div className='recognitionHeadText'>
+                                                            <p className='recognitionText'>{item && item.recognitionSetup?.name}</p>
+                                                        </div>
                                                     </div>
+
+                                                    <div className='text-center'>
+                                                        <div className='mb-3' style={{ textAlign: "center" }}>
+
+                                                            <div >
+                                                                <EmployeeProfilePhoto className='recEmployeePic' id={item.awardee?.id}></EmployeeProfilePhoto>
+                                                            </div>
+                                                            <h4 className='m-0'>{item.awardee && item.awardee?.name}</h4>
+                                                            <h6 >
+                                                                <MediaComponent mediaPath={item.mediaPath} mediaType={item.mediaType} />
+                                                                &nbsp;{item.recognitionSetup?.name}</h6>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div style={{ fontSize: '13px' }} className="mb-3 justify-content-center d-flex">
+                                                        <div className='mr-2 recBy' >
+                                                            <EmployeeProfilePhoto className='createPostProPic' id={parseInt(item.recognizer?.profilePicture || 0)}></EmployeeProfilePhoto>
+                                                            <p className='ml-2 text-center'>Recognized by: <br /><strong> {item.recognizer?.name}</strong></p>
+                                                        </div>
+                                                        <div className='recCreatedDate' >
+                                                            <p className='text-center'>Recognized Date <br /><strong >{getCustomizedWidgetDate(item?.createdOn)}</strong></p>
+                                                        </div>
+
+
+                                                    </div>
+
                                                 </div>
-
-
-                                                <div style={{ fontSize: '13px' }} className="mb-3 justify-content-center d-flex">
-                                                    <div className='mr-2 recBy' >
-                                                        <EmployeeProfilePhoto className='createPostProPic' id={parseInt(item.recognizer?.profilePicture || 0)}></EmployeeProfilePhoto>
-                                                        <p className='ml-2 text-center'>Recognized by: <br /><strong> {item.recognizer?.name}</strong></p>
-                                                    </div>
-                                                    <div className='recCreatedDate' >
-                                                        <p className='text-center'>Recognized Date <br /><strong >{getCustomizedWidgetDate(item?.createdOn)}</strong></p>
-                                                    </div>
-
-
-                                                </div>
-
-                                            </div>
-                                            {/* my code  s*/}
-                                            {/* my code */}
+                                                {/* my code  s*/}
+                                                {/* my code */}
                                                 <div className='p-2 postLike_sec'>
                                                     <div onClick={() => this.handleForm(item.id)} className='likes_Hover d-flex'>
                                                         <div className='d-flex'>
@@ -1920,821 +1924,821 @@ export default class NewSocialShare extends Component {
                                                     </div>
 
                                                 </div>
-                                            <div className='d-flex recIconsRow' ><ul className="m-0 p-2">
-                                               
-                                         
-                                                <li className='h5 likeHover'>
-                                        <div
-                                            className="like-button-container"
-                                            onMouseEnter={this.handleMouseEnter}
-                                            onMouseLeave={this.handleMouseLeave}
-                                            onMouseOver={() => this.handleMouseOver(item.id)}
-                                            style={{ position: 'relative', display: 'inline-block' }}
-                                        >
-                                            {reactionIdByemployee == 0 ?
-                                                <li onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} className='h5 likeHover'>
-                                                    <span className=' mr-1 p-0' > <AiOutlineLike size={25} /></span> Likes
+                                                <div className='d-flex recIconsRow' ><ul className="m-0 p-2">
 
-                                                </li> : <li className='p-0 h5 likeHover' style={{fontSize: '13px'}}> 
-                                                   
-                                                    <span className=' mr-1 p-0' >{reactionIdByemployee == 1?'👍':reactionIdByemployee == 2?'👏':reactionIdByemployee == 3?'🤲':reactionIdByemployee == 4?'❤️':reactionIdByemployee == 5?'💡':reactionIdByemployee == 6?'😄': <AiOutlineLike size={25} />}</span> {reactionIdByemployee == 1?'Like':reactionIdByemployee == 2?'Celebrate':reactionIdByemployee == 3?'Support':reactionIdByemployee == 4?'Love':reactionIdByemployee == 5?'Insightful':reactionIdByemployee == 6?'Funny': 'Likes'} 
 
-                                                
-                                                </li>}
+                                                    <li className='h5 likeHover'>
+                                                        <div
+                                                            className="like-button-container"
+                                                            onMouseEnter={this.handleMouseEnter}
+                                                            onMouseLeave={this.handleMouseLeave}
+                                                            onMouseOver={() => this.handleMouseOver(item.id)}
+                                                            style={{ position: 'relative', display: 'inline-block' }}
+                                                        >
+                                                            {reactionIdByemployee == 0 ?
+                                                                <li onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} className='h5 likeHover'>
+                                                                    <span className=' mr-1 p-0' > <AiOutlineLike size={25} /></span> Likes
 
-                                            {this.state.showEmojis && item.id == this.state.likeId && (
-                                                <div className="emoji-popup">
-                                                    <Tooltip title="Like" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
+                                                                </li> : <li className='p-0 h5 likeHover' style={{ fontSize: '13px' }}>
 
-                                                        <span onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} role="img" aria-label="like">
-                                                            👍 <span className="popup_imoji_desc">Like</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Celebrate" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '👏', text: 'Celebrate', id: 2, postId: item.id })} role="img" aria-label="clap">
-                                                            👏
-                                                            <span className="popup_imoji_desc">Celebrate</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Support" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '🤲', text: 'Support', id: 3, postId: item.id })} role="img" aria-label="hand">
-                                                            🤲
-                                                            <span className="popup_imoji_desc">Support</span>
-                                                        </span>
-                                                    </Tooltip>
+                                                                    <span className=' mr-1 p-0' >{reactionIdByemployee == 1 ? '👍' : reactionIdByemployee == 2 ? '👏' : reactionIdByemployee == 3 ? '🤲' : reactionIdByemployee == 4 ? '❤️' : reactionIdByemployee == 5 ? '💡' : reactionIdByemployee == 6 ? '😄' : <AiOutlineLike size={25} />}</span> {reactionIdByemployee == 1 ? 'Like' : reactionIdByemployee == 2 ? 'Celebrate' : reactionIdByemployee == 3 ? 'Support' : reactionIdByemployee == 4 ? 'Love' : reactionIdByemployee == 5 ? 'Insightful' : reactionIdByemployee == 6 ? 'Funny' : 'Likes'}
 
-                                                    <Tooltip title="Love" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '❤️', text: 'Love', id: 4, postId: item.id })} role="img" aria-label="heart">
-                                                            ❤️
-                                                            <span className="popup_imoji_desc">Love</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Insightful" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '💡', text: 'Insightful', id: 5, postId: item.id })} role="img" aria-label="lightbulb">
-                                                            💡
-                                                            <span className="popup_imoji_desc">Insightful</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Funny" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '😄', text: 'Funny', id: 6, postId: item.id })} role="img" aria-label="laugh">
-                                                            😄
-                                                            <span className="popup_imoji_desc">Funny</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </li>
 
-                                                {/* my code */}
+                                                                </li>}
 
-                                                <li onClick={() => {
-                                                    this.handleCommentClickShare(item.id);
-                                                    this.setState({ socialCommentBox: item.id == this.state.socialCommentBox?0:item.id })
-                                                }} className='h5 ml-3 likeHover' style={{fontSize: '13px'}}><span className='mr-1' ><BiCommentDots size={25} /></span>&nbsp;
-                                                     Comments </li>
-                                                   
-                                            </ul>
+                                                            {this.state.showEmojis && item.id == this.state.likeId && (
+                                                                <div className="emoji-popup">
+                                                                    <Tooltip title="Like" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
 
-                                            </div>
-                                            
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} role="img" aria-label="like">
+                                                                            👍 <span className="popup_imoji_desc">Like</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Celebrate" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '👏', text: 'Celebrate', id: 2, postId: item.id })} role="img" aria-label="clap">
+                                                                            👏
+                                                                            <span className="popup_imoji_desc">Celebrate</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Support" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '🤲', text: 'Support', id: 3, postId: item.id })} role="img" aria-label="hand">
+                                                                            🤲
+                                                                            <span className="popup_imoji_desc">Support</span>
+                                                                        </span>
+                                                                    </Tooltip>
 
-                                            {/* my code e */}
-                                        </div>
-                                        {item.id === this.state.socialCommentBox ?
-                                            <>
-                                                <div className='p-2'>
-
-                                                    <div style={{ display: "flex" }}>
-                                                        <img className='createPostProPic' alt={getUserName()} src={'data:image/jpeg;base64,' + getProfilePicture()} />
-
-                                                        <InputEmoji
-                                                            className="inputEmojiBox"
-                                                            value={this.state.commentText[item.id] || ""}
-                                                            onChange={(val) => {
-                                                                this.setState((prevState) => ({
-                                                                    commentText: {
-                                                                        ...prevState.commentText,
-                                                                        [item.id]: val
-                                                                    }
-                                                                }));
-                                                            }}
-                                                            cleanOnEnter
-                                                            placeholder="Write a comment..."
-                                                        />
-                                                        <div className="input-group-append recComment-group">
-                                                            <p className="p-2 btn btn-secondary send-btn" type="button" onClick={e => {
-                                                                putRecognitionComment(item.id, this.state.commentText[item.id]).then(res => {
-                                                                    if (res.status === "OK") {
-                                                                        this.getSocialShareList();
-                                                                        let { socialShare } = this.state;
-                                                                        let index = socialShare.findIndex(x => x.id === res.data.id);
-                                                                        socialShare[index] = res.data;
-                                                                        this.setState({
-                                                                            socialShare: socialShare,
-                                                                            commentText: {
-                                                                                ...this.state.commentText,
-                                                                                [item.id]: ""
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                });
-                                                            }}>Send</p>
+                                                                    <Tooltip title="Love" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '❤️', text: 'Love', id: 4, postId: item.id })} role="img" aria-label="heart">
+                                                                            ❤️
+                                                                            <span className="popup_imoji_desc">Love</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Insightful" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '💡', text: 'Insightful', id: 5, postId: item.id })} role="img" aria-label="lightbulb">
+                                                                            💡
+                                                                            <span className="popup_imoji_desc">Insightful</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Funny" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '😄', text: 'Funny', id: 6, postId: item.id })} role="img" aria-label="laugh">
+                                                                            😄
+                                                                            <span className="popup_imoji_desc">Funny</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                </div>
+                                                            )}
                                                         </div>
+                                                    </li>
 
+                                                    {/* my code */}
+
+                                                    <li onClick={() => {
+                                                        this.handleCommentClickShare(item.id);
+                                                        this.setState({ socialCommentBox: item.id == this.state.socialCommentBox ? 0 : item.id })
+                                                    }} className='h5 ml-3 likeHover' style={{ fontSize: '13px' }}><span className='mr-1' ><BiCommentDots size={25} /></span>&nbsp;
+                                                        Comments </li>
+
+                                                </ul>
+
+                                                </div>
+
+
+                                                {/* my code e */}
+                                            </div>
+                                            {item.id === this.state.socialCommentBox ?
+                                                <>
+                                                    <div className='p-2'>
+
+                                                        <div style={{ display: "flex" }}>
+                                                            <img className='createPostProPic' alt={getUserName()} src={'data:image/jpeg;base64,' + getProfilePicture()} />
+
+                                                            <InputEmoji
+                                                                className="inputEmojiBox"
+                                                                value={this.state.commentText[item.id] || ""}
+                                                                onChange={(val) => {
+                                                                    this.setState((prevState) => ({
+                                                                        commentText: {
+                                                                            ...prevState.commentText,
+                                                                            [item.id]: val
+                                                                        }
+                                                                    }));
+                                                                }}
+                                                                cleanOnEnter
+                                                                placeholder="Write a comment..."
+                                                            />
+                                                            <div className="input-group-append recComment-group">
+                                                                <p className="p-2 btn btn-secondary send-btn" type="button" onClick={e => {
+                                                                    putRecognitionComment(item.id, this.state.commentText[item.id]).then(res => {
+                                                                        if (res.status === "OK") {
+                                                                            this.getSocialShareList();
+                                                                            let { socialShare } = this.state;
+                                                                            let index = socialShare.findIndex(x => x.id === res.data.id);
+                                                                            socialShare[index] = res.data;
+                                                                            this.setState({
+                                                                                socialShare: socialShare,
+                                                                                commentText: {
+                                                                                    ...this.state.commentText,
+                                                                                    [item.id]: ""
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                }}>Send</p>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div style={{ borderRadius: '10px' }} className=" card post mb-3">
+                                                        <div className="comments-area clearfix meta pb-0">
+                                                            {
+                                                                item.comments.map((comment, index) => (
+                                                                    <div className="socialPostCmd pt-1 pb-1" key={index}>
+                                                                        <strong>{comment.userName}&nbsp;<small>{getCustomizedWidgetDate(comment.createdOn)}</small></strong>
+                                                                        <br />
+                                                                        <span style={{ fontSize: '13px', fontWeight: '500' }}>{comment.comment}</span>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                            {item.comments?.length > 1 && <div className="p-2">
+
+                                                                <center>
+                                                                    <Anchor onClick={() => {
+                                                                        let { socialShare } = this.state;
+                                                                        let index = socialShare.findIndex(x => x.id === item.id);
+                                                                        let commentCount = socialShare[index].commentCount ? socialShare[index].commentCount + defaultCommentCount : defaultCommentCount * 2;
+                                                                        if (commentCount > item.comments.length) {
+                                                                            commentCount = item.comments.length;
+                                                                        }
+                                                                        socialShare[index].commentCount = commentCount;
+                                                                        this.setState({
+                                                                            socialShare: socialShare
+                                                                        })
+                                                                    }}></Anchor>
+                                                                </center>
+                                                            </div>
+                                                            }
+                                                        </div></div>
+                                                </>
+                                                : null}
+                                        </div>)
+                                    // Birthday Post
+                                } else if (item.type == "BIRTHDAY" || item.type == "ANNIVERSARY") {
+                                    let showComments = item.comments;
+                                    if (item.commentCount) {
+                                        showComments = showComments.slice(0, item.commentCount);
+                                    } else {
+                                        showComments = showComments.slice(0, defaultCommentCount);
+                                    }
+                                    const inputDate = new Date(item.createdOn);
+                                    const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+                                    const formattedDate = inputDate.toLocaleDateString('en-US', options);
+                                    return (
+                                        <div className='newRecognitionShare' key={index}>
+                                            <div className="m-0">
+                                                <div className="mb-3 recognitionTop" >
+                                                    <div className='col=md-4' id='SocialSharePostHeader'>
+                                                        <div className='m-2 mt-2 d-flex'>
+                                                            <EmployeeProfilePhoto className='createPostProPic' id={parseInt(item.recognizer?.profilePicture || 0)}></EmployeeProfilePhoto>
+                                                            <p className='ml-2'> <b style={{ color: '#102746' }}>{item?.createdBy?.name || "WorkPlus"}</b>  <br />{getCustomizedWidgetDate(item.createdOn)}</p>
+
+                                                        </div>
+                                                    </div>
+                                                    <div className='mr-2 float-right align-self-center mt-3 d-flex'>
+                                                        <p className='p-0' id='socialPost'>
+                                                            {item.type === "BIRTHDAY" ? (
+                                                                <>
+                                                                    <AiOutlinePlusCircle size={15} /> Birthday
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <AiOutlinePlusCircle size={15} /> Anniversary
+                                                                </>
+                                                            )}
+                                                        </p>
+                                                        <div className="dropdow dropup">
+                                                            <a href="#" className="action-icon" data-toggle="dropdown" aria-expanded="false">
+                                                                <p className='postOptionMenu ml-2'><BiDotsHorizontalRounded size={25} /> </p>
+                                                            </a>
+                                                            {isCompanyAdmin && <div className="dropdown-menu dropdown-menu-right">
+                                                                <>
+
+                                                                    <a onClick={() => this.handleDeletePost(item)} className="dropdown-item" href="#" >
+                                                                        <i className="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                                </>
+                                                            </div>}
+                                                        </div>
+                                                    </div>
+                                                    <div className={item.type == "BIRTHDAY" ? 'socialShareArticleBirthday' : 'socialShareArticleAnniversary'}>
+
+                                                        <article className='card-body socialShareArticleDivBirthday' >
+
+                                                            <h3 className='birthdayPostTittle' >{item.type == "BIRTHDAY" ? 'HAPPY BIRTHDAY' : 'HAPPY WORK ANNIVERSARY'}</h3>
+
+                                                            <div className='birthdaypostName'>
+                                                                <EmployeeProfilePhoto className='createbirthdayPostProPic' id={item.employeeId}></EmployeeProfilePhoto>
+                                                                <p className='mt-3 birthdayname'>{item.awardee?.name}</p>
+                                                            </div>
+                                                            {item.type == "BIRTHDAY" && <img className='birthdayimg' src={Baloon} alt="" />}
+                                                            <img className='birthdayimg' src={confetti} alt="" />
+
+                                                            <h5 style={{ wordSpacing: '5px', color: ' #fff27d' }} className="m-0">{formattedDate}</h5>
+                                                            <p className='mb-0 BirthdaypostDiscription' style={{ fontFamily: "sans-serif" }}>{item.description}</p>
+                                                        </article>
                                                     </div>
                                                 </div>
-                                                <div style={{ borderRadius: '10px' }} className=" card post mb-3">
-                                                    <div className="comments-area clearfix meta pb-0">
-                                                        {
-                                                            item.comments.map((comment, index) => (
-                                                                <div className="socialPostCmd pt-1 pb-1" key={index}>
-                                                                    <strong>{comment.userName}&nbsp;<small>{getCustomizedWidgetDate(comment.createdOn)}</small></strong>
-                                                                    <br />
-                                                                    <span style={{ fontSize: '13px', fontWeight: '500' }}>{comment.comment}</span>
-                                                                </div>
-                                                            ))
-                                                        }
-                                                        {item.comments?.length > 1 && <div className="p-2">
-
-                                                            <center>
-                                                                <Anchor onClick={() => {
-                                                                    let { socialShare } = this.state;
-                                                                    let index = socialShare.findIndex(x => x.id === item.id);
-                                                                    let commentCount = socialShare[index].commentCount ? socialShare[index].commentCount + defaultCommentCount : defaultCommentCount * 2;
-                                                                    if (commentCount > item.comments.length) {
-                                                                        commentCount = item.comments.length;
-                                                                    }
-                                                                    socialShare[index].commentCount = commentCount;
-                                                                    this.setState({
-                                                                        socialShare: socialShare
-                                                                    })
-                                                                }}></Anchor>
-                                                            </center>
+                                                {/* my code */}
+                                                <div className='p-2 postLike_sec'>
+                                                    <div onClick={() => this.handleForm(item.id)} className='likes_Hover d-flex'>
+                                                        <div className='d-flex'>
+                                                            <span onClick={() => this.handleForm(item.id)} onMouseEnter={this.handleLikeEnter}
+                                                                style={{ fontSize: '20px', cursor: 'pointer' }}>👍</span>
+                                                            <span style={{ fontSize: '20px', cursor: 'pointer', marginLeft: '-4px' }}>❤️</span>
+                                                            <span style={{ fontSize: '20px', cursor: 'pointer', marginLeft: '-4px' }}>👏</span>
                                                         </div>
-                                                        }
-                                                    </div></div>
-                                            </>
-                                            : null}
-                                    </div>)
-                                // Birthday Post
-                            } else if (item.type == "BIRTHDAY" || item.type == "ANNIVERSARY") {
-                                let showComments = item.comments;
-                                if (item.commentCount) {
-                                    showComments = showComments.slice(0, item.commentCount);
+
+                                                        <span onClick={() => this.handleForm(item.id)} className="totalLike" style={{ fontSize: '23px' }}> {item.reactions?.length || 0}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span className='totalCmd' onClick={() => {
+                                                            this.handleCommentClickShare(item.id);
+                                                            this.setState({ socialCommentBox: item.id == this.state.socialCommentBox ? 0 : item.id })
+                                                        }} >{item.comments?.length || 0} <BiCommentDots size={20} /></span>
+
+
+                                                    </div>
+
+                                                </div>
+
+                                                {/* my code */}
+                                                <div className='d-flex recIconsRow' ><ul className="m-0 p-2">
+
+                                                    {/* my code */}
+                                                    <li className='h5 likeHover'>
+                                                        <div
+                                                            className="like-button-container"
+                                                            onMouseEnter={this.handleMouseEnter}
+                                                            onMouseLeave={this.handleMouseLeave}
+                                                            onMouseOver={() => this.handleMouseOver(item.id)}
+                                                            style={{ position: 'relative', display: 'inline-block' }}
+                                                        >
+                                                            {reactionIdByemployee == 0 ?
+                                                                <li onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} className='h5 likeHover'>
+                                                                    <span className=' mr-1 p-0' > <AiOutlineLike size={25} /></span> Likes
+
+                                                                </li> : <li className='p-0 h5 likeHover' style={{ fontSize: '13px' }}>
+
+                                                                    <span className=' mr-1 p-0' >{reactionIdByemployee == 1 ? '👍' : reactionIdByemployee == 2 ? '👏' : reactionIdByemployee == 3 ? '🤲' : reactionIdByemployee == 4 ? '❤️' : reactionIdByemployee == 5 ? '💡' : reactionIdByemployee == 6 ? '😄' : <AiOutlineLike size={25} />}</span> {reactionIdByemployee == 1 ? 'Like' : reactionIdByemployee == 2 ? 'Celebrate' : reactionIdByemployee == 3 ? 'Support' : reactionIdByemployee == 4 ? 'Love' : reactionIdByemployee == 5 ? 'Insightful' : reactionIdByemployee == 6 ? 'Funny' : 'Likes'}
+
+
+                                                                </li>}
+
+                                                            {this.state.showEmojis && item.id == this.state.likeId && (
+                                                                <div className="emoji-popup">
+                                                                    <Tooltip title="Like" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} role="img" aria-label="like">
+                                                                            👍 <span className="popup_imoji_desc">Like</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Celebrate" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '👏', text: 'Celebrate', id: 2, postId: item.id })} role="img" aria-label="clap">
+                                                                            👏
+                                                                            <span className="popup_imoji_desc">Celebrate</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Support" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '🤲', text: 'Support', id: 3, postId: item.id })} role="img" aria-label="hand">
+                                                                            🤲
+                                                                            <span className="popup_imoji_desc">Support</span>
+                                                                        </span>
+                                                                    </Tooltip>
+
+                                                                    <Tooltip title="Love" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '❤️', text: 'Love', id: 4, postId: item.id })} role="img" aria-label="heart">
+                                                                            ❤️
+                                                                            <span className="popup_imoji_desc">Love</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Insightful" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '💡', text: 'Insightful', id: 5, postId: item.id })} role="img" aria-label="lightbulb">
+                                                                            💡
+                                                                            <span className="popup_imoji_desc">Insightful</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Funny" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '😄', text: 'Funny', id: 6, postId: item.id })} role="img" aria-label="laugh">
+                                                                            😄
+                                                                            <span className="popup_imoji_desc">Funny</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </li>
+
+                                                    {/* my code */}
+
+                                                    <li onClick={() => {
+                                                        this.handleCommentClickShare(item.id);
+                                                        this.setState({ socialCommentBox: item.id == this.state.socialCommentBox ? 0 : item.id })
+                                                    }} className='h5 ml-3 likeHover' style={{ fontSize: '13px' }}><span className='mr-1' ><BiCommentDots size={25} /></span>&nbsp;
+                                                        Comments </li>
+
+                                                </ul>
+
+                                                </div>
+
+                                            </div>
+                                            {item.id === this.state.socialCommentBox ?
+                                                <>
+                                                    <div className='p-2'>
+                                                        <div style={{ display: "flex" }}>
+                                                            <EmployeeProfilePhoto className='createPostProPic' id={item.createdBy?.id}></EmployeeProfilePhoto>
+                                                            <InputEmoji
+                                                                className="inputEmojiBox"
+                                                                value={this.state.commentText[item.id] || ""}
+                                                                onChange={(val) => {
+                                                                    this.setState((prevState) => ({
+                                                                        commentText: {
+                                                                            ...prevState.commentText,
+                                                                            [item.id]: val
+                                                                        }
+                                                                    }));
+                                                                }}
+                                                                cleanOnEnter
+                                                                placeholder="Write a comment..."
+                                                            />
+                                                            <div className="input-group-append recComment-group">
+                                                                <p className="p-2 btn btn-secondary send-btn" type="button" onClick={e => {
+                                                                    putSocialShareComment(item.id, this.state.commentText[item.id]).then(res => {
+                                                                        if (res.status === "OK") {
+                                                                            this.getSocialShareList();
+                                                                            let { socialShare } = this.state;
+                                                                            let index = socialShare.findIndex(x => x.id === res.data.id);
+                                                                            socialShare[index] = res.data;
+                                                                            this.setState({
+                                                                                socialShare: socialShare,
+                                                                                commentText: {
+                                                                                    ...this.state.commentText,
+                                                                                    [item.id]: ""
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                }}>Send</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style={{ borderRadius: '10px' }} className="card post mb-3">
+                                                        <div className="comments-area clearfix meta pb-0">
+                                                            {
+                                                                item.comments.map((comment, index) => (
+                                                                    <div className="socialPostCmd pt-1 pb-1" key={index}>
+                                                                        <strong>{comment.userName}&nbsp;<small>{getCustomizedWidgetDate(comment.createdOn)}</small></strong>
+                                                                        <br />
+                                                                        <span style={{ fontSize: '13px', fontWeight: '500' }}>{comment.comment}</span>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                            {item.comments?.length > 1 && <div className="p-2">
+
+                                                                <center>
+                                                                    <Anchor onClick={() => {
+                                                                        let { socialShare } = this.state;
+                                                                        let index = socialShare.findIndex(x => x.id === item.id);
+                                                                        let commentCount = socialShare[index].commentCount ? socialShare[index].commentCount + defaultCommentCount : defaultCommentCount * 2;
+                                                                        if (commentCount > item.comments.length) {
+                                                                            commentCount = item.comments.length;
+                                                                        }
+                                                                        socialShare[index].commentCount = commentCount;
+                                                                        this.setState({
+                                                                            socialShare: socialShare
+                                                                        })
+                                                                    }}></Anchor>
+                                                                </center>
+                                                            </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </>
+                                                : null}
+
+
+                                        </div>)
                                 } else {
-                                    showComments = showComments.slice(0, defaultCommentCount);
-                                }
-                                const inputDate = new Date(item.createdOn);
-                                const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-                                const formattedDate = inputDate.toLocaleDateString('en-US', options);
-                                return (
-                                    <div className='newRecognitionShare' key={index}>
-                                        <div className="m-0">
-                                            <div className="mb-3 recognitionTop" >
-                                                <div className='col=md-4' id='SocialSharePostHeader'>
-                                                    <div className='m-2 mt-2 d-flex'>
-                                                        <EmployeeProfilePhoto className='createPostProPic' id={parseInt(item.recognizer?.profilePicture || 0)}></EmployeeProfilePhoto>
-                                                        <p className='ml-2'> <b style={{ color: '#102746' }}>{item?.createdBy?.name || "WorkPlus"}</b>  <br />{getCustomizedWidgetDate(item.createdOn)}</p>
+                                    {/* socialShare */ }
 
-                                                    </div>
-                                                </div>
-                                                <div className='mr-2 float-right align-self-center mt-3 d-flex'>
-                                                    <p className='p-0' id='socialPost'>
-                                                        {item.type === "BIRTHDAY" ? (
-                                                            <>
-                                                                <AiOutlinePlusCircle size={15} /> Birthday
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <AiOutlinePlusCircle size={15} /> Anniversary
-                                                            </>
-                                                        )}
-                                                    </p>
-                                                    <div className="dropdow dropup">
-                                                        <a href="#" className="action-icon" data-toggle="dropdown" aria-expanded="false">
-                                                            <p className='postOptionMenu ml-2'><BiDotsHorizontalRounded size={25} /> </p>
-                                                        </a>
-                                                        {isCompanyAdmin && <div className="dropdown-menu dropdown-menu-right">
-                                                            <>
+                                    let showComments = item.comments;
+                                    if (item.commentCount) {
+                                        showComments = showComments.slice(0, item.commentCount);
+                                    } else {
+                                        showComments = showComments.slice(0, defaultCommentCount);
+                                    }
+                                    return (
+                                        <div className='newRecognitionShare' key={index}>
+                                            <div className="m-0">
+                                                <div className="mb-3 recognitionTop" >
+                                                    <div className='col=md-4' id='SocialSharePostHeader'>
+                                                        <div className='m-2 mt-2 d-flex'>
+                                                            <EmployeeProfilePhoto className='createPostProPic' id={parseInt(item.recognizer?.profilePicture || 0)}></EmployeeProfilePhoto>
+                                                            <p className='ml-2'> <b style={{ color: '#102746' }}>{item.recognizer?.name || "WorkPlus"}</b>  <br />{getCustomizedWidgetDate(item.createdOn)}</p>
 
-                                                                <a onClick={() => this.handleDeletePost(item)} className="dropdown-item" href="#" >
-                                                                    <i className="fa fa-trash-o m-r-5"></i> Delete</a>
-                                                            </>
-                                                        </div>}
-                                                    </div>
-                                                </div>
-                                                <div className={item.type == "BIRTHDAY" ? 'socialShareArticleBirthday' : 'socialShareArticleAnniversary'}>
-
-                                                    <article className='card-body socialShareArticleDivBirthday' >
-
-                                                        <h3 className='birthdayPostTittle' >{item.type == "BIRTHDAY" ? 'HAPPY BIRTHDAY' : 'HAPPY WORK ANNIVERSARY'}</h3>
-
-                                                        <div className='birthdaypostName'>
-                                                            <EmployeeProfilePhoto className='createbirthdayPostProPic' id={item.employeeId}></EmployeeProfilePhoto>
-                                                            <p className='mt-3 birthdayname'>{item.awardee?.name}</p>
-                                                        </div>
-                                                        {item.type == "BIRTHDAY" && <img className='birthdayimg' src={Baloon} alt="" />}
-                                                        <img className='birthdayimg' src={confetti} alt="" />
-
-                                                        <h5 style={{wordSpacing: '5px', color: ' #fff27d' }} className="m-0">{formattedDate}</h5>
-                                                        <p className='mb-0 BirthdaypostDiscription' style={{ fontFamily: "sans-serif" }}>{item.description}</p>
-                                                    </article>
-                                                </div>
-                                            </div>
-                                            {/* my code */}
-                                            <div className='p-2 postLike_sec'>
-                                    <div onClick={() => this.handleForm(item.id)} className='likes_Hover d-flex'>
-                                        <div className='d-flex'>
-                                            <span onClick={() => this.handleForm(item.id)} onMouseEnter={this.handleLikeEnter}
-                                                style={{ fontSize: '20px', cursor: 'pointer' }}>👍</span>
-                                            <span style={{ fontSize: '20px', cursor: 'pointer', marginLeft: '-4px' }}>❤️</span>
-                                            <span style={{ fontSize: '20px', cursor: 'pointer', marginLeft: '-4px' }}>👏</span>
-                                        </div>
-
-                                        <span onClick={() => this.handleForm(item.id)} className="totalLike" style={{fontSize: '23px'}}> {item.reactions?.length || 0}</span>
-                                    </div>
-                                    <div>
-                                    <span className='totalCmd' onClick={() => {
-                                                    this.handleCommentClickShare(item.id);
-                                                    this.setState({ socialCommentBox: item.id == this.state.socialCommentBox?0:item.id })
-                                                }} >{item.comments?.length || 0} <BiCommentDots size={20} /></span>
-                                       
-
-                                    </div>
-
-                                </div>
-                                 
-                                            {/* my code */}
-                                            <div className='d-flex recIconsRow' ><ul className="m-0 p-2">
-                                               
-                                                {/* my code */}
-                                                <li className='h5 likeHover'>
-                                        <div
-                                            className="like-button-container"
-                                            onMouseEnter={this.handleMouseEnter}
-                                            onMouseLeave={this.handleMouseLeave}
-                                            onMouseOver={() => this.handleMouseOver(item.id)}
-                                            style={{ position: 'relative', display: 'inline-block' }}
-                                        >
-                                            {reactionIdByemployee == 0 ?
-                                                <li onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} className='h5 likeHover'>
-                                                    <span className=' mr-1 p-0' > <AiOutlineLike size={25} /></span> Likes
-
-                                                </li> : <li className='p-0 h5 likeHover' style={{fontSize: '13px'}}> 
-                                                   
-                                                <span className=' mr-1 p-0' >{reactionIdByemployee == 1?'👍':reactionIdByemployee == 2?'👏':reactionIdByemployee == 3?'🤲':reactionIdByemployee == 4?'❤️':reactionIdByemployee == 5?'💡':reactionIdByemployee == 6?'😄': <AiOutlineLike size={25} />}</span> {reactionIdByemployee == 1?'Like':reactionIdByemployee == 2?'Celebrate':reactionIdByemployee == 3?'Support':reactionIdByemployee == 4?'Love':reactionIdByemployee == 5?'Insightful':reactionIdByemployee == 6?'Funny': 'Likes'} 
-
-                                                
-                                                </li>}
-
-                                            {this.state.showEmojis && item.id == this.state.likeId && (
-                                                <div className="emoji-popup">
-                                                    <Tooltip title="Like" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-
-                                                        <span onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} role="img" aria-label="like">
-                                                            👍 <span className="popup_imoji_desc">Like</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Celebrate" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '👏', text: 'Celebrate', id: 2, postId: item.id })} role="img" aria-label="clap">
-                                                            👏
-                                                            <span className="popup_imoji_desc">Celebrate</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Support" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '🤲', text: 'Support', id: 3, postId: item.id })} role="img" aria-label="hand">
-                                                            🤲
-                                                            <span className="popup_imoji_desc">Support</span>
-                                                        </span>
-                                                    </Tooltip>
-
-                                                    <Tooltip title="Love" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '❤️', text: 'Love', id: 4, postId: item.id })} role="img" aria-label="heart">
-                                                            ❤️
-                                                            <span className="popup_imoji_desc">Love</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Insightful" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '💡', text: 'Insightful', id: 5, postId: item.id })} role="img" aria-label="lightbulb">
-                                                            💡
-                                                            <span className="popup_imoji_desc">Insightful</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Funny" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '😄', text: 'Funny', id: 6, postId: item.id })} role="img" aria-label="laugh">
-                                                            😄
-                                                            <span className="popup_imoji_desc">Funny</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </li>
-
-                                                {/* my code */}
-
-                                                <li onClick={() => {
-                                                    this.handleCommentClickShare(item.id);
-                                                    this.setState({ socialCommentBox: item.id == this.state.socialCommentBox?0:item.id })
-                                                }} className='h5 ml-3 likeHover' style={{fontSize: '13px'}}><span className='mr-1' ><BiCommentDots size={25} /></span>&nbsp;
-                                                     Comments </li>
-                                                   
-                                            </ul>
-
-                                            </div>
-
-                                        </div>
-                                        {item.id === this.state.socialCommentBox ?
-                                            <>
-                                                <div className='p-2'>
-                                                    <div style={{ display: "flex" }}>
-                                                        <EmployeeProfilePhoto className='createPostProPic' id={item.createdBy?.id}></EmployeeProfilePhoto>
-                                                        <InputEmoji
-                                                            className="inputEmojiBox"
-                                                            value={this.state.commentText[item.id] || ""}
-                                                            onChange={(val) => {
-                                                                this.setState((prevState) => ({
-                                                                    commentText: {
-                                                                        ...prevState.commentText,
-                                                                        [item.id]: val
-                                                                    }
-                                                                }));
-                                                            }}
-                                                            cleanOnEnter
-                                                            placeholder="Write a comment..."
-                                                        />
-                                                        <div className="input-group-append recComment-group">
-                                                            <p className="p-2 btn btn-secondary send-btn" type="button" onClick={e => {
-                                                                putSocialShareComment(item.id, this.state.commentText[item.id]).then(res => {
-                                                                    if (res.status === "OK") {
-                                                                        this.getSocialShareList();
-                                                                        let { socialShare } = this.state;
-                                                                        let index = socialShare.findIndex(x => x.id === res.data.id);
-                                                                        socialShare[index] = res.data;
-                                                                        this.setState({
-                                                                            socialShare: socialShare,
-                                                                            commentText: {
-                                                                                ...this.state.commentText,
-                                                                                [item.id]: ""
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                });
-                                                            }}>Send</p>
                                                         </div>
                                                     </div>
+                                                    <div className='mr-2 float-right align-self-center mt-3 d-flex'>
+                                                        <p role="button" className='p-0' id='socialPost'><AiOutlinePlusCircle size={15} /> Social Post</p>
+                                                        <div className="dropdow dropup">
+                                                            <a href="#" className="action-icon" data-toggle="dropdown" aria-expanded="false">
+                                                                <p className='postOptionMenu ml-2'><BiDotsHorizontalRounded size={25} /> </p>
+                                                            </a>
+                                                            {isCompanyAdmin && <div className="dropdown-menu dropdown-menu-right">
+                                                                <>
+                                                                    <a onClick={() => this.handleDeletePost(item)} className="dropdown-item" href="#" >
+                                                                        <i className="fa fa-trash-o m-r-5"></i> Delete</a> </>
+                                                            </div>}
+                                                        </div>
+                                                    </div>
+                                                    <div className='socialShareArticle'>
+                                                        <article className='mb-2 card-body socialShareArticleDiv' >
+
+                                                            <h5 className="post-title">{item.title}</h5>
+                                                            <p className='socialpostDiscription' style={{ fontFamily: "sans-serif" }}>{item.description}</p>
+                                                            <MediaComponent mediaPath={item.mediaPath} mediaType={item.mediaType} />
+                                                        </article>
+                                                    </div>
                                                 </div>
-                                                <div style={{ borderRadius: '10px' }} className="card post mb-3">
-                                                    <div className="comments-area clearfix meta pb-0">
-                                                        {
-                                                            item.comments.map((comment, index) => (
-                                                                <div className="socialPostCmd pt-1 pb-1" key={index}>
-                                                                    <strong>{comment.userName}&nbsp;<small>{getCustomizedWidgetDate(comment.createdOn)}</small></strong>
-                                                                    <br />
-                                                                    <span style={{ fontSize: '13px', fontWeight: '500' }}>{comment.comment}</span>
+                                                {/* my code */}
+                                                <div className='p-2 postLike_sec'>
+                                                    <div onClick={() => this.handleForm(item.id)} className='likes_Hover d-flex'>
+                                                        <div className='d-flex'>
+                                                            <span onClick={() => this.handleForm(item.id)} onMouseEnter={this.handleLikeEnter}
+                                                                style={{ fontSize: '20px', cursor: 'pointer' }}>👍</span>
+                                                            <span style={{ fontSize: '20px', cursor: 'pointer', marginLeft: '-4px' }}>❤️</span>
+                                                            <span style={{ fontSize: '20px', cursor: 'pointer', marginLeft: '-4px' }}>👏</span>
+                                                        </div>
+
+                                                        <span onClick={() => this.handleForm(item.id)} className="totalLike" style={{ fontSize: '23px' }}> {item.reactions?.length || 0}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span className='totalCmd' onClick={() => {
+                                                            this.handleCommentClickShare(item.id);
+                                                            this.setState({ socialCommentBox: item.id == this.state.socialCommentBox ? 0 : item.id })
+                                                        }} >{item.comments?.length || 0} <BiCommentDots size={20} /></span>
+
+
+                                                    </div>
+
+                                                </div>
+                                                {/* my code */}
+                                                <div className='d-flex recIconsRow' ><ul className="m-0 p-2">
+
+                                                    {/* my code */}
+                                                    <li className='h5 likeHover'>
+                                                        <div
+                                                            className="like-button-container"
+                                                            onMouseEnter={this.handleMouseEnter}
+                                                            onMouseLeave={this.handleMouseLeave}
+                                                            onMouseOver={() => this.handleMouseOver(item.id)}
+                                                            style={{ position: 'relative', display: 'inline-block' }}
+                                                        >
+                                                            {reactionIdByemployee == 0 ?
+                                                                <li onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} className='h5 likeHover'>
+                                                                    <span className=' mr-1 p-0' > <AiOutlineLike size={25} /></span> Likes
+
+                                                                </li> : <li className='p-0 h5 likeHover' style={{ fontSize: '13px' }}>
+
+                                                                    <span className=' mr-1 p-0' >{reactionIdByemployee == 1 ? '👍' : reactionIdByemployee == 2 ? '👏' : reactionIdByemployee == 3 ? '🤲' : reactionIdByemployee == 4 ? '❤️' : reactionIdByemployee == 5 ? '💡' : reactionIdByemployee == 6 ? '😄' : <AiOutlineLike size={25} />}</span> {reactionIdByemployee == 1 ? 'Like' : reactionIdByemployee == 2 ? 'Celebrate' : reactionIdByemployee == 3 ? 'Support' : reactionIdByemployee == 4 ? 'Love' : reactionIdByemployee == 5 ? 'Insightful' : reactionIdByemployee == 6 ? 'Funny' : 'Likes'}
+                                                                </li>}
+
+                                                            {this.state.showEmojis && item.id == this.state.likeId && (
+                                                                <div className="emoji-popup">
+                                                                    <Tooltip title="Like" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} role="img" aria-label="like">
+                                                                            👍 <span className="popup_imoji_desc">Like</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Celebrate" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '👏', text: 'Celebrate', id: 2, postId: item.id })} role="img" aria-label="clap">
+                                                                            👏
+                                                                            <span className="popup_imoji_desc">Celebrate</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Support" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '🤲', text: 'Support', id: 3, postId: item.id })} role="img" aria-label="hand">
+                                                                            🤲
+                                                                            <span className="popup_imoji_desc">Support</span>
+                                                                        </span>
+                                                                    </Tooltip>
+
+                                                                    <Tooltip title="Love" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '❤️', text: 'Love', id: 4, postId: item.id })} role="img" aria-label="heart">
+                                                                            ❤️
+                                                                            <span className="popup_imoji_desc">Love</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Insightful" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '💡', text: 'Insightful', id: 5, postId: item.id })} role="img" aria-label="lightbulb">
+                                                                            💡
+                                                                            <span className="popup_imoji_desc">Insightful</span>
+                                                                        </span>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Funny" componentsProps={{
+                                                                        tooltip: {
+                                                                            sx: {
+                                                                                fontSize: '15px',
+                                                                                bgcolor: 'common.black',
+                                                                                borderRadius: '20px',
+                                                                                '& .MuiTooltip-arrow': {
+                                                                                    color: 'common.black',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }} placement="top">
+                                                                        <span onClick={() => this.handleLikeClick({ icon: '😄', text: 'Funny', id: 6, postId: item.id })} role="img" aria-label="laugh">
+                                                                            😄
+                                                                            <span className="popup_imoji_desc">Funny</span>
+                                                                        </span>
+                                                                    </Tooltip>
                                                                 </div>
-                                                            ))
-                                                        }
-                                                        {item.comments?.length > 1 && <div className="p-2">
-
-                                                            <center>
-                                                                <Anchor onClick={() => {
-                                                                    let { socialShare } = this.state;
-                                                                    let index = socialShare.findIndex(x => x.id === item.id);
-                                                                    let commentCount = socialShare[index].commentCount ? socialShare[index].commentCount + defaultCommentCount : defaultCommentCount * 2;
-                                                                    if (commentCount > item.comments.length) {
-                                                                        commentCount = item.comments.length;
-                                                                    }
-                                                                    socialShare[index].commentCount = commentCount;
-                                                                    this.setState({
-                                                                        socialShare: socialShare
-                                                                    })
-                                                                }}></Anchor>
-                                                            </center>
+                                                            )}
                                                         </div>
-                                                        }
-                                                    </div>
+                                                    </li>
+
+                                                    {/* my code */}
+
+                                                    <li onClick={() => {
+                                                        this.handleCommentClickShare(item.id);
+                                                        this.setState({ socialCommentBox: item.id == this.state.socialCommentBox ? 0 : item.id })
+                                                    }} className='h5 ml-3 likeHover' style={{ fontSize: '13px' }}><span className='mr-1' ><BiCommentDots size={25} /></span>&nbsp;
+                                                        Comments </li>
+
+                                                </ul>
+
                                                 </div>
-                                            </>
-                                            : null}
-
-
-                                    </div>)
-                            } else {
-                                {/* socialShare */ }
-
-                                let showComments = item.comments;
-                                if (item.commentCount) {
-                                    showComments = showComments.slice(0, item.commentCount);
-                                } else {
-                                    showComments = showComments.slice(0, defaultCommentCount);
-                                }
-                                return (
-                                    <div className='newRecognitionShare' key={index}>
-                                        <div className="m-0">
-                                            <div className="mb-3 recognitionTop" >
-                                                <div className='col=md-4' id='SocialSharePostHeader'>
-                                                    <div className='m-2 mt-2 d-flex'>
-                                                        <EmployeeProfilePhoto className='createPostProPic' id={parseInt(item.recognizer?.profilePicture || 0)}></EmployeeProfilePhoto>
-                                                        <p className='ml-2'> <b style={{ color: '#102746' }}>{item.recognizer?.name || "WorkPlus"}</b>  <br />{getCustomizedWidgetDate(item.createdOn)}</p>
-
-                                                    </div>
-                                                </div>
-                                                <div className='mr-2 float-right align-self-center mt-3 d-flex'>
-                                                    <p role="button" className='p-0' id='socialPost'><AiOutlinePlusCircle size={15} /> Social Post</p>
-                                                    <div className="dropdow dropup">
-                                                        <a href="#" className="action-icon" data-toggle="dropdown" aria-expanded="false">
-                                                            <p className='postOptionMenu ml-2'><BiDotsHorizontalRounded size={25} /> </p>
-                                                        </a>
-                                                        {isCompanyAdmin && <div className="dropdown-menu dropdown-menu-right">
-                                                            <>
-                                                                <a onClick={() => this.handleDeletePost(item)} className="dropdown-item" href="#" >
-                                                                    <i className="fa fa-trash-o m-r-5"></i> Delete</a> </>
-                                                        </div>}
-                                                    </div>
-                                                </div>
-                                                <div className='socialShareArticle'>
-                                                    <article className='mb-2 card-body socialShareArticleDiv' >
-
-                                                        <h5 className="post-title">{item.title}</h5>
-                                                        <p className='socialpostDiscription' style={{ fontFamily: "sans-serif" }}>{item.description}</p>
-                                                        <MediaComponent mediaPath={item.mediaPath} mediaType={item.mediaType} />
-                                                    </article>
-                                                </div>
-                                            </div>
-                                             {/* my code */}
-                                             <div className='p-2 postLike_sec'>
-                                    <div onClick={() => this.handleForm(item.id)} className='likes_Hover d-flex'>
-                                        <div className='d-flex'>
-                                            <span onClick={() => this.handleForm(item.id)} onMouseEnter={this.handleLikeEnter}
-                                                style={{ fontSize: '20px', cursor: 'pointer' }}>👍</span>
-                                            <span style={{ fontSize: '20px', cursor: 'pointer', marginLeft: '-4px' }}>❤️</span>
-                                            <span style={{ fontSize: '20px', cursor: 'pointer', marginLeft: '-4px' }}>👏</span>
-                                        </div>
-
-                                        <span onClick={() => this.handleForm(item.id)} className="totalLike" style={{fontSize: '23px'}}> {item.reactions?.length || 0}</span>
-                                    </div>
-                                    <div>
-                                        <span className='totalCmd' onClick={() => {
-                                                    this.handleCommentClickShare(item.id);
-                                                    this.setState({ socialCommentBox: item.id == this.state.socialCommentBox?0:item.id})
-                                                }} >{item.comments?.length || 0} <BiCommentDots size={20} /></span>
-                                        
-
-                                    </div>
-
-                                </div>
-                                            {/* my code */}
-                                            <div className='d-flex recIconsRow' ><ul className="m-0 p-2">
-                                                
-                                                {/* my code */}
-                                                <li className='h5 likeHover'>
-                                        <div
-                                            className="like-button-container"
-                                            onMouseEnter={this.handleMouseEnter}
-                                            onMouseLeave={this.handleMouseLeave}
-                                            onMouseOver={() => this.handleMouseOver(item.id)}
-                                            style={{ position: 'relative', display: 'inline-block' }}
-                                        >
-                                            {reactionIdByemployee == 0 ?
-                                                <li onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} className='h5 likeHover'>
-                                                    <span className=' mr-1 p-0' > <AiOutlineLike size={25} /></span> Likes
-
-                                                </li> : <li className='p-0 h5 likeHover' style={{fontSize: '13px'}}> 
- 
-                                                <span className=' mr-1 p-0' >{reactionIdByemployee == 1?'👍':reactionIdByemployee == 2?'👏':reactionIdByemployee == 3?'🤲':reactionIdByemployee == 4?'❤️':reactionIdByemployee == 5?'💡':reactionIdByemployee == 6?'😄': <AiOutlineLike size={25} />}</span> {reactionIdByemployee == 1?'Like':reactionIdByemployee == 2?'Celebrate':reactionIdByemployee == 3?'Support':reactionIdByemployee == 4?'Love':reactionIdByemployee == 5?'Insightful':reactionIdByemployee == 6?'Funny': 'Likes'} 
-                                                </li>}
-
-                                            {this.state.showEmojis && item.id == this.state.likeId && (
-                                                <div className="emoji-popup">
-                                                    <Tooltip title="Like" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-
-                                                        <span onClick={() => this.handleLikeClick({ icon: '👍', text: 'Like', id: 1, postId: item.id })} role="img" aria-label="like">
-                                                            👍 <span className="popup_imoji_desc">Like</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Celebrate" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '👏', text: 'Celebrate', id: 2, postId: item.id })} role="img" aria-label="clap">
-                                                            👏
-                                                            <span className="popup_imoji_desc">Celebrate</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Support" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '🤲', text: 'Support', id: 3, postId: item.id })} role="img" aria-label="hand">
-                                                            🤲
-                                                            <span className="popup_imoji_desc">Support</span>
-                                                        </span>
-                                                    </Tooltip>
-
-                                                    <Tooltip title="Love" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '❤️', text: 'Love', id: 4, postId: item.id })} role="img" aria-label="heart">
-                                                            ❤️
-                                                            <span className="popup_imoji_desc">Love</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Insightful" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '💡', text: 'Insightful', id: 5, postId: item.id })} role="img" aria-label="lightbulb">
-                                                            💡
-                                                            <span className="popup_imoji_desc">Insightful</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                    <Tooltip title="Funny" componentsProps={{
-                                                        tooltip: {
-                                                            sx: {
-                                                                fontSize: '15px',
-                                                                bgcolor: 'common.black',
-                                                                borderRadius: '20px',
-                                                                '& .MuiTooltip-arrow': {
-                                                                    color: 'common.black',
-                                                                },
-                                                            },
-                                                        },
-                                                    }} placement="top">
-                                                        <span onClick={() => this.handleLikeClick({ icon: '😄', text: 'Funny', id: 6, postId: item.id })} role="img" aria-label="laugh">
-                                                            😄
-                                                            <span className="popup_imoji_desc">Funny</span>
-                                                        </span>
-                                                    </Tooltip>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </li>
-
-                                                {/* my code */}
-
-                                                <li onClick={() => {
-                                                    this.handleCommentClickShare(item.id);
-                                                    this.setState({ socialCommentBox: item.id == this.state.socialCommentBox?0:item.id })
-                                                }} className='h5 ml-3 likeHover' style={{fontSize: '13px'}}><span className='mr-1' ><BiCommentDots size={25} /></span>&nbsp;
-                                                     Comments </li>
-                                                   
-                                            </ul>
 
                                             </div>
+                                            {item.id === this.state.socialCommentBox ?
+                                                <>
+                                                    <div className='p-2'>
+                                                        <div style={{ display: "flex" }}>
+                                                            <img className='createPostProPic' alt={getUserName()} src={'data:image/jpeg;base64,' + getProfilePicture()} />
+                                                            <InputEmoji
+                                                                className="inputEmojiBox"
+                                                                value={this.state.commentText[item.id] || ""}
+                                                                onChange={(val) => {
+                                                                    this.setState((prevState) => ({
+                                                                        commentText: {
+                                                                            ...prevState.commentText,
+                                                                            [item.id]: val
+                                                                        }
+                                                                    }));
+                                                                }}
+                                                                cleanOnEnter
+                                                                placeholder="Write a comment..."
+                                                            />
+                                                            <div className="input-group-append recComment-group">
+                                                                <p className="p-2 btn btn-secondary send-btn" type="button" onClick={e => {
+                                                                    putSocialShareComment(item.id, this.state.commentText[item.id]).then(res => {
+                                                                        if (res.status === "OK") {
+                                                                            let { socialShare } = this.state;
+                                                                            let index = socialShare.findIndex(x => x.id === res.data.id);
+                                                                            socialShare[index] = res.data;
+                                                                            this.setState({
+                                                                                socialShare: socialShare,
+                                                                                commentText: {
+                                                                                    ...this.state.commentText,
+                                                                                    [item.id]: ""
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                }}>Send</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                        </div>
-                                        {item.id === this.state.socialCommentBox ?
-                                            <>
-                                                <div className='p-2'>
-                                                    <div style={{ display: "flex" }}>
-                                                        <img className='createPostProPic' alt={getUserName()} src={'data:image/jpeg;base64,' + getProfilePicture()} />
-                                                        <InputEmoji
-                                                            className="inputEmojiBox"
-                                                            value={this.state.commentText[item.id] || ""}
-                                                            onChange={(val) => {
-                                                                this.setState((prevState) => ({
-                                                                    commentText: {
-                                                                        ...prevState.commentText,
-                                                                        [item.id]: val
-                                                                    }
-                                                                }));
-                                                            }}
-                                                            cleanOnEnter
-                                                            placeholder="Write a comment..."
-                                                        />
-                                                        <div className="input-group-append recComment-group">
-                                                            <p className="p-2 btn btn-secondary send-btn" type="button" onClick={e => {
-                                                                putSocialShareComment(item.id, this.state.commentText[item.id]).then(res => {
-                                                                    if (res.status === "OK") {
+                                                    <div style={{ borderRadius: '10px' }} className="card post mb-3">
+                                                        <div className="comments-area clearfix meta pb-0">
+
+                                                            {
+                                                                item.comments.map((comment, index) => (
+                                                                    <div className="socialPostCmd pt-1 pb-1" key={index}>
+                                                                        <strong>{comment.userName}&nbsp;<small>{getCustomizedWidgetDate(comment.createdOn)}</small></strong>
+                                                                        <br />
+                                                                        <span style={{ fontSize: '13px', fontWeight: '500' }}>{comment.comment}</span>
+                                                                    </div>
+
+                                                                )
+                                                                )
+                                                            }
+                                                            {item.comments?.length > 1 && <div className="p-2">
+                                                                <center>
+                                                                    <Anchor onClick={() => {
                                                                         let { socialShare } = this.state;
-                                                                        let index = socialShare.findIndex(x => x.id === res.data.id);
-                                                                        socialShare[index] = res.data;
+                                                                        let index = socialShare.findIndex(x => x.id === item.id);
+                                                                        let commentCount = socialShare[index].commentCount ? socialShare[index].commentCount + defaultCommentCount : defaultCommentCount * 2;
+                                                                        if (commentCount > item.comments.length) {
+                                                                            commentCount = item.comments.length;
+                                                                        }
+                                                                        socialShare[index].commentCount = commentCount;
                                                                         this.setState({
-                                                                            socialShare: socialShare,
-                                                                            commentText: {
-                                                                                ...this.state.commentText,
-                                                                                [item.id]: ""
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                });
-                                                            }}>Send</p>
+                                                                            socialShare: socialShare
+                                                                        })
+                                                                    }}></Anchor>
+                                                                </center>
+                                                            </div>
+                                                            }
                                                         </div>
-                                                    </div>
-                                                </div>
-
-                                                <div style={{ borderRadius: '10px' }} className="card post mb-3">
-                                                    <div className="comments-area clearfix meta pb-0">
-
-                                                        {
-                                                            item.comments.map((comment, index) => (
-                                                                <div className="socialPostCmd pt-1 pb-1" key={index}>
-                                                                    <strong>{comment.userName}&nbsp;<small>{getCustomizedWidgetDate(comment.createdOn)}</small></strong>
-                                                                    <br />
-                                                                    <span style={{ fontSize: '13px', fontWeight: '500' }}>{comment.comment}</span>
-                                                                </div>
-
-                                                            )
-                                                            )
-                                                        }
-                                                        {item.comments?.length > 1 && <div className="p-2">
-                                                            <center>
-                                                                <Anchor onClick={() => {
-                                                                    let { socialShare } = this.state;
-                                                                    let index = socialShare.findIndex(x => x.id === item.id);
-                                                                    let commentCount = socialShare[index].commentCount ? socialShare[index].commentCount + defaultCommentCount : defaultCommentCount * 2;
-                                                                    if (commentCount > item.comments.length) {
-                                                                        commentCount = item.comments.length;
-                                                                    }
-                                                                    socialShare[index].commentCount = commentCount;
-                                                                    this.setState({
-                                                                        socialShare: socialShare
-                                                                    })
-                                                                }}></Anchor>
-                                                            </center>
-                                                        </div>
-                                                        }
-                                                    </div>
-                                                </div> </>
-                                            : null}
+                                                    </div> </>
+                                                : null}
 
 
                                         </div>)
@@ -2756,53 +2760,53 @@ export default class NewSocialShare extends Component {
                     {/* my code */}
                     {/* Manage Department Modal */}
                     <Modal enforceFocus={false} size={"md"} show={this.state.showForm} onHide={this.hideForm} >
-                            <Header closeButton>
-                                <h5 className="modal-title">Add Post</h5>
-                            </Header>
-                            <Body>
-                                <Formik
-                                    enableReinitialize={true}
-                                    onSubmit={this.postSocialShare}
-                                    initialValues={{
-                                        title: this.state.title,
-                                        description: this.state.description,
-                                        file: this.state.file
-                                    }}
-                                //validationSchema={DashboardSchema}
-                                >
-                                    {({
-                                        values,
-                                        errors,
-                                        touched,
-                                        handleChange,
-                                        handleBlur,
-                                        handleSubmit,
-                                        isSubmitting,
-                                        setFieldValue,
-                                        setSubmitting,
+                        <Header closeButton>
+                            <h5 className="modal-title">Add Post</h5>
+                        </Header>
+                        <Body>
+                            <Formik
+                                enableReinitialize={true}
+                                onSubmit={this.postSocialShare}
+                                initialValues={{
+                                    title: this.state.title,
+                                    description: this.state.description,
+                                    file: this.state.file
+                                }}
+                            //validationSchema={DashboardSchema}
+                            >
+                                {({
+                                    values,
+                                    errors,
+                                    touched,
+                                    handleChange,
+                                    handleBlur,
+                                    handleSubmit,
+                                    isSubmitting,
+                                    setFieldValue,
+                                    setSubmitting,
 
-                                        /* and other goodies */
-                                    }) => (
-                                        <Form encType="multipart/form-data">
-                                            <FormGroup className='text-center'>
-                                                <Field name="title" className="form-control" placeholder="Title" required pattern=".*\S+.*" title="Title is required"></Field>
-                                            </FormGroup>
-                                            <FormGroup className='text-center'>
-                                                <Field name="description" className="form-control" placeholder="Description" component="textarea" required pattern=".*\S+.*" title="Description is required"></Field>
-                                            </FormGroup>
-                                            <FormGroup>
-                                                <input type="file" className="form-control" accept="image/x-png,image/jpeg,image/jpg,video/mp4" onChange={(event) => {
-                                                    if (event.currentTarget.files.length > 0)
-                                                        setFieldValue('file', event.currentTarget.files[0]);
-                                                }} />
-                                            </FormGroup>
-                                            <input type="submit" className="btn btn-primary" value={"Post"} />
-                                        </Form>
-                                    )
-                                    }
-                                </Formik>
-                            </Body>
-                        </Modal>
+                                    /* and other goodies */
+                                }) => (
+                                    <Form encType="multipart/form-data">
+                                        <FormGroup className='text-center'>
+                                            <Field name="title" className="form-control" placeholder="Title" required pattern=".*\S+.*" title="Title is required"></Field>
+                                        </FormGroup>
+                                        <FormGroup className='text-center'>
+                                            <Field name="description" className="form-control" placeholder="Description" component="textarea" required pattern=".*\S+.*" title="Description is required"></Field>
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <input type="file" className="form-control" accept="image/x-png,image/jpeg,image/jpg,video/mp4" onChange={(event) => {
+                                                if (event.currentTarget.files.length > 0)
+                                                    setFieldValue('file', event.currentTarget.files[0]);
+                                            }} />
+                                        </FormGroup>
+                                        <input type="submit" className="btn btn-primary" value={"Post"} />
+                                    </Form>
+                                )
+                                }
+                            </Formik>
+                        </Body>
+                    </Modal>
                     {/* my code */}
                 </div>
 
@@ -2928,16 +2932,16 @@ export default class NewSocialShare extends Component {
 
                 </Modal>
                 <Modal dialogClassName='reaction-modal' enforceFocus={false} show={this.state.showReactionList} onHide={this.hideReactionList}>
-                <Header closeButton>
+                    <Header closeButton>
                         <h5 className="modal-title">
                             Reactions
                         </h5>
                     </Header>
 
                     <Body className='reaction-modal-body'>
-                        
 
-                        <ReactionList closeButton postId = {this.state.likeId}></ReactionList>
+
+                        <ReactionList closeButton postId={this.state.likeId}></ReactionList>
                     </Body>
 
 
@@ -2952,7 +2956,7 @@ export default class NewSocialShare extends Component {
                         <HolidayCalendar ></HolidayCalendar>
                     </Body>
                 </Modal>
-                
+
             </div >
         )
     }

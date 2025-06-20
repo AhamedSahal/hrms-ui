@@ -577,7 +577,7 @@ export default class LeaveTypeForm extends Component {
                                     <FormGroup>
                                         <div type="checkbox" name="mobileDefaultLeave">
                                             <label>Default Mobile Leave</label>
-                                                    <Tooltip title="Allow employees to apply for leave in advance, exceeding their available balance.">
+                                                    <Tooltip title="Enable to set this leave type as the default selection when applying for leave via the mobile app. Only one leave type can be set as default.">
                                                     <i className="fa fa-info-circle" style={{ marginLeft: '4px', cursor: 'pointer' }}></i>
                                                     </Tooltip><br />
                                                      

@@ -431,7 +431,8 @@ export default class MyPayslipCard extends Component {
                             </div>
                         </div>
                         <div className='ml-5 myPayCard col-md-5' style={{ width: '100%', height: '21em' }}>
-                            <span style={{ float: 'left', fontWeight: '500' }}>Previous six {comparison === '0' ? 'months' : 'years'} salary (Comparison)</span>
+                           
+                             <h2 style={{ float: 'left' }} className='newDashboardTitleAction'>Previous six {comparison === '0' ? 'months' : 'years'} salary (Comparison)</h2>
                             <select onChange={(e) => { this.handleSalaryComparison(e) }} className='rounded p-1 float-right'>
                                 <option value="0">Monthly</option>
                                 <option value="1">Yearly</option>
