@@ -183,7 +183,7 @@ export default class AssetsHistory extends Component {
                                             {datas.assignedEmp != null ? 
                                                 <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", display:"flex" }}>
                                                      <EmployeeListColumn
-                                                id={datas.assignedEmp} ></EmployeeListColumn> <span style={{ marginLeft: "3px", marginTop:"8px" }} title={datas.employeeName} > {this.reduceString(datas.assignedEmpName, 10)}</span></div>: "-"}
+                                                id={datas.assignedEmp} ></EmployeeListColumn> <span  title={datas.assignedEmpName} style={{ marginLeft: "3px", marginTop:"8px" }} > {this.reduceString(datas.assignedEmpName, 10)}</span></div>: "-"}
                                             </div>
                                             </div>
                                         </div> 
@@ -199,7 +199,7 @@ export default class AssetsHistory extends Component {
                                             <div>
                                              {datas.prevemployeeId != null ?
                                                 <div style={{ color: "#55687d", fontSize: "14px",fontWeight:"bolder", display:"flex"}}>
-                                                <EmployeeListColumn id={datas.prevemployeeId}></EmployeeListColumn><span style={{ marginLeft: "3px", marginTop:"8px" }}  title={datas.employeeName}> {this.reduceString(datas.prevemployeename, 10)}</span>
+                                                <EmployeeListColumn id={datas.prevemployeeId}></EmployeeListColumn><span style={{ marginLeft: "3px", marginTop:"8px" }}  title={datas.prevemployeename}> {this.reduceString(datas.prevemployeename, 10)}</span>
                                             </div>:'-'}
                                             </div>
                                         </div>

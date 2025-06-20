@@ -6,7 +6,7 @@ import { FormGroup } from 'reactstrap';
 import { saveLeaveType } from './service';
 import { LeaveTypeSchema } from './validation';
 import { Tooltip } from 'antd';
-
+import {toDateWithGMT} from '../../../utility';
 
 export default class LeaveTypeForm extends Component {
     constructor(props) {
@@ -91,8 +91,8 @@ export default class LeaveTypeForm extends Component {
         }
     }
     save = (data, action) => {
-        console.log("cell --- data", data);
-        
+        data.carryexpiryDate = toDateWithGMT(data.carryexpiryDate);
+        data.futureexpiryDate = toDateWithGMT(data.futureexpiryDate);
         action.setSubmitting(true);
         saveLeaveType(data).then(res => {
             if (res.status == "OK") {

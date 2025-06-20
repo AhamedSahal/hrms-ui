@@ -11,30 +11,66 @@ import EmpMultiSelectDropDown from '../../../ModuleSetup/Dropdown/EmpMultiSelect
 import { getBranchLists, getDepartmentLists, getFunctionLists } from '../../../Performance/ReviewCycle/CycleForms/service';
 
 const subTaskValidationSchema = Yup.object().shape({
-    selectedTask: Yup.string().required('Please select Task'),
     name: Yup.string().required('Subtask Name is required')
-    .max(200, 'Sub Task name should be up to 200 characters.')
-    .matches(
-      /^[a-zA-Z0-9 _.,\-(){}\[\]/']+$/,
-      "Sub Task name contains only letters, numbers, space, _ , . - ( ) { } [ ] / '"
-    ),
+        .max(200, 'Sub Task name should be up to 200 characters.')
+        .matches(
+            /^[a-zA-Z0-9 _.,\-(){}\[\]/']+$/,
+            "Sub Task name contains only letters, numbers, space, _ , . - ( ) { } [ ] / '"
+        ),
     assign: Yup.string().required('Assign To is required'),
     dueOn: Yup.string().required('Due Date is required'),
-    // numberofDays: Yup.number().when('dueOn', {
-    //     is: (value) => value && value !== 'onJoining',
-    //     then: Yup.number().required('Number of days is required')
-    // })
+    numberofDays: Yup.number().when('dueOn', {
+        is: (value) => value && value !== "3",
+        then: Yup.number()
+            .required('Number of days is required')
+            .positive('Number of days must be positive')
+            .integer('Number of days must be an integer'),
+        otherwise: Yup.number().notRequired()
+    }),
+
+    departments: Yup.array()
+        .transform((value, originalValue) => {
+            if (originalValue === null || originalValue === undefined) return [];
+            if (typeof originalValue === 'string') return [originalValue];
+            return originalValue;
+        })
+        .when("assign", {
+            is: "0",
+            then: Yup.array().min(1, "Select at least one department")
+        }),
+
+    branches: Yup.array()
+        .transform((value, originalValue) => {
+            if (originalValue === null || originalValue === undefined) return [];
+            if (typeof originalValue === 'string') return [originalValue];
+            return originalValue;
+        })
+        .when("assign", {
+            is: "1",
+            then: Yup.array().min(1, "Select at least one location")
+        }),
+
+    employeeId: Yup.array()
+        .transform((value, originalValue) => {
+            if (originalValue === null || originalValue === undefined) return [];
+            if (typeof originalValue === 'string') return [originalValue];
+            return originalValue;
+        })
+        .when("assign", {
+            is: "2",
+            then: Yup.array().min(1, "Select at least one employee")
+        }),
 });
 
 class OnboardSubTaskForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            function: [],
+            employeeId: [],
             department: [],
             branch: [],
             taskId: this.props?.taskId || 0,
-            assign: this.props.subTask?.assign,
+            assign: this.props.subTask?.assign || '',
             subTask: this.props.subTask || {
                 id: 0,
                 active: true,
@@ -43,9 +79,9 @@ class OnboardSubTaskForm extends Component {
                 dueOn: '',
                 numberofDays: '',
                 selectedTask: '',
-                function: [],
-                department: [],
-                branch: [],
+                employeeId: [],
+                departments: [],
+                branches: [],
 
             }
         };
@@ -56,14 +92,6 @@ class OnboardSubTaskForm extends Component {
             if (res.status == "OK") {
                 this.setState({
                     branch: res.data,
-                }, () => {
-                    if (this.props.subTask?.branches != null) {
-                        const brancheData = res.data.filter(br => this.props.subTask.branches.split(',').map(Number).includes(br.id));
-                        let { subTask } = this.state;
-                        subTask.branches = brancheData
-                        this.setState({ subTask });
-                    }
-
                 })
             }
         })
@@ -71,27 +99,17 @@ class OnboardSubTaskForm extends Component {
             if (res.status == "OK") {
                 this.setState({
                     department: res.data,
-                }, () => {
-                    if (this.props.subTask?.departments != null) {
-                        const departmentData = res.data.filter(dept => this.props.subTask.departments.split(',').map(Number).includes(dept.id));
-                        let { subTask } = this.state;
-                        subTask.departments = departmentData
-                        this.setState({ subTask });
-                    }
-                })
-            }
-        })
-        getFunctionLists().then(res => {
-            if (res.status == "OK") {
-                this.setState({
-                    function: res.data,
                 })
             }
         })
     }
 
-    onChangeTaskAssign(event) {
+    onChangeTaskAssign(event, setFieldValue) {
         this.setState({ assign: event.target.value });
+        if (event.target.value === "2") {
+            setFieldValue("departments", []);
+            setFieldValue("branches", []);
+        }
     }
 
     save = (data, action) => {
@@ -105,23 +123,46 @@ class OnboardSubTaskForm extends Component {
             numberofDays: data.numberofDays
         };
 
-        if (data.employeeId && data.employeeId.length > 0) {
-            let arr = data.employeeId;
-            subtask.employeeId = arr.join(", ");
+
+
+
+
+
+           if (data.employeeId && data.employeeId.length > 0) {
+            let employeeIdArray = [];
+            if (Array.isArray(data.employeeId)) {
+                employeeIdArray = data.employeeId;
+            } else if (typeof data.employeeId === 'string') {
+                employeeIdArray = data.employeeId.split(',').map(id => Number(id.trim()));
+            }
+           subtask.employeeId = employeeIdArray.join(", ");
         }
+       
         if (data.departments && data.departments.length > 0) {
-            let arr = data.departments.map(dept => dept.id);
+
+            const departmentsArray = Array.isArray(data.departments)
+                ? data.departments
+                : typeof data.departments === 'string'
+                    ? this.state.department.filter(d => data.departments.split(',').map(id => id.trim()).includes(String(d.id)))
+                    : [];
+
+            let arr = departmentsArray.map(dept => dept.id);
+            let arrname = departmentsArray.map(dept => dept.name);
             subtask.departments = arr.join(", ");
         }
+       
         if (data.branches && data.branches.length > 0) {
-            let arr = data.branches.map(brnch => brnch.id);
-            subtask.branches = arr.join(", ");
-        }
-        if (data.functions && data.functions.length > 0) {
-            let arr = data.functions;
-            subtask.functions = arr.join(", ");
-        }
+            const branchesArray = Array.isArray(data.branches)
+                ? data.branches
+                : typeof data.branches === 'string'
+                    ? this.state.branch.filter(d => data.branches.split(',').map(id => id.trim()).includes(String(d.id)))
+                    : [];
 
+            let arr = branchesArray.map(brnch => brnch.id);
+            let arrname = branchesArray.map(brnch => brnch.name);
+             subtask.branches = arr.join(", ");
+        }
+        
         saveOnboardMSSubTask(subtask).then(res => {
             if (res.status === "OK") {
                 toast.success(res.message);
@@ -160,11 +201,12 @@ class OnboardSubTaskForm extends Component {
 
             const handleChange = (data) => {
                 if (assign === '1') {
+
                     setFieldValue("departments", []);
-                    setFieldValue("functions", []);
+                    setFieldValue("employeeId", []);
                 } else if (assign === '0') {
                     setFieldValue("branches", []);
-                    setFieldValue("functions", []);
+                    setFieldValue("employeeId", []);
                 }
 
                 setFieldValue(name, data);
@@ -234,7 +276,7 @@ class OnboardSubTaskForm extends Component {
                                     <span style={{ color: "red" }}>*</span>
                                 </label>
                                 <div className='d-flex' onChange={(e) => {
-                                    this.onChangeTaskAssign(e);
+                                    this.onChangeTaskAssign(e, setFieldValue);
                                     setFieldValue("assign", e.target.value);
                                 }}>
                                     {/* <Field className='mr-1' type="radio" value="everyone" name="assign" /> Everyone */}
@@ -272,6 +314,9 @@ class OnboardSubTaskForm extends Component {
                                                 setFieldValue={setFieldValue}
                                                 defaultValue={values.employeeId || []}
                                             />
+                                            <ErrorMessage name="employeeId">
+                                                {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                            </ErrorMessage>
                                         </FormGroup>
                                     </div>
                                 }
@@ -295,6 +340,9 @@ class OnboardSubTaskForm extends Component {
                                 <label htmlFor="description">Due Date<span style={{ color: "red" }}>*</span></label>
                                 <div className='d-flex mb-2' name="dueOn" onChange={(e) => {
                                     setFieldValue("dueOn", e.target.value);
+                                     if (e.target.value === "3") {
+                                            setFieldValue("numberofDays", "");
+                                        }
                                 }}>
                                     <Field className='mr-1' type="radio" value="1" name="dueOn" /> Before Joining
                                     <Field className='ml-4 mr-1' type="radio" value="2" name="dueOn" /> After Joining

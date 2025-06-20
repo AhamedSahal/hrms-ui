@@ -1113,7 +1113,7 @@ export default class PayrollTable extends Component {
                                            
 
                                             <div className="pay-drop" >
-                                                <EmployeeDropdown nodefault={false} onChange={e => {
+                                                <EmployeeDropdown nodefault={false} permission="ORGANIZATION" onChange={e => {
                                                     // this.getListByEmployee(e.target.value)
                                                     this.setState({employeeId:e.target.value == ""?0:e.target.value},() =>  this.fetchList())
                                                 }}></EmployeeDropdown>

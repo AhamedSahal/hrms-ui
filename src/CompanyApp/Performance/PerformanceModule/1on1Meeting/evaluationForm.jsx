@@ -32,7 +32,7 @@ export default class EvaluvationForm extends Component {
 
     save = (data, action) => {
         action.setSubmitting(true);
-        console.log("datadata", data)
+        
         createOneOnOneEvaluvationForm(data,0).then(res => {
             if (res.status == "OK") {
                 toast.success(res.message);
@@ -113,7 +113,7 @@ export default class EvaluvationForm extends Component {
                                                         setFieldValue("currentPerformancelevel", e.target.value)
                                                         // this.setState({ currentPerformancelevel: e.target.value })
                                                     }} defaultValue={values.meetingType}>
-                                                    <option value="">Select Meeting Type</option>
+                                                    <option value="">Select Performance Level</option>
                                                     <option value="0">Needs Improvement</option>
                                                     <option value="1">Upto Par</option>
                                                     <option value="2">OutStanding</option>

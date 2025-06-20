@@ -21,7 +21,7 @@ export default class OnboardMSchecklistForm extends Component {
                 id: 0,
                 name: "",
                 description: "",
-                assign: "",
+                assign: "0",
                 active: true,
                 departments: [],
                 branches: [],
@@ -38,15 +38,15 @@ export default class OnboardMSchecklistForm extends Component {
                 this.setState({
                     branches: res.data,
                 }
-                , () => {
-                    if (this.props.checklist?.branches != null ) {
-                        const brancheData = res.data.filter(br => this.props.checklist.branches.split(',').map(Number).includes(br.id));
-                        let {checklist } = this.state;
-                        checklist.branches = brancheData
-                        this.setState({checklist});
+                    , () => {
+                        if (this.props.checklist?.branches != null) {
+                            const brancheData = res.data.filter(br => this.props.checklist.branches.split(',').map(Number).includes(br.id));
+                            let { checklist } = this.state;
+                            checklist.branches = brancheData
+                            this.setState({ checklist });
+                        }
                     }
-                }
-            );
+                );
             }
         });
         getDepartmentLists().then(res => {
@@ -56,10 +56,10 @@ export default class OnboardMSchecklistForm extends Component {
                 }, () => {
                     if (this.props.checklist?.departments != null) {
                         const departmentData = res.data.filter(dept => this.props.checklist.departments.split(',').map(Number).includes(dept.id));
-                        let {checklist } = this.state;
+                        let { checklist } = this.state;
                         checklist.departments = departmentData
-                        this.setState({checklist});
-                       
+                        this.setState({ checklist });
+
                     }
                 });
             }
@@ -72,9 +72,9 @@ export default class OnboardMSchecklistForm extends Component {
                 }, () => {
                     if (this.props.checklist?.jobtitle != null) {
                         const jobtitleData = res.data.filter(dept => this.props.checklist.jobtitle.split(',').map(Number).includes(dept.id));
-                        let {checklist } = this.state;
+                        let { checklist } = this.state;
                         checklist.jobtitle = jobtitleData
-                        this.setState({checklist});
+                        this.setState({ checklist });
 
                     }
                 })
@@ -84,10 +84,12 @@ export default class OnboardMSchecklistForm extends Component {
     }
     onChangeApplicable(event) {
         this.setState({ applicable: event.target.value });
+
     }
 
     save = (data, action) => {
         action.setSubmitting(true);
+
         const checklist = {
             id: data.id,
             name: data.name,
@@ -95,38 +97,64 @@ export default class OnboardMSchecklistForm extends Component {
             active: data.active,
             applicableId: data.assign,
         };
-        checklist.applicableFor = 'EveryOne'
-        if (data.departments && data.departments.length > 0 && data.assign == 1) {
-            let arr = data.departments.map(dept => dept.id);
-            let arrname = data.departments.map(dept => dept.name);
-            checklist.departments =  arr.join(", ");
+
+        checklist.applicableFor = 'EveryOne';
+
+        if (data.assign == '1') {
+            const departmentsArray = Array.isArray(data.departments)
+                ? data.departments
+                : typeof data.departments === 'string'
+                    ? this.state.department.filter(d => data.departments.split(',').map(id => id.trim()).includes(String(d.id)))
+                    : [];
+
+            let arr = departmentsArray.map(dept => dept.id);
+            let arrname = departmentsArray.map(dept => dept.name);
+            checklist.departments = arr.join(", ");
             checklist.applicableFor = arrname.join(", ");
         }
-        if (data.branches && data.branches.length > 0 && data.assign == 2) {
-            let arr = data.branches.map(brnch => brnch.id);
-            let arrname = data.branches.map(brnch => brnch.name);
-            checklist.branches =  arr.join(", ");
+
+        if (data.assign == '2') {
+            const branchesArray = Array.isArray(data.branches)
+                ? data.branches
+                : typeof data.branches === 'string'
+                    ? this.state.branches.filter(b => data.branches.split(',').map(id => id.trim()).includes(String(b.id)))
+                    : [];
+
+            let arr = branchesArray.map(brnch => brnch.id);
+            let arrname = branchesArray.map(brnch => brnch.name);
+            checklist.branches = arr.join(", ");
             checklist.applicableFor = arrname.join(", ");
         }
-        if (data.jobtitle && data.jobtitle.length > 0 && data.assign == 3) {
-            let arr = data.jobtitle.map(job => job.id);
-            let arrname = data.jobtitle.map(job => job.name);
-            checklist.jobtitle =  arr.join(", ");
+
+        if (data.assign == '3') {
+            const jobtitleArray = Array.isArray(data.jobtitle)
+                ? data.jobtitle
+                : typeof data.jobtitle === 'string'
+                    ? this.state.jobtitle.filter(j => data.jobtitle.split(',').map(id => id.trim()).includes(String(j.id)))
+                    : [];
+
+            let arr = jobtitleArray.map(job => job.id);
+            let arrname = jobtitleArray.map(job => job.name);
+            checklist.jobtitle = arr.join(", ");
             checklist.applicableFor = arrname.join(", ");
         }
-        saveMSChecklist(checklist).then(res => {
-            if (res.status == "OK") {
-                toast.success(res.message);
-                this.props.updateList(res.data);
-            } else {
-                toast.error(res.message);
-            }
-            action.setSubmitting(false)
-        }).catch(err => {
-            toast.error("Error while saving Checklist");
-            action.setSubmitting(false);
-        })
-    }
+
+        saveMSChecklist(checklist)
+            .then(res => {
+                if (res.status === "OK") {
+                    toast.success(res.message);
+                    this.props.updateList(res.data);
+                } else {
+                    toast.error(res.message);
+                }
+                action.setSubmitting(false);
+            })
+            .catch(err => {
+                toast.error("Error while saving Checklist");
+                action.setSubmitting(false);
+            });
+    };
+
     render() {
         const { applicable } = this.state;
 
@@ -135,49 +163,54 @@ export default class OnboardMSchecklistForm extends Component {
             options.push(...this.state.branches);
         } else if (applicable === '1') {
             options.push(...this.state.department);
-        }else if (applicable === '3') {
+        } else if (applicable === '3') {
             options.push(...this.state.jobtitle);
         }
 
-        const CustomSelect = ({ field, form, options, applicable }) => {
+        const CustomSelect = ({ field, setFieldValue }) => {
+            const { name, value } = field;
 
-            const handleChange = (selectedOptions) => {
-            if (applicable === '1') {
-                form.setFieldValue("departments", selectedOptions);
-                form.setFieldValue("branches", []);
-                form.setFieldValue("jobtitle", []);
-                form.setFieldTouched("departments", true);
-            } else if (applicable === '2') {
-                form.setFieldValue("branches", selectedOptions);
-                form.setFieldValue("departments", []);
-                form.setFieldValue("jobtitle", []);
-                form.setFieldTouched("branches", true);
-            } else if (applicable === '3') {
-                form.setFieldValue("jobtitle", selectedOptions);
-                form.setFieldValue("departments", []);
-                form.setFieldValue("branches", []);
-                form.setFieldTouched("jobtitle", true);
+            let selectedOptions = [];
+
+            if (typeof value === "string") {
+                const ids = value.split(",").map(id => id.trim()).filter(id => id !== "");
+                selectedOptions = options.filter(opt => ids.includes(String(opt.id)));
+            } else if (Array.isArray(value)) {
+                selectedOptions = value;
             }
+
+
+            const handleChange = (data) => {
+                const ids = data.map(option => option.id);
+                if (applicable === '1') {
+                    setFieldValue("branches", []);
+                    setFieldValue("jobtitle", []);
+                } else if (applicable === '2') {
+                    setFieldValue("departments", []);
+                    setFieldValue("jobtitle", []);
+                } else if (applicable === '3') {
+                    setFieldValue("departments", []);
+                    setFieldValue("branches", []);
+                }
+
+                setFieldValue(name, data);
             };
-
-
-            const value =
-                applicable === '1' ? form.values.departments :
-                    applicable === '2' ? form.values.branches :
-                        applicable === '3' ? form.values.jobtitle :
-                            [];
 
             return (
                 <Select
-                    value={value}
+                    {...field}
                     onChange={handleChange}
                     options={options}
                     isMulti
-                    getOptionValue={(option) => option.id}
-                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(options) => options.id}
+                    getOptionLabel={(options) => options.name}
+                    value={selectedOptions}
                 />
             );
         };
+
+
+
         return (
             <div>
 
@@ -230,7 +263,6 @@ export default class OnboardMSchecklistForm extends Component {
                                 <div className='d-flex mb-2' onChange={(e) => {
                                     this.onChangeApplicable(e);
                                     setFieldValue("assign", e.target.value);
-                                    setTimeout(() => validateForm(), 0);
                                 }}>
                                     <Field className='mr-1' type="radio" value="0" name="assign" /> Everyone
                                     <Field className='ml-4 mr-1' type="radio" value="1" name="assign" /> Department
@@ -247,16 +279,13 @@ export default class OnboardMSchecklistForm extends Component {
                                             <label>Select Department
                                                 <span style={{ color: "red" }}>*</span>
                                             </label>
-                                            <Field name="departments">
-                                                {({ field, form }) => (
-                                                    <CustomSelect
-                                                        field={field}
-                                                        form={form}
-                                                        options={options}
-                                                        applicable={applicable}
-                                                    />
-                                                )}
-                                            </Field>
+                                            <Field
+                                                name="departments"
+                                                component={CustomSelect}
+                                                isMulti
+                                                options={options}
+                                                setFieldValue={setFieldValue}
+                                            />
                                             <ErrorMessage name="departments">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
@@ -269,16 +298,13 @@ export default class OnboardMSchecklistForm extends Component {
                                         <FormGroup >
                                             <label>Select Location<span style={{ color: "red" }}>*</span></label>
 
-                                            <Field name="branches">
-                                                {({ field, form }) => (
-                                                    <CustomSelect
-                                                        field={field}
-                                                        form={form}
-                                                        options={options}
-                                                        applicable={applicable}
-                                                    />
-                                                )}
-                                            </Field>
+                                            <Field
+                                                name="branches"
+                                                component={CustomSelect}
+                                                isMulti
+                                                options={options}
+                                                setFieldValue={setFieldValue}
+                                            />
                                             <ErrorMessage name="branches">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
@@ -289,16 +315,14 @@ export default class OnboardMSchecklistForm extends Component {
                                     <div className='pl-0 col-md-12'>
                                         <FormGroup >
                                             <label>Select Job Title<span style={{ color: "red" }}>*</span></label>
-                                            <Field name="jobtitle">
-                                                {({ field, form }) => (
-                                                    <CustomSelect
-                                                        field={field}
-                                                        form={form}
-                                                        options={options}
-                                                        applicable={applicable}
-                                                    />
-                                                )}
-                                            </Field>
+
+                                            <Field
+                                                name="jobtitle"
+                                                component={CustomSelect}
+                                                isMulti
+                                                options={options}
+                                                setFieldValue={setFieldValue}
+                                            />
                                             <ErrorMessage name="jobtitle">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
@@ -314,13 +338,13 @@ export default class OnboardMSchecklistForm extends Component {
                                         && this.state.checklist.active
                                         ? 'fa-toggle-on text-success' :
                                         'fa fa-toggle-off text-danger'}`} onClick={e => {
-                                    let { checklist } = this.state;
-                                    checklist.active = !checklist.active;
-                                    setFieldValue("active", checklist.active);
-                                    this.setState({
-                                        checklist
-                                    });
-                                }}></i>
+                                            let { checklist } = this.state;
+                                            checklist.active = !checklist.active;
+                                            setFieldValue("active", checklist.active);
+                                            this.setState({
+                                                checklist
+                                            });
+                                        }}></i>
                                 </div>
                             </FormGroup>
                             <input type="submit" className="btn btn-primary" value={this.state.checklist.id > 0 ? "Update" : "Save"} />

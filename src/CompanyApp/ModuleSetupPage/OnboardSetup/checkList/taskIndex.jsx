@@ -22,7 +22,7 @@ class OnboardMSTaskView extends Component {
             branches: [],
             active: true,
             isEditing: false,
-            taskList:  [],
+            taskList: [],
             expandedRows: {},
         };
     }
@@ -33,62 +33,62 @@ class OnboardMSTaskView extends Component {
     }
 
     fetchData = () => {
-         getBranchLists().then(res => {
-                            if (res.status === "OK") {
-                                this.setState({
-                                    branches: res.data,
-                                });
-                            }
-                        });
-                        getDepartmentLists().then(res => {
-                            if (res.status === "OK") {
-                                this.setState({
-                                    department: res.data,
-                                });
-                            }
-                        });
-                        setTimeout(() => {this.fetchList()},1000) 
-        
+        getBranchLists().then(res => {
+            if (res.status === "OK") {
+                this.setState({
+                    branches: res.data,
+                });
+            }
+        });
+        getDepartmentLists().then(res => {
+            if (res.status === "OK") {
+                this.setState({
+                    department: res.data,
+                });
+            }
+        });
+        setTimeout(() => { this.fetchList() }, 1000)
+
     }
 
     fetchList = () => {
         getOnboardMSTaskList(this.props.viewData.id).then(res => {
             if (res.status == "OK") {
-            //   this.setState({
-            //     taskList: res.data,
-            //   })
-            if(res.data.length > 0 ){
-                let data = res.data.map((res) => {
-                    if(res.assignId == 0 &&  this.state.department.length > 0){
-                        let department =  this.state.department.filter((dept) => res.departments?.split(',').map(Number).includes(dept.id))
-                        let arrname = department.map(dept => dept.name);
-                        let applicableFor = arrname.join(", ");
-                        return {...res,applicableFor : applicableFor}
+                //   this.setState({
+                //     taskList: res.data,
+                //   })
+                if (res.data.length > 0) {
+                    let data = res.data.map((res) => {
+                        if (res.assignId == 0 && this.state.department.length > 0) {
+                            let department = this.state.department.filter((dept) => res.departments?.split(',').map(Number).includes(dept.id))
+                            let arrname = department.map(dept => dept.name);
+                            let applicableFor = arrname.join(", ");
+                            return { ...res, applicableFor: applicableFor }
 
-                    }
-                    if(res.assignId == 1 &&  this.state.branches.length > 0){
-                        let branches =  this.state.branches.filter((dept) => res.branches?.split(',').map(Number).includes(dept.id))
-                        let arrname = branches.map(dept => dept.name);
-                        let applicableFor = arrname.join(", ");
-                        return {...res,applicableFor : applicableFor}
-                    }
-                    if(res.assignId == 2){
-                        return {...res,employeeId: res.employeeId.split(",").map(Number)} ;
-                    }
+                        }
+                        if (res.assignId == 1 && this.state.branches.length > 0) {
+                            let branches = this.state.branches.filter((dept) => res.branches?.split(',').map(Number).includes(dept.id))
+                            let arrname = branches.map(dept => dept.name);
+                            let applicableFor = arrname.join(", ");
+                            return { ...res, applicableFor: applicableFor }
+                        }
+                        if (res.assignId == 2) {
+                            return { ...res, employeeId: res.employeeId.split(",").map(Number) };
+                        }
 
 
-                })
-                this.setState({taskList : data})
+                    })
+                    this.setState({ taskList: data })
 
-            }else {
-                this.setState({taskList : []})
+                } else {
+                    this.setState({ taskList: [] })
+                }
+
+
+            } else {
+                this.setState({ taskList: [] })
             }
-
-            
-            }else{
-                this.setState({taskList : []})
-            }
-          })
+        })
     }
 
     toggleEdit = () => {
@@ -106,7 +106,7 @@ class OnboardMSTaskView extends Component {
 
     updateList = (taskData) => {
         let { taskList } = this.state;
-        let index = taskList.findIndex(d => d.id === taskData.id);
+        let index = taskList.findIndex(d => d.id === taskData.id,);
         if (index > -1)
             taskList[index] = taskData;
         else {
@@ -114,10 +114,17 @@ class OnboardMSTaskView extends Component {
         }
         this.setState({ taskList }, () => {
             this.hideForm();
-            this.fetchList();
+            setTimeout(() => {
+                this.fetchList();
+            }, 500);
         });
+
     }
     updateTaskList = (subTask) => {
+        
+        this.setState({
+        expandedRows: {}
+    })
         let { subTaskData } = this.state;
         let index = subTaskData.findIndex(d => d.id === subTask.id);
         if (index > -1)
@@ -125,9 +132,15 @@ class OnboardMSTaskView extends Component {
         else {
             subTaskData = [subTask, ...subTaskData];
         }
-        this.setState({ subTaskData }, () => {
+        this.setState({ subTaskData,  expandedRows: {
+            ...this.state.expandedRows,
+            [subTask.id]: true
+        } }, () => {
+
             this.hidesubtaskForm();
-           this.fetchList();
+            this.subTaskExpand(subTask.id)
+            this.fetchList();
+
         });
     }
 
@@ -151,36 +164,35 @@ class OnboardMSTaskView extends Component {
     subTaskExpand = (id) => {
         getOnboardSubtaskList(id).then(res => {
             if (res.status == "OK") {
-               
-                if(res.data.length > 0 &&  this.state.department.length > 0){
+                if (res.data.length > 0 && this.state.department.length > 0) {
                     let data = res.data.map((res) => {
-                        if(res.assignId == 0){
-                            let department =  this.state.department.filter((dept) => res.departments?.split(',').map(Number).includes(dept.id))
+                        if (res.assignId == 0) {
+                            let department = this.state.department.filter((dept) => res.departments?.split(',').map(Number).includes(dept.id))
                             let arrname = department.map(dept => dept.name);
                             let applicableFor = arrname.join(", ");
-                            return {...res,applicableFor : applicableFor}
-    
+                            return { ...res, applicableFor: applicableFor }
+
                         }
-                        if(res.assignId == 1 &&  this.state.branches.length > 0){
-                            let branches =  this.state.branches.filter((dept) => res.branches?.split(',').map(Number).includes(dept.id))
+                        if (res.assignId == 1 && this.state.branches.length > 0) {
+                            let branches = this.state.branches.filter((dept) => res.branches?.split(',').map(Number).includes(dept.id))
                             let arrname = branches.map(dept => dept.name);
                             let applicableFor = arrname.join(", ");
-                            return {...res,applicableFor : applicableFor}
+                            return { ...res, applicableFor: applicableFor }
                         }
-                        if(res.assignId == 2){
-                            return {...res,employeeId: res.employeeId.split(",").map(Number)} ;
+                        if (res.assignId == 2) {
+                            return { ...res, employeeId: res.employeeId.split(",").map(Number) };
                         }
-    
-    
+
+
                     })
-                    this.setState({subTaskData : data})
-    
-                }else {
-                    this.setState({taskList : []})
+                    this.setState({ subTaskData: data })
+
+                } else {
+                    this.setState({ taskList: [] })
                 }
 
-                
-            }else{
+
+            } else {
                 this.setState({
                     subTaskData: [],
                 })
@@ -211,7 +223,7 @@ class OnboardMSTaskView extends Component {
 
                                 <div className="mt-2 d-flex float-right col-auto ml-auto">
                                     <div className="add-goals-dropdown">
-                                        <button style={{width: '95px'}} className="add-goals-btn">+ Add</button>
+                                        <button style={{ width: '95px' }} className="add-goals-btn">+ Add</button>
                                         <div className="Goal_dropdown-menu">
                                             <button onClick={() => {
                                                 this.setState({
@@ -281,11 +293,11 @@ class OnboardMSTaskView extends Component {
                                                             <div className="goal-title">{this.reduceString(item.name, 45)}</div>
                                                         </Tooltip>
                                                         <div className="goal-details">
-                                                            {item.subgoalsCount} {item.subgoalsCount > 1?"Subtasks":"Subtask"}
+                                                            {item.subgoalsCount} {item.subgoalsCount > 1 ? "Subtasks" : "Subtask"}
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>{item.numberofDays != 0? item.numberofDays:null} {item.dueOn == 1?"Days Before Joining":item.dueOn == 2?"Days After Joining":"Date of Joining"}</td>
+                                                <td>{item.numberofDays != 0 ? item.numberofDays : null} {item.dueOn == 1 ? "Days Before Joining" : item.dueOn == 2 ? "Days After Joining" : "Date of Joining"}</td>
                                                 {item.employeeId ? <td >
                                                     <Avatar.Group
                                                         max={{
@@ -293,19 +305,19 @@ class OnboardMSTaskView extends Component {
                                                             style: { color: '#f56a00', backgroundColor: '#fde3cf' },
                                                         }}
                                                     >
-                                                        {item.employeeId.slice(0, 3).map((memberId, index) => (
-                                                             <Avatar key={index} style={{ backgroundColor: '#1677ff' }} icon={<EmployeeProfilePhoto className="" id={memberId} />} />
+                                                        {(Array.isArray(item.employeeId) ? item.employeeId : [item.employeeId]).slice(0, 3).map((memberId, index) => (
+                                                            <Avatar key={index} style={{ backgroundColor: '#1677ff' }} icon={<EmployeeProfilePhoto className="" id={memberId} />} />
                                                         ))}
 
-                                                        {item.employeeId.length > 3 && (
+                                                        {(Array.isArray(item.employeeId) ? item.employeeId.length : typeof item.employeeId === 'string' ? item.employeeId.split(',').map(id => id.trim()).length : 0) > 3 && (
                                                             <Tooltip
-                                                                title={item.members.slice(3).map((memberId, index) => (
-                                                                     <Avatar key={index} style={{ backgroundColor: '#1677ff' }} icon={<EmployeeProfilePhoto className="" id={memberId} />} />
+                                                                title={(Array.isArray(item.employeeId) ? item.employeeId : [item.employeeId]).slice(3).map((memberId, index) => (
+                                                                    <Avatar key={index} style={{ backgroundColor: '#1677ff' }} icon={<EmployeeProfilePhoto className="" id={memberId} />} />
                                                                 ))}
                                                                 placement="top"
                                                             >
                                                                 <Avatar style={{ backgroundColor: '#ffb586', color: '#5f4115' }}>
-                                                                    +{item.employeeId.length - 3}
+                                                                    +{(Array.isArray(item.employeeId) ? item.employeeId.length : typeof item.employeeId === 'string' ? item.employeeId.split(',').map(id => id.trim()).length : 0) - 3}
                                                                 </Avatar>
                                                             </Tooltip>
                                                         )}
@@ -331,13 +343,13 @@ class OnboardMSTaskView extends Component {
                                                 <td style={{ textAlign: 'center' }}>
                                                     <div className="">
                                                         <i className="menuIconFa fa fa-pencil-square-o"
-                                                            onClick={() => { this.setState({ showForm: true, taskData: {...item, assign:item.assignId.toString(), dueOn: item.dueOn.toString()} }) }} aria-hidden="true"></i>
+                                                            onClick={() => { this.setState({ showForm: true, taskData: { ...item, assign: item.assignId.toString(), dueOn: item.dueOn.toString() } }) }} aria-hidden="true"></i>
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             {isExpanded && (
-                                              this.state.subTaskData.length > 0 &&  this.state.subTaskData?.map((sub) => (
+                                                this.state.subTaskData.length > 0 && this.state.subTaskData?.map((sub) => (
                                                     <tr key={sub.id}>
                                                         <td className='p-1' colSpan={5}>
                                                             <div className="Onboardsub-Task">
@@ -351,7 +363,7 @@ class OnboardMSTaskView extends Component {
                                                                                     </Tooltip>
                                                                                 </div>
                                                                             </td>
-                                                                            <td>{sub.numberofDays != 0?sub.numberofDays:null} {sub.dueOn == 1?"Days Before Joining":sub.dueOn == 2?"Days After Joining":"Date of Joining"}</td>
+                                                                            <td>{sub.numberofDays != 0 ? sub.numberofDays : null} {sub.dueOn == 1 ? "Days Before Joining" : sub.dueOn == 2 ? "Days After Joining" : "Date of Joining"}</td>
                                                                             {sub.employeeId ? <td >
                                                                                 <Avatar.Group
                                                                                     max={{
@@ -359,19 +371,19 @@ class OnboardMSTaskView extends Component {
                                                                                         style: { color: '#f56a00', backgroundColor: '#fde3cf' },
                                                                                     }}
                                                                                 >
-                                                                                    {sub.employeeId.slice(0, 3).map((memberId, index) => (
-                                                                                         <Avatar key={index} style={{ backgroundColor: '#1677ff' }} icon={<EmployeeProfilePhoto className="" id={memberId} />} />
+                                                                                    {(Array.isArray(sub.employeeId) ? sub.employeeId : [sub.employeeId]).slice(0, 3).map((memberId, index) => (
+                                                                                        <Avatar key={index} style={{ backgroundColor: '#1677ff' }} icon={<EmployeeProfilePhoto className="" id={memberId} />} />
                                                                                     ))}
 
-                                                                                    {sub.employeeId.length > 3 && (
+                                                                                    {(Array.isArray(sub.employeeId) ? sub.employeeId.length : typeof sub.employeeId === 'string' ? sub.employeeId.split(',').map(id => id.trim()).length : 0) > 3 && (
                                                                                         <Tooltip
-                                                                                            title={sub.employeeId.slice(3).map((memberId, index) => (
-                                                                                                 <Avatar key={index} style={{ backgroundColor: '#1677ff' }} icon={<EmployeeProfilePhoto className="" id={memberId} />} />
+                                                                                            title={(Array.isArray(sub.employeeId) ? sub.employeeId : [sub.employeeId]).slice(3).map((memberId, index) => (
+                                                                                                <Avatar key={index} style={{ backgroundColor: '#1677ff' }} icon={<EmployeeProfilePhoto className="" id={memberId} />} />
                                                                                             ))}
                                                                                             placement="top"
                                                                                         >
                                                                                             <Avatar style={{ backgroundColor: '#ffb586', color: '#5f4115' }}>
-                                                                                                +{sub.employeeId.length - 3}
+                                                                                                +{(Array.isArray(sub.employeeId) ? sub.employeeId.length : typeof sub.employeeId === 'string' ? sub.employeeId.split(',').map(id => id.trim()).length : 0) - 3}
                                                                                             </Avatar>
                                                                                         </Tooltip>
                                                                                     )}
@@ -396,7 +408,7 @@ class OnboardMSTaskView extends Component {
                                                                             </td>
                                                                             <td style={{ textAlign: 'center' }}>
                                                                                 <div className="">
-                                                                                    <i className="menuIconFa fa fa-pencil-square-o" onClick={() => this.setState({ showSubtaskForm: true, subTask: {...sub,assign:sub.assignId.toString(), dueOn: sub.dueOn.toString()}, taskId : item.id })} aria-hidden="true"></i>
+                                                                                    <i className="menuIconFa fa fa-pencil-square-o" onClick={() => this.setState({ showSubtaskForm: true, subTask: { ...sub, assign: sub.assignId.toString(), dueOn: sub.dueOn.toString() }, taskId: item.id })} aria-hidden="true"></i>
                                                                                 </div>
                                                                             </td>
 
@@ -429,7 +441,7 @@ class OnboardMSTaskView extends Component {
                         <h5 className="modal-title">{this.state.subTask ? 'Edit' : 'Add'} Subtask</h5>
                     </Header>
                     <Body>
-                        <OnboardSubTaskForm updateList={this.updateTaskList} subTask={this.state.subTask} taskList = {this.state.taskList} taskId= {this.state.taskId}>
+                        <OnboardSubTaskForm updateList={this.updateTaskList} subTask={this.state.subTask} taskList={this.state.taskList} taskId={this.state.taskId}>
                         </OnboardSubTaskForm>
                     </Body>
                 </Modal>

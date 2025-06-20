@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import moment from "moment"
-import { camelize, exportToCsv, getTitle,toLocalDateTime,verifyViewPermission,setAllChecked, exportToCsvSorted, getCompanyId, getMultiEntityCompanies } from '../../../../../utility';
+import { camelize, exportToCsv, getTitle,toLocalDateTime,verifyViewPermission,setAllChecked, exportToCsvSorted, getCompanyId, getMultiEntityCompanies,fallbackLocalDateTime } from '../../../../../utility';
 import BranchDropdown from '../../../../ModuleSetup/Dropdown/BranchDropdown';
 import DepartmentDropdown from '../../../../ModuleSetup/Dropdown/DepartmentDropdown';
 import PdfDocument from '../../../pdfDocument';
@@ -13,6 +13,11 @@ import PreviewTable from '../../../previewTable';
 import JobTitlesDropdown from '../../../../ModuleSetup/Dropdown/JobTitlesDropdown';
 import AccessDenied from '../../../../../MainPage/Main/Dashboard/AccessDenied';
 import CompanyMultiSelectDropDown from '../../../../ModuleSetup/Dropdown/CompanyMultiSelectDropDown';
+import Bowser from 'bowser';
+
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const { Header, Body, Footer, Dialog } = Modal;
 
 
@@ -91,7 +96,8 @@ export default class LeaveReport extends Component {
           }
         });
         if(Object.keys(temp).length > 0) {
-          temp['appliedOn'] = toLocalDateTime(temp['appliedOn']);
+
+          temp['appliedOn'] = (!temp['appliedOn'])? "-":(isSafari?fallbackLocalDateTime(temp['appliedOn']):(toLocalDateTime(temp['appliedOn'])=== null ? fallbackLocalDateTime(temp['appliedOn']):toLocalDateTime(temp['appliedOn'])  ))
           temp['endDate'] = temp['endDate']?.split('T')[0];
           temp['startDate'] =temp['startDate']?.split('T')[0];
         }

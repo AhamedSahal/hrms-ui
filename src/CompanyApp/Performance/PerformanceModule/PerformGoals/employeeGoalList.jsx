@@ -80,7 +80,7 @@ export default class EmployeePerformGoalsList extends Component {
     }
     fetchList = () => {
         getPerformanceGoalsListByEmployee(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.branchId, this.state.departmentId, this.state.jobTitleId, this.state.fromDate, this.state.toDate, this.state.self,this.props.goalStatus).then(res => {   
-            if (res.status == "OK") {
+            if (res.status == "OK") {            
                 this.setState({
                     empData: res.data,
                     
@@ -115,7 +115,7 @@ export default class EmployeePerformGoalsList extends Component {
             this.fetchList();
         })
     }
-    updateList = () => {
+    updateList = (data) => {
         this.setState({
             showForm: false,
             performanceTemplate: undefined,
@@ -433,12 +433,12 @@ export default class EmployeePerformGoalsList extends Component {
                                                 showForm: true
                                             })
                                         }}>Add Goal</button>
-                                        <button onClick={() => {
+                                        {/* <button onClick={() => {
                                             this.setState({
                                                 showSubGoalsForm: true,
                                                 isSubform: false
                                             })
-                                        }}>Add Sub Goal</button>
+                                        }}>Add Sub Goal</button> */}
                                     </div>
                                 </div>}
                             </div>
@@ -478,8 +478,8 @@ export default class EmployeePerformGoalsList extends Component {
                                                 </td>
                                             </tr>
                                         )}
-                                        {empData?.map((item) => {
-                                            let weightStatusValidation = item.subGoalsStatusWeightage != null ? item.subGoalsStatusWeightage : item.goalsStatusWeightage != null ? item.goalsStatusWeightage : 0;
+                                        {empData?.map((item) => {                                            
+                                            let weightStatusValidation = (item.goalsStatusWeightage !=null && item.subGoalsStatusWeightage != null) ? (item.goalsStatusWeightage + item.subGoalsStatusWeightage) : item.subGoalsStatusWeightage != null? item.subGoalsStatusWeightage : item.goalsStatusWeightage != null ? item.goalsStatusWeightage : 0;
                                             return (
                                                 <>
                                                     <tr className='Goals_table_row' key={item.id}>
@@ -493,7 +493,11 @@ export default class EmployeePerformGoalsList extends Component {
                                                             {item.jobTitle}
                                                         </td>
                                                         <td className='GoalName_tab' >
-                                                            {item.reportingManagerName}
+                                                              <div >
+                                                                <div className="goal-title">{item.reportingManagerId?<><EmployeeProfilePhoto className='multiSelectImgSize' id={item.reportingManagerId}></EmployeeProfilePhoto>{item.reportingManagerName}</>:"-"}</div>
+
+                                                            </div>
+                                                      
                                                         </td>
                                                         <td style={{ textAlign: 'center' }}>
                                                             -

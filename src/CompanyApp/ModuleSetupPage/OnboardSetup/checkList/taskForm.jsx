@@ -47,17 +47,12 @@ class OnboardMSTaskForm extends Component {
     }
 
     componentDidMount() {
+          console.log("task tested for active:s ")
+                console.log("task tested for active: ",this.props.taskData)
         getBranchLists().then(res => {
             if (res.status === "OK") {
                 this.setState({
                     branches: res.data,
-                }, () => {
-                    if (this.props.taskData?.branches != null) {
-                        const brancheData = res.data.filter(br => this.props.taskData.branches.split(',').map(Number).includes(br.id));
-                       let {task} = this.state;
-                       task.branches = brancheData
-                       this.setState({task});
-                    }
                 });
             }
         });
@@ -65,13 +60,6 @@ class OnboardMSTaskForm extends Component {
             if (res.status === "OK") {
                 this.setState({
                     department: res.data,
-                }, () => {
-                    if (this.props.taskData?.departments != null) {
-                        const departmentData = res.data.filter(dept => this.props.taskData.departments.split(',').map(Number).includes(dept.id));
-                        let {task} = this.state;
-                       task.departments = departmentData
-                       this.setState({task});
-                    }
                 });
             }
         });
@@ -88,37 +76,45 @@ class OnboardMSTaskForm extends Component {
         });
     }
 
-    onChangeTaskAssign(event) {
+    onChangeTaskAssign(event, setFieldValue) {
         this.setState({ taskAssign: event.target.value });
+        if (event.target.value === "2") {
+            setFieldValue("departments", []);
+            setFieldValue("branches", []);
+        }
     }
 
-    onChangeSubtaskAssign(event, index) {
+    onChangeSubtaskAssign(event, index,setFieldValue) {
         const subtaskAssign = [...this.state.subtaskAssign];
         subtaskAssign[index] = event.target.value;
         this.setState({ subtaskAssign });
+         if (event.target.value === "2") {
+            setFieldValue(`subtasks[${index}].departments`, []);
+            setFieldValue(`subtasks[${index}].branches`, []);
+        }
     }
 
     onChangeSubtaskAssign(event, index, setFieldValue, setFieldTouched) {
-    const value = event.target.value;
+        const value = event.target.value;
 
-    const subtaskAssign = [...this.state.subtaskAssign];
-    subtaskAssign[index] = value;
-    this.setState({ subtaskAssign });
+        const subtaskAssign = [...this.state.subtaskAssign];
+        subtaskAssign[index] = value;
+        this.setState({ subtaskAssign });
 
-    
-    setFieldValue(`subtasks[${index}].assign`, value);
-    setFieldValue(`subtasks[${index}].departments`, []);
-    setFieldValue(`subtasks[${index}].branches`, []);
-    setFieldValue(`subtasks[${index}].employeeId`, []);
 
-    if (value === "0") {
-        setFieldTouched(`subtasks[${index}].departments`, true);
-    } else if (value === "1") {
-        setFieldTouched(`subtasks[${index}].branches`, true);
-    } else if (value === "2") {
-        setFieldTouched(`subtasks[${index}].employeeId`, true);
+        setFieldValue(`subtasks[${index}].assign`, value);
+        setFieldValue(`subtasks[${index}].departments`, []);
+        setFieldValue(`subtasks[${index}].branches`, []);
+        setFieldValue(`subtasks[${index}].employeeId`, []);
+
+        if (value === "0") {
+            setFieldTouched(`subtasks[${index}].departments`, true);
+        } else if (value === "1") {
+            setFieldTouched(`subtasks[${index}].branches`, true);
+        } else if (value === "2") {
+            setFieldTouched(`subtasks[${index}].employeeId`, true);
+        }
     }
-}
 
 
     save = (data, action) => {
@@ -134,25 +130,44 @@ class OnboardMSTaskForm extends Component {
         };
 
         if (data.employeeId && data.employeeId.length > 0) {
-            let arr = data.employeeId;
-            onboardMSTaskList.employeeId  =  arr.join(", ");
+            let employeeIdArray = [];
+            if (Array.isArray(data.employeeId)) {
+                employeeIdArray = data.employeeId;
+            } else if (typeof data.employeeId === 'string') {
+                employeeIdArray = data.employeeId.split(',').map(id => Number(id.trim()));
+            }
+            onboardMSTaskList.employeeId = employeeIdArray.join(", ");
         }
         if (data.departments && data.departments.length > 0) {
-            let arr = data.departments.map(dept => dept.id);
-            onboardMSTaskList.departments  =  arr.join(", ");
+
+            const departmentsArray = Array.isArray(data.departments)
+                ? data.departments
+                : typeof data.departments === 'string'
+                    ? this.state.department.filter(d => data.departments.split(',').map(id => id.trim()).includes(String(d.id)))
+                    : [];
+
+            let arr = departmentsArray.map(dept => dept.id);
+            let arrname = departmentsArray.map(dept => dept.name);
+            onboardMSTaskList.departments = arr.join(", ");
         }
         if (data.branches && data.branches.length > 0) {
-           let arr = data.branches.map(brnch => brnch.id);
-            onboardMSTaskList.branches  =  arr.join(", ");
+            const branchesArray = Array.isArray(data.branches)
+                ? data.branches
+                : typeof data.branches === 'string'
+                    ? this.state.branches.filter(d => data.branches.split(',').map(id => id.trim()).includes(String(d.id)))
+                    : [];
+
+            let arr = branchesArray.map(brnch => brnch.id);
+            let arrname = branchesArray.map(brnch => brnch.name);
+            onboardMSTaskList.branches = arr.join(", ");
         }
 
-       
         action.setSubmitting(true);
         saveOnboardMSTask(onboardMSTaskList).then(res => {
             if (res.status == "OK") {
-                if(data.id == 0){
-                this.handleSubTaskData(res.data.id,data)
-            }
+                if (data.id == 0) {
+                    this.handleSubTaskData(res.data.id, data)
+                }
                 toast.success(res.message);
                 this.props.updateList(res.data);
             } else {
@@ -164,11 +179,10 @@ class OnboardMSTaskForm extends Component {
 
             action.setSubmitting(false);
         })
-      
+
     };
 
-    handleSubTaskData = (id,data) => {
-           
+    handleSubTaskData = (id, data) => {
         data.subtasks.map(subtask => {
             const subtaskData = {
                 taskId: id,
@@ -182,15 +196,15 @@ class OnboardMSTaskForm extends Component {
             };
             if (subtask.employeeId && subtask.employeeId.length > 0) {
                 let arr = subtask.employeeId;
-                subtaskData.employeeId  =  arr.join(", ");
+                subtaskData.employeeId = arr.join(", ");
             }
             if (subtask.departments && subtask.departments.length > 0) {
                 let arr = subtask.departments.map(dept => dept.id);
-                subtaskData.departments =  arr.join(", ");
+                subtaskData.departments = arr.join(", ");
             }
             if (subtask.branches && subtask.branches.length > 0) {
                 let arr = subtask.branches.map(brnch => brnch.id);
-                subtaskData.branches =  arr.join(", ");
+                subtaskData.branches = arr.join(", ");
             }
 
             saveOnboardMSSubTask(subtaskData).then(res => {
@@ -202,14 +216,9 @@ class OnboardMSTaskForm extends Component {
                 // action.setSubmitting(false)
             }).catch(err => {
                 toast.error("Error while saving Subtask");
-    
                 // action.setSubmitting(false);
             })
-            
         })
-
-         
-
     }
 
     render() {
@@ -223,8 +232,8 @@ class OnboardMSTaskForm extends Component {
 
         const CustomSelect = ({ field, setFieldValue }) => {
             const { name, value } = field;
-        
-             let selectedOptions = [];
+
+            let selectedOptions = [];
 
             if (typeof value === "string") {
                 const ids = value.split(",").map(id => id.trim()).filter(id => id !== "");
@@ -249,6 +258,8 @@ class OnboardMSTaskForm extends Component {
 
                 setFieldValue(name, data);
             };
+
+
             return (
                 <Select
                     {...field}
@@ -286,6 +297,7 @@ class OnboardMSTaskForm extends Component {
             } else if (subtaskAssignType === '0') {
                 subtaskOptions = subtaskDepartments;
             }
+
 
             return (
                 <Select
@@ -327,17 +339,23 @@ class OnboardMSTaskForm extends Component {
                                     <ErrorMessage style={{ color: 'red' }} name="name" component="div" />
                                 </FormGroup>
                                 <FormGroup style={{ placeItems: 'center', alignContent: 'center' }} className='col-md-6'>
-                                    <div name="active"  className="toggles-btn-view" id="button-container">
+                                    <div name="active" className="toggles-btn-view" id="button-container">
 
-                                        <div id="my-button" className="toggle-button-element" style={{ transform: active ? 'translateX(0px)' : 'translateX(80px)' }} onClick={() => {
-                                       
-                                        this.setState({ active: !active });
-                                        setFieldValue("active", active);
-                                    }}>
-                                            <p className='m-0 self-btn'>{active ? 'Active' : 'Inactive'}</p>
+                                        <div id="my-button" className="toggle-button-element" style={{ transform: this.state.task.active ? 'translateX(0px)' : 'translateX(80px)' }} onClick={() => {
+
+                                           this.setState((prevState) => ({
+                                            active: !prevState.active,
+                                            task: {
+                                                ...prevState.task,
+                                                active: !prevState.active
+                                            }
+                                            }));
+                                            setFieldValue("active", active);
+                                        }}>
+                                            <p className='m-0 self-btn'>{this.state.task.active ? 'Active' : 'Inactive'}</p>
 
                                         </div>
-                                        <p className='m-0 team-btn' style={{ transform: active ? 'translateX(-10px)' : 'translateX(-80px)' }}>{active ? 'Inactive' : 'Active'}</p>
+                                        <p className='m-0 team-btn' style={{ transform: this.state.task.active ? 'translateX(-10px)' : 'translateX(-80px)' }}>{this.state.task.active ? 'Inactive' : 'Active'}</p>
                                     </div>
                                 </FormGroup>
                             </div>
@@ -352,14 +370,13 @@ class OnboardMSTaskForm extends Component {
                                 </label>
 
                                 <div className='d-flex mb-2' onChange={(e) => {
-                                    this.onChangeTaskAssign(e);
+                                    this.onChangeTaskAssign(e, setFieldValue);
                                     setFieldValue("assign", e.target.value);
                                 }}>
                                     {/* <Field className='mr-1' type="radio" value="1" name="assign" /> Everyone */}
                                     <Field className='mr-1' type="radio" value="0" name="assign" /> Department
                                     <Field className='ml-4 mr-1' type="radio" value="1" name="assign" /> Location
                                     <Field className='ml-4 mr-1' type="radio" value="2" name="assign" /> Individual Employee
-
                                 </div>
                                 <ErrorMessage name="assign">
                                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
@@ -394,7 +411,7 @@ class OnboardMSTaskForm extends Component {
                                                 setFieldValue={setFieldValue}
                                                 defaultValue={values.employeeId || []}
                                             />
-                                             <ErrorMessage name="employeeId">
+                                            <ErrorMessage name="employeeId">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
                                         </FormGroup>
@@ -423,24 +440,24 @@ class OnboardMSTaskForm extends Component {
                             <FormGroup>
                                 <label htmlFor="description">Due Date<span style={{ color: "red" }}>*</span></label>
                                 <div className='d-flex mb-2' onChange={(e) => {
-                                    this.onChangeTaskAssign(e);
                                     setFieldValue("dueOn", e.target.value);
                                 }}>
-                                    <Field className='mr-1' type="radio" value="1" name="dueOn"  /> Before Joining
-                                    <Field className='ml-4 mr-1' type="radio" value="2" name="dueOn"  /> After Joining
-                                    <Field className='ml-4 mr-1' type="radio" value="3" name="dueOn"  /> Date of Joining
+                                    <Field className='mr-1' type="radio" value="1" name="dueOn" /> Before Joining
+                                    <Field className='ml-4 mr-1' type="radio" value="2" name="dueOn" /> After Joining
+                                    <Field className='ml-4 mr-1' type="radio" value="3" name="dueOn" /> Date of Joining
                                 </div>
                                 <ErrorMessage name="dueOn" style={{ color: 'red' }} component="div" />
                             </FormGroup>
                             {values.dueOn && values.dueOn !== '3' && (
                                 <FormGroup>
                                     <label>Enter number of days<span style={{ color: "red" }}>*</span></label>
-                                    <Field name="numberofDays" type="number" className="form-control" min="0" step="1" 
-                                    onKeyDown={(e) => {
-                                        const invalidChars = ['e', 'E', '+', '-', '.'];
-                                        if (invalidChars.includes(e.key)) {
-                                        e.preventDefault();
-                                        }}} required />
+                                    <Field name="numberofDays" type="number" className="form-control" min="0" step="1"
+                                        onKeyDown={(e) => {
+                                            const invalidChars = ['e', 'E', '+', '-', '.'];
+                                            if (invalidChars.includes(e.key)) {
+                                                e.preventDefault();
+                                            }
+                                        }} required />
                                     <ErrorMessage name="numberofDays" style={{ color: 'red' }} component="div" />
                                 </FormGroup>
                             )}
@@ -458,7 +475,7 @@ class OnboardMSTaskForm extends Component {
                                                 subtasks[index].active = !subtasks[index].active;
                                                 setFieldValue("subtasks", subtasks);
                                             }}>
-                                                <i className={`fa fa-2x ${!active?'fa-toggle-off text-danger':subtask.active ? 'fa-toggle-on text-success' : 'fa-toggle-off text-danger'}`}></i>
+                                                <i className={`fa fa-2x ${!active ? 'fa-toggle-off text-danger' : subtask.active ? 'fa-toggle-on text-success' : 'fa-toggle-off text-danger'}`}></i>
                                             </div>
                                             <button type="button" className="btn btn-light ml-2" onClick={() => {
                                                 let subtasks = [...values.subtasks];
@@ -517,7 +534,7 @@ class OnboardMSTaskForm extends Component {
                                                             setFieldValue={setFieldValue}
                                                             defaultValue={values.subtaskEmpId}
                                                         />
-                                                         <ErrorMessage name={`subtasks[${index}].employeeId`}>
+                                                        <ErrorMessage name={`subtasks[${index}].employeeId`}>
                                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                                         </ErrorMessage>
                                                     </FormGroup>

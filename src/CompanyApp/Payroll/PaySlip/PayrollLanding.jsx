@@ -7,7 +7,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Switch, TextField, Tooltip } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import { VscChecklist, VscCheck } from "react-icons/vsc";
 import { MdRemoveDone, MdTableView, MdPlaylistRemove, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { TbListSearch } from "react-icons/tb";
@@ -16,7 +16,7 @@ import { IoClose } from "react-icons/io5";
 import { downloadPayslipCsv, downloadPayslipSif } from '../../../HttpRequest';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 import { itemRender } from '../../../paginationfunction';
-import { getTitle, getUserType, getPermission, verifyViewPermission, verifyApprovalPermission, getSyncPeoplehumCustomField, getPayrollType, getReadableMonthYear } from '../../../utility';
+import { getTitle, getUserType, verifyViewPermission, verifyApprovalPermission, getSyncPeoplehumCustomField, getPayrollType, getReadableMonthYear } from '../../../utility';
 import EmployeeListColumn from '../../Employee/employeeListColumn';
 import { closePayrollMonth, deletePayslip, generatePayslips, getPayrollCloseMonths, getPayslips, updateAllPayslipStatus, updatePayslipStatus, getMonthlyData } from './service';
 import PayslipViewer from './view';
@@ -36,7 +36,6 @@ import { getCurrentUserEntity } from "../../Organisationchart/Entity/service";
 const { Header, Body, Footer, Dialog } = Modal;
 
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
-const isEmployee = getUserType() == 'EMPLOYEE';
 
 
 const Months = {
@@ -79,7 +78,7 @@ export default class PayrollLanding extends Component {
             checkedList: this.getColumns().map((item) => item.key),
             isHovered: false,
             branchId: '',
-            isChecked: false,
+            isChecked: true,
             regularizationValidation: false,
             entityId: 0,
             orgsetup: "",
@@ -231,7 +230,6 @@ export default class PayrollLanding extends Component {
       }
 
     getColumns = () => {
-        const { selected } = this.state || [];
         const menuItems = (text, record) => {
             const items = [];
             items.push(
@@ -330,7 +328,7 @@ export default class PayrollLanding extends Component {
                 align: 'center',
                 width: 100,
                 key: '7',
-                render: (text, record) => {
+                render: (text) => { // removed unused 'record'
                     return <span >{parseFloat(text.allowance + text.otherAllowances).toFixed(2)}<br /></span>
                 }
             },
@@ -689,8 +687,8 @@ export default class PayrollLanding extends Component {
           }); 
       }
     render() {
-        const { checkedList, isChecked, isHovered,orgsetup } = this.state;
-        const { data, totalPages, totalRecords, currentPage, size, payslip, selected, closeMonths, monthlyData, isDownArrow } = this.state
+        const { checkedList, isChecked, isHovered, orgsetup } = this.state;
+        const { data, totalPages, totalRecords, currentPage, size, payslip, selected, closeMonths, monthlyData } = this.state;
         const payrollTypes = closeMonths && closeMonths.map((p) => p.payrollType);
         let startRange = ((currentPage - 1) * size) + 1;
         let endRange = ((currentPage) * (size + 1)) - 1;
@@ -728,26 +726,23 @@ export default class PayrollLanding extends Component {
                                     <h3 style={{ color: 'white' }} className="page-title">Salary Process</h3>
                                     <div className="p-0 col-lg-12 col-md-12 col-sm-12 sub-nav-tabs">
                                         <ul className="nav nav-items">
-                                           {isChecked && <li className="nav-item"><a href="#myPay" data-toggle="tab" className="nav-link">My Pay</a></li>}
-                                            { verifyApprovalPermission("Payroll Run Payroll")  && <li className="nav-item"><a href="#payslips" data-toggle="tab" className="nav-link active">Payroll Table</a></li>}
+                                            {isChecked && <li className="nav-item"><a href="#myPay" data-toggle="tab" className="nav-link active">My Pay</a></li>}
+                                            {verifyApprovalPermission("Payroll Run Payroll") && <li className="nav-item"><a href="#payslips" data-toggle="tab" className={`nav-link${!isChecked ? ' active' : ''}`}>Payroll Table</a></li>}
                                             {verifyApprovalPermission("Payroll Run Payroll") && <li className="nav-item"><a href="#generate" data-toggle="tab" className="nav-link">Run Payroll</a></li>}
-
-
                                         </ul>
                                     </div>
                                 </div>
-                                <div className='tempBtn' >
+                                {/* <div className='tempBtn' >
                                 <span  onClick={this.handleChange}>New</span>
-                               
-                            </div>
+
+                                </div> */}
                             </div>
 
                         </div>
-                        <div id="myPay" className="pro-overview ant-table-background tab-pane fade ">
+                        <div id="myPay" className={`pro-overview ant-table-background tab-pane fade${isChecked ? ' show active' : ''}`}> 
                             <MyPayslipCard></MyPayslipCard>
                         </div>
-                        <div id="payslips" className="pro-overview ant-table-background tab-pane fade show active">
-                            
+                        <div id="payslips" className={`pro-overview ant-table-background tab-pane fade${!isChecked ? ' show active' : ''}`}> 
                             {isChecked  && verifyApprovalPermission("Payroll Run Payroll") ?
                                 <PayrollTable></PayrollTable> :
                                 <>

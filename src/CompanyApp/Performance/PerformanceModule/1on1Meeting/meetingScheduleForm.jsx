@@ -30,15 +30,10 @@ export default class MeetingScheduleForm extends Component {
         }
 
     }
-componentDidMount () {
-    console.log("this.state.meetingSchedule",this.state.meetingSchedule)
-    console.log("this.state.meetingSchedule",this.props.meetingSchedule)
-}
 
     save = (data, action) => {
         action.setSubmitting(true);
-        console.log("datadata",this.state.meetingSchedule)
-        console.log("datadata",this.props.meetingSchedule)
+    
 
         let tempData = data;
         // if(this.state.meetingSchedule.id > 0){
@@ -47,7 +42,26 @@ componentDidMount () {
         createOneOnOneScheduleMeeting(tempData,this.state.meetingSchedule.id).then(res => {
             if (res.status == "OK") {
                 toast.success(res.message);
-                this.props.updateList();
+                
+                this.setState({
+                meetingSchedule: {
+                    id: 0,
+                    title: '',
+                    dateAndTime: '',
+                    meetingType: '',
+                    other: '',
+                    employeeId: null,
+                    reviewer: null,
+                    agenda: '',
+                    rescheduleId: null,
+                },
+                meetingType: 0
+            });
+
+            action.resetForm();
+            this.props.updateList();
+
+            this.props.updateList();
             } else {
                 toast.error(res.message);
             }

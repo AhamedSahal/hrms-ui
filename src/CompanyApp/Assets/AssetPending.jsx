@@ -108,7 +108,7 @@ export default class AssetPending extends Component {
             }
          }else if(this.state.AssetsAction.pendingStatus == "ALLOCATE"){
              //asset Accept block - assign
-             console.log("am here mari")
+             
             if(this.state.remarks == "" || this.state.remarks == undefined){
                 toast.error("Add a comment");
             }

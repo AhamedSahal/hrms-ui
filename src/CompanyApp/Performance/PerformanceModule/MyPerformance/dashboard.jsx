@@ -293,6 +293,7 @@ export default class MyPerformDashboard extends Component {
         this.setState({
             showForm: false,
           })
+          window.location.reload()
       }
 
 

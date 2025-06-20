@@ -4,9 +4,8 @@ import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { BsFillCaretDownFill } from "react-icons/bs";
 import { get1On1ViewList } from './service';
-import { toLocalDateTime } from '../../../../utility';
+import { toLocalDateTime, verifyViewPermission,getUserType,getEmployeeId,fallbackLocalDateTime,convertToUserDateTimeZone } from '../../../../utility';
 import EmployeeListColumn from '../../../Employee/employeeListColumn';
-
 
 
 export default class EmployeePerformance1on1MeetingView extends Component {
@@ -85,7 +84,7 @@ export default class EmployeePerformance1on1MeetingView extends Component {
                           
                         </div>
                         <div className="col-md-3">
-                          <h4 className="collapse-para">{toLocalDateTime(res.dateAndTime)}</h4>
+                          <h4 className="collapse-para">{fallbackLocalDateTime(res.dateAndTime)}</h4>
                         </div>
                         <div className="col-md-3">
                           <h4 className="collapse-para">{this.getStyle(res.status)}</h4>
@@ -152,13 +151,10 @@ export default class EmployeePerformance1on1MeetingView extends Component {
                   </div>
 
                   {/* Hidden Comments */}
-                  {this.props.viewStatus &&  <div className="col-md-4" style={{ color: "#999", fontSize: "14px", paddingTop: "10px" }}>Hidden Comments
+                  {((getUserType() == 'COMPANY_ADMIN') || (getEmployeeId()== res.reviewerId)) && <div className="col-md-4" style={{ color: "#999", fontSize: "14px", paddingTop: "10px" }}>Hidden Comments
                     <div style={{ color: "#55687d", fontSize: "14px", fontWeight: "bolder" }}>
                       {res.hiddenComments == null ? "-" : res.hiddenComments}
-
                     </div>
-
-
                   </div>}
 
                   {/* Employee Comments */}
@@ -176,7 +172,7 @@ export default class EmployeePerformance1on1MeetingView extends Component {
                 {res.status != "PENDING"  && <div className="col-md-4" style={{ color: "#999", fontSize: "14px", paddingTop: "10px" }}>
                   {res.status == "RESCHEDULE"?"Re-scheduled on":res.status == "CANCEL"?"Canceled on":res.status == "COMPLETED"?"Completed on":"-"}
                     <div style={{ color: "#55687d", fontSize: "14px", fontWeight: "bolder" }}>
-                      {res.modifiedOn == null ? "-" : toLocalDateTime(res.modifiedOn)}
+                      {res.modifiedOn == null ? "-" : fallbackLocalDateTime(convertToUserDateTimeZone(res.modifiedOn))}
 
                     </div>
 

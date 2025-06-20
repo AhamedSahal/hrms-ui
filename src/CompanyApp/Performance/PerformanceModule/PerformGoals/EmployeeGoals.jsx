@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet';
 import { toast } from 'react-toastify';
 import { itemRender } from "../../../../paginationfunction";
 import { deletePerformanceReview, getPerformanceReviewList } from '../../Review/service';
-import { getReadableDate, getTitle, getUserType, verifyApprovalPermission, verifyOrgLevelEditPermission, verifyOrgLevelViewPermission, verifySelfViewPermission, verifyViewPermissionForTeam, convertToUserTimeZone } from '../../../../utility';
+import { getReadableDate, getTitle, getUserType, verifyApprovalPermission, verifyOrgLevelEditPermission, verifyOrgLevelViewPermission, verifySelfViewPermission, verifyViewPermissionForTeam, convertToUserTimeZone, relativeTime } from '../../../../utility';
 import PerformanceGoalsForm from './form';
 import { getPerformanceGoalsList, getSubGoalsList } from './service';
 import PerformanceSubGoalsForm from './subGoalsform';
@@ -19,11 +19,11 @@ import checkimg from '../../../../assets/img/tickmarkimg.gif';
 import SubGoalsStatusAction from './subGoalsStatusAction';
 import GoalsStatusHistory from './GoalsStatusViewHistory';
 import { getDashboardData, saveSubGoals } from './service';
-import { formatDistanceToNow, parse } from "date-fns";
 import EmployeeProfilePhoto from '../../../Employee/widgetEmployeePhoto';
 import ProgressValueForm from './progressValueForm';
 import { FcHighPriority, FcLowPriority, FcMediumPriority } from 'react-icons/fc';
 import InfiniteScroll from 'react-infinite-scroll-component';
+
 
 
 const { Header, Body, Footer, Dialog } = Modal;
@@ -93,7 +93,7 @@ export default class EmployeesGoals extends Component {
                             });
                         } else if (filteredData == 'active') {
                             this.setState({
-                                data: res.data.list.filter((item) => item.active == true),
+                                data: res.data.list.filter((item) => (item.active == true) && (item.employeeId === this.props.goalsData.item.employeeId)),
                             })
                         } else if (filteredData == 'overdue') {
                             this.setState({
@@ -103,19 +103,19 @@ export default class EmployeesGoals extends Component {
                                         : item.goalsStatusWeightage != null
                                             ? item.goalsStatusWeightage
                                             : 0;
-                                    return new Date(item.deadline) < new Date() && weightStatusValidation < 100 && item.active == true
+                                    return new Date(item.deadline) < new Date() && weightStatusValidation < 100 && item.active == true  && (item.employeeId === this.props.goalsData.item.employeeId)
                                 }),
                             });
                         } else if (filteredData == 'completed') {
                             this.setState({
                                 data: res.data.list.filter((item) => {
                                     let weightStatusValidation = item.subGoalsStatusWeightage != null ? item.subGoalsStatusWeightage : item.goalsStatusWeightage != null ? item.goalsStatusWeightage : 0;
-                                    return weightStatusValidation === 100;
+                                    return weightStatusValidation === 100 && (item.employeeId === this.props.goalsData.item.employeeId);
                                 }),
                             });
                         } else if (filteredData == 'inactive') {
                             this.setState({
-                                data: res.data.list.filter((item) => item.active == false),
+                                data: res.data.list.filter((item) => item.active == false && (item.employeeId === this.props.goalsData.item.employeeId)),
                             })
                         }
                         this.setState({
@@ -128,14 +128,11 @@ export default class EmployeesGoals extends Component {
             })
         }, 500);
 
+        
         getDashboardData(this.props.goalStatus).then(res => {
             if (res.status == "OK") {
-                this.setState({ dashboard: res.data }, () => {
-                    this.RelativeTime(this.state.dashboard.lastUpdate)
-                })
+                this.setState({ dashboard: res.data, lastUpdatedTime:relativeTime(res.data.lastUpdate)  })
                 //  last update
-
-
             }
         })
         // }
@@ -167,8 +164,9 @@ export default class EmployeesGoals extends Component {
             this.fetchList();
         })
     }
-    updateList = () => {
+    updateList = (data) => {
         this.setState({
+            expandedRows: {},
             showForm: false,
             performanceTemplate: undefined,
             PerformanceGoalsForm: undefined,
@@ -280,21 +278,6 @@ export default class EmployeesGoals extends Component {
 
 
 
-    RelativeTime = (timestamp) => {
-        if (this.state.dashboard.lastUpdate != null && this.state.dashboard.lastUpdate != "") {
-
-
-            let date = getReadableDate(this.state.dashboard.lastUpdate);
-            let time = convertToUserTimeZone(this.state.dashboard.lastUpdate);
-            let dateAndTime = date + "-" + time
-            let parsedDate = parse(dateAndTime, "dd-MM-yyyy-hh:mm a", new Date());
-            const formattedTime = formatDistanceToNow(new Date(parsedDate), {
-                addSuffix: true,
-            });
-            this.setState({ lastUpdatedTime: formattedTime })
-        } // if end
-    };
-
 
 
     reduceString = (str, maxLength) => {
@@ -319,6 +302,7 @@ export default class EmployeesGoals extends Component {
 
     updateProgressList = () => {
         this.subGoalExpand(this.state.addGoalId);
+        this.fetchList();
     }
 
     updateGoalsProgressList = () => {
@@ -575,7 +559,7 @@ export default class EmployeesGoals extends Component {
                                                                         />}
                                                                     <div className='m-1'>
                                                                         <span className="last-updated">{weightStatusValidation}%</span>
-                                                                        <span className="last-updated float-right">Last updated: {this.state.lastUpdatedTime}</span>
+                                                                        <span className="last-updated float-right">Last updated: {relativeTime(item.lastModifiedGoalOrSubGoal)}</span>
                                                                     </div>
 
                                                                 </div>

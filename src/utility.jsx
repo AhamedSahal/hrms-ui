@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 import { headerlogo, loginLogo } from './Entryfile/imagepath';
-import { parse, isValid } from 'date-fns';
+import { parse, isValid, formatDistanceToNow } from 'date-fns';
 import { getWithAuth } from './HttpRequest';
 import * as XLSX from 'xlsx';
 import { PERMISSION_LEVEL } from './Constant/enum';
@@ -442,6 +442,17 @@ export function toUTCCalendarTime(time) {
 }
 
 export function convertToUTC(dateTimeString) {
+    const timeOnlyRegex = /^\d{2}:\d{2}(:\d{2})?$/;
+
+  if (typeof dateTimeString === 'string' && timeOnlyRegex.test(dateTimeString.trim())) {
+    const today = new Date();
+    const [hours, minutes, seconds = '00'] = dateTimeString.split(':');
+    const localDateTime = new Date(today.getFullYear(),today.getMonth(),today.getDate(),Number(hours),Number(minutes),Number(seconds));
+    const utcHours = String(localDateTime.getUTCHours()).padStart(2, '0');
+    const utcMinutes = String(localDateTime.getUTCMinutes()).padStart(2, '0');
+    const utcSeconds = String(localDateTime.getUTCSeconds()).padStart(2, '0');
+    return `${utcHours}:${utcMinutes}:${utcSeconds}`;
+  }
     const inputDateTime = new Date(dateTimeString);
     const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const browserTimeZoneOffsetInMilliseconds = new Date().getTimezoneOffset() * 60000;
@@ -452,17 +463,42 @@ export function convertToUTC(dateTimeString) {
 }
 
 export function convertToUserTimeZone(dateTimeString) {
-    const datetime = new Date(dateTimeString);
+    const timeOnlyFormat = /^\d{2}:\d{2}:\d{2}$/;
+    let datetime;
+    const isTimeOnly = timeOnlyFormat.test(dateTimeString);
+
+    if (isTimeOnly) {
+        const today = new Date();
+        const [hour, minute, second = '00'] = dateTimeString.split(':');
+        const fullDateTimeString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}T${hour}:${minute}:${second}`;
+        datetime = new Date(fullDateTimeString);
+    } else {
+        datetime = new Date(dateTimeString);
+    }
+
     const userTimeZoneOffset = datetime.getTimezoneOffset();
-    const userDateTime = new Date(datetime.getTime() - (userTimeZoneOffset * 60000));
+    const userDateTime = new Date(datetime.getTime() - userTimeZoneOffset * 60000);
+
     const hour = userDateTime.getHours();
     const minute = userDateTime.getMinutes();
+    const second = userDateTime.getSeconds();
+
+    if (isTimeOnly) {
+        const formattedHour = hour.toString().padStart(2, '0');
+        const formattedMinute = minute.toString().padStart(2, '0');
+        const formattedSecond = second.toString().padStart(2, '0');
+        const result = `${formattedHour}:${formattedMinute}:${formattedSecond}`;
+        return result;
+    }
+
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
     const formattedMinute = minute < 10 ? '0' + minute : minute;
-
-    return `${formattedHour}:${formattedMinute} ${ampm}`;
+    const result = `${formattedHour}:${formattedMinute} ${ampm}`;
+    return result;
 }
+
+
 // Convert UTC to user's local timezone 
 export function convertToUserDateTimeZone(dateTimeString) {
     const datetime = new Date(dateTimeString);
@@ -477,7 +513,6 @@ export function convertToUserDateTimeZone(dateTimeString) {
     const formattedDate = `${year}-${month}-${day}`;
     const formattedTime = `${hour}:${minute}`;
 
-    console.log(`${formattedDate} ${formattedTime}`);
     return `${formattedDate} ${formattedTime}`;
 }
 
@@ -521,10 +556,8 @@ export function toLocalDateTime(dateTime) {
     if (dateTime) {
         try{
         dateTime = dateTime.replace('T', ' ');
-        console.log(new Date(dateTime + ' UTC').toLocaleString([], { timeStyle: 'short', dateStyle: 'medium', hourCycle: 'h12' }))
         return new Date(dateTime + ' UTC').toLocaleString([], { timeStyle: 'short', dateStyle: 'medium', hourCycle: 'h12' });
-        }catch (e) {
-            console.log("hitted mariiiiiiii")
+        }catch (e) {        
         return null;
     }
     }
@@ -760,7 +793,23 @@ export function toDateWithGMT(inputDate) {
 }
 
 export function fallbackLocalDateTime(dateTime) {
-console.log("hello falled here")
+  const timeOnlyRegex = /^\d{2}:\d{2}(:\d{2})?$/;
+
+  const formatTime12Hr = (date) => {
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+    return `${hours}:${minutes} ${ampm}`;
+  };
+
+  if (typeof dateTime === 'string' && timeOnlyRegex.test(dateTime.trim())) {
+    const today = new Date();
+    const [h='00', m='00', s = '00'] = dateTime.split(':');
+    const date = new Date(today.getFullYear(), today.getMonth(), today.getDate(), Number(h), Number(m), Number(s));
+    return formatTime12Hr(date);
+  }
+
   const date = new Date(dateTime);
   if (isNaN(date.getTime())) return 'Invalid Date';
 
@@ -768,15 +817,19 @@ console.log("hello falled here")
   const day = String(date.getDate()).padStart(2, '0');
   const year = date.getFullYear();
 
-  let hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12 || 12; 
-
-  return `${month}-${day}-${year}, ${hours}:${minutes} ${ampm}`;
+  return `${month}-${day}-${year}, ${formatTime12Hr(date)}`;
 }
 
-
+ export function relativeTime(timestamp){
+    if (timestamp) {
+        const isoFormatted = timestamp.replace(" ", "T");
+        const parsedDate = new Date(isoFormatted);
+        const formattedTime = formatDistanceToNow(parsedDate, {
+            addSuffix: true,
+        });
+        return formattedTime.replace("about ", ""); 
+    }
+};
 
    
 

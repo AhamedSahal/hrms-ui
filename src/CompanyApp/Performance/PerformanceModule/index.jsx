@@ -185,7 +185,7 @@ export default class EmployeePerformanceModule extends Component {
                                                 className={activeMenu === '1on1Meeting' ? 'active' : ''}
                                                 onClick={() => this.handleMenuClick('1on1Meeting')}
                                             >
-                                                <BsMicrosoftTeams  className=" mr-1" size={20} />
+                                                <BsMicrosoftTeams className=" mr-1" size={20} />
                                                 1-on-1 Meeting
                                             </button>
                                         </>

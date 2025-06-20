@@ -6,7 +6,7 @@ import { Button, FormGroup } from 'reactstrap';
 import EnumDropdown from '../ModuleSetup/Dropdown/EnumDropdown';
 import { ImportType } from '../../Constant/enum';
 import { downloadAttendanceTemplate } from '../../HttpRequest';
-import { saveImportJobsAttendance, saveImportJobsDeductions, saveImportJobsEarnings, saveImportJobsEmployees, saveImportJobsJobTitle } from './service';
+import { saveImportJobsAttendance, saveImportJobsDeductions, saveImportJobsEarnings, saveImportJobsEmployees, saveImportJobsJobTitle, saveImportJobsEmployeesalary } from './service';
 import { verifyOrgLevelEditPermission, verifyOrgLevelViewPermission } from '../../utility';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
 export default class BulkUploadTypeForm extends Component {
@@ -107,6 +107,21 @@ export default class BulkUploadTypeForm extends Component {
             toast.error("Error while uploading Employee Bulk Data");
         }
     }
+    else if(this.state.importType === 'SALARY'){
+        try {
+            saveImportJobsEmployeesalary(data,this.state.importType,this.state.overrideData,this.state.timeZone).then(res => {
+                if (res.status == "OK") {
+                    toast.success(res.message);
+                    this.setState({importType : null,overrideData : false })
+                    document.querySelector('input[name="file"]').value = '';
+                } else {
+                    toast.error(res.message);
+                }
+            });}
+             catch (err) {
+            toast.error("Error while uploading Employee Bulk Data");
+        }
+    }
     
     }
 
@@ -126,6 +141,9 @@ export default class BulkUploadTypeForm extends Component {
         }
         else if (this.state.importType === 'EMPLOYEES') {
             fileName = 'EmployeeBulkUploadTemplate.xlsx';
+        }
+        else if (this.state.importType === 'SALARY'){
+            fileName = 'EmployeeSalaryUploadTemplate.xlsx';
         }
         if (fileName) {
             downloadAttendanceTemplate(fileName)
@@ -206,7 +224,7 @@ export default class BulkUploadTypeForm extends Component {
                                                         <i className="fa fa-download"> Download Template</i>
                                                         </button>
                                                         </div>
-                                                    {this.state.importType !== 'JOB_TITLE' && (
+                                                    {!['JOB_TITLE', 'SALARY'].includes(this.state.importType) && (
                                                         <div className="col-md-3" style={{paddingBlock: '40px'}}>
                                                         <div type="checkbox" name="active" onClick={e => {
                                                             let { overrideData } = this.state;

@@ -99,7 +99,7 @@ export default class RegularizeAttendance extends Component {
                 firstHalf: val,
                 secondHalf: val
             });
-            console.log("setValidation",setValidation);
+  
         } else {
             this.setState({
                 firstHalf: '',

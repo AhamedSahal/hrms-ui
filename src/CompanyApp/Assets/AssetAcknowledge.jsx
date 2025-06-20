@@ -50,6 +50,7 @@ export default class AssetAcknowledge extends Component{
        { verifyViewPermission("Manage Assets") &&   getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort,this.state.assetAcknowledgeStatusId,this.state.self,0,0).then(res => {
        
           if (res.status == "OK") {
+            
             this.setState({
               data: res.data.list,
               totalPages: res.data.totalPages,
@@ -250,6 +251,7 @@ export default class AssetAcknowledge extends Component{
         },
         {
           title: 'Assigned To',
+          key: 'employee',
           width: 50,
           render: (text, record) => {
             return <> {text.employee?.id != null ? <EmployeeListColumn
@@ -310,7 +312,7 @@ export default class AssetAcknowledge extends Component{
                       q: e.target.value
                     })
                   }} type="text" className="form-control floating" />
-                  <label className="focus-label">Search by Name / Category / Serial Number / Employee Name / Employee Number </label>
+                  <label className="focus-label">Search by Name / Category / Serial Number / Employee Name </label>
                 </div>
               </div>
               <div className="col-md-3">
@@ -350,6 +352,7 @@ export default class AssetAcknowledge extends Component{
                   columns={columns}
                   dataSource={[...data]}
                   onChange={this.onTableDataChange}
+                  rowKey="id"
                 />
                 </div>
                 </div>

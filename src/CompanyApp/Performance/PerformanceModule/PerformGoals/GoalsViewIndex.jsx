@@ -4,7 +4,7 @@ import { Anchor } from "react-bootstrap";
 import EmployeeProfilePhoto from "../../../Employee/widgetEmployeePhoto";
 import { BsThreeDots } from "react-icons/bs";
 import { getgoalsViewHistory, getPerformanceGoalsList, getSubGoalsList, getsubgoalsViewHistory } from "./service";
-import { getReadableDate, toGoalsLocalDateTime, toLocalDateTime } from "../../../../utility";
+import { getReadableDate, toGoalsLocalDateTime, toLocalDateTime, getUserType, getEmployeeId } from "../../../../utility";
 import { FcCalendar, FcHighPriority, FcLowPriority, FcMediumPriority } from "react-icons/fc";
 import { Modal } from 'react-bootstrap';
 import PerformanceGoalsForm from "./form";
@@ -155,7 +155,7 @@ class GoalDetails extends Component {
                 <div className="goalViewPage-header">
                     <h3 className="m-0">{goalType == 'goal' ? 'View Goal' : "View Sub Goal"}</h3>
                     <div className="goalAuditTopBtn">
-                        <p
+                        {((getUserType() == 'COMPANY_ADMIN') || (getEmployeeId()==goalDisc.createdBy)) && <p
                             onClick={() => {
                                 let { PerformanceGoalsForm } = this.state;
                                 if (this.props.goalsData.type === 'subGoal') {
@@ -169,7 +169,7 @@ class GoalDetails extends Component {
                                     PerformanceGoalsForm.isWeightage = goalDisc.weightage;
                                     this.setState({ PerformanceGoalsForm, showForm: true });
                                 }
-                            }} className="goalsViewHeaderBtn "><i style={{ fontSize: '25px' }} class="fa fa-pencil-square-o" aria-hidden="true"></i></p>
+                            }} className="goalsViewHeaderBtn "><i style={{ fontSize: '25px' }} class="fa fa-pencil-square-o" aria-hidden="true"></i></p>}
 
                         <p onClick={() => this.setState({ showDropdown: !this.state.showDropdown })} className="goalsViewHeaderBtn "><BsThreeDots size={23} /></p>
 
@@ -286,11 +286,15 @@ class GoalDetails extends Component {
                                             <span className="GoalAudit-time">{time}</span>
                                         </div>
                                         <div style={{ width: '170px' }} className="GoalAudit-info">
-                                            <span className="GoalAudit-name">{audit.createdBy}</span>
+                                            <div className="goal-title"><EmployeeProfilePhoto className='multiSelectImgSize' id={audit.employeeId}></EmployeeProfilePhoto>{audit.createdBy}</div>                                                               
                                         </div>
                                         <div style={{ width: '170px' }}>
                                             <span className="text-muted">Achievement</span>
                                             <div>{audit.achievement}</div>
+                                        </div>
+                                         <div style={{ width: '170px' }} className="GoalAudit-dateTime">
+                                            <span className="text-muted">Deadline</span>
+                                            <div>{audit.deadline}</div>
                                         </div>
                                         <div style={{ width: '500px' }}>
                                             <span className="text-muted">Comments</span>
