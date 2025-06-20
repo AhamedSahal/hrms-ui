@@ -4,8 +4,9 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import EmployeeDropdown from '../../../ModuleSetup/Dropdown/EmployeeDropdown';
-import { saveGoals,saveSubGoals } from './service';
+import { saveGoals, saveSubGoals } from './service';
 import PerformanceSubGoalsForm from './subGoalsform';
+import {PerformanceGoalSchema} from './validation';
 import { Button } from "antd";
 
 
@@ -23,6 +24,21 @@ export default class PerformanceGoalsForm extends Component {
             active: true,
             subGoalsData: [],
             isWeightage: true,
+            issubGoalWeightageMap: {},
+            isAutoWeightageExist: {},
+            PerformanceGoalsForm:this.props.PerformanceGoalsForm|| {
+                    id: 0,
+                    name: '',
+                    description: '',
+                    priority: '',
+                    deadline: '',
+                    employeeId: 0,
+                    goalWeightage: 0,
+                    active: true,
+                    subGoalsData: [],
+                    isWeightage: true,
+
+            }
 
         }
 
@@ -95,6 +111,34 @@ export default class PerformanceGoalsForm extends Component {
 
     };
 
+//    handleSubGoalButtonClick = (index) => {
+//     this.setState(prevState => {
+//         const newMap = { ...prevState.issubGoalWeightageMap };
+//         newMap[index] = !newMap[index]; 
+//         return { issubGoalWeightageMap: newMap };
+//     });
+// };
+
+handleSubGoalButtonClick = (index) => {
+  this.setState(prevState => {
+    const newMap = { ...prevState.issubGoalWeightageMap };
+    newMap[index] = !newMap[index];
+
+    const subMapValuesUpToIndex = Object.keys(newMap)
+      .filter(key => parseInt(key) < index)
+      .map(key => newMap[key]);
+
+    const isAnyManual = subMapValuesUpToIndex.some(val => val === false);
+
+    return {
+      issubGoalWeightageMap: newMap,
+      isAutoWeightageExist: !isAnyManual,
+    };
+  });
+};
+
+
+
     removeRow = (index) => {
         const tmp = this.state.subGoalsData;
         tmp.splice(index, 1);
@@ -104,6 +148,7 @@ export default class PerformanceGoalsForm extends Component {
     };
 
     save = (data, action) => {
+      
         action.setSubmitting(true);
         data["isWeightage"] = this.state.isWeightage;
         data["weightage"] = this.state.isWeightage;
@@ -115,11 +160,11 @@ export default class PerformanceGoalsForm extends Component {
                     toast.error(res.message);
                 }
                 if (res.status == "OK") {
-                    if (this.state.subGoalsData.length > 0) {
-                        this.saveSubGoalsData(res.data.id)
+                    if (data.subGoalsData.length > 0) {
+                        this.saveSubGoalsData(res.data.id,data.subGoalsData,data)
                         // this.weightageValidation(res.data.id)
                     } else {
-                        this.props.updateList();
+                        this.props.updateList(data);
                     }
                     // setTimeout(function () {
                     //     window.location.reload()
@@ -178,25 +223,23 @@ export default class PerformanceGoalsForm extends Component {
     }
 
     // save goals sub tables
-    saveSubGoalsData = (goalsId) => {
-        if (this.state.subGoalsData.length > 0) {
-            this.state.subGoalsData.map((data, i) => {
-                let dataUpdate = { ...data, goalsId: goalsId };
+    saveSubGoalsData = (goalsId, subGoals,data ) => {
+        var partialSuccess=0
+        if (subGoals.length > 0) {
+            subGoals.map((datas, i) => {
+                let dataUpdate = { ...datas, goalsId: goalsId, issubGoalWeightage:this.state.issubGoalWeightageMap[datas.index] };
                 saveSubGoals(dataUpdate).then(res => {
                     if (res.status == "OK") {
-                        // toast.success(res.message); 
+                        toast.success(res.message); 
+                        partialSuccess = 1;
                     } else {
                         toast.error(res.message);
                     }
-                    if (res.status == "OK") {
-                        if (this.state.subGoalsData.length - 1 == i) {
-                            toast.success(res.message);
-                            this.props.updateList();
+                   
+                        if (partialSuccess==1) {
+                            this.props.updateList(data);
                         }
-                        // setTimeout(function () {
-                        //     window.location.reload()
-                        //   }, 3000)
-                    }
+                      
 
                 }).catch(err => {
                     toast.error("Error while saving Performance Sub Goals");
@@ -219,7 +262,7 @@ export default class PerformanceGoalsForm extends Component {
                     enableReinitialize={true}
                     initialValues={this.state.PerformanceGoalsForm}
                     onSubmit={this.save}
-                //    validationSchema={PerformanceReviewSchema}
+                    validationSchema={PerformanceGoalSchema}
                 >
                     {({
                         values,
@@ -244,7 +287,7 @@ export default class PerformanceGoalsForm extends Component {
                                             onChange={e => {
                                                 setFieldValue("employeeId", e.target.value);
                                             }} 
-                                            required 
+                                           
                                             readOnly={isEmployeeId} 
                                         ></EmployeeDropdown>
                                     }} ></Field>
@@ -257,7 +300,7 @@ export default class PerformanceGoalsForm extends Component {
                                         <label>Goal Name
                                             <span style={{ color: "red" }}>*</span>
                                         </label>
-                                        <Field name="name" type="text" className="form-control" required></Field>
+                                        <Field name="name" type="text" className="form-control" ></Field>
                                         <ErrorMessage name="name">
                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                         </ErrorMessage>
@@ -281,14 +324,14 @@ export default class PerformanceGoalsForm extends Component {
 
                                     </FormGroup>
                                 </div>
-                                {!isWeightage && <div className="col-2"> <FormGroup><label></label><Field name="goalWeightage" type="number" className="form-control" required></Field> </FormGroup></div>}
+                                {!isWeightage && <div className="col-2"> <FormGroup><label></label><Field name="goalWeightage" type="number" className="form-control" required={!isWeightage} ></Field> </FormGroup></div>}
                             </div> <div className="row">
                                 <div className="col-12">
                                     <FormGroup>
                                         <label>Description
                                             <span style={{ color: "red" }}>*</span>
                                         </label>
-                                        <Field name="description" component="textarea" rows="4" className="form-control" placeholder="Description" required></Field>
+                                        <Field name="description" component="textarea" rows="4" className="form-control" placeholder="Description" ></Field>
                                         <ErrorMessage name="description">
                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                         </ErrorMessage>
@@ -304,7 +347,7 @@ export default class PerformanceGoalsForm extends Component {
                                         <select id="priority" className="form-control" name="priority"
                                             onChange={e => {
                                                 setFieldValue("priority", e.target.value)
-                                            }} defaultValue={values.priority} required>
+                                            }} defaultValue={values.priority} >
                                             <option value="">Select Priority</option>
                                             <option value="0">Low</option>
                                             <option value="1">Medium</option>
@@ -320,7 +363,7 @@ export default class PerformanceGoalsForm extends Component {
                                         <label>Deadline
                                             <span style={{ color: "red" }}>*</span>
                                         </label>
-                                        <Field name="deadline" type="date" className="form-control" required></Field>
+                                        <Field name="deadline" type="date" className="form-control" ></Field>
                                         <ErrorMessage name="deadline">
                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                         </ErrorMessage>
@@ -349,22 +392,161 @@ export default class PerformanceGoalsForm extends Component {
                             </div>
                             {/*  sub goals forms */}
 
-                            {this.state.subGoalsData.length > 0 && this.state.subGoalsData.map((res, index) => {
-                                return <div style={{ padding: "20px 0" }}>
-                                    <div >
-                                        {index == 0 ? <h3>Sub Goals</h3> : null}
-                                        <PerformanceSubGoalsForm PerformanceSubGoalsForm={res} index={index} multiForm={true} updateState={this.updateState} removeRow={this.removeRow}> </PerformanceSubGoalsForm>
-                                        <hr />
-                                    </div>
+             <FormGroup>
+                {values.subGoalsData.length > 0 && values.subGoalsData.map((res, index) => 
+                   (
+                  
+                    <div key={index} >
+                        {index === 0 && <h3>Sub Goals</h3>}
+
+                        <div className="row">
+                            <div className="col-md-6">
+                            <FormGroup>
+                                <label>Sub Goal Name<span style={{ color: "red" }}>*</span></label>
+                                <Field name={`subGoalsData[${index}].name`} type="text" className="form-control" />
+                                <ErrorMessage name={`subGoalsData[${index}].name`}>
+                                {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                </ErrorMessage>
+                            </FormGroup>
+                            </div>
+
+                            <div className="col-4">
+                            <FormGroup>
+                                <label>Weightage</label>
+                                <div onClick={() => {
+                                        if (!(this.state.issubGoalWeightageMap?.[index + 1] !== undefined)) {
+                                            this.handleSubGoalButtonClick(index);
+                                            setFieldValue(`subGoalsData[${index}].issubGoalWeightage`, this.state.issubGoalWeightageMap?.[index]);
+                                        }
+                                        }} className="toggles-btn-view" id="button-container">
+                                <div id="my-button" className="toggle-button-element" style={{ transform: (this.state.issubGoalWeightageMap?.[index]?? true) ? 'translateX(0px)':'translateX(80px)' }}>
+                                    <p className='m-0 self-btn'>{(this.state.issubGoalWeightageMap?.[index]?? true) ? 'Auto':'Manual' }</p>
                                 </div>
-                            })}
+                                <p className='m-0 team-btn' style={{ transform: (this.state.issubGoalWeightageMap?.[index]?? true) ? 'translateX(-10px)':'translateX(-80px)'}}>
+                                    {(this.state.issubGoalWeightageMap?.[index]?? true) ? 'Manual':'Auto'}
+                                </p>
+                                </div>
+                            </FormGroup>
+                            </div>
+
+                            { !this.state.issubGoalWeightageMap?.[index] && <div className="col-2">
+                            <FormGroup>
+                                <label></label>
+                                <Field
+                                name={`subGoalsData[${index}].subgoalWeightage`}
+                                type="number"
+                                className="form-control"
+                                min={1}
+                                max={(this.state.isAutoWeightageExist[index] || index==0 )? 100 : 99}
+                                />
+                            </FormGroup>
+                            </div>}
+                        </div>
+
+                        <div className="row">
+                            <div className="col-12">
+                            <FormGroup>
+                                <label>Description<span style={{ color: "red" }}>*</span></label>
+                                <Field
+                                name={`subGoalsData[${index}].description`}
+                                component="textarea"
+                                rows="4"
+                                className="form-control"
+                                placeholder="Description"
+                                />
+                                <ErrorMessage name={`subGoalsData[${index}].description`}>
+                                {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                </ErrorMessage>
+                            </FormGroup>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-6">
+                            <FormGroup>
+                                <label>Priority<span style={{ color: "red" }}>*</span></label>
+                                <Field as="select" name={`subGoalsData[${index}].priority`} className="form-control">
+                                <option value="">Select Priority</option>
+                                <option value="0">Low</option>
+                                <option value="1">Medium</option>
+                                <option value="2">High</option>
+                                </Field>
+                                <ErrorMessage name={`subGoalsData[${index}].priority`}>
+                                {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                </ErrorMessage>
+                            </FormGroup>
+                            </div>
+
+                            <div className="col-6">
+                            <FormGroup>
+                                <label>Deadline<span style={{ color: "red" }}>*</span></label>
+                                <Field name={`subGoalsData[${index}].deadline`} type="date" className="form-control" />
+                                <ErrorMessage name={`subGoalsData[${index}].deadline`}>
+                                {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                </ErrorMessage>
+                            </FormGroup>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-md-4">
+                            <FormGroup>
+                                <label>Is Active</label><br />
+                                <i
+                                className={`fa fa-2x ${res.active ? 'fa-toggle-on text-success' : 'fa-toggle-off text-danger'}`}
+                                onClick={() => {
+                                    const { subGoalsData } = this.state;
+                                    subGoalsData[index].active = !subGoalsData[index].active;
+                                    this.setState({ subGoalsData });
+                                    setFieldValue(`subGoalsData[${index}].active`, subGoalsData[index].active);
+                                }}
+                                ></i>
+                            </FormGroup>
+                            </div>
+                        </div>
+
+                        <hr />
+                    </div>
+                    
+                ))}
+                </FormGroup>
+
+
                             {/* sub form */}
                             <div className="row">
                                 <div className="col">
                                     <input type="submit" className="btn btn-success" value={(this.props.PerformanceGoalsForm == undefined || this.props.PerformanceGoalsForm?.id == 0) ? "Publish" : "Update"} />
                                 </div>
                                 {(this.props.PerformanceGoalsForm == undefined || this.props.PerformanceGoalsForm?.id == 0) && <div className="col text-end">
-                                    <input type='button' className="btn btn-primary" onClick={() => this.handleSubGoals()} value="Add Sub Goal" />
+                                    <input type='button' className="btn btn-primary" onClick={() => {
+                                                    const newIndex = values.subGoalsData.length;
+                                                    let subGoalsData = values.subGoalsData || [];
+                                                    subGoalsData.push({ 
+                                                    id: 0,
+                                                    name: '',
+                                                    description: '',
+                                                    priority: '',
+                                                    deadline: '',
+                                                    subgoalWeightage: 0,
+                                                    active: true,
+                                                    goalsId: 0,
+                                                    goals:{},
+                                                    issubGoalWeightage: true,
+                                                    index:newIndex
+                                                    });
+                                                    setFieldValue("subGoalsData", subGoalsData);
+                                                    this.setState(prevState => ({
+                                                        issubGoalWeightageMap: {
+                                                        ...prevState.issubGoalWeightageMap,
+                                                        [newIndex]: true 
+                                                        }, 
+                                                        isAutoWeightageExist:{
+                                                        ...prevState.isAutoWeightageExist,
+                                                        [newIndex]: true 
+                                                        },
+                                                    }))
+
+                                    }} value="Add Sub Goal" />
                                 </div>}
 
                             </div>
@@ -373,10 +555,6 @@ export default class PerformanceGoalsForm extends Component {
                     )
                     }
                 </Formik>
-
-
-
-
             </div>
         )
     }

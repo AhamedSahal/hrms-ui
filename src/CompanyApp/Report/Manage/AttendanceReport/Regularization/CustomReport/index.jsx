@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import moment from "moment";
-import { camelize, exportToCsv, getTitle,verifyViewPermission,convertToUserTimeZone, formTimeFormat,toDateTime,toLocalDateTime,formatDateTime, getCompanyId, getMultiEntityCompanies} from '../../../../../../utility';
+import { camelize, exportToCsv, getTitle,verifyViewPermission,convertToUserTimeZone, formTimeFormat,toDateTime,toLocalDateTime,formatDateTime, getCompanyId, getMultiEntityCompanies, fallbackLocalDateTime} from '../../../../../../utility';
 import BranchDropdown from '../../../../../ModuleSetup/Dropdown/BranchDropdown';
 import DepartmentDropdown from '../../../../../ModuleSetup/Dropdown/DepartmentDropdown';
 import PdfDocument from '../../../../pdfDocument';
@@ -13,6 +13,11 @@ import PreviewTable from '../../../../previewTable';
 import AccessDenied from '../../../../../../MainPage/Main/Dashboard/AccessDenied';
 import JobTitlesDropdown from '../../../../../ModuleSetup/Dropdown/JobTitlesDropdown';
 import CompanyMultiSelectDropDown from '../../../../../ModuleSetup/Dropdown/CompanyMultiSelectDropDown';
+import Bowser from 'bowser';
+
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const { Header, Body, Footer, Dialog } = Modal;
 
 
@@ -49,11 +54,11 @@ export default class RegularizationCustomReport extends Component {
   fetchList = () => { 
     if(verifyViewPermission("Attendance Report")){
         getRegularizationReport(this.state.branchId, this.state.departmentId, this.state.jobTitleId, this.state.q, this.state.fromDate, this.state.toDate,this.state.selectedCompanies).then(response => {
-      let data = response.data.map(item => {
-        let systemShiftClockIn = item.settingClockIn != null ? convertToUserTimeZone(toDateTime(item.date, item.settingClockIn)): "-";
-        let systemShiftClockOut = item.settingClockOut != null ? convertToUserTimeZone(toDateTime(item.date, item.settingClockOut)) : "-";
-        let systemAttendanceclockIn = item.systemClockIn != null ? convertToUserTimeZone(item.systemClockIn) : "-";
-        let systemAttendanceclockOut = item.systemClockOut != null ? convertToUserTimeZone(item.systemClockOut) : "-";
+      let data = response.data.map(item => {            
+        let systemShiftClockIn = item.settingClockIn != null ? isSafari ? (fallbackLocalDateTime(convertToUserTimeZone(item.settingClockIn)) ):convertToUserTimeZone(toDateTime(item.date, item.settingClockIn)): "-";
+        let systemShiftClockOut = item.settingClockOut != null ?  isSafari ? (fallbackLocalDateTime(convertToUserTimeZone(item.settingClockOut)) ):convertToUserTimeZone(toDateTime(item.date, item.settingClockOut)) : "-";
+        let systemAttendanceclockIn = item.systemClockIn != null ? fallbackLocalDateTime(convertToUserTimeZone(item.systemClockIn)) : "-";
+        let systemAttendanceclockOut = item.systemClockOut != null ? fallbackLocalDateTime(convertToUserTimeZone(item.systemClockOut)) : "-";
         return {
             ...item,
             settingClockIn: formTimeFormat(item.settingClockIn),
@@ -107,7 +112,7 @@ export default class RegularizationCustomReport extends Component {
           if (selectedProperties.includes(key)) {
             if(key != "recordedClockInTime" && key != "recordedClockOutTime"){
               if(key == "requestedClockInTime" || key == "requestedClockOutTime" || key == "submittedOn"){
-                temp[key]  = element[key] == null?"-":formatDateTime(toLocalDateTime(element[key]))
+                temp[key]  = element[key] == null?"-":isSafari?fallbackLocalDateTime(element[key]):formatDateTime(toLocalDateTime(element[key]))
               }else if(key == "date"){
                 temp[key]  = element[key] == null?"-":moment(element[key]).format("ll") 
               }else{
@@ -126,7 +131,12 @@ export default class RegularizationCustomReport extends Component {
             }
           }
         }); 
-       
+         if (Object.keys(temp).length > 0) {
+          temp['date'] = (temp['date'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['date']) : temp['date']);
+          temp['recordedClockInTime'] = (temp['recordedClockInTime'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['recordedClockInTime']) : temp['recordedClockInTime']);
+          temp['recordedClockOutTime'] = (temp['recordedClockOutTime'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['recordedClockOutTime']) : temp['recordedClockOutTime']);
+                }
+         
         selectedData.push(temp); 
       })
     }

@@ -173,6 +173,16 @@ export function saveImportJobsEmployees(data,importType,overrideData,timeZone) {
         return Promise.reject(err);
     });
 }
+
+export function saveImportJobsEmployeesalary(data,importType,overrideData,timeZone) {
+    let post = postWithAuth(`${importBulkPath}/job-employees-salary?name=${importType}&overrideData=${overrideData}&timeZone=${timeZone}`, { file: data.file },true);
+    return post.then(res => {
+        return Promise.resolve(res.data);
+    }).catch(err => {
+        console.log({ err })
+        return Promise.reject(err);
+    });
+}
 export function saveOwner(data) {
      let post = data.id == 0 ? postWithAuth(`/owners`,data)
                 :putWithAuth(`/owners`,data);

@@ -6,7 +6,11 @@ import { saveTimesheet } from './service';
 import { TimesheetSchema } from './validation';
 import { getEmployeeId } from '../../utility';
 import TimesheetRow from './timesheetRow';
+import Bowser from 'bowser';
 
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const CreateTimesheetForm = ({ timesheet: initialTimesheet, self, employeeId, showAlert, updateList }) => {
     const [timesheets, setTimesheets] = useState([]);
     const [count, setCount] = useState(0);

@@ -8,7 +8,8 @@ import GoalsEmployeeDropdown from '../../../ModuleSetup/Dropdown/GoalsEmployeeDr
 import { saveSubGoals, getSubGoalWeightage, getGoalsActionList } from './service';
 import { FcHighPriority, FcLowPriority, FcMediumPriority } from 'react-icons/fc';
 import { confirmAlert } from 'react-confirm-alert';
-
+import { PerformanceSubGoalSchema } from './validation';
+toast.configure();
 
 export default class PerformanceSubGoalsForm extends Component {
     constructor(props) {
@@ -26,7 +27,8 @@ export default class PerformanceSubGoalsForm extends Component {
             goals: {
                 id: 0,
             },
-            goalsData: []
+            goalsData: [],
+            autoWeightageExist:true
 
         }
 
@@ -44,9 +46,13 @@ export default class PerformanceSubGoalsForm extends Component {
         getGoalsActionList(id).then(res => {
             if (res.status == "OK") {
                 this.setState({
-                    goalsData: res.data,
+                    goalsData: res.data.goalsStatus,
+                    autoWeightageExist: res.data.isAutoWeightageEmpty 
                 })
-
+            }else{
+                 this.setState({
+                    autoWeightageExist: res.data.isAutoWeightageEmpty 
+                })
             }
         })
     }
@@ -90,9 +96,10 @@ export default class PerformanceSubGoalsForm extends Component {
     save = (data, action) => {
 
         if (this.state.goalsData.length > 0) {
-            this.props.goalsStatusPopupMessage(data)
+            this.props.updateList(data)
         } else {
             this.saveSubGoals(data);
+             this.props.updateList(data)
         }
 
     }
@@ -121,6 +128,7 @@ export default class PerformanceSubGoalsForm extends Component {
     render() {
         const { issubGoalWeightage, PerformanceSubGoalsForm } = this.state
         const isEmployeeId = this.props?.isEmployeeGoals
+
         return (
             <div>
                 {/* remove record */}
@@ -133,7 +141,7 @@ export default class PerformanceSubGoalsForm extends Component {
                     enableReinitialize={true}
                     initialValues={this.state.PerformanceSubGoalsForm}
                     onSubmit={this.save}
-                //    validationSchema={PerformanceReviewSchema}
+                    validationSchema={PerformanceSubGoalSchema}
                 >
                     {({
                         values,
@@ -153,12 +161,17 @@ export default class PerformanceSubGoalsForm extends Component {
                                     <label>Employee<span style={{ color: "red" }}>*</span>
                                     </label>
                                     <Field name="employeeId" className="col-md-12" render={field => {
-                                        return <EmployeeDropdown defaultValue={isEmployeeId || this.props.goalDataItem?.employeeId || 0} onChange={e => {
+                                        return <EmployeeDropdown defaultValue={isEmployeeId || this.props.goalDataItem?.employeeId} onChange={e => {
                                             this.setState({ employeeId: e.target.value })
+                                            setFieldValue("employeeId", e.target.value);
                                             setFieldValue("goalsId", 0);
                                             setFieldValue("goals", null);
-                                        }}  readOnly={isEmployeeId}></EmployeeDropdown>
+                                        }} readOnly={isEmployeeId}></EmployeeDropdown>
                                     }}></Field>
+
+                                    <ErrorMessage name="employeeId">
+                                        {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                    </ErrorMessage>
                                 </FormGroup>}
 
                                 {/* new dropdown s */}
@@ -167,9 +180,9 @@ export default class PerformanceSubGoalsForm extends Component {
                                         <label>Goals<span style={{ color: "red" }}>*</span>
                                         </label>
                                         <Field name="goalsId" render={field => {
-                                            return <GoalsEmployeeDropdown 
-                                                employeeId={this.state.employeeId || isEmployeeId} 
-                                                defaultValue={ this.props.goalDataItem?.id || values.goalsId} 
+                                            return <GoalsEmployeeDropdown
+                                                employeeId={this.state.employeeId || isEmployeeId}
+                                                defaultValue={this.props.goalDataItem?.id || values.goalsId}
                                                 onChange={e => {
                                                     setFieldValue("goalsId", e.target.value);
                                                     setFieldValue("goals", { id: e.target.value });
@@ -177,9 +190,9 @@ export default class PerformanceSubGoalsForm extends Component {
                                                     if (this.state.PerformanceSubGoalsForm.id > 0) {
                                                         toast.error("Are you sure, you want to update Goals");
                                                     }
-                                                }} 
-                                                readOnly={!this.props.enableGoalDropdown} 
-                                                required>
+                                                }}
+                                                readOnly={!this.props.enableGoalDropdown}
+                                            >
                                             </GoalsEmployeeDropdown>
                                         }}></Field>
 
@@ -195,7 +208,7 @@ export default class PerformanceSubGoalsForm extends Component {
                                         <label>Sub Goal Name
                                             <span style={{ color: "red" }}>*</span>
                                         </label>
-                                        <Field name="name" type="text" className="form-control" required onChange={(e) => {
+                                        <Field name="name" type="text" className="form-control" onChange={(e) => {
                                             setFieldValue("name", e.target.value)
                                             if (this.props.multiForm) {
                                                 PerformanceSubGoalsForm.name = e.target.value;
@@ -207,7 +220,7 @@ export default class PerformanceSubGoalsForm extends Component {
                                         </ErrorMessage>
                                     </FormGroup>
                                 </div>
-                                <div className="col-4">
+                                {values.goalsId && <div className="col-4">
                                     <FormGroup>
                                         <label>Weightage</label>
                                         <div onClick={e => {
@@ -227,8 +240,8 @@ export default class PerformanceSubGoalsForm extends Component {
 
 
                                     </FormGroup>
-                                </div>
-                                {!issubGoalWeightage && <div className="col-2"> <FormGroup><label></label><Field name="subgoalWeightage" type="number" className="form-control" required onChange={(e) => {
+                                </div>}
+                                {!issubGoalWeightage && <div className="col-2"> <FormGroup><label></label><Field name="subgoalWeightage" type="number" className="form-control" min={1} max={this.state.autoWeightageExist?100:99} required={!issubGoalWeightage} onChange={(e) => {
                                     setFieldValue("subgoalWeightage", e.target.value)
                                     if (this.props.multiForm) {
                                         PerformanceSubGoalsForm.subgoalWeightage = e.target.value;
@@ -241,7 +254,7 @@ export default class PerformanceSubGoalsForm extends Component {
                                         <label>Description
                                             <span style={{ color: "red" }}>*</span>
                                         </label>
-                                        <Field name="description" component="textarea" rows="4" className="form-control" placeholder="Description" required onChange={(e) => {
+                                        <Field name="description" component="textarea" rows="4" className="form-control" placeholder="Description" onChange={(e) => {
                                             setFieldValue("description", e.target.value)
                                             if (this.props.multiForm) {
                                                 PerformanceSubGoalsForm.description = e.target.value;
@@ -267,7 +280,7 @@ export default class PerformanceSubGoalsForm extends Component {
                                                     PerformanceSubGoalsForm.priority = e.target.value;
                                                     this.props.updateState(PerformanceSubGoalsForm, this.props.index);
                                                 }
-                                            }} defaultValue={values.priority} required>
+                                            }} defaultValue={values.priority} >
                                             <option value="">Select Priority</option>
                                             <option value="0">Low</option>
                                             <option value="1">Medium</option>
@@ -283,7 +296,7 @@ export default class PerformanceSubGoalsForm extends Component {
                                         <label>Deadline
                                             <span style={{ color: "red" }}>*</span>
                                         </label>
-                                        <Field name="deadline" type="date" className="form-control" required onChange={(e) => {
+                                        <Field name="deadline" type="date" className="form-control" onChange={(e) => {
                                             setFieldValue("deadline", e.target.value)
                                             if (this.props.multiForm) {
                                                 PerformanceSubGoalsForm.deadline = e.target.value;
@@ -333,3 +346,5 @@ export default class PerformanceSubGoalsForm extends Component {
         )
     }
 }
+
+

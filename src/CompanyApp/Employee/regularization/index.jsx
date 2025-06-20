@@ -8,13 +8,17 @@ import { BsSliders } from "react-icons/bs";
 import { toast } from 'react-toastify';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { getRegularizationList, updateSelectedStatus } from './service';
-import { getTitle, getUserType, verifySelfViewPermission,verifyOrgLevelEditPermission, verifyEditPermission,formatDateTime, verifyViewPermission, verifyViewPermissionForTeam, getReadableDate, verifyApprovalPermission, convertToUserTimeZone, toDateTime,toLocalDateTime } from '../../../utility';
+import { getTitle, getUserType, verifySelfViewPermission,verifyOrgLevelEditPermission, verifyEditPermission,formatDateTime, verifyViewPermission, verifyViewPermissionForTeam, getReadableDate, verifyApprovalPermission, convertToUserTimeZone, toDateTime,toLocalDateTime,toDateWithGMT,convertToUTC,fallbackLocalDateTime } from '../../../utility';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 import TableDropDown from '../../../MainPage/tableDropDown';
 import RegularizeAttendance from './form';
 import RegularizationAction from './regularizationAction';
 import AttendaceRegularizationView from './view';
+import Bowser from 'bowser';
 
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 const isEmployee = getUserType() == 'EMPLOYEE';
 const { Header, Body, Footer, Dialog } = Modal;
@@ -48,6 +52,7 @@ export default class Regularization extends Component {
 
     }
     componentDidMount() {
+
          this.fetchList();
     }
 
@@ -280,7 +285,7 @@ export default class Regularization extends Component {
                 sorter: true,
                 render: (text, record) => {
                     return <>
-                        <div>{getReadableDate(record.date) } {record.settingClockIn != null ? convertToUserTimeZone(toDateTime(record.date, record.settingClockIn)) : "-"} to {record.settingClockOut != null ? convertToUserTimeZone(toDateTime(record.date, record.settingClockOut)) : "-"}</div>
+                    <div>{getReadableDate(record.date)} {record.settingClockIn != null ? (isSafari ? fallbackLocalDateTime(convertToUserTimeZone(record.settingClockIn)) : convertToUserTimeZone(toDateTime(record.date, record.settingClockIn))) : "-"} to {record.settingClockOut != null ? (isSafari ? fallbackLocalDateTime(convertToUserTimeZone(record.settingClockOut)) : convertToUserTimeZone(toDateTime(record.date, record.settingClockOut))) : "-"}</div>
                     </>
                 }
             },

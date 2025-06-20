@@ -5,14 +5,18 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import moment from "moment";
 import { toast } from "react-toastify";
-import { camelize, exportToCsv, getTitle,verifyViewPermission,convertToUserTimeZone, formTimeFormat,toDateTime,toLocalDateTime,formatDateTime, getCompanyId, getMultiEntityCompanies } from '../../../../../../utility';
+import { camelize, exportToCsv, getTitle, verifyViewPermission, convertToUserTimeZone, formTimeFormat, toDateTime, toLocalDateTime, formatDateTime, getCompanyId, getMultiEntityCompanies,fallbackLocalDateTime } from '../../../../../../utility';
 // import PdfDocument from '../../../pdfDocument';
 import PdfDocument from '../../../../pdfDocument';
 import { getRegularizationStatusReport } from '../service';
 import PreviewTable from '../../../../previewTable';
 import AccessDenied from '../../../../../../MainPage/Main/Dashboard/AccessDenied';
 import CompanyMultiSelectDropDown from '../../../../../ModuleSetup/Dropdown/CompanyMultiSelectDropDown';
+import Bowser from 'bowser';
 
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const { Header, Body, Footer, Dialog } = Modal;
 
 
@@ -38,10 +42,10 @@ export default class RegularizationStatusReport extends Component {
       fromDate: firstDay.toISOString().split('T')[0],
       toDate: lastDay.toISOString().split('T')[0],
       companyId: getCompanyId(),
-      allCompany : false,
-      companies : getMultiEntityCompanies(),
+      allCompany: false,
+      companies: getMultiEntityCompanies(),
       selectedCompanies: [],
-      isFilter : true,
+      isFilter: true,
     };
   }
 
@@ -50,30 +54,30 @@ export default class RegularizationStatusReport extends Component {
   }
   fetchList = () => {
     if (verifyViewPermission("Attendance Report")) {
-        getRegularizationStatusReport(this.state.q, this.state.fromDate, this.state.toDate > this.state.currentDate?this.state.currentDate:this.state.toDate,this.state.regularizationStatus,this.state.approvalStatus,this.state.selectedCompanies).then(response => {
-        if(response.status == "OK"){
+      getRegularizationStatusReport(this.state.q, this.state.fromDate, this.state.toDate > this.state.currentDate ? this.state.currentDate : this.state.toDate, this.state.regularizationStatus, this.state.approvalStatus, this.state.selectedCompanies).then(response => {
+        if (response.status == "OK") {
           let data = response.data.map(item => {
-            let systemShiftClockIn = item.settingClockIn != null ? convertToUserTimeZone(toDateTime(item.date, item.settingClockIn)): "-";
-            let systemShiftClockOut = item.settingClockOut != null ? convertToUserTimeZone(toDateTime(item.date, item.settingClockOut)) : "-";
-            let systemAttendanceclockIn = item.systemClockIn != null ? convertToUserTimeZone(item.systemClockIn) : "-";
-            let systemAttendanceclockOut = item.systemClockOut != null ? convertToUserTimeZone(item.systemClockOut) : "-";
+                    let systemShiftClockIn = item.settingClockIn != null ? isSafari ? (fallbackLocalDateTime(convertToUserTimeZone(item.settingClockIn)) ):convertToUserTimeZone(toDateTime(item.date, item.settingClockIn)): "-";
+                    let systemShiftClockOut = item.settingClockOut != null ?  isSafari ? (fallbackLocalDateTime(convertToUserTimeZone(item.settingClockOut)) ):convertToUserTimeZone(toDateTime(item.date, item.settingClockOut)) : "-";
+                    let systemAttendanceclockIn = item.systemClockIn != null ? fallbackLocalDateTime(convertToUserTimeZone(item.systemClockIn)) : "-";
+                    let systemAttendanceclockOut = item.systemClockOut != null ? fallbackLocalDateTime(convertToUserTimeZone(item.systemClockOut)) : "-";
             return {
-                ...item,
-                settingClockIn: formTimeFormat(item.settingClockIn),
-                settingClockOut: formTimeFormat(item.settingClockOut),
-                assignedShift: systemShiftClockIn + " to " + systemShiftClockOut,
-                systemAttendance: systemAttendanceclockIn +" - "+ systemAttendanceclockOut
+              ...item,
+              settingClockIn: formTimeFormat(item.settingClockIn),
+              settingClockOut: formTimeFormat(item.settingClockOut),
+              assignedShift: systemShiftClockIn + " to " + systemShiftClockOut,
+              systemAttendance: systemAttendanceclockIn + " - " + systemAttendanceclockOut
             };
-        });
-        this.setState({
-          data
-        }, () => {
-          this.setAllChecked(true);
-        })
-      }else{
-        this.setState({data: []})
-        toast.error(response.message);      
-      }
+          });
+          this.setState({
+            data
+          }, () => {
+            this.setAllChecked(true);
+          })
+        } else {
+          this.setState({ data: [] })
+          toast.error(response.message);
+        }
       })
     }
   }
@@ -82,7 +86,7 @@ export default class RegularizationStatusReport extends Component {
     const data = this.state.data;
     let selectedProperties = [];
     let sortedData = []
-    selectedProperties = ["employeeId", "fullName","email", "date","assignedShift","systemReason","recordedClockInTime","recordedClockOutTime","requestedClockInTime","requestedClockOutTime","reasonForRegularization","requestSubmissionStatus","approvalStatus","approver","submittedBy","submittedOn"];
+    selectedProperties = ["employeeId", "fullName", "email", "date", "assignedShift", "systemReason", "recordedClockInTime", "recordedClockOutTime", "requestedClockInTime", "requestedClockOutTime", "reasonForRegularization", "requestSubmissionStatus", "approvalStatus", "approver", "submittedBy", "submittedOn"];
     this.setState({ checkedValidation: checkAll == true ? true : false })
     if (data && data.length > 0 && checkAll) {
       // let tempselectedProperties = Object.keys(data[0]).filter(key => !selectedProperties.includes(key)).map(key => key);
@@ -95,17 +99,17 @@ export default class RegularizationStatusReport extends Component {
   handleChange = (selectedOptions) => {
     const selectedCompanies = selectedOptions.map((option) => option.value);
     this.setState((prevState) => ({
-      selectedCompanies ,
-      isFilter: selectedCompanies.length === 1 || selectedCompanies.length === 0 ,
+      selectedCompanies,
+      isFilter: selectedCompanies.length === 1 || selectedCompanies.length === 0,
       companyId: selectedCompanies.length === 1 ? selectedCompanies[0] : '',
       branchId: selectedCompanies.length > 1 ? '' : prevState.branchId,
-      jobTitleId : selectedCompanies.length > 1 ? '' : prevState.jobTitleId,
-      departmentId : selectedCompanies.length > 1 ? '' : prevState.departmentId,
-  }));
+      jobTitleId: selectedCompanies.length > 1 ? '' : prevState.jobTitleId,
+      departmentId: selectedCompanies.length > 1 ? '' : prevState.departmentId,
+    }));
   };
 
   render() {
-    const { data, selectedProperties, showPdf,isFilter, showCsv, companyId,companies } = this.state;
+    const { data, selectedProperties, showPdf, isFilter, showCsv, companyId, companies } = this.state;
     const currentDate = new Date().toISOString().split('T')[0];
     let selectedData = [];
 
@@ -113,34 +117,43 @@ export default class RegularizationStatusReport extends Component {
       data.forEach((element) => {
         let temp = {};
         Object.keys(element).forEach((key) => {
+     
           if (selectedProperties.includes(key)) {
-            if(key != "recordedClockInTime" && key != "recordedClockOutTime"){
-              if(key == "requestedClockInTime" || key == "requestedClockOutTime" || key == "submittedOn"){
-                temp[key]  = element[key] == null?"-":formatDateTime(toLocalDateTime(element[key]))
-              }else if(key == "date"){
-                temp[key]  = element[key] == null?"-":moment(element[key]).format("ll") 
-              }else{
-                if(key == "approvalStatus"){
-                  temp[key] = element[key] == null || element[key] == "undefined" || element[key] == ""?"-":element[key] == "PENDING"?"Pending":element[key] == "APPROVED"?"Approved":"Rejected"
-                }else if(key == "requestSubmissionStatus"){
+            if (key != "recordedClockInTime" && key != "recordedClockOutTime") {
+              if (key == "requestedClockInTime" || key == "requestedClockOutTime" || key == "submittedOn") {
+                temp[key] = element[key] == null ? "-" : formatDateTime(toLocalDateTime(element[key]))
+              } else if (key == "date") {
+                temp[key] = element[key] == null ? "-" : moment(element[key]).format("ll")
+              } else {
+                if (key == "approvalStatus") {
+                  temp[key] = element[key] == null || element[key] == "undefined" || element[key] == "" ? "-" : element[key] == "PENDING" ? "Pending" : element[key] == "APPROVED" ? "Approved" : "Rejected"
+                } else if (key == "requestSubmissionStatus") {
                   temp[key] = element[key] == "NOT_REGULARIZED" ? 'Not Regularized(P)' : element[key] == "PENDING" ? 'Pending' : element[key] == "REGULARIZED" ? 'Regularized(A + R)' : "-"
-                }else{
-                  temp[key] = element[key] == null || element[key] == "undefined"?"-":element[key];
+                } else {
+                  temp[key] = element[key] == null || element[key] == "undefined" ? "-" : element[key];
                 }
-                
+
 
               }
-            }else{
-              temp[key]  = element[key] == null?"-":convertToUserTimeZone(element[key])
+            } else {
+              temp[key] = element[key] == null ? "-" : convertToUserTimeZone(element[key])
             }
           }
         });
+        if (Object.keys(temp).length > 0) {
+          temp['date'] = (temp['date'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['date']) : temp['date']);
+          temp['recordedClockInTime'] = (temp['recordedClockInTime'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['recordedClockInTime']) : temp['recordedClockInTime']);
+          temp['recordedClockOutTime'] = (temp['recordedClockOutTime'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['recordedClockOutTime']) : temp['recordedClockOutTime']);
+          temp['requestedClockInTime'] = (temp['requestedClockInTime'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['requestedClockInTime']) : temp['requestedClockInTime']);
+          temp['requestedClockOutTime'] = (temp['requestedClockOutTime'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['requestedClockOutTime']) : temp['requestedClockOutTime']);
+          temp['submittedOn'] = (temp['submittedOn'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['submittedOn']) : temp['submittedOn']);
+        }
         selectedData.push(temp);
       })
     }
-    
+
     return (
-      
+
       <div className="insidePageDiv">
         <Helmet>
           <title>Regularization | {getTitle()}</title>
@@ -162,49 +175,49 @@ export default class RegularizationStatusReport extends Component {
           </div>
           {verifyViewPermission("Attendance Report") && <><div className="card p-2">
             <div className="row">
-            <div className="col-sm-4 col-md-4">
-              <div className="form-group form-focus">
-                <input  onChange={e => {
-                  this.setState({
-                    q: e.target.value
-                  })
-                }} type="text" className="form-control floating" />
-                <label className="focus-label">Search</label>
+              <div className="col-sm-4 col-md-4">
+                <div className="form-group form-focus">
+                  <input onChange={e => {
+                    this.setState({
+                      q: e.target.value
+                    })
+                  }} type="text" className="form-control floating" />
+                  <label className="focus-label">Search</label>
+                </div>
               </div>
-            </div>
-            <div className="col-sm-6 col-md-4">
-              <div className="form-group form-focus">
+              <div className="col-sm-6 col-md-4">
+                <div className="form-group form-focus">
                   <select
                     className="form-control floating"
                     defaultValue={this.state.regularizationStatus}
                     onChange={(e) => {
-                      this.setState({regularizationStatus: e.target.value})
+                      this.setState({ regularizationStatus: e.target.value })
                     }}
                   >
                     <option value="">All</option>
                     <option value="0">Not Regularized</option>
                     <option value="2">Regularized</option>
-            
+
                   </select>
-              </div>
+                </div>
               </div>
               {/* approval status */}
               <div className="col-sm-6 col-md-4">
-              <div className="form-group form-focus">
+                <div className="form-group form-focus">
                   <select
                     className="form-control floating"
                     defaultValue={this.state.approvalStatus}
                     onChange={(e) => {
-                      this.setState({approvalStatus: e.target.value})
+                      this.setState({ approvalStatus: e.target.value })
                     }}
                   >
                     <option value="">All</option>
                     <option value="0">Pending</option>
-                   {this.state.regularizationStatus != "0" && <option value="1">Approved</option>} 
-                   {this.state.regularizationStatus != "0" &&  <option value="2">Rejected</option>}
-            
+                    {this.state.regularizationStatus != "0" && <option value="1">Approved</option>}
+                    {this.state.regularizationStatus != "0" && <option value="2">Rejected</option>}
+
                   </select>
-              </div>
+                </div>
               </div>
               <div className="col-sm-6 col-md-4">
 
@@ -221,7 +234,7 @@ export default class RegularizationStatusReport extends Component {
 
               <div className="col-sm-6 col-md-4">
                 <div className="form-group form-focus">
-                  <input value={this.state.toDate > this.state.currentDate?this.state.currentDate: this.state.toDate} max={currentDate}  onChange={e => {
+                  <input value={this.state.toDate > this.state.currentDate ? this.state.currentDate : this.state.toDate} max={currentDate} onChange={e => {
                     this.setState({
                       toDate: e.target.value
                     })
@@ -231,7 +244,7 @@ export default class RegularizationStatusReport extends Component {
 
               </div>
 
-              
+
 
               <div className="col-md-2">
                 <a href="#" onClick={() => {
@@ -239,15 +252,15 @@ export default class RegularizationStatusReport extends Component {
                 }} className="btn btn-success btn-block"> Search </a>
               </div>
             </div>
-            {this.state.companies.length > 1 && 
-                <div className='col-sm-6 col-md-6'>
-                    <div className="form-group form-focus">
-                      <CompanyMultiSelectDropDown value={this.state.selectedCompanies} 
-                        onChange={(e) => {this.handleChange(e)}}>
-                      </CompanyMultiSelectDropDown>
-                    </div>
-                  </div>
-                }
+            {this.state.companies.length > 1 &&
+              <div className='col-sm-6 col-md-6'>
+                <div className="form-group form-focus">
+                  <CompanyMultiSelectDropDown value={this.state.selectedCompanies}
+                    onChange={(e) => { this.handleChange(e) }}>
+                  </CompanyMultiSelectDropDown>
+                </div>
+              </div>
+            }
 
             <div className="row">
               <div className="col-md-12">

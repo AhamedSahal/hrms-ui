@@ -136,7 +136,7 @@ export default class Assets extends Component {
                                 </div>
                                 <div className="col-md-6">
                                     <FormGroup>
-                                        <label>Asset Name
+                                        <label style={{ paddingBottom: 8 }}>Asset Name
                                             <span style={{ color: "red" }}>*</span>
                                         </label> 
                                         <Field name="assetId" render={field => {
@@ -144,7 +144,7 @@ export default class Assets extends Component {
                                             setFieldValue("assetId", e.currentTarget.value);
                                         }}></AssetSetupDropDown>}}></Field> 
                                         <ErrorMessage name="assetId">
-                                            {msg => <div style={{ color: 'red', marginTop: '5px' }}>{msg}</div>}
+                                            {msg => <div style={{ color: 'red', marginTop: '10px' }}>{msg}</div>}
                                         </ErrorMessage>
                                     </FormGroup>
                                 </div>

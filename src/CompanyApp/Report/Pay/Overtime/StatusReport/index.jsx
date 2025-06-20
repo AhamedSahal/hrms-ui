@@ -5,7 +5,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import moment from "moment";
 import { toast } from "react-toastify";
-import { camelize, exportToCsv,exportToSortedCsvOrder, getCompanyId, getMultiEntityCompanies, getTitle, toLocalTime, verifyViewPermission } from '../../../../../utility';
+import { camelize, exportToCsv,exportToSortedCsvOrder, getCompanyId, getMultiEntityCompanies, getTitle, toLocalTime, verifyViewPermission, fallbackLocalDateTime } from '../../../../../utility';
 // import PdfDocument from '../../../pdfDocument';
 import PdfDocument from '../../../pdfDocument';
 import { getOvertimeStatusReport } from '../service';
@@ -13,7 +13,11 @@ import PreviewTable from '../../../previewTable';
 import ProjectDropdown from '../../../../ModuleSetup/Dropdown/ProjectDropdown';
 import AccessDenied from '../../../../../MainPage/Main/Dashboard/AccessDenied';
 import CompanyMultiSelectDropDown from '../../../../ModuleSetup/Dropdown/CompanyMultiSelectDropDown';
+import Bowser from 'bowser';
 
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const { Header, Body, Footer, Dialog } = Modal;
 
 
@@ -114,6 +118,9 @@ export default class OvertimeStatusReport extends Component {
             }
           }
         });
+          if (Object.keys(temp).length > 0) {
+                          temp['date'] = (temp['date'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['date']) : temp['date']);
+                        }
         selectedData.push(temp);
       })
       if(selectedData.length > 0){

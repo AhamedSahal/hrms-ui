@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import moment from "moment";
-import { camelize, exportToCsv,exportToSortedCsvOrder, getTitle,verifyViewPermission,setAllChecked, getCompanyId, getMultiEntityCompanies } from '../../../../../utility';
+import { camelize, exportToCsv,exportToSortedCsvOrder, getTitle,verifyViewPermission,setAllChecked, getCompanyId, getMultiEntityCompanies,fallbackLocalDateTime } from '../../../../../utility';
 import BranchDropdown from '../../../../ModuleSetup/Dropdown/BranchDropdown';
 import DepartmentDropdown from '../../../../ModuleSetup/Dropdown/DepartmentDropdown';
 import PdfDocument from '../../../pdfDocument';
@@ -13,6 +13,11 @@ import JobTitlesDropdown from '../../../../ModuleSetup/Dropdown/JobTitlesDropdow
 import PreviewTable from '../../../previewTable';
 import AccessDenied from '../../../../../MainPage/Main/Dashboard/AccessDenied';
 import CompanyMultiSelectDropDown from '../../../../ModuleSetup/Dropdown/CompanyMultiSelectDropDown';
+import Bowser from 'bowser';
+
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const { Header, Body, Footer, Dialog } = Modal;
 
 
@@ -94,6 +99,9 @@ export default class OvertimeReport extends Component {
             }
           }
         });
+        if (Object.keys(temp).length > 0) {
+                          temp['date'] = (temp['date'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['date']) : temp['date']);
+                        }
         selectedData.push(temp);
       })
     }

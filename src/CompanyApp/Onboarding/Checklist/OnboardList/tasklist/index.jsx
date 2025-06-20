@@ -492,7 +492,11 @@ export default class OnboardTasklist extends Component {
                                                 <tr className='Goals_table_row' key={item.id}>
                                                     <td style={{ width: '0px' }}>
                                                         <Checkbox
-                                                            onChange={() => this.handleTaskSelect(item.id, item.completedDate == null ? true : false)}
+                                                             onChange={() => {
+                                                               
+                                                                    this.setState({ expandedRows: {} });
+                                                                    this.handleTaskSelect(item.id, item.completedDate == null ? true : false);
+                                                                }}
                                                             checked={taskCompletedPercentage === 100}
                                                         />
                                                     </td>
@@ -572,7 +576,7 @@ export default class OnboardTasklist extends Component {
                                                                 </Tooltip>
                                                             )}
                                                         </Avatar.Group>
-                                                    </td> : <td>{item.applicableFor}</td>}
+                                                    </td> : <td style={{ textAlign: 'center' }}>{item.applicableFor}</td>}
                                                     <td onClick={() => this.setState({ showForm: true, historyId: item.id, historyStatus: true })} style={{ textAlign: 'center', cursor: 'pointer' }}><AiOutlineFolderView className='checklistViewBtn' size={25} /></td>
 
                                                 </tr>
@@ -627,7 +631,7 @@ export default class OnboardTasklist extends Component {
                                                                                             </Tooltip>
                                                                                         )}
                                                                                     </Avatar.Group>
-                                                                                </td> : <td>{sub.applicableFor}</td>}
+                                                                                </td> : <td style={{ textAlign: 'center' }}>{sub.applicableFor}</td>}
                                                                                 <td onClick={() => this.setState({ showForm: true, historyId: sub.id, historyStatus: false })} style={{ textAlign: 'center', cursor: 'pointer' }}><AiOutlineFolderView className='checklistViewBtn' size={25} /></td>
 
 

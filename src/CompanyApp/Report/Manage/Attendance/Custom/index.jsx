@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import moment from "moment";
-import { camelize, exportToCsv, getTitle,verifyViewPermission,convertToUserTimeZone, formTimeFormat,setAllChecked, getMultiEntityCompanies } from '../../../../../utility';
+import { camelize, exportToCsv, getTitle,verifyViewPermission,convertToUserTimeZone, formTimeFormat,setAllChecked, getMultiEntityCompanies,fallbackLocalDateTime } from '../../../../../utility';
 import BranchDropdown from '../../../../ModuleSetup/Dropdown/BranchDropdown';
 import DepartmentDropdown from '../../../../ModuleSetup/Dropdown/DepartmentDropdown';
 import PdfDocument from '../../../pdfDocument';
@@ -13,6 +13,11 @@ import PreviewTable from '../../../previewTable';
 import AccessDenied from '../../../../../MainPage/Main/Dashboard/AccessDenied';
 import JobTitlesDropdown from '../../../../ModuleSetup/Dropdown/JobTitlesDropdown';
 import CompanyMultiSelectDropDown from '../../../../ModuleSetup/Dropdown/CompanyMultiSelectDropDown';
+import Bowser from 'bowser';
+
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const { Header, Body, Footer, Dialog } = Modal;
 
 
@@ -95,14 +100,19 @@ export default class AttendanceReport extends Component {
         let temp = {};
         Object.keys(element).forEach((key) => {
           if (selectedProperties.includes(key)) {
-            if(key != "actualClockIn" && key != "actualClockOut"){
+            if(key != "actualClockIn" && key != "actualClockOut" && key != "settingClockIn" && key != "settingClockOut"){
               temp[key] = element[key] == null || element[key] == "undefined"?"-":element[key];
             }else{
               temp[key]  = element[key] == null?"-":convertToUserTimeZone(element[key])
             }
           }
         }); 
-       
+        if(Object.keys(temp).length > 0) {
+                  temp['actualClockIn'] = (temp['actualClockIn']==='-')? "-":(isSafari?fallbackLocalDateTime(temp['actualClockIn']):temp['actualClockIn']);  
+                  temp['actualClockOut'] = (temp['actualClockOut']==='-')? "-":(isSafari?fallbackLocalDateTime(temp['actualClockOut']):temp['actualClockOut']); 
+                   temp['settingClockIn'] = (temp['settingClockIn']==='-')? "-":(isSafari?fallbackLocalDateTime(temp['settingClockIn']):temp['settingClockIn']);
+                   temp['settingClockOut'] = (temp['settingClockOut']==='-')? "-":(isSafari?fallbackLocalDateTime(temp['settingClockOut']):temp['settingClockOut']);                  
+                }
         selectedData.push(temp); 
       })
     }

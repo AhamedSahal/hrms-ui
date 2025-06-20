@@ -10,7 +10,7 @@ import { BsEyeFill, BsFillBookFill } from "react-icons/bs";
 
 import { itemRender } from "../../../../paginationfunction";
 
-import { getReadableDate, getTitle, getUserType, toLocalDateTime, verifyOrgLevelViewPermission, verifySelfViewPermission, verifyViewPermissionForTeam,getEmployeeId,getUserName } from '../../../../utility';
+import { getReadableDate, getTitle, getUserType, toLocalDateTime, verifyOrgLevelViewPermission, verifySelfViewPermission, verifyViewPermissionForTeam,getEmployeeId,getUserName,fallbackLocalDateTime } from '../../../../utility';
 
 import DepartmentDropdown from '../../../ModuleSetup/Dropdown/DepartmentDropdown';
 import BranchDropdown from '../../../ModuleSetup/Dropdown/BranchDropdown';
@@ -96,9 +96,10 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
   }
 
   // updated - meeting page
-  updateList = () => {
+  updateList = (data) => {
     this.setState({ showForm: false, showEmployeeCommentForm: false, showEvaluationForm: false });
     this.fetchList()
+    window.location.reload()
   }
 
   // update status 
@@ -137,11 +138,9 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
 
   }
   hideForm = () => {
-    if(this.props.oneOnOneStatus == 1 || this.state.oneOnOneStatus == 1){
-      this.setState({meetingSchedule : {reviewer: getEmployeeId(),name:getUserName(),id:0,teamValidation: true}})
-    }
+   
     this.setState({
-      showForm: false,
+            showForm: false,
       showEvaluationForm: false,
       showEmployeeCommentForm: false,
       performanceTemplate: undefined,
@@ -277,7 +276,7 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
 
       {/* employee comment */ }
       {
-        this.state.oneOnOneStatus == 0 && !text.employeeStatus && text.status == "COMPLETED" && items.push(<div> <a className="muiMenu_item" href="#" onClick={() => {
+        this.state.oneOnOneStatus == 0 && !text.employeeStatus && text.status == 1 && items.push(<div> <a className="muiMenu_item" href="#" onClick={() => {
           this.setState({ meetingId: text.id, showEmployeeCommentForm: true })
         }} >
           <i className="las la-check-double m-r-5"></i>  Employee Comment</a> </div>)
@@ -387,7 +386,7 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
       sorter: false,
       render: (text, record) => {
         return <>
-          <div>{toLocalDateTime(text.dateAndTime)}</div>
+          <div>{fallbackLocalDateTime(text.dateAndTime)}</div>
         </>
 
 
@@ -399,7 +398,7 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
       sorter: true,
       render: (text, record) => {
         return <>
-          <div>{text.status != "COMPLETED" ? (text.meetingType == 0 ? "In-person" : text.meetingType == 1 ? "MS Teams" : text.meetingType == 2 ? "Zoom" : text.other) : "-"}</div>
+          <div>{"-"}</div>
         </>
       }
     },
@@ -430,7 +429,7 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
       sorter: false,
       render: (text, record) => {
         return <>
-          <div>{text.status == "COMPLETED" ? (text.meetingType == 0 ? "In-person" : text.meetingType == 1 ? "MS Teams" : text.meetingType == 2 ? "Zoom" : text.other) : "-"}</div>
+          <div>{text.meetingType == 0 ? "In-person" : text.meetingType == 1 ? "MS Teams" : text.meetingType == 2 ? "Zoom" : text.other}</div>
         </>
       }
     },
@@ -470,7 +469,7 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
           />
         )}
         <Helmet>
-          <title>1-on-1 Meeting  | {getTitle()}</title>
+          <title>One-on-One Meeting  | {getTitle()}</title>
           <meta name="description" content="Branch page" />
         </Helmet>
         {/* Page Content */}
@@ -577,7 +576,7 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
               <div className="tableCard-body">
                 <div className="row " >
                   <div className="mt-3 col">
-                    <h3 className="page-titleText">{this.state.oneOnOneStatus == 0?"Reviews":"1-on-1 Meeting"} </h3>
+                    <h3 className="page-titleText">{this.state.oneOnOneStatus == 0?"Reviews":"One-on-One Meeting"} </h3>
                   </div>
                   {/* {!isAdmin && <div className='mt-2 float-right col-md-auto'>``
                         <i onClick={() => this.updateSelf()} className={this.state.self ? 'fa-2x fa fa-toggle-on text-success' : 'fa-2x fa fa-toggle-off text-danger'}></i>
@@ -642,7 +641,7 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
 
 
             <Header closeButton>
-              <h5 className="modal-title">Evaluation Form</h5>
+              <h5 className="modal-title"></h5>
 
             </Header>
             <Body>

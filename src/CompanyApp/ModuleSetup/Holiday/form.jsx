@@ -41,7 +41,7 @@ export default class HolidayForm extends Component {
         return null;
     }
     save = (data, action) => {
-        console.log("holidayyy: ", data.date)
+     
         data.date = toDateWithGMT(data.date);
         action.setSubmitting(true);
         saveHoliday(data).then(res => {

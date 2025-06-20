@@ -5,7 +5,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { itemRender } from '../../../paginationfunction';
-import { getReadableDate, getTitle,toLocalDateTime } from '../../../utility';
+import { getReadableDate, getTitle,toLocalDateTime,fallbackLocalDateTime } from '../../../utility';
 import EmployeeListColumn from '../../Employee/employeeListColumn';
 import LeaveAction from '../../Employee/leave/leaveAction';
 import { getTeamLeaveList, updateSelectedStatus } from './service';
@@ -21,7 +21,11 @@ import reject from '../../../assets/img/rejectimg.gif';
 import checkimg from '../../../assets/img/tickmarkimg.gif';
 import { Tooltip } from 'antd';
 import { getHalfdayCount } from '../../ModuleSetup/LeaveType/service';
+import Bowser from 'bowser';
 
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const { Header, Body, Footer, Dialog } = Modal;
 
 
@@ -310,10 +314,16 @@ export default class LeaveApproval extends Component {
       },
       {
         title: 'Approved on',
+        sorter: true,
         render: (text, record) => {
-          return <>
-            <div>{text.approvedOn != null?toLocalDateTime(text.approvedOn):"-"}</div>
-          </>
+          if (!text.approvedOn) return <div>-</div>;
+
+          if (isSafari) {
+            return <div>{fallbackLocalDateTime(text.approvedOn)}</div>;
+          } else {
+            const value = toLocalDateTime(text.approvedOn);
+            return <div>{value === null ? fallbackLocalDateTime(text.approvedOn) : value}</div>;
+          }
         }
       },
       {

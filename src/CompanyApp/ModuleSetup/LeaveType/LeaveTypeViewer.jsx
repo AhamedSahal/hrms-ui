@@ -42,7 +42,7 @@ export default class LeaveTypeView extends Component {
 
                         <div className="col-md-4" style={{ color: "#999", fontSize: "14px", paddingTop: "10px" }}>Applicable To
                         <div style={{ color: "#55687d", fontSize: "14px", fontWeight: "bolder" }}>
-                            {this.state.leaveType.applicableGender == 0 ? "Male" : this.state.leaveType.applicableGender == 1 ? "Female" : "All"}
+                            {this.state.leaveType.applicableGender == 0 ? "Male" : this.state.leaveType.applicableGender == 1 ? "Female" : this.state.leaveType.applicableGender == 2 ? "All" : "-"}
                         </div>
                         </div>
 

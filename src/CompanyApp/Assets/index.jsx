@@ -308,7 +308,7 @@ export default class Assets extends Component {
       },
       {
         title: 'Assigned To',
-
+        key: 'employee',
         width: 50,
         render: (text, record) => {
           return <> {text.employee?.id != null ? <EmployeeListColumn
@@ -406,7 +406,7 @@ export default class Assets extends Component {
                       q: e.target.value
                     })
                   }} type="text" className="form-control floating" />
-                  <label className="focus-label">Search by Name / Category / Serial Number / Employee Name / Employee Number</label>
+                  <label className="focus-label">Search by Name / Category / Serial Number / Employee Name</label>
                 </div>
               </div>
               <div className="col-md-3">
@@ -446,6 +446,8 @@ export default class Assets extends Component {
                       style={{ overflowX: 'auto' }}
                       columns={columns}
                       dataSource={[...data]}
+                      onChange={this.onTableDataChange}
+                      rowKey="id"
                     />
                   </div>
                 </div>

@@ -1,5 +1,5 @@
 import { Table } from 'antd';
-import React, { Component, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Modal, Col, Row, ButtonGroup, Anchor } from 'react-bootstrap';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -13,7 +13,6 @@ import DesignationDropdown from '../../ModuleSetup/Dropdown/DesignationDropdown'
 import EmployeeListColumn from '../employeeListColumn';
 import JobTitlesDropdown from '../../ModuleSetup/Dropdown/JobTitlesDropdown';
 import LeaveForm from './form';
-
 import LeaveAction from './leaveAction';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 import { deleteLeave, getLeaveList } from './service';
@@ -37,6 +36,7 @@ const browserName = browser.getBrowserName();
 const isSafari = browserName === 'Safari';
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 const { Header, Body, Footer, Dialog } = Modal;
+
 const Leave = () => {
   const { id } = useParams();
   const [state, setState] = useState({

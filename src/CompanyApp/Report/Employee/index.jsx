@@ -5,7 +5,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import * as XLSX from 'xlsx';
 import moment from "moment";
-import { camelize, exportToCsv, getTitle, toLocalDateTime, toLocalTime, verifyViewPermission, setAllChecked, exportToCsvSorted, getCompanyId,setAllCheckedEmployee, getMultiEntityCompanies } from '../../../utility';
+import { camelize, exportToCsv, getTitle, toLocalDateTime, toLocalTime, verifyViewPermission, setAllChecked, exportToCsvSorted, getCompanyId,setAllCheckedEmployee, getMultiEntityCompanies, fallbackLocalDateTime } from '../../../utility';
 import BranchDropdown from '../../ModuleSetup/Dropdown/BranchDropdown';
 import PdfDocument from '../pdfDocument';
 import PreviewTable from '../previewTable';
@@ -15,6 +15,11 @@ import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
 import { getOrgSettings } from '../../ModuleSetup/OrgSetup/service';
 import EntityDropdown from '../../ModuleSetup/Dropdown/EntityDropdown';
 import CompanyMultiSelectDropDown from '../../ModuleSetup/Dropdown/CompanyMultiSelectDropDown';
+import Bowser from 'bowser';
+
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const { Header, Body, Footer, Dialog } = Modal;
 
 
@@ -31,7 +36,7 @@ export default class EmployeeReport extends Component {
       designationId: "",
       jobTitleId: "",
       entityId: "",
-      selectedPropertiestemp :["employeeId", "firstName", "middleName","lastName","email","personalEmailAddress","doj","confirmationDate","companyName","locationName","departmentName","designationName","reportingManager","shiftStart","shiftEnd","weeklyOffs","status","statusComment","totalExperience","probationPeriod","dob","fatherName","motherName","gender","maritalStatus","bloodGroup","phone","religion","nationality","labourCardNo","noticePeriod","lwd","bankAccountHolderName","bankAccountNumber","bankName","ibanNumber","bankBranchLocation","swiftCode","routingCode","employerId","createdOn","modifiedOn"],
+      selectedPropertiestemp :["employeeId", "firstName", "middleName","lastName","email","personalEmailAddress","doj","confirmationDate","companyName","locationName","departmentName","designationName","reportingManager","weeklyOffs","status","statusComment","totalExperience","probationPeriod","dob","fatherName","motherName","gender","maritalStatus","bloodGroup","phone","religion","nationality","labourCardNo","noticePeriod","lwd","bankAccountHolderName","bankAccountNumber","bankName","ibanNumber","bankBranchLocation","swiftCode","routingCode","employerId","createdOn","modifiedOn"],
       selectedProperties:[],
       checkedValidation: true,
       orgsetup: false,
@@ -54,7 +59,7 @@ export default class EmployeeReport extends Component {
       if (res.status == "OK") {
         this.setState({ orgsetup: res.data.entity })
         if(res.data.entity){
-          let tempProperties = ["employeeId", "firstName", "middleName","lastName","email","personalEmailAddress","doj","confirmationDate","entityName","companyName","locationName","departmentName","designationName","reportingManager","shiftStart","shiftEnd","weeklyOffs","status","statusComment","totalExperience","probationPeriod","dob","fatherName","motherName","gender","maritalStatus","bloodGroup","phone","telephoneNo","religion","nationality","labourCardNo","noticePeriod","lwd","bankAccountHolderName","bankAccountNumber","bankName","ibanNumber","bankBranchLocation","swiftCode","routingCode","employerId","createdOn","modifiedOn"];
+          let tempProperties = ["employeeId", "firstName", "middleName","lastName","email","personalEmailAddress","doj","confirmationDate","entityName","companyName","locationName","departmentName","designationName","reportingManager","weeklyOffs","status","statusComment","totalExperience","probationPeriod","dob","fatherName","motherName","gender","maritalStatus","bloodGroup","phone","telephoneNo","religion","nationality","labourCardNo","noticePeriod","lwd","bankAccountHolderName","bankAccountNumber","bankName","ibanNumber","bankBranchLocation","swiftCode","routingCode","employerId","createdOn","modifiedOn"];
           this.setState({selectedPropertiestemp: tempProperties},() => {
             this.fetchList();
 
@@ -119,12 +124,10 @@ export default class EmployeeReport extends Component {
           }
         });
         if(Object.keys(temp).length > 0) {
-          temp['createdOn'] = toLocalDateTime(temp['createdOn']);
-          temp['modifiedOn'] = toLocalDateTime(temp['modifiedOn']);
-          temp['dob'] = temp['dob']?.split('T')[0];
-          temp['doj'] =temp['doj']?.split('T')[0];
-          temp['shiftEnd'] = toLocalTime(temp['shiftEnd']);
-          temp['shiftStart'] = toLocalTime(temp['shiftStart']);
+          temp['createdOn'] = (temp['createdOn']==='-')? "-":(isSafari?fallbackLocalDateTime(temp['createdOn']):(toLocalDateTime(temp['createdOn'])=== null ? fallbackLocalDateTime(temp['createdOn']):toLocalDateTime(temp['createdOn'])));
+          temp['modifiedOn'] = (temp['modifiedOn']==='-')? "-":(isSafari?fallbackLocalDateTime(temp['modifiedOn']):(toLocalDateTime(temp['modifiedOn'])=== null ? fallbackLocalDateTime(temp['modifiedOn']):toLocalDateTime(temp['modifiedOn'])));
+          temp['dob'] = (temp['dob']?.split('T')[0]==='-')? "-":(isSafari?fallbackLocalDateTime(temp['dob']?.split('T')[0]):temp['dob']?.split('T')[0] );    
+          temp['doj'] = (temp['doj']?.split('T')[0]==='-')? "-":(isSafari?fallbackLocalDateTime(temp['doj']?.split('T')[0]):temp['doj']?.split('T')[0] ); 
           temp['confirmationDate'] = temp['confirmationDate']?.split('T')[0];      
         }
         selectedData.push(temp);

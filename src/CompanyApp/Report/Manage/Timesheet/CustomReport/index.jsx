@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import moment from "moment";
-import { camelize, exportToCsv, getTitle,verifyViewPermission,setAllChecked, getCompanyId, getMultiEntityCompanies } from '../../../../../utility';
+import { camelize, exportToCsv, getTitle,verifyViewPermission,setAllChecked, getCompanyId, getMultiEntityCompanies, fallbackLocalDateTime,toLocalDateTime } from '../../../../../utility';
 import BranchDropdown from '../../../../ModuleSetup/Dropdown/BranchDropdown';
 import DepartmentDropdown from '../../../../ModuleSetup/Dropdown/DepartmentDropdown';
 import PdfDocument from '../../../pdfDocument';
@@ -13,6 +13,11 @@ import JobTitlesDropdown from '../../../../ModuleSetup/Dropdown/JobTitlesDropdow
 import PreviewTable from '../../../previewTable';
 import AccessDenied from '../../../../../MainPage/Main/Dashboard/AccessDenied';
 import CompanyMultiSelectDropDown from '../../../../ModuleSetup/Dropdown/CompanyMultiSelectDropDown';
+import Bowser from 'bowser';
+
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const { Header, Body, Footer, Dialog } = Modal;
 
 
@@ -94,6 +99,9 @@ export default class TimesheetReport extends Component {
             }
           }
         });
+         if(Object.keys(temp).length > 0) {
+                  temp['date'] = (temp['date']==='-')? "-":(isSafari?fallbackLocalDateTime(temp['date']):(toLocalDateTime(temp['date'])=== null ? fallbackLocalDateTime(temp['date']):toLocalDateTime(temp['date'])));      
+                }
         selectedData.push(temp);
       })
     }
@@ -218,7 +226,7 @@ export default class TimesheetReport extends Component {
               </div>
               <div className='row'>
                 {data && data.length > 0 && sortedProperties.map((a, i) => {
-                  console.log(data,"data")
+            
                   //checkbox to select which properties to consider in selectedProperties
                   return <div className='col-md-3' key={i}>
                     <input id='cbColor' type="checkbox" checked={selectedProperties.includes(a)} onChange={e => {

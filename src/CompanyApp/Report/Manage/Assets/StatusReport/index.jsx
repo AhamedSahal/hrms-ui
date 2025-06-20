@@ -5,14 +5,18 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import moment from "moment";
 import { toast } from "react-toastify";
-import { camelize,exportToCsv,exportToSortedCsvOrder, getCompanyId, getMultiEntityCompanies, getTitle, toLocalTime, verifyViewPermission } from '../../../../../utility';
+import { camelize, exportToCsv, exportToSortedCsvOrder, getCompanyId, getMultiEntityCompanies, getTitle, toLocalTime, verifyViewPermission, fallbackLocalDateTime } from '../../../../../utility';
 // import PdfDocument from '../../../pdfDocument';
 import PdfDocument from '../../../pdfDocument';
 import { getAssetStatusReport } from '../service';
 import PreviewTable from '../../../previewTable';
 import AccessDenied from '../../../../../MainPage/Main/Dashboard/AccessDenied';
 import CompanyMultiSelectDropDown from '../../../../ModuleSetup/Dropdown/CompanyMultiSelectDropDown';
+import Bowser from 'bowser';
 
+const browser = Bowser.getParser(window.navigator.userAgent);
+const browserName = browser.getBrowserName();
+const isSafari = browserName === 'Safari';
 const { Header, Body, Footer, Dialog } = Modal;
 
 
@@ -37,10 +41,10 @@ export default class AssetStatusReport extends Component {
       fromDate: firstDay.toISOString().split('T')[0],
       toDate: lastDay.toISOString().split('T')[0],
       companyId: getCompanyId(),
-      allCompany : false,
-      companies : getMultiEntityCompanies(),
+      allCompany: false,
+      companies: getMultiEntityCompanies(),
       selectedCompanies: [],
-      isFilter : true,
+      isFilter: true,
     };
   }
 
@@ -49,18 +53,18 @@ export default class AssetStatusReport extends Component {
   }
   fetchList = () => {
     if (verifyViewPermission("Assets Report")) {
-        getAssetStatusReport(this.state.q, this.state.fromDate, this.state.toDate > this.state.currentDate?this.state.currentDate:this.state.toDate,this.state.assetStatus,this.state.selectedCompanies).then(response => {
-        if(response.status == "OK"){
-        let data = response.data;
-        this.setState({
-          data
-        }, () => {
-          this.setAllChecked(true);
-        })
-      }else{
-        this.setState({data: []})
-        toast.error(response.message);      
-      }
+      getAssetStatusReport(this.state.q, this.state.fromDate, this.state.toDate > this.state.currentDate ? this.state.currentDate : this.state.toDate, this.state.assetStatus, this.state.selectedCompanies).then(response => {
+        if (response.status == "OK") {
+          let data = response.data;
+          this.setState({
+            data
+          }, () => {
+            this.setAllChecked(true);
+          })
+        } else {
+          this.setState({ data: [] })
+          toast.error(response.message);
+        }
       })
     }
   }
@@ -68,31 +72,31 @@ export default class AssetStatusReport extends Component {
 
     const data = this.state.data;
     let selectedProperties = [];
-    let sortedData= []
-     selectedProperties = ["name", "assetsCategory", "serialNo","brandName","modelNo","ram","storageCapacity","imeiNo","ipAddress","previousState","tag","currentLocation","purchaseFrom","purchaseDate","warrantyStartDate","warrantyEndDate","status","assignDate","assignedTo","previousOwner"];
-    this.setState({checkedValidation:checkAll == true?true: false})
+    let sortedData = []
+    selectedProperties = ["name", "assetsCategory", "serialNo", "brandName", "modelNo", "ram", "storageCapacity", "imeiNo", "ipAddress", "previousState", "tag", "currentLocation", "purchaseFrom", "purchaseDate", "warrantyStartDate", "warrantyEndDate", "status", "assignDate", "assignedTo", "previousOwner"];
+    this.setState({ checkedValidation: checkAll == true ? true : false })
     if (data && data.length > 0 && checkAll) {
       let tempselectedProperties = Object.keys(data[0]).filter(key => !selectedProperties.includes(key)).map(key => key);
       sortedData = [...selectedProperties, ...tempselectedProperties]
     }
     this.setState({
-      selectedProperties :sortedData
+      selectedProperties: sortedData
     })
   }
 
   handleChange = (selectedOptions) => {
     const selectedCompanies = selectedOptions.map((option) => option.value);
     this.setState((prevState) => ({
-      selectedCompanies ,
-      isFilter: selectedCompanies.length === 1 || selectedCompanies.length === 0 ,
+      selectedCompanies,
+      isFilter: selectedCompanies.length === 1 || selectedCompanies.length === 0,
       companyId: selectedCompanies.length === 1 ? selectedCompanies[0] : '',
       branchId: selectedCompanies.length > 1 ? '' : prevState.branchId,
-      jobTitleId : selectedCompanies.length > 1 ? '' : prevState.jobTitleId,
-      departmentId : selectedCompanies.length > 1 ? '' : prevState.departmentId,
-  }));
+      jobTitleId: selectedCompanies.length > 1 ? '' : prevState.jobTitleId,
+      departmentId: selectedCompanies.length > 1 ? '' : prevState.departmentId,
+    }));
   };
   render() {
-    const { data, selectedProperties,isFilter, showPdf, showCsv,companyId,companies } = this.state;
+    const { data, selectedProperties, isFilter, showPdf, showCsv, companyId, companies } = this.state;
     const currentDate = new Date().toISOString().split('T')[0];
     let selectedData = [];
 
@@ -101,27 +105,34 @@ export default class AssetStatusReport extends Component {
         let temp = {};
         Object.keys(element).forEach((key) => {
           if (selectedProperties.includes(key)) {
-            if(key != "warrantyEndDate" && key != "completedDate" && key != "warrantyStartDate" && key != "assignDate" && key != "purchaseDate"){
-              if(key == "status"){
-                temp[key] = element[key] == "AVAILABLE"?"Available":element[key] == "APPROVED"?"Allocated":element[key] == "PENDING"?(element["pendingStatus"] == "RETURN"?"Return Request":"Assign Request"):"-"
-              }else{
-            temp[key] = element[key] == null || element[key] == "undefined" ||  element[key] == "" ? "-": element[key];
-                    
+            if (key != "warrantyEndDate" && key != "completedDate" && key != "warrantyStartDate" && key != "assignDate" && key != "purchaseDate") {
+              if (key == "status") {
+                temp[key] = element[key] == "AVAILABLE" ? "Available" : element[key] == "APPROVED" ? "Allocated" : element[key] == "PENDING" ? (element["pendingStatus"] == "RETURN" ? "Return Request" : "Assign Request") : "-"
+              } else {
+                temp[key] = element[key] == null || element[key] == "undefined" || element[key] == "" ? "-" : element[key];
+
               }
-            }else{
-                temp[key]  = element[key] == null?"-":moment(element[key]).format("ll") 
+            } else {
+              temp[key] = element[key] == null ? "-" : moment(element[key]).format("ll")
             }
           }
         });
+        if (Object.keys(temp).length > 0) {
+          temp['warrantyEndDate'] = (temp['warrantyEndDate'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['warrantyEndDate']) : temp['warrantyEndDate']);
+          temp['warrantyStartDate'] = (temp['warrantyStartDate'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['warrantyStartDate']) : temp['warrantyStartDate']);
+          temp['returnOn'] = (temp['returnOn'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['returnOn']) : temp['returnOn']);
+          temp['assignDate'] = (temp['assignDate'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['assignDate']) : temp['assignDate']);
+          temp['purchaseDate'] = (temp['purchaseDate'] === '-') ? "-" : (isSafari ? fallbackLocalDateTime(temp['purchaseDate']) : temp['purchaseDate']);
+        }
         selectedData.push(temp);
       })
     }
-    
+
     return (
       <div className="insidePageDiv">
         <Helmet>
           <title>Asset | {getTitle()}</title>
-        <meta name="description" content="Login page" />
+          <meta name="description" content="Login page" />
         </Helmet>
         {/* Page Content */}
         <div className="page-containerDocList content container-fluid" style={{ marginTop: "20px" }}>
@@ -140,25 +151,25 @@ export default class AssetStatusReport extends Component {
           {verifyViewPermission("Assets Report") && <><div className="card p-2">
             <div className="row">
 
-            <div className="col-sm-6 col-md-3">
-              <div className="form-group form-focus">
+              <div className="col-sm-6 col-md-3">
+                <div className="form-group form-focus">
                   <select
                     className="form-control floating"
                     defaultValue={this.state.assetStatus}
                     onChange={(e) => {
-                      this.setState({assetStatus: e.target.value})
+                      this.setState({ assetStatus: e.target.value })
                     }}
                   >
                     <option value="">All</option>
                     <option value="0">Available</option>
                     <option value="1">Allocated</option>
                     <option value="3">Acknowledge</option>
-            
+
                   </select>
+                </div>
               </div>
-              </div>
-              
-             
+
+
               <div className="col-sm-6 col-md-3">
 
                 <div className="form-group form-focus">
@@ -174,7 +185,7 @@ export default class AssetStatusReport extends Component {
 
               <div className="col-sm-6 col-md-3">
                 <div className="form-group form-focus">
-                  <input value={this.state.toDate > this.state.currentDate?this.state.currentDate: this.state.toDate} max={currentDate}  onChange={e => {
+                  <input value={this.state.toDate > this.state.currentDate ? this.state.currentDate : this.state.toDate} max={currentDate} onChange={e => {
                     this.setState({
                       toDate: e.target.value
                     })
@@ -184,23 +195,23 @@ export default class AssetStatusReport extends Component {
 
               </div>
 
-           
+
 
               <div className="col-md-2">
                 <a href="#" onClick={() => {
                   this.fetchList();
                 }} className="btn btn-success btn-block"> Search </a>
               </div>
-            
-            {this.state.companies.length > 1 && 
+
+              {this.state.companies.length > 1 &&
                 <div className='col-sm-6 col-md-6'>
-                    <div className="form-group form-focus">
-                      <CompanyMultiSelectDropDown value={this.state.selectedCompanies} 
-                        onChange={(e) => {this.handleChange(e)}}>
-                      </CompanyMultiSelectDropDown>
-                    </div>
+                  <div className="form-group form-focus">
+                    <CompanyMultiSelectDropDown value={this.state.selectedCompanies}
+                      onChange={(e) => { this.handleChange(e) }}>
+                    </CompanyMultiSelectDropDown>
                   </div>
-                }
+                </div>
+              }
             </div>
             <div className="row">
               <div className="col-md-12">
@@ -209,7 +220,7 @@ export default class AssetStatusReport extends Component {
                   {selectedData && selectedData.length > 0 &&
                     <ButtonGroup>
                       <Button className='add-btn' variant='warning' size='sm' onClick={() => {
-                        exportToSortedCsvOrder(selectedData, "AssetStatus", "AssetStatus",selectedProperties)
+                        exportToSortedCsvOrder(selectedData, "AssetStatus", "AssetStatus", selectedProperties)
                       }}>
                         <i className="fa fa-file-excel-o"></i> Export to CSV
                       </Button>

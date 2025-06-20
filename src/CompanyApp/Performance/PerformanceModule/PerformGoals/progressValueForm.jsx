@@ -5,6 +5,7 @@ import { FormGroup } from 'react-bootstrap';
 import { BsFileEarmarkCheck, BsPaperclip } from "react-icons/bs";
 import { updateGoalStatus, updateSubGoalStatus } from './service';
 import { toast } from 'react-toastify';
+import { Tooltip } from 'antd';
 
 
 
@@ -138,6 +139,12 @@ class ProgressValueForm extends Component {
                                     }}
                                 >
                                     <BsPaperclip size={17} /> Add Attachments
+                                    <Tooltip title="Attachment must be in DOCX,JPEG,PNG,XLSX,PPT format only and lesser than 5MB">
+                                        <i
+                                            className="fa fa-info-circle"
+                                            style={{ marginLeft: '8px', marginBottom: '5px', cursor: 'pointer' }}
+                                        ></i>
+                                    </Tooltip>
                                 </label>
                                 <input
                                     id={uniqueId}
