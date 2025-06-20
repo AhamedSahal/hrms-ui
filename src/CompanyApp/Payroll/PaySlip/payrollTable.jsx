@@ -558,7 +558,7 @@ export default class PayrollTable extends Component {
                 dataIndex: 'status',
                 key: 'status',
                 align: 'center',
-                width: 100,
+                width: 120,
                 key: '13',
                 render: (text, record) => {
                     return <><div >{getStyle(text)}</div>
@@ -964,7 +964,7 @@ export default class PayrollTable extends Component {
 
                                             <div style={{}}>
                                                 <span>Total Gross Salary</span>
-                                                <h4 className='mb-0'>{this.state.defaultCurrencyName != ""?this.state.defaultCurrencyName.split('-')[0]:""} {this.state.dashboardInfoData == "" || this.state.dashboardInfoData == null || this.state.dashboardInfoData?.grossSalary == null ? 0 : Math.abs(this.state.dashboardInfoData?.grossSalary).toFixed(2)}</h4>
+                                                <h4 className='text-dark mb-0'>{this.state.defaultCurrencyName != ""?this.state.defaultCurrencyName.split('-')[0]:""} {this.state.dashboardInfoData == "" || this.state.dashboardInfoData == null || this.state.dashboardInfoData?.grossSalary == null ? 0 : Math.abs(this.state.dashboardInfoData?.grossSalary).toFixed(2)}</h4>
 
                                             </div>
                                         </div>
@@ -990,7 +990,7 @@ export default class PayrollTable extends Component {
                                             </div>
                                             <div style={{}}>
                                                 <span>Total Net Pay</span>
-                                                <h4 className='mb-0'>{this.state.defaultCurrencyName != ""?this.state.defaultCurrencyName.split('-')[0]:""} {this.state.dashboardInfoData == "" || this.state.dashboardInfoData == null || this.state.dashboardInfoData?.netPay == null ? 0 : Math.abs(this.state.dashboardInfoData?.netPay).toFixed(2)}</h4>
+                                                <h4 className='text-dark mb-0'>{this.state.defaultCurrencyName != ""?this.state.defaultCurrencyName.split('-')[0]:""} {this.state.dashboardInfoData == "" || this.state.dashboardInfoData == null || this.state.dashboardInfoData?.netPay == null ? 0 : Math.abs(this.state.dashboardInfoData?.netPay).toFixed(2)}</h4>
 
                                             </div>
                                         </div>
@@ -1012,7 +1012,7 @@ export default class PayrollTable extends Component {
                                             </div>
                                             <div style={{}}>
                                                 <span>Total Employees</span>
-                                                <h4 className='mb-0'>{this.state.dashboardInfoData == "" || this.state.dashboardInfoData == null ||  this.state.dashboardInfoData?.employeesCount == null ? 0 : this.state.dashboardInfoData?.employeesCount}</h4>
+                                                <h4 className='text-dark mb-0'>{this.state.dashboardInfoData == "" || this.state.dashboardInfoData == null ||  this.state.dashboardInfoData?.employeesCount == null ? 0 : this.state.dashboardInfoData?.employeesCount}</h4>
 
                                             </div>
                                         </div>
@@ -1038,7 +1038,7 @@ export default class PayrollTable extends Component {
                                             </div>
                                             <div style={{}}>
                                                 <span>Total Deduction</span>
-                                                <h4 className='mb-0'>{this.state.defaultCurrencyName != ""?this.state.defaultCurrencyName.split('-')[0]:""} {this.state.dashboardInfoData == "" || this.state.dashboardInfoData == null || this.state.dashboardInfoData?.deduction == null ? 0 : Math.abs(this.state.dashboardInfoData?.deduction).toFixed(2)}</h4>
+                                                <h4 className='text-dark mb-0'>{this.state.defaultCurrencyName != ""?this.state.defaultCurrencyName.split('-')[0]:""} {this.state.dashboardInfoData == "" || this.state.dashboardInfoData == null || this.state.dashboardInfoData?.deduction == null ? 0 : Math.abs(this.state.dashboardInfoData?.deduction).toFixed(2)}</h4>
 
                                             </div>
                                         </div>
@@ -1252,7 +1252,7 @@ export default class PayrollTable extends Component {
                                         </select>
                                     </FormGroup>
 
-                                    <input type="submit" className="btn btn-primary" value={"Update Status"} />
+                                    <input type="submit" className="mt-3 btn btn-primary" value={"Update Status"} />
 
                                 </Form>
                             )

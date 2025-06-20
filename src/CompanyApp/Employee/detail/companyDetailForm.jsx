@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
-import { getUserType, toLocalTime, toLocalCalendarTime, toUTCCalendarTime, verifyEditPermission, getPermission, getRoleId, verifyViewPermission, verifyRoleEditPermissionforSelf, verifyViewPermissionForTeam, verifyOrgLevelViewPermission, getReadableDate } from '../../../utility';
+import { getUserType, toLocalTime, toLocalCalendarTime, toUTCCalendarTime, verifyEditPermission, getPermission, getRoleId, verifyViewPermission, verifyRoleEditPermissionforSelf, verifyViewPermissionForTeam, verifyOrgLevelViewPermission, getReadableDate, toDateWithGMT } from '../../../utility';
 import BranchDropdown from '../../ModuleSetup/Dropdown/BranchDropdown';
 import DepartmentDropdown from '../../ModuleSetup/Dropdown/DepartmentDropdown';
 import EmployeeDropdown from '../../ModuleSetup/Dropdown/EmployeeDropdown';
@@ -74,6 +74,17 @@ export default class CompanyDetailEmployeeForm extends Component {
     }
 
     componentDidMount() {
+        this.fetchList();
+
+        // entity is present validation
+        getOrgSettings().then(res => {
+            if (res.status == "OK") {
+              this.setState({ orgsetup: res.data.entity })
+            }
+          })
+    }
+
+    fetchList = () => {
         getCompanyInformation(this.state.id).then(res => {
             if (res.status == "OK") {
                 this.bindState(res.data)
@@ -82,13 +93,6 @@ export default class CompanyDetailEmployeeForm extends Component {
             }
 
         })
-
-        // entity is present validation
-        getOrgSettings().then(res => {
-            if (res.status == "OK") {
-              this.setState({ orgsetup: res.data.entity })
-            }
-          })
     }
 
     bindState = (company) => {
@@ -125,7 +129,8 @@ export default class CompanyDetailEmployeeForm extends Component {
         updateCompanyInformation(data).then(res => {
             if (res.status == "OK") {
                 toast.success(res.message);
-                window.location.reload();
+                this.setState({ editable: false })
+                 this.fetchList();
                 // this.bindState(res.data);
                 // this.setState({
                 //     editable: false

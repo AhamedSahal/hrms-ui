@@ -196,9 +196,9 @@ export default class TimesheetApproval extends Component {
       });
     } else if (status === 'submit') {
       this.setState({
-        alertMsg: 'Submited!',
+        alertMsg: 'Submitted!',
         imgTag: checkimg,
-        desc: 'Timesheet submited successfully',
+        desc: 'Timesheet submitted successfully',
         showAlert: true
       });
     } else { }

@@ -131,7 +131,7 @@ export default class RecognitionGiven extends Component {
               }) : <div> <Empty/> </div>}
             </div>
 
-            <ul style={{ placeItems: 'center' }} className="p-1 ant-pagination ant-table-pagination ">
+            <ul  className="p-1 ant-pagination ant-table-pagination ">
               <Pagination
                 current={currentPage}
                 total={totalRecords}

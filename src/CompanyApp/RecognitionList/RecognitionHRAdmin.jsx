@@ -128,7 +128,7 @@ export default class RecognitionMainList extends Component {
 
 
             </div>
-            <ul style={{placeItems: 'center'}} className="p-1 ant-pagination ant-table-pagination ">
+            <ul  className="p-1 ant-pagination ant-table-pagination ">
               <Pagination
                 current={currentPage}
                 total={totalRecords}

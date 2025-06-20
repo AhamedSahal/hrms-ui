@@ -25,14 +25,14 @@ export default class PayVarianceForm extends Component {
                 id: 0,
                 employeeId: props.employeeId,
                 fixDuration: false,
-                amount:'',
+                amount: '',
             },
-            amount: payVariance.amount? payVariance.amount:'',
+            amount: payVariance.amount ? payVariance.amount : '',
             installmentDetails: [],
         }
     }
 
-    componentDidMount () {
+    componentDidMount() {
         this.calculateInstallments()
     }
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -62,42 +62,43 @@ export default class PayVarianceForm extends Component {
         const firstDayOfMonth = moment(date).startOf('month');
         const formattedFirstDay = firstDayOfMonth.format('YYYY-MM-DD');
         this.setState(
-          (prevState) => ({
-            payVariance: {
-              ...prevState.payVariance,
-              fromDate: formattedFirstDay,
-            },
-          }),() => { this.calculateInstallments();
-         }
+            (prevState) => ({
+                payVariance: {
+                    ...prevState.payVariance,
+                    fromDate: formattedFirstDay,
+                },
+            }), () => {
+                this.calculateInstallments();
+            }
         );
-      };
-      
+    };
+
     handleToDateChange = (date) => {
         const toDate = moment(date).endOf('month').format('YYYY-MM-DD');
-        if(toDate < this.state.payVariance.fromDate){
+        if (toDate < this.state.payVariance.fromDate) {
             toast.error("End Month should be greater then Start Month ");
         }
         const updatedPayVariance = { ...this.state.payVariance, toDate };
-      
+
         this.setState({ payVariance: updatedPayVariance }, () => {
-          this.calculateInstallments();
+            this.calculateInstallments();
         });
-      };
+    };
 
     save = (data, action) => {
-        if(data.toDate < data.fromDate){
+        if (data.toDate < data.fromDate) {
             return toast.error("End Month should be greater then Start Month");
         }
         if (!data.fixDuration) {
             const currentMonthStart = moment().startOf('month').format('YYYY-MM-DD');
             const currentMonthEnd = moment().endOf('month').format('YYYY-MM-DD');
-    
+
             data.fromDate = new Date(`${currentMonthStart} GMT`);
             data.toDate = new Date(`${currentMonthEnd} GMT`);
-        } 
+        }
         else {
-        data["fromDate"] = new Date(`${data["fromDate"]} GMT`);
-        data["toDate"] = new Date(`${data["toDate"]} GMT`);
+            data["fromDate"] = new Date(`${data["fromDate"]} GMT`);
+            data["toDate"] = new Date(`${data["toDate"]} GMT`);
         }
         action.setSubmitting(true);
         savePayVariance(data).then(res => {
@@ -114,32 +115,32 @@ export default class PayVarianceForm extends Component {
             action.setSubmitting(false);
         })
     }
-      
+
     calculateInstallments = () => {
         const { payVariance } = this.state;
-        const { fromDate, toDate ,amount} = payVariance;
-      
+        const { fromDate, toDate, amount } = payVariance;
+
         const startDate = moment(fromDate);
         const endDate = moment(toDate);
         const totalMonths = endDate.diff(startDate, 'months') + 1;
-      
+
         const installmentAmount = parseFloat(amount) / totalMonths;
         const installmentDetails = [];
-      
+
         for (let i = 0; i < totalMonths; i++) {
-          const currentMonth = startDate.clone().add(i, 'months');
-          const monthYear = currentMonth.format('MMMM YYYY');
-      
-          installmentDetails.push({
-            installmentNumber: i + 1,
-            monthYear: monthYear,
-            amount: installmentAmount.toFixed(2),
-          });
+            const currentMonth = startDate.clone().add(i, 'months');
+            const monthYear = currentMonth.format('MMMM YYYY');
+
+            installmentDetails.push({
+                installmentNumber: i + 1,
+                monthYear: monthYear,
+                amount: installmentAmount.toFixed(2),
+            });
         }
-      
+
         this.setState({ installmentDetails });
-      };
-    
+    };
+
     render() {
         const { payVariance, installmentDetails } = this.state;
         return (
@@ -149,7 +150,7 @@ export default class PayVarianceForm extends Component {
                     enableReinitialize={true}
                     initialValues={this.state.payVariance}
                     onSubmit={this.save}
-                    // validationSchema={PayVarianceSchema}
+                // validationSchema={PayVarianceSchema}
                 >
                     {({
                         values,
@@ -178,14 +179,14 @@ export default class PayVarianceForm extends Component {
                                     <span style={{ color: "red" }}>*</span>
                                 </label>
                                 <Field name="amount" required className="form-control"
-                                    onChange={(e) => { 
+                                    onChange={(e) => {
                                         let { payVariance } = this.state;
                                         payVariance.amount = e.target.value;
-                                        setFieldValue("amount", e.target.value); 
+                                        setFieldValue("amount", e.target.value);
                                         this.setState({ payVariance });
                                         this.calculateInstallments();
                                     }}
-                                    />
+                                />
                                 <ErrorMessage name="amount">
                                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                 </ErrorMessage>
@@ -205,38 +206,50 @@ export default class PayVarianceForm extends Component {
                             </FormGroup>
                             <div className="row">
                                 {this.state.payVariance.fixDuration && <>
-                                    <div className="col-md-6">
+                                    <div className="pl-0 col-md-6">
                                         <div className="form-group col-md-10">
-                                        <label>Start Month
-                                            <span style={{ color: "red" }}>*</span>
-                                        </label>
-                                        <DatePicker picker="month" allowClear={true}
-                                            onChange={(date) => { this.handleDateChange(date);
-                                                const startDate = moment(date).startOf('month').format('YYYY-MM-DD');
-                                                let { payVariance } = this.state;
-                                                payVariance.fromDate = startDate;
+                                            <label>Start Month
+                                                <span style={{ color: "red" }}>*</span>
+                                            </label>
+                                            <Field
+                                                name="date"
+                                                type="month"
+                                                className="form-control"
+                                                onChange={(date) => {
+                                                    this.handleDateChange(date);
+                                                    const startDate = moment(date).startOf('month').format('YYYY-MM-DD');
+                                                    let { payVariance } = this.state;
+                                                    payVariance.fromDate = startDate;
+                                                    setFieldValue("fromDate", startDate);
+                                                    this.setState({ payVariance });
+                                                }}
+                                                defaultValue={payVariance?.fromDate}
 
-                                                setFieldValue("fromDate", startDate);
-                                                this.setState({ payVariance });
-                                            }} className='neo-datePicker' placeholder={'YYYY-MM'} value={moment(payVariance.fromDate ? payVariance.fromDate : moment(), 'YYYY-MM')}
-                                            clearIcon={null}/>
+                                            />
                                         </div>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="pl-0 col-md-6">
                                         <div className="form-group col-md-10">
-                                        <label>End Month
-                                            <span style={{ color: "red" }}>*</span>
-                                        </label>
-                                        <DatePicker picker="month" allowClear={true}
-                                            onChange={(date) => {this.handleToDateChange(date);
-                                                const toDate = moment(date).endOf('month').format('YYYY-MM-DD');
-                                                let { payVariance } = this.state;
-                                                payVariance.toDate = toDate;
+                                            <label>End Month
+                                                <span style={{ color: "red" }}>*</span>
+                                            </label>
+                                            <Field
+                                                name="date"
+                                                type="month"
+                                                className="form-control"
+                                                onChange={(date) => {
+                                                    this.handleToDateChange(date);
+                                                    const toDate = moment(date).endOf('month').format('YYYY-MM-DD');
+                                                    let { payVariance } = this.state;
+                                                    payVariance.toDate = toDate;
 
-                                                setFieldValue("toDate", toDate);
-                                                this.setState({ payVariance });
-                                            }} className='neo-datePicker' placeholder={'YYYY-MM'} value={moment(payVariance.toDate ? payVariance.toDate : moment(), 'YYYY-MM')}
-                                            clearIcon={null}/>
+                                                    setFieldValue("toDate", toDate);
+                                                    this.setState({ payVariance });
+                                                }}
+                                                defaultValue={payVariance?.toDate}
+
+                                            />
+
                                         </div>
                                     </div>
                                 </>}
@@ -253,27 +266,27 @@ export default class PayVarianceForm extends Component {
                             {payVariance.fixDuration && payVariance.fromDate && payVariance.toDate && (
                                 <div className="col-md-12">
                                     <div className="expireDocs-table">
-                                    <table className="table">
-                                        <thead>
-                                        <tr style={{ borderBottom: "none", background: '#c4c4c4' }}>
-                                            <th style={{ fontWeight: "600" }}>Installment</th>
-                                            <th style={{ fontWeight: "600" }}>Month & Year</th>
-                                            <th style={{ fontWeight: "600" }}>Amount</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {installmentDetails.map((installment, index) => (
-                                            <tr key={index}>
-                                            <td>{installment.installmentNumber}</td>
-                                            <td>{installment.monthYear}</td>
-                                            <td>{installment.amount}</td>
-                                            </tr>
-                                        ))}
-                                        </tbody>
-                                    </table>
+                                        <table className="table">
+                                            <thead>
+                                                <tr style={{ borderBottom: "none", background: '#c4c4c4' }}>
+                                                    <th style={{ fontWeight: "600" }}>Installment</th>
+                                                    <th style={{ fontWeight: "600" }}>Month & Year</th>
+                                                    <th style={{ fontWeight: "600" }}>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {installmentDetails.map((installment, index) => (
+                                                    <tr key={index}>
+                                                        <td>{installment.installmentNumber}</td>
+                                                        <td>{installment.monthYear}</td>
+                                                        <td>{installment.amount}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-                                )}
+                            )}
                             <input type="submit" className="btn btn-primary" value={this.state.payVariance.id > 0 ? "Update" : "Save"} />
 
                         </Form>

@@ -203,7 +203,7 @@ export default class LeaveApproval extends Component {
       });
     } else if (status === 'submit') {
       this.setState({
-        alertMsg: 'Submited!',
+        alertMsg: 'Submitted!',
         imgTag: checkimg,
         showAlert: true
       });

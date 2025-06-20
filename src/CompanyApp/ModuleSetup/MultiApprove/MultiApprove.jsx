@@ -88,7 +88,7 @@ export default class MultiApprove extends Component {
         return (
             <>
 
-                <div className="page-container content container-fluid">
+                <div className="mt-4 page-container content container-fluid">
                     {/* /Page Header */}
                     <div className="row">
                         {verifyOrgLevelViewPermission("Module Setup Owner") &&

@@ -86,7 +86,7 @@ export default class AttendancePermissionForm extends Component {
                     enableReinitialize={true}
                     initialValues={this.state.permissionType}
                     onSubmit={this.save}
-                    validationSchema={PermissionTypeSchema}
+                    // validationSchema={PermissionTypeSchema}
                 >
                     {({
                         values,

@@ -208,9 +208,9 @@ export default class EmployeePerformance1on1MeetingModule extends Component {
   showAlert = (status) => {
     if (status === 'submit') {
       this.setState({
-        alertMsg: 'Submited!',
+        alertMsg: 'Submitted!',
         imgTag: checkimg,
-        desc: 'Submited successfully',
+        desc: 'Submitted successfully',
         showAlert: true
       });
     }

@@ -192,9 +192,9 @@ export default class EmployeePerformGoalsList extends Component {
     showAlert = (status) => {
         if (status === 'submit') {
             this.setState({
-                alertMsg: 'Submited!',
+                alertMsg: 'Submitted!',
                 imgTag: checkimg,
-                desc: 'Submited successfully',
+                desc: 'Submitted successfully',
                 showAlert: true
             });
         }

@@ -197,7 +197,7 @@ const Leave = () => {
     } else if (status === 'submit') {
       setState(prevState => ({
         ...prevState,
-        alertMsg: 'Submited!',
+        alertMsg: 'Submitted!',
         imgTag: checkimg,
         showAlert: true
       }));

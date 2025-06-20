@@ -6,28 +6,28 @@ export const RosterSchema = Yup.object().shape({
     rotationReq: Yup.string()
         .required('Please choose rotation required'),  
     shiftrepeat: Yup.number()
-        .when('rotationReq', {
-            is: 'no',
-            then: Yup.number().notRequired(),
-            otherwise: Yup.number().min(1, 'Shift Repetition days required').required('Shift Repetition days required')
+        .when('rotationReq', ([rotationReq], schema) => {
+            return rotationReq === 'no'
+                ? schema.notRequired()
+                : schema.min(1, 'Shift Repetition days required').required('Shift Repetition days required');
         }),
-    shiftId:Yup.number()
-        .when('rotationReq', {
-            is: 'yes',
-            then: Yup.number().notRequired(),
-            otherwise: Yup.number().min(1, 'Please select shift').required('Please select shift')
-        }),
+    // shiftId:Yup.number()
+    //     .when('rotationReq', ([rotationReq], schema) => {
+    //         return rotationReq === 'no'
+    //             ? schema.notRequired()
+    //             : schema.min(1, 'Please select shift').required('Please select shift');
+    //     }),
     weekoffId: Yup.number()
-        .min(1,'Please select weekly off')
-        .required('Please select weekly off'),
+    .required('Week off is required')
+    .moreThan(0, 'Please select a valid weekly off'),
     effectivedate: Yup.string()
-        .required('Please provide effective date'), 
+        .required('Please provide effective date'),
     enddatenever: Yup.string()
         .required('Please choose Roster ends'), 
     enddate: Yup.string()
-    .when('enddatenever', {
-        is: 'yes',
-        then: Yup.string().required('Please provide end date'),
-        otherwise: Yup.string().notRequired()
+    .when('enddatenever', ([enddatenever], schema) => {
+        return enddatenever === 'yes'
+            ? schema.required('Please provide end date')
+            : schema.notRequired();
     }),
 });
