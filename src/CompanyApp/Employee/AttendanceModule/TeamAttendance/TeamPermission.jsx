@@ -205,7 +205,6 @@ export default class TeamPermission extends Component {
 
 
   render() {
-    let isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
     const { data, totalPages, totalRecords, currentPage, size, selected, buttonState } = this.state
     let startRange = ((currentPage - 1) * size) + 1;
     let endRange = ((currentPage) * (size + 1)) - 1;

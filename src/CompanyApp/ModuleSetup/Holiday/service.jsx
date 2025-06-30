@@ -13,7 +13,7 @@ export function getHolidayist(searchText, pageNumber, pageSize, sort,id,year) {
 }
 
 export function getAllHolidayList(searchText, pageNumber, pageSize, sort,id,year) {
-    let path = `${servicePath}/holidayList?${getPaginationQueryString(searchText, pageNumber, pageSize, sort)}&locationId=${id}&year=${year}`;
+    let path = `${servicePath}/holidayList?&locationId=${id}&year=${year}`;
     return getWithAuth(path).then(res => {
         return Promise.resolve(res.data);
     }).catch(err => {

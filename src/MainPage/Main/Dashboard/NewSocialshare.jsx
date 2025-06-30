@@ -247,10 +247,8 @@ export default class NewSocialShare extends Component {
         this.getupComingHolidays();
         this.getupComingAnnouncement();
         this.getUpComingCelebration();
-        if (isCompanyAdmin) {
-            this.getUpComingHire();
-            this.getUpComingLeaving();
-        }
+        this.getUpComingHire();
+        this.getUpComingLeaving();
         this.getDocumentExpiry();
         this.getDocumentExpiryMonth();
         this.getMissingInfoCount();
@@ -1719,7 +1717,7 @@ export default class NewSocialShare extends Component {
                                     <div className='eventScroll'>
                                         {this.state.upComingLeaving.length > 0 ? this.state.upComingLeaving.map((data, index) => (
                                             <div hidden={!this.state.newHire} className='container-fluid' id='eventElements'>
-                                                <Tooltip className='d-flex' title={`${data.firstName} ${data.middleName} ${data.lastName}`} 
+                                                <Tooltip className='d-flex' title={`${data.firstName} ${data.middleName} ${data.lastName}`}
                                                     placement="top">
                                                     <div >
                                                         <EmployeeProfilePhoto className="events-proPic" id={data.id} alt={data.firstName} />
@@ -1731,7 +1729,7 @@ export default class NewSocialShare extends Component {
 
                                         {this.state.upComingHire.length > 0 ? this.state.upComingHire.map((data, index) => (
                                             <div hidden={this.state.newHire} className='container-fluid' id='eventElements'>
-                                                <Tooltip className='d-flex' title={`${data.firstName} ${data.middleName} ${data.lastName}`}  placement="top">
+                                                <Tooltip className='d-flex' title={`${data.firstName} ${data.middleName} ${data.lastName}`} placement="top">
                                                     <div >
                                                         <EmployeeProfilePhoto className="events-proPic" id={data.id} alt={data.firstName} />
                                                     </div>

@@ -14,7 +14,7 @@ const Chatbot = ({ closeChatbot }) => {
         const userName = getUserName();
         const greeting = {
             role: "bot",
-            content: `Hello${userName ? ` ${userName}` : ""}! How can I assist you today?`
+            content: `Hello,${userName ? ` ${userName}` : ""}! How can I assist you today?`
         };
         setMessages([greeting]);
     }, []);
@@ -87,9 +87,16 @@ const Chatbot = ({ closeChatbot }) => {
                         className={`${msg.role === "user" ? "userChatSpace" : "botMsgSpace"}`}
                         key={index}
                     >
-                        {typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content.content)}
+                        {typeof msg.content === "string" ? (
+                            msg.content.split('\n').map((line, idx) => (
+                                <p key={idx} style={{ margin: 0 }}>{line}</p>
+                            ))
+                        ) : (
+                            JSON.stringify(msg.content.content)
+                        )}
                     </div>
                 ))}
+
                 {loading && <div>Bot is typing...</div>}
             </div>
             <div className="chat-input">
