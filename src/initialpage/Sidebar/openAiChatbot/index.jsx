@@ -18,8 +18,6 @@ const Chatbot = ({ closeChatbot }) => {
         };
         setMessages([greeting]);
     }, []);
-    const API_URL = import.meta.env.VITE_BOT_API_URL;
-
     const sendMessage = async () => {
         if (!input.trim()) return;
 
@@ -34,7 +32,7 @@ const Chatbot = ({ closeChatbot }) => {
         setLoading(true);
 
         try {
-            const response = await axios.post(API_URL, {
+            const response = await axios.post("https://chatbot-service-six.vercel.app/api/chat", {
                 messages: newMessages,
                 employeeId,
                 locationId,
