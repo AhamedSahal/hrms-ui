@@ -4,7 +4,7 @@ import jsPDF from "jspdf";
 import { toast } from 'react-toastify';
 import { getLogo} from '../../utility';
 import {  getAssetLatestHistory, getEmpEntity } from './service'; 
-import {  verifyViewPermission } from '../../utility'
+import {  verifyViewPermission,verifyOrgLevelEditPermission } from '../../utility'
 
 
 export default class AssetAcknowledgeForm extends Component {
@@ -26,7 +26,7 @@ export default class AssetAcknowledgeForm extends Component {
       }
   
      getEmpEntity(){
-      verifyViewPermission("Manage Assets") &&  getEmpEntity(this.state.Assets.employee.id).then(res => {
+      verifyViewPermission("Manage Assets") || verifyOrgLevelEditPermission("Manage Assets") &&  getEmpEntity(this.state.Assets.employee.id).then(res => {
         if (res.status == "OK") {
            
              this.setState({
@@ -45,7 +45,7 @@ export default class AssetAcknowledgeForm extends Component {
 
       getAssetLatestHistory(categoryName,assetName,serialno){
           
-         verifyViewPermission("Manage Assets") &&  getAssetLatestHistory(categoryName,assetName,serialno).then(res => {
+         verifyViewPermission("Manage Assets") || verifyOrgLevelEditPermission("Manage Assets") &&  getAssetLatestHistory(categoryName,assetName,serialno).then(res => {
               if (res.status == "OK") {
               
                   this.setState(

@@ -5,11 +5,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown'; 
 import { returnAsset,getAssetHistory, getAssetLatestHistory, acceptReturn, acceptAsset,cancelReturn, cancelAllocation } from './service'; 
-import { getReadableDate, getEmployeeId, getUserType, verifyEditPermission, verifyViewPermission } from '../../utility';
+import { getReadableDate, getEmployeeId, getUserType, verifyEditPermission, verifyViewPermission, verifyOrgLevelViewPermission,verifyOrgLevelEditPermission } from '../../utility';
 import { Button, Stack } from '@mui/material';
 
 const loggedInUserId = getEmployeeId();
-const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
+const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || verifyOrgLevelViewPermission("Manage Assets");
 
 export default class AssetPending extends Component {
     constructor(props) {
@@ -36,7 +36,7 @@ export default class AssetPending extends Component {
 
     getAssetLatestHistory(categoryName,assetName,serialno){
         
-       verifyViewPermission("Manage Assets") &&  getAssetLatestHistory(categoryName,assetName,serialno).then(res => {
+       (verifyViewPermission("Manage Assets") || verifyOrgLevelViewPermission("Manage Assets")) &&  getAssetLatestHistory(categoryName,assetName,serialno).then(res => {
             if (res.status == "OK") {
                  
                 this.setState(
@@ -91,7 +91,7 @@ export default class AssetPending extends Component {
                 toast.error("Add a comment");
             }
             else{ 
-                verifyEditPermission("Manage Assets") &&  acceptReturn(this.state.AssetsAction.id, this.state.confidentiality,this.state.integrity,this.state.availability).then(res => {
+                (verifyEditPermission("Manage Assets" || verifyOrgLevelEditPermission("Manage Assets"))) &&  acceptReturn(this.state.AssetsAction.id, this.state.confidentiality,this.state.integrity,this.state.availability).then(res => {
                     if (res.status == "OK") {
                         toast.success(res.message); 
                     } else {
@@ -113,7 +113,7 @@ export default class AssetPending extends Component {
                 toast.error("Add a comment");
             }
             else{ 
-                verifyEditPermission("Manage Assets") &&  acceptAsset(this.state.AssetsAction.id).then(res => {
+                (verifyEditPermission("Manage Assets") || verifyOrgLevelEditPermission("Manage Assets")) &&  acceptAsset(this.state.AssetsAction.id).then(res => {
                     if (res.status == "OK") {
                         toast.success(res.message); 
                     } else {
@@ -136,7 +136,7 @@ export default class AssetPending extends Component {
                         toast.error("Add a comment");
                     }
                     else{ 
-                        verifyEditPermission("Manage Assets") &&  cancelReturn(this.state.AssetsAction.id).then(res => {
+                        (verifyEditPermission("Manage Assets") || verifyOrgLevelEditPermission("Manage Assets")) &&  cancelReturn(this.state.AssetsAction.id).then(res => {
                             if (res.status == "OK") {
                                 toast.success(res.message); 
                             } else {
@@ -157,7 +157,7 @@ export default class AssetPending extends Component {
                         toast.error("Add a comment");
                     }
                     else{
-                        verifyEditPermission("Manage Assets") &&  cancelAllocation(this.state.AssetsAction.id).then(res => {
+                        (verifyEditPermission("Manage Assets") || verifyOrgLevelEditPermission("Manage Assets")) &&  cancelAllocation(this.state.AssetsAction.id).then(res => {
                             if (res.status == "OK") {
                                 toast.success(res.message); 
                             } else {

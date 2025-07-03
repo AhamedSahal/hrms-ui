@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { itemRender } from "../../../paginationfunction";
-import { getReadableDate, getTitle, getUserType, verifyOrgLevelViewPermission, verifyViewPermissionForTeam, convertToUserTimeZoneWithAMPM } from '../../../utility';
+import { getReadableDate, getTitle, getUserType, verifyOrgLevelViewPermission, verifyViewPermissionForTeam,verifyOrgLevelEditPermission, convertToUserTimeZoneWithAMPM, getPermission } from '../../../utility';
 import { getRosterList } from './service';
 import EmployeeListColumn from '../employeeListColumn';
 import EmployeeDropdown from "../../ModuleSetup/Dropdown/EmployeeDropdown";
@@ -40,7 +40,7 @@ export default class rosterList extends Component {
     this.fetchList();
   }
   fetchList = () => {
-    if (verifyViewPermissionForTeam("Manage Roster") || verifyOrgLevelViewPermission("Manage Roster")) {
+    if (verifyOrgLevelEditPermission("Manage Roster") || verifyOrgLevelViewPermission("Manage Roster")) {
       getRosterList(this.state.defaultEmployeeId, this.state.q, this.state.page, this.state.size, this.state.sort, this.state.fromDate, this.state.toDate).then(res => {
         if (res.status == "OK") {
           this.setState({
@@ -210,12 +210,12 @@ export default class rosterList extends Component {
               <div className="col-6 ">
 
 
-                {isCompanyAdmin && <div className="mt-2 float-right col-auto ml-auto" >
+                {(isCompanyAdmin || verifyOrgLevelEditPermission("Manage Roster")) && <div className="mt-2 float-right col-auto ml-auto" >
                   <Link to={`/app/company-app/employee/RosterForm`} className="btn apply-button btn-primary"><i className="fa fa-plus" /> Assign Roster</Link>
                 </div>}
-                {(verifyViewPermissionForTeam("Manage Roster") || verifyOrgLevelViewPermission("Manage Roster")) &&
+                {(verifyOrgLevelEditPermission("Manage Roster") || verifyOrgLevelViewPermission("Manage Roster")) &&
                   <div className="float-right col-md-6" >
-                    <EmployeeDropdown nodefault={false} onChange={e => {
+                    <EmployeeDropdown permission={getPermission("ATTENDANCE","EDIT")} nodefault={false} onChange={e => {
                       this.getListByEmployee(e.target.value)
                     }}></EmployeeDropdown></div>}
               </div>
@@ -225,7 +225,7 @@ export default class rosterList extends Component {
           <div className="row">
             <div className="col-md-12">
               <div className="mt-3 mb-3 table-responsive">
-                {(verifyViewPermissionForTeam("Manage Roster") || verifyOrgLevelViewPermission("Manage Roster")) && <div>
+                {(verifyOrgLevelEditPermission("Manage Roster") || verifyOrgLevelViewPermission("Manage Roster")) && <div>
                   {(this.state.defaultEmployeeId == 0) && <>
                     <div className="alert alert-warning alert-dismissible fade show" role="alert">
                       <span>Please select Employee.</span>
@@ -251,7 +251,7 @@ export default class rosterList extends Component {
                     onChange={this.onTableDataChange}
                   /> </>}
                 </div>}
-                {!verifyViewPermissionForTeam("Manage Roster") && !verifyOrgLevelViewPermission("Manage Roster") && <AccessDenied></AccessDenied>}
+                {!verifyOrgLevelEditPermission("Manage Roster") && !verifyOrgLevelViewPermission("Manage Roster") && <AccessDenied></AccessDenied>}
 
               </div>
             </div>

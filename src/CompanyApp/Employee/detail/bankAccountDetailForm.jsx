@@ -4,7 +4,7 @@ import { Modal, Anchor } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
-import { getOrDefault, getPermission, getUserType, verifyEditPermission } from '../../../utility';
+import { getOrDefault, getPermission, getUserType, verifyEditPermission, getEmployeeId } from '../../../utility';
 import { getBankInformation, updateBankInformation } from './service';
 import { BankDetailsSchema } from '../validation';
 import { PERMISSION_LEVEL } from '../../../Constant/enum';
@@ -26,13 +26,13 @@ export default class BankAccountDetailEmployeeForm extends Component {
                 name: "",
                 active: true
             },
-            paymentModes:[]
+            paymentModes: []
         }
     }
 
     componentDidMount() {
         this.fetchList()
-        
+
     }
 
     fetchList = () => {
@@ -63,16 +63,20 @@ export default class BankAccountDetailEmployeeForm extends Component {
             action.setSubmitting(false);
         })
     }
-    getPaymentName = (paymentId) =>{
+    getPaymentName = (paymentId) => {
         let paymentMode = this.state.paymentModes.find(x => x.id == paymentId);
-        if(paymentMode){
+        if (paymentMode) {
             return paymentMode.name;
         }
     }
 
     render() {
         let { editable, employee } = this.state;
-        const isEditAllowed = getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION
+        // const isEditAllowed = getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION
+        const currentUserId = getEmployeeId();
+        const isEditAllowed = getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION ||
+            (getPermission("Peoples My Profile", "EDIT") == PERMISSION_LEVEL.SELF &&
+                currentUserId == this.state.id);
         if (editable && !isEditAllowed) {
             editable = true;
         }
@@ -85,13 +89,13 @@ export default class BankAccountDetailEmployeeForm extends Component {
         employee.routingCode = getOrDefault(employee.routingCode, "");
         employee.labourCardNo = getOrDefault(employee.labourCardNo, "");
         employee.employerId = getOrDefault(employee.employerId, "");
-        employee.paymentMode = getOrDefault(this.getPaymentName(employee.paymentModeId),"");
+        employee.paymentMode = getOrDefault(this.getPaymentName(employee.paymentModeId), "");
         return (
             <>
                 <div className="col-md-6 d-flex">
                     <div className="card profile-box flex-fill">
                         <div className="card-body">
-                            <h3 className="card-title">Bank Information {!editable && <Anchor style={{ borderRadius: "50%" }} className="btn btn-success btn-sm" onClick={() => {
+                            <h3 className="card-title">Bank Information {(!editable && isEditAllowed) && <Anchor style={{ borderRadius: "50%" }} className="btn btn-success btn-sm" onClick={() => {
                                 this.setState({ editable: true })
                             }}><i className="fa fa-edit"></i></Anchor>}</h3>
                             <ul className="personal-info">

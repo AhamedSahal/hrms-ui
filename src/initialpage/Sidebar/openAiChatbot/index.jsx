@@ -3,7 +3,7 @@ import axios from "axios";
 import "./chatbot.css";
 import BotLogo from '../../../assets/img/logo.png';
 import { MdSend } from "react-icons/md";
-import { getBranchId, getCompanyIdCookie, getEmployeeId, getTokenCookie, getUserName } from "../../../utility"; // ✅ adjust this path to where you defined getTokenCookie
+import { getBranchId, getCompanyIdCookie, getEmployeeId, getTokenCookie, getUserName, getUserType } from "../../../utility"; // ✅ adjust this path to where you defined getTokenCookie
 
 const Chatbot = ({ closeChatbot }) => {
     const [messages, setMessages] = useState([]);
@@ -18,6 +18,7 @@ const Chatbot = ({ closeChatbot }) => {
         };
         setMessages([greeting]);
     }, []);
+
     const sendMessage = async () => {
         if (!input.trim()) return;
 
@@ -25,6 +26,7 @@ const Chatbot = ({ closeChatbot }) => {
         const token = getTokenCookie();
         const companyId = getCompanyIdCookie();
         const locationId = getBranchId();
+        const userType = getUserType();
         console.log("API Response:", locationId);
         const newMessages = [...messages, { role: "user", content: input }];
         setMessages(newMessages);
@@ -36,11 +38,13 @@ const Chatbot = ({ closeChatbot }) => {
                 messages: newMessages,
                 employeeId,
                 locationId,
+                userType,
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     CompanyId: companyId,
                     LocationId: locationId,
+                    userType: userType,
                 }
             });
 
@@ -56,8 +60,9 @@ const Chatbot = ({ closeChatbot }) => {
             console.error("Error fetching response:", error);
         }
 
-        setLoading(false);
-    };
+  setLoading(false);
+};
+
 
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {

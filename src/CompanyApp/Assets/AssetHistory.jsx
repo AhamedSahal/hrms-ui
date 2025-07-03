@@ -3,7 +3,7 @@ import jsPDF from 'jspdf';
 import { Table } from 'antd'; 
 import EmployeeListColumn from '../Employee/employeeListColumn';
 import { itemRender } from "../../paginationfunction";
-import { getCurrency, getLogo, getReadableDate, verifyEditPermission, verifyViewPermission } from '../../utility';
+import { getCurrency, getLogo, getReadableDate, verifyEditPermission, verifyViewPermission,verifyOrgLevelEditPermission } from '../../utility';
 import { getAssetHistory } from './service'
 export default class AssetsHistory extends Component {
     constructor(props) {
@@ -40,7 +40,7 @@ export default class AssetsHistory extends Component {
     }
 
     fetchList = () => { 
-       verifyViewPermission("Manage Assets") &&  getAssetHistory(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.AssetsHistory.category.id,this.state.AssetsHistory.assets.id,this.state.AssetsHistory.serialno,this.state.AssetsHistory.id).then(res => {
+       verifyViewPermission("Manage Assets") || verifyOrgLevelEditPermission("Manage Assets") &&  getAssetHistory(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.AssetsHistory.category.id,this.state.AssetsHistory.assets.id,this.state.AssetsHistory.serialno,this.state.AssetsHistory.id).then(res => {
          
             if (res.status == "OK") { 
              

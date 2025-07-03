@@ -14,11 +14,11 @@ import AssetAction from './AssetAction';
 import AssetHistory from './AssetHistory';
 import AssetActive from './AssetActive';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
-import { getReadableDate,getCustomizedDate,getTitle,getUserType,verifyViewPermission, verifyEditPermission} from '../../utility';
+import { getReadableDate,getCustomizedDate,getTitle,getUserType,verifyViewPermission, verifyEditPermission, verifyOrgLevelEditPermission,verifyOrgLevelViewPermission} from '../../utility';
 import {  getAssetList,updateStatus } from './service';  
 import TableDropDown from '../../MainPage/tableDropDown';
 const { Header, Body, Footer, Dialog } = Modal;
-const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
+const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || verifyOrgLevelViewPermission("Manage Assets");
 const isEmployee = getUserType() == 'EMPLOYEE';
 export default class AssetAvailable extends Component{
     constructor(props) {
@@ -47,7 +47,7 @@ export default class AssetAvailable extends Component{
        
       }
        fetchList = () => {
-       { verifyViewPermission("Manage Assets") && getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort,this.state.AssetAcknowledgeStatusId,0,0,0).then(res => {
+       { (verifyViewPermission("Manage Assets") || verifyOrgLevelViewPermission("Manage Assets") )&& getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort,this.state.AssetAcknowledgeStatusId,0,0,0).then(res => {
           if (res.status == "OK") {
     
             this.setState({
@@ -221,7 +221,7 @@ export default class AssetAvailable extends Component{
                     
                      
 
-                    {isCompanyAdmin && !showForm && <> 
+                    {(isCompanyAdmin || verifyOrgLevelEditPermission("Manage Assets")) && !showForm && <> 
                   <button className="apply-button btn-primary mr-2" onClick={() => {
                   this.setState({
                     showForm: true
@@ -229,7 +229,7 @@ export default class AssetAvailable extends Component{
                   }}>
                     <i className="fa fa-plus" /> New Asset</button></>
                 }
-                 {verifyViewPermission("Manage Assets") && <BsSliders className='filter-btn' size={30} onClick={() => this.setState({ showFilter: !this.state.showFilter })} />}
+                 {(verifyViewPermission("Manage Assets") || verifyOrgLevelViewPermission("Manage Assets")) && <BsSliders className='filter-btn' size={30} onClick={() => this.setState({ showFilter: !this.state.showFilter })} />}
                 </div>
             </div> 
             {this.state.showFilter && <div className='mt-4 filterCard p-3'>
@@ -253,7 +253,7 @@ export default class AssetAvailable extends Component{
           </div>}
             {/* /Page Header */}
       
-            {verifyViewPermission("Manage Assets") && <div className='Table-card'>
+            {(verifyViewPermission("Manage Assets") || verifyOrgLevelViewPermission("Manage Assets")) && <div className='Table-card'>
             <div className="tableCard-body">
             <div className=" p-12 m-0">
                 <div className="row " >
@@ -285,7 +285,7 @@ export default class AssetAvailable extends Component{
               </div>
             </div>
             </div>}
-            {!verifyViewPermission("Manage Assets") && <AccessDenied></AccessDenied>}
+            {(!verifyViewPermission("Manage Assets") || !verifyOrgLevelViewPermission("Manage Assets")) && <AccessDenied></AccessDenied>}
             </div>
 
         <Modal enforceFocus={false} size={"xl"} show={this.state.showForm} onHide={this.hideForm} >

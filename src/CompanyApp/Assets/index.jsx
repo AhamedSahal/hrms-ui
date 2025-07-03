@@ -15,11 +15,11 @@ import AssetHistory from './AssetHistory';
 import AssetAcknowledgeForm from './AssetAcknowledgeForm';
 import AssetActive from './AssetActive';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
-import { getReadableDate, getCustomizedDate, getTitle, getUserType, verifyViewPermission, getEmployeeId, verifyEditPermission } from '../../utility';
+import { getReadableDate, getCustomizedDate, getTitle, getUserType, verifyViewPermission, getEmployeeId, verifyEditPermission,verifyOrgLevelEditPermission,verifyOrgLevelViewPermission } from '../../utility';
 import { getAssetList, updateStatus, getEmployeeList } from './service';
 import TableDropDown from '../../MainPage/tableDropDown';
 const { Header, Body, Footer, Dialog } = Modal;
-const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
+const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || verifyOrgLevelViewPermission("Manage Assets");
 const isEmployee = getUserType() == 'EMPLOYEE';
 const loggedInUserId = getEmployeeId();
 export default class Assets extends Component {
@@ -62,7 +62,7 @@ export default class Assets extends Component {
   
     {
      
-    { verifyViewPermission("Manage Assets") && getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.AssetAcknowledgeStatusId, this.state.self, 0, this.state.empId).then(res => {
+    { (verifyViewPermission("Manage Assets") || verifyOrgLevelViewPermission("Manage Assets")) && getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.AssetAcknowledgeStatusId, this.state.self, 0, this.state.empId).then(res => {
         if (res.status == "OK") {
           
           this.setState({
@@ -96,7 +96,7 @@ export default class Assets extends Component {
 
   getTeamList = () => {
  
-    { verifyViewPermission("Manage Assets") &&  getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort, 1, this.state.self, 1).then(res => {
+    { (verifyViewPermission("Manage Assets") || verifyOrgLevelViewPermission("Manage Assets")) &&  getAssetList(this.state.q, this.state.page, this.state.size, this.state.sort, 1, this.state.self, 1).then(res => {
       if (res.status == "OK") {
         this.setState({
           data: res.data.list,
@@ -110,7 +110,7 @@ export default class Assets extends Component {
   }
   getEmployeefetchList = () => {
     {
-      !isCompanyAdmin && verifyViewPermission("Manage Assets") && getEmployeeList().then(res => {
+      !isCompanyAdmin && (verifyViewPermission("Manage Assets")) && getEmployeeList().then(res => {
         if (res.status == "OK") {
           this.setState({
             empdata: res.data
@@ -198,7 +198,7 @@ export default class Assets extends Component {
 
   
   updateStatus = (id, status) => {
-    verifyEditPermission("Manage Assets") && updateStatus(id, status).then(res => {
+   ( verifyEditPermission("Manage Assets") || verifyOrgLevelEditPermission("Manage Assets")) && updateStatus(id, status).then(res => {
       if (res.status == "OK") {
         toast.success(res.message);
 
@@ -346,46 +346,9 @@ export default class Assets extends Component {
 
           <div id='page-head' >
             <div className="float-right col-md-5 btn-group btn-group-sm" style={{ paddingRight: "30px" }}>
-               {/* {!isCompanyAdmin && <>
-                {empdata == 1 && <><div className="toggles-btn-view" id="button-container" onClick={e => {
-                                this.updateSelf()
-                                this.handleButtonClick()
-                              }}>
+                     
 
-                  <div id="my-button" className="toggle-button-element" style={{ transform: buttonState ? 'translateX(0px)' : 'translateX(80px)' }}  onClick={e => {
-                    if(buttonState){
-                      this.getTeamList();
-                    }else{
-                      this.fetchList();
-                    }
-                    
-                  }}>
-                                  <p className='m-0 self-btn'>{buttonState ? 'Self' : 'Team'}</p>
-                                </div>
-                                <p className='m-0 team-btn' style={{ transform: buttonState ? 'translateX(0px)' : 'translateX(-80px)' }}>{buttonState ? 'Team' : 'Self'}</p>       
-
-              </div></>}
-               </>} */}
-
-{/* 
-               {
-                (this.props.employeeId !== undefined) &&
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <span style={{ fontWeight: 'bold', fontSize: '18px' }}>Manage Asset</span>
-                  <i
-                    className="fa fa-arrow-right text-success cursor-pointer"
-                    style={{ fontSize: '30px', marginLeft: '10px' }}
-                    onClick={() => {
-                      window.location.href = `/app/company-app/Assets`;
-                    }}
-                  ></i>
-                </div>
-              } */}
-
-             
-                            
-
-              {isCompanyAdmin &&  (this.props.employeeId == undefined ) && !showForm && <>
+              {(isCompanyAdmin || verifyOrgLevelViewPermission("Manage Assets")) &&  (this.props.employeeId == undefined ) && !showForm && <>
                 <button className="apply-button btn-primary mr-2" onClick={() => {
                   this.setState({
                     showForm: true
@@ -394,7 +357,7 @@ export default class Assets extends Component {
                   <i className="fa fa-plus" /> New Asset</button></>
               }
 
-              {verifyViewPermission("Manage Assets") && this.props.employeeId == undefined &&  <BsSliders className='filter-btn' size={30} onClick={() => this.setState({ showFilter: !this.state.showFilter })} />}
+              {(verifyViewPermission("Manage Assets") || verifyOrgLevelViewPermission("Manage Assets")) && this.props.employeeId == undefined &&  <BsSliders className='filter-btn' size={30} onClick={() => this.setState({ showFilter: !this.state.showFilter })} />}
             </div>
           </div>
           {this.state.showFilter && <div className='mt-4 filterCard p-3'>
@@ -420,7 +383,7 @@ export default class Assets extends Component {
               
            
           {/* /Page Header */}
-          {verifyViewPermission("Manage Assets") && 
+          {(verifyViewPermission("Manage Assets") || verifyOrgLevelViewPermission("Manage Assets")) && 
             <div className='Table-card'>
             <div className="tableCard-body">
              { (this.props.employeeId == undefined) && <div className=" p-12 m-0">
@@ -474,8 +437,8 @@ export default class Assets extends Component {
         <Modal enforceFocus={false} size={"xl"} show={this.state.showAssetView} onHide={this.hideAssetView} >
 
           <Header closeButton>
-            {isCompanyAdmin && <><h5 className="modal-title">Asset Details</h5></>}
-            {!isCompanyAdmin && <><h5 className="modal-title">My Asset Details</h5></>}
+            {(isCompanyAdmin || verifyOrgLevelViewPermission("Manage Assets")) && <><h5 className="modal-title">Asset Details</h5></>}
+            {(!isCompanyAdmin || !verifyOrgLevelViewPermission("Manage Assets")) && <><h5 className="modal-title">My Asset Details</h5></>}
           </Header>
           <Body>
             {AssetView && <AssetViewer AssetView={AssetView} />}

@@ -7,7 +7,7 @@ import { saveAssets } from './service';
 import AssetsCategoryDropDown from '../ModuleSetup/Dropdown/AssetsCategoryDropDown';
 import AssetSetupDropDown from '../ModuleSetup/Dropdown/AssetSetupDropDown';
 import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown';
-import { verifyEditPermission, verifyViewPermission } from '../../utility';
+import { verifyEditPermission, verifyViewPermission ,verifyOrgLevelEditPermission} from '../../utility';
 import { AssetSchema } from './validation';
 import { Tooltip } from 'antd';
 
@@ -75,7 +75,7 @@ export default class Assets extends Component {
     }
     save = (data, action) => {
         action.setSubmitting(true);
-        verifyEditPermission("Manage Assets") && saveAssets(data).then(res => {
+        (verifyEditPermission("Manage Assets") || verifyOrgLevelEditPermission("Manage Assets")) && saveAssets(data).then(res => {
             if (res.status == "OK") {
                 toast.success(res.message); 
             } else {

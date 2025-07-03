@@ -1,8 +1,6 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { employeeProfilePhotoURL } from '../../HttpRequest';
-import { getDefaultProfilePicture } from '../../utility'
 import EmployeePhoto from './employeePhoto';
 export default class EmployeeListColumn extends Component {
     constructor(props) {

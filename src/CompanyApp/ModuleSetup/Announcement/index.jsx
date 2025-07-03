@@ -208,9 +208,9 @@ export default class Announcement extends Component {
                   <li className="breadcrumb-item active">Announcement</li>
                 </ul>
               </div>
-          {verifyOrgLevelEditPermission("EMPLOYEE")&&
+          {verifyOrgLevelViewPermission("Engage Announcement")&&
               <div className="mt-1 float-right col">
-                {verifyOrgLevelEditPermission("Engage Announcement") && 
+                {verifyOrgLevelViewPermission("Engage Announcement") && 
                 <a href="#" className="btn apply-button btn-primary" onClick={() => {
                   this.setState({
                     showForm: true

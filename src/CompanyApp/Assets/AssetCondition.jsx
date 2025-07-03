@@ -4,7 +4,7 @@ import { Table } from 'antd';
 import EmployeeListColumn from '../Employee/employeeListColumn';
 import { itemRender } from "../../paginationfunction";
 import {  getAssetLatestHistory } from './service';
-import { getCurrency, getLogo, getReadableDate, verifyEditPermission, verifyViewPermission } from '../../utility';
+import { getCurrency, getLogo, getReadableDate, verifyEditPermission, verifyOrgLevelViewPermission, verifyViewPermission } from '../../utility';
 import { getAssetHistory } from './service'
 import { toast } from 'react-toastify';
 
@@ -27,7 +27,7 @@ export default class AssetCondition extends Component {
     
     getAssetLatestHistory(categoryName,assetName,serialno){
 
-     verifyViewPermission("Manage Assets") &&  getAssetLatestHistory(categoryName,assetName,serialno).then(res => {
+     (verifyViewPermission("Manage Assets") || verifyOrgLevelViewPermission("Manage Assets")) &&  getAssetLatestHistory(categoryName,assetName,serialno).then(res => {
           if (res.status == "OK") {
           
               this.setState(

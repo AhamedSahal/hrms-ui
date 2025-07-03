@@ -6,14 +6,15 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { BLOOD_GROUP, GENDER, MARITAL_STATUS } from '../../../Constant/enum';
-import { getEmployeeId, getOrDefault, getReadableDate, getUserType, verifyEditPermission,toDateWithGMT } from '../../../utility';
+import { getEmployeeId, getOrDefault, getReadableDate, getPermission, getUserType, verifyEditPermission,toDateWithGMT } from '../../../utility';
 import EnumDropdown from '../../ModuleSetup/Dropdown/EnumDropdown';
 import LanguageDropdown from '../../ModuleSetup/Dropdown/LanguageDropdown';
 import NationalityDropdown from '../../ModuleSetup/Dropdown/NationalityDropdown';
 import ReligionDropdown from '../../ModuleSetup/Dropdown/ReligionDropdown';
 import { getPersonalInformation, updatePersonalInformation } from './service';
 import { EmployeeSchema } from '../validation';
-;
+import { PERMISSION_LEVEL } from '../../../Constant/enum';
+
 const { Header, Body, Footer, Dialog } = Modal;
 export default class PersonalDetailEmployeeForm extends Component {
     constructor(props) {
@@ -69,7 +70,10 @@ export default class PersonalDetailEmployeeForm extends Component {
     }
     render() {
         let { editable, employee } = this.state;
-        const isEditAllowed = verifyEditPermission("Peoples My Team");
+        // const isEditAllowed = verifyEditPermission("Peoples My Team");
+        const isEditAllowed = getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION || 
+                              getPermission("Peoples My Team", "EDIT") == PERMISSION_LEVEL.HIERARCHY ||
+                              getPermission("Peoples My Profile", "EDIT") == PERMISSION_LEVEL.SELF;
         if (editable && !isEditAllowed) {
             editable = true;
         }
@@ -86,7 +90,7 @@ export default class PersonalDetailEmployeeForm extends Component {
                 <div className="pt-3 col-md-6 d-flex">
                     <div className="card profile-box flex-fill">
                         <div className="card-body">
-                            <h3 className="card-title">Personal Information {!editable && <Anchor style={{ borderRadius: "50%" }} className="btn btn-success btn-sm" onClick={() => {
+                            <h3 className="card-title">Personal Information {(!editable && isEditAllowed) && <Anchor style={{ borderRadius: "50%" }} className="btn btn-success btn-sm" onClick={() => {
                                 this.setState({ editable: true })
                             }}><i className="fa fa-edit"></i></Anchor>}</h3>
 

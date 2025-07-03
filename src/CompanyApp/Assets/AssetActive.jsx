@@ -1,23 +1,19 @@
 
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React, { Component } from 'react';
-import { Modal,Anchor } from 'react-bootstrap';
-import { getReadableDate,getCustomizedDate,getTitle,getUserType,verifyViewPermission, verifyEditPermission } from '../../utility';
-import {  getAssetList,updateStatus } from './service';  
+import { getUserType,verifyViewPermission, verifyEditPermission,verifyOrgLevelViewPermission,verifyOrgLevelEditPermission } from '../../utility';
+import { Modal,Anchor } from 'react-bootstrap'; 
 import { toast } from 'react-toastify';
-import { getWithAuth } from "../../HttpRequest";
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
-import { updateAsset, getAssetSerials, getAssetHistory, getAsset} from './service'; 
+import { getAssetSerials, getAssetHistory, getAsset} from './service'; 
 import { saveAssetActive, getPreviousOwner } from './service';
 import AssetHistory from './AssetHistory';
 import AssetViewer from './view';
 import EmployeeDropdown from '../ModuleSetup/Dropdown/EmployeeDropdown'; 
 import AssetCondition from './AssetCondition';
 const { Header, Body, Footer, Dialog } = Modal;
-
-const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
-const isEmployee = getUserType() == 'EMPLOYEE';
+const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || verifyOrgLevelEditPermission("Manage Assets") || verifyOrgLevelViewPermission("Manage Assets") ;
 
 export default class AssetsActive extends Component {
     constructor(props) {

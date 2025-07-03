@@ -1331,34 +1331,63 @@ export default class NewSocialShare extends Component {
                                     {this.state.myTaskList.length > 0 ? this.state.myTaskList.map((item, index) => (
                                         <>
                                             {index < 5 ?
-                                                <div className="container myTask">
-                                                    <div className='float-left myTaskDiv'>
-                                                        <p className='myTaskName'><BiTask size={20} /> {item.taskname}</p>
-
-                                                        <p className='myTaskStatus'>Status : <span>{item.status == "REJECTED" ? "OVERDUE" : item.status}</span></p>
+                                                <div
+                                                    className="container myTask"
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
+                                                        gap: '16px' // Optional: adds consistent spacing between items
+                                                    }}
+                                                >
+                                                    <div style={{ flex: 1 , textAlign: 'left'}}>
+                                                        <p className="myTaskName">
+                                                            <BiTask size={20} /> {item.taskname}
+                                                        </p>
+                                                        <p className="myTaskStatus">
+                                                            Status : <span>{item.status === "REJECTED" ? "OVERDUE" : item.status}</span>
+                                                        </p>
                                                     </div>
-                                                    <div className='d-flex float-right'>
 
-                                                        <p className='text-dark'>Due : <span>{getCustomizedWidgetDate(item.enddate)}</span></p>
-                                                        <Tooltip title="Mark as complete" componentsProps={{
-                                                            tooltip: {
-                                                                sx: {
-                                                                    fontSize: '15px',
-                                                                    bgcolor: 'common.black',
-                                                                    '& .MuiTooltip-arrow': {
-                                                                        color: 'common.black',
+                                                    <div style={{ flex: 1 }}>
+                                                        <p className="text-dark">
+                                                            Due : <span>{getCustomizedWidgetDate(item.enddate)}</span>
+                                                        </p>
+                                                    </div>
+
+                                                    <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+                                                        <Tooltip
+                                                            title="Mark as complete"
+                                                            componentsProps={{
+                                                                tooltip: {
+                                                                    sx: {
+                                                                        fontSize: '15px',
+                                                                        bgcolor: 'common.black',
+                                                                        '& .MuiTooltip-arrow': {
+                                                                            color: 'common.black',
+                                                                        },
                                                                     },
                                                                 },
-                                                            },
-                                                        }} placement="top">
-                                                            <p><TbCheckbox onClick={() => {
-                                                                let { status } = this.state;
-                                                                status = (item.status == "PENDING" ? "APPROVED" : "PENDING");
-                                                                this.updateStatus(item.id, status);
-                                                            }} className='ml-5 myTaskCheckBtn' size={25} /></p>
+                                                            }}
+                                                            placement="top"
+                                                        >
+                                                            <p>
+                                                                <TbCheckbox
+                                                                    onClick={() => {
+                                                                        let { status } = this.state;
+                                                                        status = item.status === "PENDING" ? "APPROVED" : "PENDING";
+                                                                        this.updateStatus(item.id, status);
+                                                                    }}
+                                                                    className="ml-5 myTaskCheckBtn"
+                                                                    size={25}
+                                                                />
+                                                            </p>
                                                         </Tooltip>
                                                     </div>
-                                                </div> : null}
+                                                </div>
+
+                                                : null}
                                         </>
                                     )) : <span><Empty /></span>}
                                 </div>

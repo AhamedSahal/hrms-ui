@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { getPermission, getUserType, verifyEditPermission } from '../../../utility';
 import { getAllowanceInformation, updateAllowanceInformation } from './service';
 import { PERMISSION_LEVEL } from '../../../Constant/enum';
-const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION;
+const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION;
 export default class AllowanceForm extends Component {
     constructor(props) {
         super(props)
@@ -59,7 +59,7 @@ export default class AllowanceForm extends Component {
         if (!isCompanyAdmin) {
             allowances = allowances.filter(item => item.amount != null && item.amount > 0);
         }
-        const isEditAllowed = getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION
+        const isEditAllowed = getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION
         if (editable && !isEditAllowed) {
             editable = false;
         }
@@ -93,7 +93,7 @@ export default class AllowanceForm extends Component {
                             <div className="card-footer">
                                 {(isCompanyAdmin || editable) &&
                                     <>
-                                        <input disabled={getPermission("Employee", "EDIT") != PERMISSION_LEVEL.ORGANIZATION || !editable} type="button" onClick={this.save} className="btn btn-primary" value="Update" />
+                                        <input disabled={getPermission("Peoples Organization", "EDIT") != PERMISSION_LEVEL.ORGANIZATION || !editable} type="button" onClick={this.save} className="btn btn-primary" value="Update" />
                                     </>}
                             </div>
                         </div>

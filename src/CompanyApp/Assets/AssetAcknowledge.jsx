@@ -14,11 +14,11 @@ import AssetHistory from './AssetHistory';
 import AssetActive from './AssetActive';
 import AssetPending from './AssetPending';
 import AccessDenied from '../../MainPage/Main/Dashboard/AccessDenied';
-import { getReadableDate,getCustomizedDate,getTitle,getUserType,verifyViewPermission, getUserData, getEmployeeId,verifyEditPermission } from '../../utility';
+import { getReadableDate,getCustomizedDate,getTitle,getUserType,verifyViewPermission, getUserData, getEmployeeId,verifyEditPermission,verifyOrgLevelViewPermission } from '../../utility';
 import {  getAssetList,updateStatus } from './service';  
 import TableDropDown from '../../MainPage/tableDropDown';
 const { Header, Body, Footer, Dialog } = Modal;
-const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
+const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || verifyOrgLevelViewPermission("Manage Assets");
 const isEmployee = getUserType() == 'EMPLOYEE';
 
 export default class AssetAcknowledge extends Component{
