@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
-import { getEmployeeId } from '../../../utility';
+import { getPermission,getEmployeeId } from '../../../utility';
 import { save } from './service';
 import EmployeeDropdown from "../Dropdown/EmployeeDropdown";
 import { ProjectSchema } from './validation';
@@ -110,7 +110,7 @@ export default class ProjectForm extends Component {
                                                 <span style={{ color: "red" }}>*</span>
                                             </label>
                                             <Field name="employeeId" render={field => {
-                                                return <EmployeeDropdown 
+                                                return <EmployeeDropdown  permission={getPermission("TIMESHEET","EDIT")}
                                                 defaultValue={values.employee?.id}
                                                 onChange={e => {
                                                     setFieldValue("employeeId", e.target.value);

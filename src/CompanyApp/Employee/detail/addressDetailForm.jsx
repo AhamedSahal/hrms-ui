@@ -5,10 +5,11 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
-import { getUserType, verifyEditPermission } from '../../../utility';
+import { getUserType, verifyEditPermission, getPermission} from '../../../utility';
 import CountryDropdown from '../../ModuleSetup/Dropdown/CountryDropdown';
 import { getAddressInformation, updateAddressInformation } from './service';
 import { AddressDetailEmployeeSchema } from '../validation';
+import { PERMISSION_LEVEL } from '../../../Constant/enum';
 
 const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
 const isEmployee = getUserType() == 'EMPLOYEE';
@@ -99,14 +100,17 @@ export default class AddressDetailEmployeeForm extends Component {
     }
     view = (address, heading) => {
         let { editable } = this.state;
-        const isEditAllowed = verifyEditPermission("EMPLOYEE");
+        // const isEditAllowed = verifyEditPermission("EMPLOYEE");
+        const isEditAllowed = getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION || 
+                      getPermission("Peoples My Team", "EDIT") == PERMISSION_LEVEL.HIERARCHY ||
+                      getPermission("Peoples My Profile", "EDIT") == PERMISSION_LEVEL.SELF;
         if (editable && !isEditAllowed) {
             editable = true;
         }
         return <>
             <div className="card profile-box flex-fill">
                 <div className="card-body">
-                    <h3 className="card-title">{heading} {!editable && <Anchor style={{borderRadius:"50%"}} className="btn btn-success btn-sm" onClick={() => {
+                    <h3 className="card-title">{heading} {(!editable && isEditAllowed) && <Anchor style={{borderRadius:"50%"}} className="btn btn-success btn-sm" onClick={() => {
                         this.setState({ editable: true, editAddress: address })
                     }}><i className="fa fa-edit"></i></Anchor>}</h3>
 

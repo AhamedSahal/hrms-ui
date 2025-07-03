@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FormGroup } from "reactstrap";
 import { Helmet } from "react-helmet";
+import { getPermission, verifyOrgLevelViewPermission } from "../../../utility";
 import EmployeeDropdown from "../../ModuleSetup/Dropdown/EmployeeDropdown";
 import RosterDropdown from "../../ModuleSetup/Dropdown/RosterDropdown";
 import ShiftDropdown from "../../ModuleSetup/Dropdown/ShiftDropdown";
@@ -270,7 +271,7 @@ export default class RosterForm extends Component {
                               name="employeeId"
                               render={(field) => {
                                 return (
-                                  <EmployeeDropdown
+                                  <EmployeeDropdown permission={getPermission("ATTENDANCE","EDIT")}
                                     defaultValue={values.employee?.id}
                                     onChange={(e) => {
                                       setFieldValue(

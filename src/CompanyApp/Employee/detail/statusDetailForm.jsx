@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { PERMISSION_LEVEL, STATUS } from '../../../Constant/enum';
-import { getPermission, getRoleId, getUserType, verifyEditPermission,toDateWithGMT } from '../../../utility';
+import { getPermission, getRoleId, getUserType, verifyEditPermission,toDateWithGMT,verifyOrgLevelEditPermission } from '../../../utility';
 import EnumDropdown from '../../ModuleSetup/Dropdown/EnumDropdown';
 import { getStatusInformation, updateStatusInformation } from './service';
 
@@ -56,7 +56,9 @@ export default class StatusDetailEmployeeForm extends Component {
     }
     render() {
         let { editable ,status} = this.state;
-        const isEditAllowed = getPermission("PEOPLE", "EDIT") == PERMISSION_LEVEL.ORGANIZATION ;
+        // const isEditAllowed = getPermission("PEOPLE", "EDIT") == PERMISSION_LEVEL.ORGANIZATION ;
+        const isEditAllowed = getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION || 
+                              getPermission("Peoples My Team", "EDIT") == PERMISSION_LEVEL.HIERARCHY;
         if (editable && !isEditAllowed) {
             editable = false;
         }
@@ -64,7 +66,7 @@ export default class StatusDetailEmployeeForm extends Component {
             <div className="col-md-6 d-flex">
                 <div className="card profile-box flex-fill">
                     <div className="card-body">
-                        <h3 className="card-title">Status {!editable && getPermission("PEOPLE", "EDIT") == PERMISSION_LEVEL.ORGANIZATION && status.status != "INACTIVE"&&<Anchor style={{ borderRadius: "50%" }} className="btn btn-success btn-sm" onClick={() => {
+                        <h3 className="card-title">Status {(!editable && isEditAllowed) && status.status != "INACTIVE"&&<Anchor style={{ borderRadius: "50%" }} className="btn btn-success btn-sm" onClick={() => {
                             this.setState({ editable: true })
                         }}><i className="fa fa-edit"></i></Anchor>}</h3>
 

@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { Link, useParams } from 'react-router-dom';
 import { CONSTANT } from '../../../constant';
 import AccessDenied from '../../../MainPage/Main/Dashboard/AccessDenied';
-import { getDefaultProfilePicture, getEmployeeId, getPermission, getReadableDate, getTitle, getUserType, verifyViewPermissionForTeam } from '../../../utility';
+import { getDefaultProfilePicture, getEmployeeId, getPermission, getReadableDate, getRoleId , getTitle, getUserType, verifyOrgLevelViewPermission, verifyRoleEditPermissionforSelf, verifySelfViewPermission, verifyViewPermission, verifyViewPermissionForTeam , verifyOrgLevelEditPermission  } from '../../../utility';
 import Academic from './academic';
 import AddressDetailEmployeeForm from './addressDetailForm';
 import AllowanceForm from './allowanceForm';
@@ -31,7 +31,7 @@ import Assets from '../../Assets/index';
 import PeoplejobDescription from './jobDescription';
 import { getOrgSettings } from '../../ModuleSetup/OrgSetup/service';
 
-const isCompanyAdmin = getUserType() === 'COMPANY_ADMIN' || getPermission("PEOPLE", "EDIT") === PERMISSION_LEVEL.ORGANIZATION;
+const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN'  || getPermission("PEOPLE", "EDIT") == PERMISSION_LEVEL.ORGANIZATION ||  verifyOrgLevelEditPermission("Peoples Organization");
 const canMangerViewable = verifyViewPermissionForTeam("Peoples My Team");
 
 const EmployeeDetail = (props) => {
@@ -236,20 +236,15 @@ const EmployeeDetail = (props) => {
                         <div id="emp_reference" className="pro-overview tab-pane fade">
                             {activeTab === 8 && <ProfessionalReference employeeId={state.id}></ProfessionalReference>}
                         </div>
-                        <div id="emp_benefits" className="pro-overview tab-pane fade">
-                            {activeTab === 9 && (
-                                (getEmployeeId() === state.id || isCompanyAdmin) ? <BenefitsDetail employeeId={state.id}></BenefitsDetail> : <AccessDenied />
-                            )}
+                        
+                        <div id="emp_benefits" className="pro-overview  tab-pane fade">
+                            {activeTab == 9 && <> {(getEmployeeId() === this.state.id || isCompanyAdmin || verifyOrgLevelEditPermission("Peoples Organization") )?<BenefitsDetail employeeId={this.state.id}></BenefitsDetail>: <AccessDenied></AccessDenied>}</>}
                         </div>
-                        <div id="status_change" className="pro-overview tab-pane fade">
-                            {activeTab === 10 && (
-                                (getEmployeeId() === state.id || isCompanyAdmin) ? <ChangeStatus employeeId={state.id}></ChangeStatus> : <AccessDenied />
-                            )}
+                        <div id="status_change" className="pro-overview  tab-pane fade">
+                            {activeTab == 10 && <> {(getEmployeeId() === this.state.id || isCompanyAdmin || verifyOrgLevelEditPermission("Peoples Organization"))?<ChangeStatus employeeId={this.state.id}></ChangeStatus>: <AccessDenied></AccessDenied>}</>}
                         </div>
                         <div id="system_log" className="pro-overview tab-pane fade">
-                            {activeTab === 11 && (
-                                (getEmployeeId() === state.id || isCompanyAdmin) ? <SystemLog employeeId={state.id}></SystemLog> : <AccessDenied />
-                            )}
+                            {activeTab == 11 && <> {(getEmployeeId() === this.state.id || isCompanyAdmin || verifyOrgLevelEditPermission("Peoples Organization") )?<SystemLog employeeId={this.state.id}></SystemLog>: <AccessDenied></AccessDenied>}</>}
                         </div>
                         <div id="my_asset" className="pro-overview tab-pane fade">
                             {activeTab === 12 && <Assets employeeId={employee.id || getEmployeeId()}></Assets>}

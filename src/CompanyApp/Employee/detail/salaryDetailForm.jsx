@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
 import { PERMISSION_LEVEL, SALARY_MODE } from '../../../Constant/enum';
-import { getUserType, getCurrency, verifyEditPermission, getPermission } from '../../../utility';
+import { getUserType, getCurrency, verifyEditPermission, getPermission,verifyOrgLevelEditPermission } from '../../../utility';
 import EnumDropdown from '../../ModuleSetup/Dropdown/EnumDropdown';
 import AllowanceForm from './allowanceForm';
 import { getCountryList, getSalaryInformation, updateSalaryInformation } from './service';
@@ -14,8 +14,7 @@ import { SalaryBasicAndModeSchema } from '../validation';
 import ComparatioMap from './comparatioMap';
 import { getPayScaleType } from '../../ModuleSetupPage/CompensationSettings/service';
 import { getCurrencyList } from '../../ModuleSetup/Currency/service';
-const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION;
-const isEmployee = getUserType() == 'EMPLOYEE';
+const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION || verifyOrgLevelEditPermission("Peoples Organization");
 
 export default class SalaryDetailEmployeeForm extends Component {
     constructor(props) {
@@ -126,7 +125,9 @@ export default class SalaryDetailEmployeeForm extends Component {
     };
     render() {
         let { editable, payScaleType } = this.state;
-        const isEditAllowed = getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION
+        // const isEditAllowed = getPermission("Employee", "EDIT") == PERMISSION_LEVEL.ORGANIZATION
+        const isEditAllowed = getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION || 
+                      getPermission("Peoples My Team", "EDIT") == PERMISSION_LEVEL.HIERARCHY
         if (editable && !isEditAllowed) {
             editable = false;
         }
@@ -140,7 +141,7 @@ export default class SalaryDetailEmployeeForm extends Component {
                                 <div className="alert alert-info alert-dismissible fade show" role="alert">
                                     <span>Monthy Salary: <strong> {this.state.employee.monthyPayment} {this.state.defaultCurrencyCode == ''?getCurrency():this.state.defaultCurrencyCode} </strong></span>
                                 </div>
-                                {!editable && isCompanyAdmin && <Anchor className="edit-icon" onClick={() => {
+                                {(!editable && isEditAllowed) && <Anchor className="edit-icon" onClick={() => {
                                     this.setState({ editable: true })
                                 }}><i className="fa fa-edit"></i></Anchor>}
                                 <Formik
@@ -246,8 +247,8 @@ export default class SalaryDetailEmployeeForm extends Component {
                                                         </ErrorMessage>
                                                     </FormGroup>
                                                 </div>
-                                                {(isCompanyAdmin || editable) && <div className='col-md-12'>
-                                                    <input disabled={!isCompanyAdmin || !editable} type="submit" className="btn btn-primary btn-sm" value="Update" />
+                                                {(isEditAllowed || editable) && <div className='col-md-12'>
+                                                    <input disabled={!isEditAllowed || !editable} type="submit" className="btn btn-primary btn-sm" value="Update" />
                                                     &nbsp;
                                                     <Anchor onClick={() => { this.setState({ editable: false }) }} className="btn btn-secondary btn-sm" ><span>Cancel</span></Anchor>
                                                 </div>}

@@ -27,7 +27,7 @@ const { Header, Body, Footer, Dialog } = Modal;
 export default class EmployeeList extends Component {
 
 
-  
+
   constructor(props) {
     super(props);
 
@@ -51,7 +51,7 @@ export default class EmployeeList extends Component {
       gridView: false,
       status: "ACTIVE",
       showFilter: false,
-      entityId:"",
+      entityId: "",
       orgsetup: false
     };
   }
@@ -71,8 +71,8 @@ export default class EmployeeList extends Component {
       }
     })
 
-     // entity is present validation
-     getOrgSettings().then(res => {
+    // entity is present validation
+    getOrgSettings().then(res => {
       if (res.status == "OK") {
         this.setState({ orgsetup: res.data.entity })
       }
@@ -174,7 +174,7 @@ export default class EmployeeList extends Component {
     const isCompanyAdmin = getUserType() == "COMPANY_ADMIN";
     const { data, totalPages, totalRecords, currentPage, size } = this.state
     let startRange = ((currentPage - 1) * size) + 1;
-    let endRange = ((currentPage) * (size)) ;
+    let endRange = ((currentPage) * (size));
     if (endRange > totalRecords) {
       endRange = totalRecords;
     }
@@ -200,8 +200,8 @@ export default class EmployeeList extends Component {
     ]
     let columns = []
     // 
-    if(this.state.orgsetup){
-       columns = [
+    if (this.state.orgsetup) {
+      columns = [
         {
           title: 'Employee',
           sorter: false,
@@ -219,7 +219,7 @@ export default class EmployeeList extends Component {
           dataIndex: 'phone',
           sorter: true,
         },
-        
+
         {
           title: 'Entity',
           sorter: true,
@@ -227,7 +227,7 @@ export default class EmployeeList extends Component {
             return <>
               <div>{record.entity?.name ? record.entity?.name : "-"}</div>
             </>
-          }     
+          }
         },
         {
           title: 'Division',
@@ -238,7 +238,7 @@ export default class EmployeeList extends Component {
             </>
           }
         },
-  
+
         {
           title: 'Department',
           sorter: true,
@@ -275,7 +275,7 @@ export default class EmployeeList extends Component {
             </>
           }
         },
-  
+
         {
           title: 'Location',
           sorter: true,
@@ -303,13 +303,13 @@ export default class EmployeeList extends Component {
             </div>
           ),
         },
-       
+
       ]
 
-    }else{
+    } else {
 
       // colums 2 without entity
-       columns = [
+      columns = [
         {
           title: 'Employee',
           sorter: false,
@@ -327,7 +327,7 @@ export default class EmployeeList extends Component {
           dataIndex: 'phone',
           sorter: true,
         },
-        
+
         {
           title: 'Division',
           sorter: true,
@@ -337,7 +337,7 @@ export default class EmployeeList extends Component {
             </>
           }
         },
-  
+
         {
           title: 'Department',
           sorter: true,
@@ -374,7 +374,7 @@ export default class EmployeeList extends Component {
             </>
           }
         },
-  
+
         {
           title: 'Location',
           sorter: true,
@@ -402,11 +402,11 @@ export default class EmployeeList extends Component {
             </div>
           ),
         },
-       
+
       ]
 
     }
-    
+
     return (
 
       <div className="">
@@ -431,14 +431,14 @@ export default class EmployeeList extends Component {
             {this.state.showFilter && <div className='mt-5 filterCard p-3'>
               {isCompanyAdmin && <div className="row">
 
-              {this.state.orgsetup &&  <div className="col-md-3">
+                {this.state.orgsetup && <div className="col-md-3">
                   <div className="form-group form-focus">
                     <EntityDropdown
-                    defaultValue={this.state.entityId} onChange={e => {
-                      this.setState({
-                        entityId: e.target.value
-                      })
-                    }}></EntityDropdown>
+                      defaultValue={this.state.entityId} onChange={e => {
+                        this.setState({
+                          entityId: e.target.value
+                        })
+                      }}></EntityDropdown>
                     <label className="focus-label">Entity</label>
                   </div>
                 </div>}
@@ -481,7 +481,7 @@ export default class EmployeeList extends Component {
                     <input onChange={e => {
                       this.setState({
                         q: e.target.value,
-                        page:0
+                        page: 0
                       })
                     }} type="text" className="form-control floating" />
                     <label className="focus-label">Search</label>

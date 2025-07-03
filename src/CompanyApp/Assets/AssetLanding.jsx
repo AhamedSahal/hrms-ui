@@ -6,8 +6,8 @@ import Assets from './index';
 import AssetAvailable from './AssetAvailable';
 import AssetAcknowledge from './AssetAcknowledge';
 import {getAssetAcknowledgementStatus} from '../ModuleSetup/Assets/Acknowlegement/service';
-import { verifyViewPermission,verifyEditPermission } from '../../utility';
-const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN';
+import { verifyViewPermission,verifyEditPermission,verifyOrgLevelEditPermission,verifyOrgLevelViewPermission} from '../../utility';
+const isCompanyAdmin = getUserType() == 'COMPANY_ADMIN' || verifyOrgLevelViewPermission("Manage Assets");
 
 
 const { Header, Body, Footer, Dialog } = Modal;
@@ -55,7 +55,7 @@ export default class AssetLanding extends Component {
                                     <ul className="nav nav-items">
                                         
                                     {<li className="nav-item"><a href="#allocate" data-toggle="tab" className="nav-link active">Allocated</a></li>}
-                                    {isCompanyAdmin && <li className="nav-item"><a href="#available" data-toggle="tab" className="nav-link">Available</a></li>}          
+                                    {(isCompanyAdmin || verifyOrgLevelViewPermission("Manage Assets") )&& <li className="nav-item"><a href="#available" data-toggle="tab" className="nav-link">Available</a></li>}          
                                     {this.state.isAssetAcknowledgeEnabled && <><li className="nav-item"><a href="#acknowledge" data-toggle="tab" className="nav-link">Acknowledge</a></li></>} 
                                     </ul>
                                 </div>
@@ -66,7 +66,7 @@ export default class AssetLanding extends Component {
                         { <div id="allocate" className="pro-overview insidePageDiv tab-pane fade show active">
                           <Assets AcknowledgeStatus={this.state.isAssetAcknowledgeEnabled} ></Assets>
                         </div>}
-                        { isCompanyAdmin && <div id="available" className="pro-overview insidePageDiv tab-pane fade">
+                        { (isCompanyAdmin || verifyOrgLevelViewPermission("Manage Assets")) && <div id="available" className="pro-overview insidePageDiv tab-pane fade">
                         <AssetAvailable></AssetAvailable>
                         </div>}
                         {<><div id="acknowledge" className="pro-overview insidePageDiv tab-pane fade">

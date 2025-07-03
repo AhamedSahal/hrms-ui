@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormGroup } from 'reactstrap';
-import { getUserType, toLocalTime, toLocalCalendarTime, toUTCCalendarTime, verifyEditPermission, getPermission, getRoleId, verifyViewPermission, verifyRoleEditPermissionforSelf, verifyViewPermissionForTeam, verifyOrgLevelViewPermission, getReadableDate, toDateWithGMT } from '../../../utility';
+import { getUserType, toLocalTime, toLocalCalendarTime, toUTCCalendarTime, verifyEditPermission, getPermission, getRoleId, verifyViewPermission, verifyRoleEditPermissionforSelf, verifyViewPermissionForTeam, verifyOrgLevelViewPermission, getReadableDate, toDateWithGMT, verifyOrgLevelEditPermission } from '../../../utility';
 import BranchDropdown from '../../ModuleSetup/Dropdown/BranchDropdown';
 import DepartmentDropdown from '../../ModuleSetup/Dropdown/DepartmentDropdown';
 import EmployeeDropdown from '../../ModuleSetup/Dropdown/EmployeeDropdown';
@@ -148,7 +148,10 @@ export default class CompanyDetailEmployeeForm extends Component {
     render() {
         const { company, orgsetup } = this.state;
         let { editable } = this.state;
-        const isEditAllowed = getPermission("PEOPLE", "EDIT") == PERMISSION_LEVEL.ORGANIZATION;
+        // const isEditAllowed = getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION && getPermission("Peoples My Teams", "EDIT") == PERMISSION_LEVEL.HIERARCHY ; 
+        const isEditAllowed = getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION || 
+                      getPermission("Peoples My Team", "EDIT") == PERMISSION_LEVEL.HIERARCHY ||
+                      getPermission("Peoples My Profile", "EDIT") == PERMISSION_LEVEL.SELF;
         if (editable && !isEditAllowed) {
             editable = false;
         }
@@ -157,7 +160,7 @@ export default class CompanyDetailEmployeeForm extends Component {
                 <div className="pt-3 col-md-6 d-flex">
                     <div className="card profile-box flex-fill">
                         <div className="card-body">
-                        <h3 className="card-title">Company Information {!editable && getPermission("PEOPLE", "EDIT") == PERMISSION_LEVEL.ORGANIZATION  && <Anchor style={{ borderRadius: "50%" }} className="btn btn-success btn-sm" onClick={() => {
+                        <h3 className="card-title">Company Information {(!editable && isEditAllowed) && <Anchor style={{ borderRadius: "50%" }} className="btn btn-success btn-sm" onClick={() => {
                                 this.setState({ editable: true })
                             }}><i className="fa fa-edit"></i></Anchor>}</h3>
                             <ul className="personal-info">
@@ -410,7 +413,7 @@ export default class CompanyDetailEmployeeForm extends Component {
 
                                                 </label>
                                                 <Field readOnly={!editable} name="reportingManagerId" render={field => {
-                                                    return <EmployeeDropdown excludeId={values.id} readOnly={!editable} defaultValue={values.reportingManager?.id} onChange={e => {
+                                                    return <EmployeeDropdown permission={getPermission("People","VIEW")} excludeId={values.id} readOnly={!editable} defaultValue={values.reportingManager?.id} onChange={e => {
                                                         setFieldValue("reportingManagerId", e.target.value)
                                                     }}></EmployeeDropdown>
                                                 }}></Field>
