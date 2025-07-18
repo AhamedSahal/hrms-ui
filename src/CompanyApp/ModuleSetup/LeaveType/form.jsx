@@ -573,11 +573,11 @@ export default class LeaveTypeForm extends Component {
                                     </ErrorMessage>
                                     </FormGroup>
                                 </div>}
-                                <div className={values.mobileDefaultLeave == true ? "col-md-2" : "col-md-4"}>
+                                <div className={values.mobileDefaultLeave == true ? "col-md-6" : "col-md-6"}>
                                     <FormGroup>
                                         <div type="checkbox" name="mobileDefaultLeave">
                                             <label>Default Mobile Leave</label>
-                                                    <Tooltip title="Enable to set this leave type as the default selection when applying for leave via the mobile app. Only one leave type can be set as default.">
+                                                    <Tooltip title="When enabled, this leave type will appear as the main pie chart by default on the mobile app.">
                                                     <i className="fa fa-info-circle" style={{ marginLeft: '4px', cursor: 'pointer' }}></i>
                                                     </Tooltip><br />
                                                      
@@ -592,6 +592,9 @@ export default class LeaveTypeForm extends Component {
                                                         leaveType
                                                     });
                                                 }}  ></i>
+                                                    {this.state.leaveType
+                                                && this.state.leaveType.mobileDefaultLeave &&
+                                                <> <br /><small class="text-danger">Enabling this will override previous records and set this leave type as the default for mobile.</small> </>}
                                         </div>
                                     </FormGroup>
                                 </div>

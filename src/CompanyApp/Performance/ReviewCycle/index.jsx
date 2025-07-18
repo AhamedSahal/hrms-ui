@@ -15,6 +15,7 @@ import ActiveCycle from './activeCycle/index';
 import PlannedCycle from './plannedCycle/index';
 import DraftsCycle from './draftCycle/index';
 
+import { FcTodoList } from "react-icons/fc";
 
 const { Header, Body, Footer } = Modal;
 export default class EmployeePerfomanceCycle extends Component {
@@ -24,12 +25,18 @@ export default class EmployeePerfomanceCycle extends Component {
             cycleSetupScreen: 0,
             cycleData: '',
             step: 0,
-            formData: {},
+            formData: {
+                id:0
+            },
+            
         }
     }
     hideForm = () => {
         this.setState({
             showForm: false,
+            formData: {},
+            id:0,
+            cycleSetupScreen:0,
         })
     }
 
@@ -39,6 +46,85 @@ export default class EmployeePerfomanceCycle extends Component {
             formData: { ...prevState.formData, ...data },
         }));
     };
+
+    refreshActiveCycle = () => {
+      
+        window.location.reload();
+    
+    }
+
+
+
+    updateCycle = (data) => {
+   
+
+    const formData = {
+        id:data.id,
+        appraisalCycletime5: {
+            id: data.appraisalCycleTimeId,
+            cycleStartDate: data.cycleStartDate,
+            cycleEndDate: data.cycleEndDate,
+            instancename: data.instanceName,
+            regular: data.regular,
+            regularCheck_ins: data.regularCheckIns,
+        },
+        cycleDetails1: {
+            id: data.cycleDetailsId,
+            assign: data.assign,
+            branchId: data.branchId,
+            departmentId: data.departmentId,
+            functionId: data.functionId,
+            cyclename: data.cyclename,
+            description: data.description,
+            // branches: data.branchId ? data.branchId.split(',').map(id => ({
+            //     id: parseInt(id.trim()),
+            //     name: '', 
+            // })) : [],
+        },
+        feedbackFlow4: {
+            id: data.feedbackId,
+            reviewer1: data.reviewer1,
+            reviewer2: data.reviewer2,
+            reviewer3: data.reviewer3,
+            reviewer4: data.reviewer4,
+            reviewer5: data.reviewer5,
+            roleId: data.roleId,
+            feedback: [
+                data.reviewer1 ? '1' : null,
+                data.reviewer2 ? '2' : null,
+                data.reviewer3 ? '3' : null,
+                data.reviewer4 ? '4' : null,
+                data.reviewer5 ? '5' : null,
+            ].filter(Boolean),
+            roleName:data.roleName
+
+        },
+        performanceValue2: {
+            id: data.performFactorId,
+            factorField: data.factorField,
+            performanceScore: data.performanceScore,
+        },
+        repetitionValue6: {
+            id: data.repetitionId,
+            repetitionSettings: {
+                id: 0,
+                active: data.active,
+                frequencyType: data.frequencyType,
+                recurrence: data.recurrence,
+            },
+            repetitionPeriods: [], 
+        },
+    };
+
+        this.setState({
+            formData: formData,
+            showForm: true,
+        });
+    };
+
+
+
+
 
     nextStep = () => {
         this.setState((prevState) => ({
@@ -58,7 +144,7 @@ export default class EmployeePerfomanceCycle extends Component {
         const steps = [
             'Cycle Define',
             'Compose Score',
-            'Templateize',
+            // 'Templateize',
             'Participants',
             'Set Timelines',
             'Repetitions',
@@ -67,20 +153,21 @@ export default class EmployeePerfomanceCycle extends Component {
         return (
             <div className="page-wrapper">
                 <Helmet>
-                    <title>Performance Cycle | {getTitle()}</title>
+                    <title>Review Cycle | {getTitle()}</title>
                 </Helmet>
                 <div className="mt-4 content container-fluid">
                     <div className="tab-content">
                         <div className="subMenu_box row user-tabs">
                             <div className="nav-box">
                                 <div className="page-headerTab">
-                                    <h3 style={{ color: 'white' }} className="page-title">Performance Cycle</h3>
+                                    {/* <h3 style={{ color: 'white' }} className="page-title">Performance Cycle</h3> */}
                                     <div className="p-0 col-lg-12 col-md-12 col-sm-12 sub-nav-tabs">
                                         <ul className="nav nav-items">
-                                            <li className="nav-item"><a href="#active" data-toggle="tab" className="nav-link active">Active(2)</a></li>
-                                            <li className="nav-item"><a href="#planned" data-toggle="tab" className="nav-link ">Planned(1)</a></li>
+                                            {<li className="nav-item"><a href="#list" data-toggle="tab" className="nav-link active"><FcTodoList /> List</a></li>}
+                                        
+                                            {/* <li className="nav-item"><a href="#planned" data-toggle="tab" className="nav-link ">Planned(1)</a></li>
                                             <li className="nav-item"><a href="#drafts" data-toggle="tab" className="nav-link ">Drafts(0)</a></li>
-                                            <li className="nav-item"><a href="#completed" data-toggle="tab" className="nav-link ">Completed(1)</a></li>
+                                            <li className="nav-item"><a href="#completed" data-toggle="tab" className="nav-link ">Completed(1)</a></li> */}
                                         </ul>
                                     </div>
                                 </div>
@@ -93,10 +180,10 @@ export default class EmployeePerfomanceCycle extends Component {
                             </div>
                         </div>
 
-                        <div id="active" className="pro-overview insidePageDiv tab-pane fade show active">
-                            <ActiveCycle ></ActiveCycle>
+                        <div id="list" className="pro-overview insidePageDiv tab-pane fade show active">
+                            <ActiveCycle updateCycle={this.updateCycle} ></ActiveCycle>
                         </div>
-                        <div id="planned" className="pro-overview insidePageDiv tab-pane fade">
+                        {/* <div id="planned" className="pro-overview insidePageDiv tab-pane fade">
                             <PlannedCycle ></PlannedCycle>
                         </div>
                         <div id="drafts" className="pro-overview insidePageDiv tab-pane fade">
@@ -104,7 +191,7 @@ export default class EmployeePerfomanceCycle extends Component {
                         </div>
                         <div id="completed" className="pro-overview insidePageDiv tab-pane fade ">
                             <CompletedCycle ></CompletedCycle>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <Formik
@@ -116,7 +203,9 @@ export default class EmployeePerfomanceCycle extends Component {
 
                             < Modal className='cycleModal' enforceFocus={false} size={"lg"} show={this.state.showForm} onHide={this.hideForm} >
                                 <Header closeButton>
-                                    <h5 className="modal-title">New Cycle</h5>
+                                    <h5 className="modal-title">
+                                        {(this.state.formData && this.state.formData.id) ? 'Edit' : 'New'} Cycle</h5>
+                                        
                                 </Header>
                                 <div className='cycle-modal-header'>
                                     <div className=''>
@@ -135,21 +224,22 @@ export default class EmployeePerfomanceCycle extends Component {
                                         nextStep={this.nextStep}
                                         prevStep={this.prevStep}
                                         handleFormData={this.handleFormData} />}
-                                    {cycleSetupScreen === 2 && <TemplatesForReviewers formData={formData}
+                                    {/* {cycleSetupScreen === 2 && <TemplatesForReviewers formData={formData}
+                                        nextStep={this.nextStep}
+                                        prevStep={this.prevStep}
+                                        handleFormData={this.handleFormData} />} */}
+                                    {cycleSetupScreen === 2 && <FeedbackFlow formData={formData} nextStep={this.nextStep} prevStep={this.prevStep}
+                                        handleFormData={this.handleFormData} />}
+                                    {cycleSetupScreen === 3 && <AppraisalCycleTime formData={formData}
                                         nextStep={this.nextStep}
                                         prevStep={this.prevStep}
                                         handleFormData={this.handleFormData} />}
-                                    {cycleSetupScreen === 3 && <FeedbackFlow formData={formData} nextStep={this.nextStep} prevStep={this.prevStep}
-                                        handleFormData={this.handleFormData} />}
-                                    {cycleSetupScreen === 4 && <AppraisalCycleTime formData={formData}
-                                        nextStep={this.nextStep}
-                                        prevStep={this.prevStep}
-                                        handleFormData={this.handleFormData} />}
-                                    {cycleSetupScreen === 5 && <RepetitionsSettings cycleData={this.state.cycleData} formData={formData}
+                                    {cycleSetupScreen === 4 && <RepetitionsSettings cycleData={this.state.cycleData} formData={formData}
                                         nextStep={this.nextStep}
                                         prevStep={this.prevStep}
                                         hideForm={this.hideForm}
-                                        handleFormData={this.handleFormData} />}
+                                        handleFormData={this.handleFormData} 
+                                        refreshActiveCycle={this.refreshActiveCycle}/>}
 
                                 </Body>
 

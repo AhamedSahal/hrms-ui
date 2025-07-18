@@ -238,13 +238,13 @@ const EmployeeDetail = (props) => {
                         </div>
                         
                         <div id="emp_benefits" className="pro-overview  tab-pane fade">
-                            {activeTab == 9 && <> {(getEmployeeId() === this.state.id || isCompanyAdmin || verifyOrgLevelEditPermission("Peoples Organization") )?<BenefitsDetail employeeId={this.state.id}></BenefitsDetail>: <AccessDenied></AccessDenied>}</>}
+                            {activeTab == 9 && <> {(getEmployeeId() === state.id || isCompanyAdmin || verifyOrgLevelEditPermission("Peoples Organization") )?<BenefitsDetail employeeId={state.id}></BenefitsDetail>: <AccessDenied></AccessDenied>}</>}
                         </div>
                         <div id="status_change" className="pro-overview  tab-pane fade">
-                            {activeTab == 10 && <> {(getEmployeeId() === this.state.id || isCompanyAdmin || verifyOrgLevelEditPermission("Peoples Organization"))?<ChangeStatus employeeId={this.state.id}></ChangeStatus>: <AccessDenied></AccessDenied>}</>}
+                            {activeTab == 10 && <> {(getEmployeeId() === state.id || isCompanyAdmin || verifyOrgLevelEditPermission("Peoples Organization"))?<ChangeStatus employeeId={state.id}></ChangeStatus>: <AccessDenied></AccessDenied>}</>}
                         </div>
                         <div id="system_log" className="pro-overview tab-pane fade">
-                            {activeTab == 11 && <> {(getEmployeeId() === this.state.id || isCompanyAdmin || verifyOrgLevelEditPermission("Peoples Organization") )?<SystemLog employeeId={this.state.id}></SystemLog>: <AccessDenied></AccessDenied>}</>}
+                            {activeTab == 11 && <> {(getEmployeeId() === state.id || isCompanyAdmin || verifyOrgLevelEditPermission("Peoples Organization") )?<SystemLog employeeId={state.id}></SystemLog>: <AccessDenied></AccessDenied>}</>}
                         </div>
                         <div id="my_asset" className="pro-overview tab-pane fade">
                             {activeTab === 12 && <Assets employeeId={employee.id || getEmployeeId()}></Assets>}

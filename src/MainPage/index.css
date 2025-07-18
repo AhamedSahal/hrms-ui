@@ -4042,5 +4042,16 @@ input[data-id="cbColor"] {
     margin-right: auto !important;
 }
 
+.openAI_Bot_button {
+    position: fixed;
+    top: 71%;
+    right: 0px;
+    z-index: 13;
+    padding: 13px 3px 13px 1px;
+    border-radius: 0px 5px 5px 0px;
+    background: linear-gradient(90deg, rgb(22 20 75) 0%, rgba(9, 54, 121, 1) 35%, rgb(25 129 150) 100%);
+    cursor: pointer;
+}
+
 
 

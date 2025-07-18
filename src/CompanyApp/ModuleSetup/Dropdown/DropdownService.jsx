@@ -1,6 +1,6 @@
 import { getWithAuth, getWithAuthSurvey } from "../../../HttpRequest";
 import { getCompanyId } from "../../../utility";
-import { setBranchData, setCountryData, setDepartmentData, setDesignationData, setEmployeeData,setEmployeeDataByCompany, setLanguageData, setLeaveTypeData, setLeaveTypeDataReport, setNationalityData, setPlanData, setReligionData, setObjectiveGroupData, setPerformanceTemplateData, setJobTitleData, setDivisionData, setGradesData, setJobTitlesData, setRoleData, setTemplatesData, setSignaturesData, setFunctionData, setSectionData, setRecognitionCategoryData, setProjectData, setActivityData, setWeekOffData, setShiftsData, setRosterData, setShiftData, setCategoryData, setSurveyLanguageData, setCompanyData, setSurveyData, setExpenseCategoryData, setWorkFlowAutomateData, setApplicantData, setWorkFlowStepAutomateData, setSourceTypeData, setAssetCategoryData, setAssetSetupData, setPaymentModeData, setPayhubRegionData, setPayhubSubRegionData, setpayhubIndustryData, setpayhubRevenueData, setEmploymentStatus , setGoalsData,setGoalsEmployeeData,setEntity} from "./DropdownReducer";
+import { setBranchData, setCountryData, setDepartmentData, setDesignationData, setEmployeeData,setEmployeeDataByCompany, setLanguageData, setLeaveTypeData, setLeaveTypeDataReport, setNationalityData, setPlanData, setReligionData, setObjectiveGroupData, setPerformanceTemplateData, setJobTitleData, setDivisionData, setGradesData, setJobTitlesData, setRoleData, setTemplatesData, setSignaturesData, setFunctionData, setSectionData, setRecognitionCategoryData, setProjectData, setActivityData, setWeekOffData, setShiftsData, setRosterData, setShiftData, setCategoryData, setSurveyLanguageData, setCompanyData, setSurveyData, setExpenseCategoryData, setWorkFlowAutomateData, setApplicantData, setWorkFlowStepAutomateData, setSourceTypeData, setAssetCategoryData, setAssetSetupData, setPaymentModeData, setPayhubRegionData, setPayhubSubRegionData, setpayhubIndustryData, setpayhubRevenueData, setEmploymentStatus , setGoalsData,setGoalsEmployeeData,setEntity,setPerformReviewCycle} from "./DropdownReducer";
 import { toast } from 'react-toastify';
 
 
@@ -197,9 +197,9 @@ export const DropdownService = {
         }
     },
 
-    getObjectiveGroups: function () {
+    getObjectiveGroups: function (excludeDefault) {
         return dispatch => {
-            return getWithAuth("/performance-objective-group/select").then(response => {
+            return getWithAuth(`/performance-objective-group/select?excludeDefault=${excludeDefault}`).then(response => {
                 if (response.data && response.data.status === "OK") {
                     dispatch(setObjectiveGroupData(response.data.data));
                 } else {
@@ -744,5 +744,21 @@ export const DropdownService = {
             });;
         }
     },
+
+     getReviewCycle: function (empId) {
+        console.log("props.empId from dropdown service: ",empId )
+        return dispatch => {
+            return getWithAuth(`/performanceCycle/select?empId=${empId}`).then(response => {
+                if (response.data && response.data.status === "OK") {
+                    dispatch(setPerformReviewCycle(response.data.data));
+                } else {
+                    toast.error(response.data.message);
+                }
+            }).catch(err => {
+                toast.error(err.message) //"Something went wrong");
+            });;
+        }
+    },
+    
 
 };

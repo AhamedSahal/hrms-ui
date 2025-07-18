@@ -116,10 +116,12 @@ export default class BulkUploadTypeForm extends Component {
                     document.querySelector('input[name="file"]').value = '';
                 } else {
                     toast.error(res.message);
+                    document.querySelector('input[name="file"]').value = '';
                 }
             });}
              catch (err) {
             toast.error("Error while uploading Employee Bulk Data");
+            document.querySelector('input[name="file"]').value = '';
         }
     }
     

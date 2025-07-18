@@ -14,6 +14,14 @@ const repetitionValidationSchema = Yup.object().shape({
         then: Yup.string().required('Select frequency'),
         otherwise: Yup.string(),
     }),
+    recurrence: Yup.number().when('active', {
+        is: true,
+        then: Yup.number()
+            .required('Number of recurrences is required')
+            .min(1, 'Must be at least 1')
+            .integer('Must be a whole number'),
+        otherwise: Yup.number(),
+    }),
 });
 
 export default class RepetitionsSettings extends Component {
@@ -22,128 +30,110 @@ export default class RepetitionsSettings extends Component {
 
         this.state = {
             active: this.props.formData.repetitionValue6?.repetitionSettings.active || false,
-            cycleTimePeriod: this.props.formData.repetitionsPeriods || [],
+            cycleTimePeriod: this.props.formData.repetitionValue6?.repetitionsPeriods || [],
             currentPage: 0,
             rowsPerPage: 4,
-            frequency: this.props.formData.repetitionSettings?.frequencyType || '',
+            frequency: this.props.formData.repetitionValue6?.repetitionSettings?.frequencyType || '',
             formValue: {
-                id: 0,
-                frequencyType: this.props.formData.repetitionSettings?.frequencyType || "",
-                recurrence: this.props.formData.repetitionSettings?.recurrence || '',
+                id: this.props.formData.repetitionValue6?.id || 0,
+                frequencyType: this.props.formData.repetitionValue6?.repetitionSettings?.frequencyType || "",
+                recurrence: this.props.formData.repetitionValue6?.repetitionSettings?.recurrence || '',
 
             }
         }
     }
+
+    componentDidMount() {
+
+        const recurrence = this.props.formData.repetitionValue6?.repetitionSettings?.recurrence;
+        const frequencyType = this.props.formData.repetitionValue6?.repetitionSettings?.frequencyType;
+
+        if (this.state.active && recurrence && frequencyType) {
+            this.setState({ frequency: frequencyType }, () => {
+                const fakeEvent = {
+                    target: {
+                        value: recurrence
+                    },
+                    preventDefault: () => { }
+                };
+                this.handleFieldChange(fakeEvent);
+            });
+        }
+   
+    }
+
     handleFieldChange = (e) => {
         e.preventDefault();
         const { value } = e.target;
-        const { frequency } = this.state
-        const startDate = this.props.formData.appraisalCycletime5?.cycleStartDate
-        const endDate = this.props.formData.appraisalCycletime5?.cycleEndDate
-        const instance = this.props.formData.appraisalCycletime5?.instancename
-        const dateStart = new Date(startDate);
-        const dateEnd = new Date(endDate)
-        if (frequency === "monthly") {
-            const result = []
-            for (let i = 0; i < value; i++) {
-                const nextMonthDate = new Date(dateStart);
-                const nextMonthEndDate = new Date(dateEnd);
+        const { frequency } = this.state;
+        const startDate = this.props.formData.appraisalCycletime5?.cycleStartDate;
+        const endDate = this.props.formData.appraisalCycletime5?.cycleEndDate;
+        const instance = this.props.formData.appraisalCycletime5?.instancename;
 
-                nextMonthDate.setMonth(dateEnd.getMonth() + i);
-                nextMonthDate.setDate(nextMonthDate.getDate() + 30);
-                const formattedDate = nextMonthDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                });
+        if (!startDate || !endDate || !frequency || !value) return;
 
-                nextMonthEndDate.setMonth(dateEnd.getMonth() + i);
-                nextMonthEndDate.setDate(nextMonthEndDate.getDate() + 30);
-                const formattedEndDate = nextMonthEndDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                });
+        const originalStart = new Date(startDate);
+        const originalEnd = new Date(endDate);
+        const result = [];
+        const numRecurrences = parseInt(value);
 
-                result.push({ startDate: formattedDate, endDate: formattedEndDate, instanceName: instance });
-            }
-            this.setState({ cycleTimePeriod: result })
-        } else if (frequency === "quarterly") {
-            const result = []
-            for (let i = 0; i < value; i++) {
-                const nextMonthDate = new Date(dateStart);
-                const nextMonthEndDate = new Date(dateEnd);
-
-                nextMonthDate.setMonth(dateStart.getMonth() + i * 3);
-                nextMonthDate.setDate(nextMonthDate.getDate() + 90);
-                const formattedDate = nextMonthDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                });
-                nextMonthEndDate.setMonth(dateEnd.getMonth() + i * 3);
-                nextMonthEndDate.setDate(nextMonthEndDate.getDate() + 90);
-                const formattedEndDate = nextMonthEndDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                });
-
-                result.push({ startDate: formattedDate, endDate: formattedEndDate, instanceName: instance });
-
-            }
-            this.setState({ cycleTimePeriod: result })
-        } else if (frequency === "semiannually") {
-            const result = []
-            for (let i = 0; i < value; i++) {
-                const nextMonthDate = new Date(dateStart);
-                const nextMonthEndDate = new Date(dateEnd);
-
-                nextMonthDate.setMonth(dateStart.getMonth() + i * 6);
-                nextMonthDate.setDate(nextMonthDate.getDate() + 180);
-                const formattedDate = nextMonthDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                });
-                nextMonthEndDate.setMonth(dateEnd.getMonth() + i * 6);
-                nextMonthEndDate.setDate(nextMonthEndDate.getDate() + 180);
-                const formattedEndDate = nextMonthEndDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                });
-
-                result.push({ startDate: formattedDate, endDate: formattedEndDate, instanceName: instance });
-            }
-            this.setState({ cycleTimePeriod: result })
-        } else if (frequency === "annually") {
-            const result = []
-            for (let i = 0; i < value; i++) {
-                const nextMonthDate = new Date(dateStart);
-                const nextMonthEndDate = new Date(dateEnd);
-
-                nextMonthDate.setMonth(dateStart.getMonth() + i * 12);
-                nextMonthDate.setDate(nextMonthDate.getDate() + 365);
-                const formattedDate = nextMonthDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                });
-                nextMonthEndDate.setMonth(dateEnd.getMonth() + i * 6);
-                nextMonthEndDate.setDate(nextMonthEndDate.getDate() + 365);
-                const formattedEndDate = nextMonthEndDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                });
-
-                result.push({ startDate: formattedDate, endDate: formattedEndDate, instanceName: instance });
-
-            }
-            this.setState({ cycleTimePeriod: result })
+        let monthsPerCycle;
+        switch (frequency) {
+            case 'monthly':
+                monthsPerCycle = 1;
+                break;
+            case 'quarterly':
+                monthsPerCycle = 3;
+                break;
+            case 'semiannually':
+                monthsPerCycle = 6;
+                break;
+            case 'annually':
+                monthsPerCycle = 12;
+                break;
+            default:
+                return;
         }
+
+        for (let i = 0; i < numRecurrences; i++) {
+            const cycleStart = new Date(originalStart);
+            cycleStart.setMonth((originalStart.getMonth()+1) + (i * monthsPerCycle));
+
+            const cycleEnd = new Date(cycleStart);
+            cycleEnd.setMonth((cycleStart.getMonth()) + monthsPerCycle);
+            cycleEnd.setDate(cycleEnd.getDate() - 1);
+
+            if (cycleEnd > originalEnd) {
+                cycleEnd.setTime(originalEnd.getTime());
+            }
+
+            const formattedStartDate = cycleStart.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+            });
+
+            const formattedEndDate = cycleEnd.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+            });
+
+            result.push({
+                startDate: formattedStartDate,
+                endDate: formattedEndDate,
+                instanceName: `${instance} - Cycle ${i + 1}`
+            });
+
+            // Stop if we've reached the original end date
+            if (cycleEnd >= originalEnd) {
+                break;
+            }
+        }
+
+        this.setState({ cycleTimePeriod: result });
     }
+    
     handleNextClick = () => {
         this.setState((prevState) => ({
             currentPage: prevState.currentPage + 1,
@@ -155,15 +145,22 @@ export default class RepetitionsSettings extends Component {
     }
 
     save = (data, action) => {
+       
         const repetitionSettings = {
+            active: this.state.active,
+            id: this.state.formValue.id,
             repetitionPeriods: this.state.cycleTimePeriod,
             repetitionSettings: data
         }
-        this.props.handleFormData({ repetitionValue6: repetitionSettings })
+        
+        this.props.handleFormData({ repetitionValue6: repetitionSettings, id: this.props.formData?.id || 0 })
         action.setSubmitting(true);
+       
         savePerformanceCycle(this.props.formData).then(res => {
             if (res.status == "OK") {
                 toast.success(res.message);
+                 this.props.refreshActiveCycle();
+                 this.props.hideForm();
             } else {
                 toast.error(res.message);
             }
@@ -178,12 +175,137 @@ export default class RepetitionsSettings extends Component {
         })
         this.props.hideForm()
     }
+    getAvailableFrequencies = () => {
+        const startDate = this.props.formData.appraisalCycletime5?.cycleStartDate;
+        const endDate = this.props.formData.appraisalCycletime5?.cycleEndDate;
+
+        if (!startDate || !endDate) {
+            return [];
+        }
+
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        const calculatePreciseMonths = (startDate, endDate) => {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+
+            let months = 0;
+            let currentDate = new Date(start);
+
+            while (currentDate < end) {
+                const nextMonth = new Date(currentDate);
+                nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+                if (nextMonth <= end) {
+                    months++;
+                    currentDate = nextMonth;
+                } else {
+                    const remainingDays = Math.ceil((end - currentDate) / (1000 * 60 * 60 * 24));
+                    const daysInCurrentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+                    months += remainingDays / daysInCurrentMonth;
+                    break;
+                }
+            }
+
+            return months;
+        };
+
+        const exactMonths = calculatePreciseMonths(start, end);
+        const diffInDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
+        const availableOptions = [];
+
+        if (exactMonths >= 1) {
+            availableOptions.push({ value: "monthly", label: "Monthly" });
+        }
+
+        if (exactMonths >= 3) {
+            availableOptions.push({ value: "quarterly", label: "Quarterly" });
+        }
+
+        if (exactMonths >= 6) {
+            availableOptions.push({ value: "semiannually", label: "Semiannually" });
+        }
+
+        if (exactMonths >= 12) {
+            availableOptions.push({ value: "annually", label: "Annually" });
+        }
+
+        return availableOptions;
+    }
+    getMaxRecurrences = () => {
+        const startDate = this.props.formData.appraisalCycletime5?.cycleStartDate;
+        const endDate = this.props.formData.appraisalCycletime5?.cycleEndDate;
+        const { frequency } = this.state;
+
+        if (!startDate || !endDate || !frequency) {
+            return null;
+        }
+
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        const calculatePreciseMonths = (startDate, endDate) => {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+
+            let months = 0;
+            let currentDate = new Date(start);
+
+            while (currentDate < end) {
+                const nextMonth = new Date(currentDate);
+                nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+                if (nextMonth <= end) {
+                    months++;
+                    currentDate = nextMonth;
+                } else {
+                    break;
+                }
+            }
+
+            return months;
+        };
+
+        const exactMonths = calculatePreciseMonths(start, end);
+
+        switch (frequency) {
+            case 'monthly':
+                return Math.floor(exactMonths);
+            case 'quarterly':
+                return Math.floor(exactMonths / 3);
+            case 'semiannually':
+                return Math.floor(exactMonths / 6);
+            case 'annually':
+                return Math.floor(exactMonths / 12);
+            default:
+                return null;
+        }
+    }
+    handleFrequency = (e) => {
+        const value = e.target.value;
+        this.setState({ frequency: value }, () => {
+            const maxRecurrences = this.getMaxRecurrences();
+            if (maxRecurrences && this.state.formValue.recurrence > maxRecurrences) {
+                this.setState({
+                    formValue: {
+                        ...this.state.formValue,
+                        recurrence: ''
+                    },
+                    cycleTimePeriod: []
+                });
+            }
+        });
+    }
     render() {
         const { cycleTimePeriod } = this.state;
         const { currentPage, rowsPerPage } = this.state;
         const startIndex = currentPage * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
         const currentRows = cycleTimePeriod.slice(startIndex, endIndex);
+        const availableFrequencies = this.getAvailableFrequencies();
+        const maxRecurrences = this.getMaxRecurrences();
 
         return (
             <div>
@@ -232,32 +354,54 @@ export default class RepetitionsSettings extends Component {
                                         <select
                                             className="form-control"
                                             name="frequencyType"
+                                            value={values.frequencyType}
                                             onChange={e => {
                                                 this.handleFrequency(e);
                                                 setFieldValue('frequencyType', e.target.value);
                                             }}
                                         >
-                                            <option value="">Select Frequency</option>
-                                            <option value="monthly">Monthly</option>
-                                            <option value="quarterly">Quarterly</option>
-                                            <option value="semiannually">Semiannually</option>
-                                            <option value="annually">Annually</option>
+                                            <option value="">
+                                                {availableFrequencies.length === 0
+                                                    ? "No frequency options available for selected date range"
+                                                    : "Select Frequency"
+                                                }
+                                            </option>
+                                            {availableFrequencies.map(option => (
+                                                <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </option>
+                                            ))}
                                         </select>
                                         <ErrorMessage name="frequencyType">
                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                         </ErrorMessage>
                                     </div>
-
                                     <FormGroup className="col-md-4">
                                         <label>Recurrences
                                             <span style={{ color: "red" }}>*</span>
-
                                         </label>
-                                        <Field disabled={!this.state.frequency} name="recurrence" type="number" className="form-control"
+                                        <Field
+                                            disabled={!this.state.frequency}
+                                            name="recurrence"
+                                            type="number"
+                                            min="1"
+                                            max={maxRecurrences || undefined}
+                                            className="form-control"
                                             onChange={e => {
+                                                const value = parseInt(e.target.value);
+                                                if (maxRecurrences && value > maxRecurrences) {
+                                                    // Optionally show a warning or prevent the input
+                                                    return;
+                                                }
                                                 this.handleFieldChange(e);
                                                 setFieldValue('recurrence', e.target.value);
-                                            }} ></Field>
+                                            }}
+                                        />
+                                        {maxRecurrences && values.recurrence > maxRecurrences && (
+                                            <div style={{ color: 'red', fontSize: '12px' }}>
+                                                Maximum {maxRecurrences} recurrences allowed for selected frequency and date range
+                                            </div>
+                                        )}
                                         <ErrorMessage name="recurrence">
                                             {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                         </ErrorMessage>
@@ -279,7 +423,7 @@ export default class RepetitionsSettings extends Component {
                                         {currentRows.map((item, index) => (
                                             <tbody key={index}>
                                                 <tr >
-                                                    <td className='p-0 text-start border-0'>{item.instanceName}({index})</td>
+                                                    <td className='p-0 text-start border-0'>{item.instanceName}</td>
                                                     <td className='p-0 text-start border-0'>{item.startDate}</td>
                                                     <td className='p-0 text-start border-0'>{item.endDate}</td>
                                                 </tr>

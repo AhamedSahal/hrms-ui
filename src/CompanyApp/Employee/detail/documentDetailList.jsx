@@ -3,10 +3,11 @@ import React, { Component } from 'react';
 import { Modal, Anchor } from 'react-bootstrap';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { fileDownload } from '../../../HttpRequest';
-import { getPermission, getReadableDate, getUserType, verifyEditPermission } from '../../../utility';
+import { getPermission, getReadableDate, getUserType, verifyEditPermission,verifyOrgLevelEditPermission } from '../../../utility';
 import DocumentDetailEmployeeForm from './documentDetailForm';
 import { getDocumentInformation } from './service';
 
+import { PERMISSION_LEVEL } from '../../../Constant/enum';
 const { Header, Body, Footer, Dialog } = Modal;
 
 export default class DocumentDetailList extends Component {
@@ -98,7 +99,7 @@ export default class DocumentDetailList extends Component {
                           <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             <i className="las la-bars"></i>
                           </a>
-                          {(item.edit || verifyEditPermission("COMPANY_ADMIN") ) && <div className="dropdown-menu dropdown-menu-right">
+                          {(item.edit || getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION ) && <div className="dropdown-menu dropdown-menu-right">
                             {<a className="dropdown-item" href="#" onClick={() => {
 
                               try {

@@ -223,7 +223,7 @@ export const patchWithAuthSurvey = (path, body) => {
 }
 
 export const fileDownload = (downloadId, referenceId, type, fileName) => {
-
+console.log("cell fileDownload", downloadId, referenceId, type, fileName);
     http.get(`/download?downloadId=${downloadId}&referenceId=${referenceId}&type=${type}`, { responseType: 'blob' })
         .then((response) => {
             const url = window.URL.createObjectURL(new Blob([response.data]));

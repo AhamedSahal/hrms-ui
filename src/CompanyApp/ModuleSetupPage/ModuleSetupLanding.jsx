@@ -20,6 +20,7 @@ import { getModuleSetupByCompanyId } from '../../AdminApp/Company/service';
 import MultiApproveLanding from './MultiApproveLanding';
 import OnboardSetup from './OnboardSetup';
 import OffboardSetup from './Offboard';
+import AIChatbotDocument from '../ModuleSetup/chatbotPolicyDocs';
 export default class ModuleSetupLanding extends Component {
     constructor(props) {
         super(props);
@@ -192,6 +193,7 @@ export default class ModuleSetupLanding extends Component {
                             </div>}
                             {activeTab == 'Chatbot' && <div id="chatbot" className={"pro-overview moduleSetupPageContainer tab-pane fade show active "}>
                                 <ChatbotMessage></ChatbotMessage>
+                                <AIChatbotDocument></AIChatbotDocument>
                             </div>}
                             {activeTab == 'Automate' && <div id="Automate" className={"pro-overview moduleSetupPageContainer tab-pane fade show active "}>
                                 <AutoDocs></AutoDocs>

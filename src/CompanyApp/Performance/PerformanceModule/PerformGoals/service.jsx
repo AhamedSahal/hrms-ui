@@ -3,6 +3,7 @@ import { getPaginationQueryString } from "../../../../utility";
 
 const servicePath = "/employee-performance/PerformGoals";
 const servicePath1 = "/employee-performance/PerformSubGoals";
+const servicePath2 = "/employee-performance";
 
 // get Goal List
 export function getPerformanceGoalsList(searchText, pageNumber, pageSize, sort,self,branchId,departmentId,jobTitleId,fromDate,toDate,status) {
@@ -170,6 +171,15 @@ export function updateGoalStatus(id, file,achievement,comments) {
     return post.then(res => {
         return Promise.resolve(res.data);
     }).catch(err => { 
+        return Promise.reject(err);
+    });
+}
+
+export function getGoalsByReviewIdAndFromToDate(reviewCycleId, fromDate, toDate,empId){
+    let path = `${servicePath2}/getGoalsByReviewIdAndFromToDate?reviewCycleId=${reviewCycleId}&fromDate=${fromDate}&toDate=${toDate}&empId=${empId}`;
+    return getWithAuth(path).then(res => {
+        return Promise.resolve(res.data);
+    }).catch(err => {
         return Promise.reject(err);
     });
 }

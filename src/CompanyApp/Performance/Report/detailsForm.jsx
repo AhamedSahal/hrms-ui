@@ -1,5 +1,5 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Helmet } from 'react-helmet';
 import { getCustomizedWidgetDate, getTitle, getUserType } from '../../../utility';
@@ -9,26 +9,46 @@ import { getPerformanceById, getOverallScoreList } from './service';
 import { PerformanceReviewSchema } from './validation';
 import { Card, CardContent, Typography } from '@mui/material';
 import EmployeeProfilePhoto from '../../Employee/widgetEmployeePhoto';
-import { Anchor } from 'react-bootstrap';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import EmployeeListColumn from '../../Employee/employeeListColumn';
+import { getGoalsByReviewIdAndFromToDate } from '../PerformanceModule/PerformGoals/service';
 import { useParams, useLocation } from 'react-router-dom';
 
-const PerformanceReviewReportDetailsForm = () => {
-    const { id } = useParams();
-    const location = useLocation();
-    const [employeeId, setEmployeeId] = useState(location.state?.empId);
+const PerformanceReviewReportDetailsForm = (props) => {
+	const { id } = useParams();
+	const location = useLocation();
+	const [employeeId, setEmployeeId] = useState(location.state?.empId);
     const [performanceReview, setPerformanceReview] = useState({});
     const [overallScores, setOverallScores] = useState([]);
     const [openTableIndex, setOpenTableIndex] = useState(null);
     const [openTable, setOpenTable] = useState(0);
-console.log("cell performanceReview", location , id);
-    const colorGrade = ['#57E32C', '#b7dd29', '#ffe234', '#ffa534', '#ff4545'];
 
     useEffect(() => {
         getData(id);
         getOverallScoreData();
     }, [id]);
+
+    useEffect(() => {
+        if (
+            performanceReview?.employeePerformanceObjectiveGropList?.some(group => group.defaultRecord)
+        ) {
+            getGoalByReviewIdAndFromToDate(
+                performanceReview.reviewCycleId,
+                performanceReview.fromDate,
+                performanceReview.toDate,
+                performanceReview.employee.id
+            );
+        }
+    }, [performanceReview]);
+
+    const getGoalByReviewIdAndFromToDate = async (reviewCycleId, fromDate, toDate, empId) => {
+        return getGoalsByReviewIdAndFromToDate(reviewCycleId, fromDate, toDate, empId).then(res => {
+            if (res.status === "OK") {
+                setPerformanceReview(prevState => ({ ...prevState, goals: res.data }));
+            }
+        });
+    };
 
     const getOverallScoreData = () => {
         getOverallScoreList().then(res => {
@@ -42,8 +62,8 @@ console.log("cell performanceReview", location , id);
 
     const getScoreTotal = (objectiveGroup) => {
         let total = 0;
-        objectiveGroup.employeePerformanceObjectiveEntity.forEach(objective => {
-            objective.employeePerformanceObjectiveTaskEntity.forEach(task => {
+        objectiveGroup.employeePerformanceObjectiveEntity.map(objective => {
+            objective.employeePerformanceObjectiveTaskEntity.map(task => {
                 total += task.score;
             });
         });
@@ -53,7 +73,7 @@ console.log("cell performanceReview", location , id);
     const isScoreMatch = (score, objectiveGroups) => {
         let scoreTotal = getOverallScore(objectiveGroups);
         let status = scoreTotal >= score.scoreFrom && scoreTotal <= score.scoreTo;
-        console.log(scoreTotal, score.scoreFrom, score.scoreTo, status);
+
         return !status;
     };
 
@@ -82,7 +102,7 @@ console.log("cell performanceReview", location , id);
 
     const getOverallScore = (objectiveGroups) => {
         let total = 0;
-        objectiveGroups?.forEach(objectiveGroup => {
+        objectiveGroups?.map(objectiveGroup => {
             let tmpTotal = getScoreTotal(objectiveGroup);
             total += (tmpTotal * objectiveGroup.weightage / 100);
         });
@@ -92,8 +112,7 @@ console.log("cell performanceReview", location , id);
     const getData = (id) => {
         getPerformanceById(id).then((res) => {
             if (res.status === "OK") {
-                setPerformanceReview(res.data.performanceReview);
-                setEmployeeId(res.data.performanceReview.employee.id);
+                setPerformanceReview(res.data);
             } else {
                 toast.error(res.message);
             }
@@ -108,27 +127,65 @@ console.log("cell performanceReview", location , id);
         setOpenTableIndex(prevOpenTableIndex => (prevOpenTableIndex === index ? null : index));
     };
 
+    const getRatingForGoal = (goalId, isEmployee) => {
+        const ratingString = isEmployee ? (performanceReview?.goalsEmployeeRating || "") : (performanceReview?.goalsManagerRating || "");
+        const pairs = ratingString.split(",");
+        for (let pair of pairs) {
+            const [id, rating] = pair.split(":");
+            if (parseInt(id) === goalId) {
+                return rating;
+            }
+        }
+        return "";
+    };
+
+    const getScoreForGoal = (goalId) => {
+        const scoreString = performanceReview?.goalsScore || "";
+        const pairs = scoreString.split(",");
+        for (let pair of pairs) {
+            const [id, score] = pair.split(":");
+            if (parseInt(id) === goalId) {
+                return score;
+            }
+        }
+        return "";
+    };
+
+    const getGoalsTotalScore = () => {
+        const scoreString = performanceReview?.goalsScore || "";
+
+        let total = 0;
+
+        if (scoreString) {
+            const pairs = scoreString.split(",");
+            for (let pair of pairs) {
+                const [id, score] = pair.split(":");
+                total += parseInt(score);
+            }
+        }
+
+        return total;
+    };
+
     const generatePDF = () => {
         const input = document.getElementById('card');
         html2canvas(input).then(function (canvas) {
-            canvas.getContext('2d');
-            var imgWidth = canvas.width;
-            var imgHeight = canvas.height * imgWidth / canvas.width;
-            var top_left_margin = 15;
-            var PDF_Width = imgWidth + (top_left_margin * 2);
-            var PDF_Height = (PDF_Width * 2) + (top_left_margin * 2);
-            var totalPDFPages = Math.ceil(imgHeight / PDF_Height) - 1;
-            var imgData = canvas.toDataURL("image/png", 1.0);
-            var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
-            pdf.addImage(imgData, 'PNG', top_left_margin, top_left_margin, imgWidth, imgHeight);
-            for (var i = 1; i <= totalPDFPages; i++) {
-                pdf.addPage([PDF_Width, PDF_Height], 'p');
-                pdf.addImage(imgData, 'PNG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 4), imgWidth, imgHeight);
-            }
-
-            pdf.save("Performance Review" + Date().toLocaleString() + ".pdf");
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF();
+            pdf.addImage(imgData, 'PNG', 0, 0);
+            pdf.save("download.pdf");
         });
     };
+
+    const colorGrade = [
+        '#57E32C',
+        '#b7dd29',
+        '#ffe234',
+        '#ffa534',
+        '#ff4545',
+    ];
+
+    const employeeID = performanceReview?.employee?.id;
 
     return (
         <div>
@@ -142,16 +199,16 @@ console.log("cell performanceReview", location , id);
                         <div className="mb-4 row pageTitle-section">
                             <div style={{ justifyContent: 'space-between' }} className="d-flex col">
                                 <div>
-                                    <h3  className="tablePage-title">Performance Review</h3>
+                                    <h3 style={{ wordSpacing: '-7px' }} className="tablePage-title">Performance Review</h3>
                                     <ul className="breadcrumb">
                                         <li className="breadcrumb-item"><a href="/app/main/dashboard">Dashboard</a></li>
                                         <li className="breadcrumb-item active">Performance Review</li>
                                     </ul>
                                 </div>
                                 <div style={{ alignContent: 'center' }}>
-                                    <Anchor className='performDownloadIcon' onClick={generatePDF} >
+                                    <SafeAnchor className='performDownloadIcon' onClick={generatePDF} >
                                         <i className='fa fa-download'></i> Download
-                                    </Anchor>
+                                    </SafeAnchor>
                                 </div>
                             </div>
 
@@ -159,9 +216,20 @@ console.log("cell performanceReview", location , id);
                         <Formik
                             enableReinitialize={true}
                             initialValues={performanceReview}
+                            onSubmit={this.save}
                             validationSchema={PerformanceReviewSchema}
                         >
-                            {() => (
+                            {({
+                                values,
+                                errors,
+                                touched,
+                                handleChange,
+                                handleBlur,
+                                handleSubmit,
+                                isSubmitting,
+                                setFieldValue,
+                                setSubmitting
+                            }) => (
 
                                 <Form>
                                     <div className="perform_con">
@@ -171,8 +239,8 @@ console.log("cell performanceReview", location , id);
                                                 <div className="row">
                                                     <div className="col-md-12">
                                                         <div className="mt-3 perform-general-info-card">
-                                                            <div className="row">
-                                                                <div className="col-3">
+                                                            <div class="row">
+                                                                <div class="col-3">
                                                                     <div className='m-2 perfom_profile_img'>
                                                                         <EmployeeProfilePhoto className="mt-2 payProPic" id={employeeId} />
                                                                         <CardContent className='p-1'>
@@ -185,7 +253,7 @@ console.log("cell performanceReview", location , id);
                                                                         </CardContent>
                                                                     </div>
                                                                 </div>
-                                                                <div style={{ alignContent: 'center' }} className="col-3">
+                                                                <div style={{ alignContent: 'center' }} class="col-3">
                                                                     <div className="gnInfodetail">
                                                                         <span className="gnInfolabel">Employee’s Position</span>
                                                                         {performanceReview?.employeeDesignation || '-'}
@@ -200,7 +268,7 @@ console.log("cell performanceReview", location , id);
                                                                     </div>
 
                                                                 </div>
-                                                                <div style={{ alignContent: 'center' }} className="col-3">
+                                                                <div style={{ alignContent: 'center' }} class="col-3">
                                                                     <div className="gnInfodetail">
                                                                         <span className="gnInfolabel">Date in Current Role</span>
                                                                         <span className="gnInfovalue">{getCustomizedWidgetDate(performanceReview?.dateOfCurrentRole?.substring(0, 10)) || '-'}</span>
@@ -215,7 +283,7 @@ console.log("cell performanceReview", location , id);
                                                                     </div>
 
                                                                 </div>
-                                                                <div style={{ alignContent: 'center' }} className="col-3">
+                                                                <div style={{ alignContent: 'center' }} class="col-3">
                                                                     <div className="gnInfodetail">
                                                                         <span className="gnInfolabel">Review Period From</span>
                                                                         <span className="gnInfovalue">{getCustomizedWidgetDate(performanceReview?.fromDate) || '-'}</span>
@@ -325,6 +393,11 @@ console.log("cell performanceReview", location , id);
                                         <h4 className='performTableHead'>Detailed Report</h4>
                                         {performanceReview?.employeePerformanceObjectiveGropList?.sort((a, b) => b.weightage - a.weightage).map((objectiveGroup, index) => {
                                             const isOpen = openTableIndex === index;
+                                             const hasValidObjective = objectiveGroup?.employeePerformanceObjectiveEntity?.some(obj => obj.name && obj.name.trim() !== '');
+
+                                            if (!hasValidObjective && !objectiveGroup.defaultRecord) {
+                                                return null;
+                                            }
                                             return (
                                                 <section className="perform_table_mng_hd review-section professional-excellence mt-2" key={index}>
                                                     {/* Clickable header */}
@@ -369,40 +442,82 @@ console.log("cell performanceReview", location , id);
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            {objectiveGroup.employeePerformanceObjectiveEntity.map((objective, objIndex) => {
+                                                                        {
+                                                                            objectiveGroup.defaultRecord ? (
+                                                                            performanceReview.goals?.map((goal, index) => {
                                                                                 return (
-                                                                                    <tr key={objIndex}>
-                                                                                        <td>{objIndex + 1}</td>
-                                                                                        <td className='pre-wrap'>{objective.name}</td>
-                                                                                        {objective.employeePerformanceObjectiveTaskEntity.map((task, taskIndex) => {
-                                                                                            return (
-                                                                                                <React.Fragment key={taskIndex}>
-                                                                                                    <td className='pre-wrap'>
-                                                                                                        <span>{task.name}</span>
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        <input tabIndex="-1" type="number" defaultValue={task.weightage} className="form-control" readOnly />
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        <input type="number" tabIndex="-1" readOnly defaultValue={task.selfRating} className="form-control" />
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        <input type="number" defaultValue={task.managerRating} readOnly className="form-control" />
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        <input type="number" defaultValue={task.score} readOnly className="form-control" />
-                                                                                                    </td>
-                                                                                                </React.Fragment>
-                                                                                            );
-                                                                                        })}
-                                                                                    </tr>
+                                                                                     <>
+                                                                                <tr key={goal.id}>
+                                                                                    <td>{index + 1}</td>
+                                                                                    <td className='pre-wrap'>{goal?.name}</td>
+                                                                                    <td className='pre-wrap'>
+                                                                                    <span>{goal?.name}</span>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                    <input tabIndex="-1" type="number" defaultValue={goal.goalWeightage} className="form-control" readOnly />
+                                                                                    </td>
+                                                                                    <td>
+                                                                                    <input type="number" tabIndex="-1" readOnly defaultValue={getRatingForGoal(goal.id, true)} className="form-control" />
+                                                                                    </td>
+                                                                                    <td>
+                                                                                    <input type="number" defaultValue={getRatingForGoal(goal.id, false)} readOnly className="form-control" />
+                                                                                    </td>
+                                                                                    <td>
+                                                                                    <input type="number" defaultValue={getScoreForGoal(goal.id)} readOnly className="form-control" />
+                                                                                    </td>
+                                                                                </tr>
+                                                                             
+                                                                                <tr style={{ fontWeight: 'bold' }}>
+                                                                                <td colSpan={6} className='text-right'>Total Score</td>
+                                                                                <td>{getGoalsTotalScore()}</td>
+                                                                                </tr>
+                                                                             </>
                                                                                 );
-                                                                            })}
-                                                                            <tr style={{ fontWeight: 'bold' }}>
+                                                                            })
+                                                                            ) : (
+                                                                            <>
+                                                                                {objectiveGroup.employeePerformanceObjectiveEntity.map((objective, objIndex) => {
+                                                                                return (
+                                                                                    <>
+                                                                                    <tr key={objIndex}>
+                                                                                    <td>{objIndex + 1}</td>
+                                                                                    <td className='pre-wrap'>{objective.name}</td>
+                                                                                    {objective.employeePerformanceObjectiveTaskEntity.map((task, taskIndex) => {
+                                                                                        return (
+                                                                                        <React.Fragment key={taskIndex}>
+                                                                                            <td className='pre-wrap'>
+                                                                                            <span>{task.name}</span>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                            <input tabIndex="-1" type="number" defaultValue={task.weightage} className="form-control" readOnly />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                            <input type="number" tabIndex="-1" readOnly defaultValue={task.selfRating} className="form-control" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                            <input type="number" defaultValue={task.managerRating} readOnly className="form-control" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                            <input type="number" defaultValue={task.score} readOnly className="form-control" />
+                                                                                            </td>
+                                                                                        </React.Fragment>
+                                                                                        );
+                                                                                    })}
+                                                                                    </tr>
+                                                                                    <tr style={{ fontWeight: 'bold' }}>
                                                                                 <td colSpan={6} className='text-right'>Total Score</td>
                                                                                 <td>{getScoreTotal(objectiveGroup)}</td>
-                                                                            </tr>
+                                                                                </tr>
+                                                                                    </>
+                                                                                        
+                                                                                );
+                                                                                })}
+                                                                                
+                                                                            </>
+                                                                            )
+                                                                        }
                                                                         </tbody>
+
                                                                     </table>
                                                                 </div>
                                                             </div>
@@ -413,110 +528,81 @@ console.log("cell performanceReview", location , id);
                                         })}
 
 
-                                        <section className="perform_table_mng_hd review-section professional-excellence mt-2" >
-                                            {/* Clickable header */}
-                                            <div className="p-2  perform_hdr text-center col-12" onClick={() => toggleDevTable(5)} style={{
-                                                borderBottom: openTable === 5 ? '1px solid #dee2e6' : '',
-                                                cursor: 'pointer'
-                                            }}>
-                                                <div className="row">
-                                                    <h4 className="mb-0 perform_table_mng review-title col-8">
-                                                        Combined Appraisal
-                                                    </h4>
-                                                    <div className="form-group col-4 mb-0">
-                                                        <div className='perform-UpDownIcon'>
-                                                            <i className={`mt-0 ml-3 comparisonIcon fa ${openTable === 5 ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'}`} aria-hidden="true"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {openTable === 5 &&
-                                                <div className="p-3 row">
-                                                    <div className="col-md-12">
-                                                        <div className="table-responsive">
-                                                            <table className="table table-bordered review-table mb-0">
-                                                                <thead>
-                                                                    <tr style={{ background: '#c4c4c4' }}>
-                                                                        <td>Performance Factors</td>
-                                                                        <td>Score</td>
-                                                                        <td>Weightage (%)</td>
-                                                                        <td>Contribution</td>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    {performanceReview?.employeePerformanceObjectiveGropList?.map((objectiveGroup, index) => {
-                                                                        return <tr key={index}>
-                                                                            <td>{objectiveGroup.name}</td>
-                                                                            <td>{getScoreTotal(objectiveGroup)}</td>
-                                                                            <td>{objectiveGroup.weightage}</td>
-                                                                            <td>{getContribution(objectiveGroup)}</td>
-                                                                        </tr>
-                                                                    })}
-                                                                    <tr style={{ fontWeight: 'bold' }}>
-                                                                        <td className='text-right' colSpan={3}>Overall Score</td>
-                                                                        <td>{getOverallScore(performanceReview?.employeePerformanceObjectiveGropList)}</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>}
-
-                                        </section>
-
-                                        {/*  Reviewer profile */}
-
-                                        <section className="perform_table_mng_hd review-section professional-excellence mt-2" >
-                                            <div className="p-2  perform_hdr text-center col-12" onClick={() => toggleDevTable(7)} style={{
-                                                borderBottom: openTable === 7 ? '1px solid #dee2e6' : '',
-                                                cursor: 'pointer'
-                                            }}>
-                                                <div className="row">
-                                                    <h4 className="mb-0 perform_table_mng review-title col-8">
-                                                        Appraisal Comments
-                                                    </h4>
-                                                    <div className="form-group col-4 mb-0">
-                                                        <div className='perform-UpDownIcon'>
-                                                            <i className={`mt-0 ml-3 comparisonIcon fa ${openTable === 7 ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'}`} aria-hidden="true"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {openTable === 7 && <div className="p-3 row">
-                                                <div className="col-md-6">
-                                                    <span className='reviewerHead'>Employee Comment</span>
-                                                    <div className="perform-general-info-card">
-                                                        <div className="row">
-                                                            <div className='col'>
-                                                                <div style={{ placeContent: 'space-between', marginRight: '15em' }} className='d-flex'>
-
-
-                                                                    <div className="gnInfodetail">
-                                                                        <span className="gnInfolabel">Date</span>
-                                                                        <span className="gnInfovalue"> {getCustomizedWidgetDate(performanceReview?.submitedByEmployeeOn?.substring(0, 10)) || '-'}</span>
-                                                                    </div>
-                                                                    <div className="gnInfodetail">
-                                                                        <span className="gnInfolabel">Signature</span>
-                                                                        <span className="gnInfovalue">-</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="gnInfodetail">
-                                                                    <span className="gnInfolabel">Comment</span>
-                                                                    <span className="gnInfovalue">{performanceReview?.employeeComment || '-'}</span>
-                                                                </div>
+                                            <section className="perform_table_mng_hd review-section professional-excellence mt-2" >
+                                                {/* Clickable header */}
+                                                <div className="p-2  perform_hdr text-center col-12" onClick={() => toggleDevTable(5)} style={{
+                                                    borderBottom: openTable === 5 ? '1px solid #dee2e6' : '',
+                                                    cursor: 'pointer'
+                                                }}>
+                                                    <div className="row">
+                                                        <h4 className="mb-0 perform_table_mng review-title col-8">
+                                                            Combined Appraisal
+                                                        </h4>
+                                                        <div className="form-group col-4 mb-0">
+                                                            <div className='perform-UpDownIcon'>
+                                                                <i className={`mt-0 ml-3 comparisonIcon fa ${openTable === 5 ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'}`} aria-hidden="true"></i>
                                                             </div>
-
-
-
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="col-md-6">
-                                                    <span className='reviewerHead'>Manager Comment</span>
-                                                    <div className="perform-general-info-card">
-                                                        <div className="row">
-                                                            <div className='col'>
-                                                                <div style={{ placeContent: 'space-between' }} className='d-flex'>
+                                                {openTable === 5 &&
+                                                    <div className="p-3 row">
+                                                        <div className="col-md-12">
+                                                            <div className="table-responsive">
+                                                                <table className="table table-bordered review-table mb-0">
+                                                                    <thead>
+                                                                        <tr style={{ background: '#c4c4c4' }}>
+                                                                            <td>Performance Factors</td>
+                                                                            <td>Score</td>
+                                                                            <td>Weightage (%)</td>
+                                                                            <td>Contribution</td>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {performanceReview?.employeePerformanceObjectiveGropList?.map((objectiveGroup, index) => {
+                                                                            return <tr>
+                                                                                <td>{objectiveGroup.name}</td>
+                                                                                <td>{getScoreTotal(objectiveGroup)}</td>
+                                                                                <td>{objectiveGroup.weightage}</td>
+                                                                                <td>{getContribution(objectiveGroup)}</td>
+                                                                            </tr>
+                                                                        })}
+                                                                        <tr style={{ fontWeight: 'bold' }}>
+                                                                            <td className='text-right' colSpan={3}>Overall Score</td>
+                                                                            <td>{getOverallScore(performanceReview?.employeePerformanceObjectiveGropList)}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>}
+
+                                            </section>
+
+                                            {/*  Reviewer profile */}
+
+                                            <section className="perform_table_mng_hd review-section professional-excellence mt-2" >
+                                                <div className="p-2  perform_hdr text-center col-12" onClick={() => toggleDevTable(7)} style={{
+                                                    borderBottom: openTable === 7 ? '1px solid #dee2e6' : '',
+                                                    cursor: 'pointer'
+                                                }}>
+                                                    <div className="row">
+                                                        <h4 className="mb-0 perform_table_mng review-title col-8">
+                                                            Appraisal Comments
+                                                        </h4>
+                                                        <div className="form-group col-4 mb-0">
+                                                            <div className='perform-UpDownIcon'>
+                                                                <i className={`mt-0 ml-3 comparisonIcon fa ${openTable === 7 ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'}`} aria-hidden="true"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {openTable === 7 && <div className="p-3 row">
+                                                    <div className="col-md-6">
+                                                        <span className='reviewerHead'>Employee Comment</span>
+                                                        <div className="perform-general-info-card">
+                                                            <div className="row">
+                                                                <div className='col'>
                                                                     <div style={{ placeContent: 'space-between', marginRight: '15em' }} className='d-flex'>
 
 
@@ -540,126 +626,127 @@ console.log("cell performanceReview", location , id);
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <span className='reviewerHead'>Manager Comment</span>
-                                                    <div className="perform-general-info-card">
-                                                        <div className="row">
-                                                            <div className='col'>
-                                                                <div style={{ placeContent: 'space-between' }} className='d-flex'>
-                                                                    <div className="gnInfodetail">
-                                                                        <span className="gnInfolabel">Name</span>
-                                                                        {performanceReview?.reportingManagerName || '-'}
+                                                    <div className="col-md-6">
+                                                        <span className='reviewerHead'>Manager Comment</span>
+                                                        <div className="perform-general-info-card">
+                                                            <div className="row">
+                                                                <div className='col'>
+                                                                    <div style={{ placeContent: 'space-between' }} className='d-flex'>
+                                                                        <div className="gnInfodetail">
+                                                                            <span className="gnInfolabel">Name</span>
+                                                                            {performanceReview?.reportingManagerName || '-'}
+                                                                        </div>
+                                                                        <div className="gnInfodetail">
+                                                                            <span className="gnInfolabel">Job Title</span>
+                                                                            {performanceReview?.reportingManagerDesignation || '-'}
+                                                                        </div>
+                                                                        <div className="gnInfodetail">
+                                                                            <span className="gnInfolabel">Date</span>
+                                                                            <span className="gnInfovalue">{getCustomizedWidgetDate(performanceReview?.submitedByReviewerOn?.substring(0, 10)) || '-'}</span>
+                                                                        </div>
+                                                                        <div className="gnInfodetail">
+                                                                            <span className="gnInfolabel">Signature</span>
+                                                                            <span className="gnInfovalue">-</span>
+                                                                        </div>
                                                                     </div>
                                                                     <div className="gnInfodetail">
-                                                                        <span className="gnInfolabel">Job Title</span>
-                                                                        {performanceReview?.reportingManagerDesignation || '-'}
+                                                                        <span className="gnInfolabel">Comment</span>
+                                                                        <span className="gnInfovalue">{performanceReview?.reviewerComment || '-'}</span>
                                                                     </div>
-                                                                    <div className="gnInfolabel">
-                                                                        <span className="gnInfolabel">Date</span>
-                                                                        <span className="gnInfovalue">{getCustomizedWidgetDate(performanceReview?.submitedByReviewerOn?.substring(0, 10)) || '-'}</span>
-                                                                    </div>
-                                                                    <div className="gnInfodetail">
-                                                                        <span className="gnInfolabel">Signature</span>
-                                                                        <span className="gnInfovalue">-</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="gnInfodetail">
-                                                                    <span className="gnInfolabel">Comment</span>
-                                                                    <span className="gnInfovalue">{performanceReview?.reviewerComment || '-'}</span>
+
                                                                 </div>
 
                                                             </div>
+                                                        </div>
+                                                    </div>
 
+                                                </div>}
+                                            </section>
+                                            {/* Development Plan */}
+                                            <section className="perform_table_mng_hd review-section professional-excellence mt-2" >
+
+                                                <div className="p-2  perform_hdr text-center col-12" onClick={() => toggleDevTable(6)} style={{
+                                                    borderBottom: openTable === 6 ? '1px solid #dee2e6' : '',
+                                                    cursor: 'pointer'
+                                                }}>
+                                                    <div className="row">
+                                                        <h4 className="mb-0 perform_table_mng review-title col-8">
+                                                            Development Plan
+                                                        </h4>
+                                                        <div className="form-group col-4 mb-0">
+                                                            <div className='perform-UpDownIcon'>
+                                                                <i className={`mt-0 ml-3 comparisonIcon fa ${openTable === 6 ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'}`} aria-hidden="true"></i>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>}
-                                        </section>
-                                        {/* Development Plan */}
-                                        <section className="perform_table_mng_hd review-section professional-excellence mt-2" >
+                                                {openTable === 6 &&
+                                                    <div className="p-3 row">
+                                                        <div className="col-md-12">
+                                                            <div className='pre-wrap p-2'>A more detailed Personal Development Plan should come out of this section to outline more on the “How”, “By When”, “Success Factors”, etc.  The Training Department will need to work closely with the Line Manager to meet these requirements</div>
+                                                            <div className="table-responsive">
+                                                                <table className="table table-bordered review-table mb-0">
 
-                                            <div className="p-2  perform_hdr text-center col-12" onClick={() => toggleDevTable(6)} style={{
-                                                borderBottom: openTable === 6 ? '1px solid #dee2e6' : '',
-                                                cursor: 'pointer'
-                                            }}>
-                                                <div className="row">
-                                                    <h4 className="mb-0 perform_table_mng review-title col-8">
-                                                        Development Plan
-                                                    </h4>
-                                                    <div className="form-group col-4 mb-0">
-                                                        <div className='perform-UpDownIcon'>
-                                                            <i className={`mt-0 ml-3 comparisonIcon fa ${openTable === 6 ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'}`} aria-hidden="true"></i>
+                                                                    <thead>
+                                                                        <tr style={{ background: '#c4c4c4' }}>
+                                                                            <th>Area that Needs Improvement</th>
+                                                                            <th>Specific Competency (Knowledge, Skill, Ability)</th>
+                                                                            <th>How *</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id='tabl'>
+                                                                        <tr>
+                                                                            <td><input title={getArea(0)} defaultValue={getArea(0)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                            <td><input title={getCompetency(0)} defaultValue={getCompetency(0)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                            <td><input title={getHow(0)} defaultValue={getHow(0)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><input title={getArea(1)} defaultValue={getArea(1)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                            <td><input title={getCompetency(1)} defaultValue={getCompetency(1)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                            <td><input title={getHow(1)} defaultValue={getHow(1)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><input title={getArea(2)} defaultValue={getArea(2)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                            <td><input title={getCompetency(2)} defaultValue={getCompetency(2)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                            <td><input title={getHow(2)} defaultValue={getHow(2)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><input title={getArea(3)} defaultValue={getArea(3)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                            <td><input title={getCompetency(3)} defaultValue={getCompetency(3)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                            <td><input title={getHow(3)} defaultValue={getHow(3)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><input title={getArea(4)} defaultValue={getArea(4)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                            <td><input title={getCompetency(4)} defaultValue={getCompetency(4)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                            <td><input title={getHow(4)} defaultValue={getHow(4)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <td colSpan={3} className='pre-wrap'>* HOW: Training & Development can include aswaaq Training courses, external training courses, e-learning, development workshops, on-the-job training, coaching and mentoring, job rotation, special assignments, secondment, etc.</td>
+                                                                        </tr>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            {openTable === 6 &&
-                                                <div className="p-3 row">
-                                                    <div className="col-md-12">
-                                                        <div className='pre-wrap p-2'>A more detailed Personal Development Plan should come out of this section to outline more on the “How”, “By When”, “Success Factors”, etc.  The Training Department will need to work closely with the Line Manager to meet these requirements</div>
-                                                        <div className="table-responsive">
-                                                            <table className="table table-bordered review-table mb-0">
+                                                }
 
-                                                                <thead>
-                                                                    <tr style={{ background: '#c4c4c4' }}>
-                                                                        <th>Area that Needs Improvement</th>
-                                                                        <th>Specific Competency (Knowledge, Skill, Ability)</th>
-                                                                        <th>How *</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody id='tabl'>
-                                                                    <tr>
-                                                                        <td><input title={getArea(0)} defaultValue={getArea(0)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                        <td><input title={getCompetency(0)} defaultValue={getCompetency(0)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                        <td><input title={getHow(0)} defaultValue={getHow(0)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><input title={getArea(1)} defaultValue={getArea(1)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                        <td><input title={getCompetency(1)} defaultValue={getCompetency(1)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                        <td><input title={getHow(1)} defaultValue={getHow(1)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><input title={getArea(2)} defaultValue={getArea(2)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                        <td><input title={getCompetency(2)} defaultValue={getCompetency(2)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                        <td><input title={getHow(2)} defaultValue={getHow(2)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><input title={getArea(3)} defaultValue={getArea(3)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                        <td><input title={getCompetency(3)} defaultValue={getCompetency(3)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                        <td><input title={getHow(3)} defaultValue={getHow(3)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><input title={getArea(4)} defaultValue={getArea(4)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                        <td><input title={getCompetency(4)} defaultValue={getCompetency(4)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                        <td><input title={getHow(4)} defaultValue={getHow(4)} disabled={true} type="text" maxLength={250} className='form-control' /></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                                <tfoot>
-                                                                    <tr>
-                                                                        <td colSpan={3} className='pre-wrap'>* HOW: Training & Development can include aswaaq Training courses, external training courses, e-learning, development workshops, on-the-job training, coaching and mentoring, job rotation, special assignments, secondment, etc.</td>
-                                                                    </tr>
-                                                                </tfoot>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            }
-
-                                        </section>
+                                            </section>
 
 
 
-                                    </div>
-                                </Form>
-                            )}
-                        </Formik>
+                                        </div>
+                                    </Form>
+                                )
+                                }
+                            </Formik>
 
+                        </div >
                     </div >
                 </div >
             </div >
-        </div>
-    )
+        )
 }
 
 export default PerformanceReviewReportDetailsForm;

@@ -16,6 +16,7 @@ export function getEmployeeDashboardDetail(date) {
 export function postAttendance() {
     return postWithAuth('/attendance-v2/web').then(res => {
         toast.success(res.message);
+        console.log("Attendance posted successfully",res.data);
         return Promise.resolve(res.data);
     }).catch(err => {
         toast.err(err.message);

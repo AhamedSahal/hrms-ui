@@ -225,8 +225,7 @@ export default class TeamEmployeeList extends Component {
               <BsSliders className='ml-2 filter-btn' size={25} onClick={() => this.setState({ showFilter: !this.state.showFilter })} />
             </div>
           {this.state.showFilter && <div className='mt-5 filterCard p-3'>
-              {isCompanyAdmin && <div className="row">
-
+              <div className="row">
                 <div className="col-md-4">
                   <div className="form-group form-focus">
                     <DivisionDropdown defaultValue={this.state.divisionId} onChange={e => {
@@ -258,7 +257,7 @@ export default class TeamEmployeeList extends Component {
                     <label className="focus-label">Location</label>
                   </div>
                 </div>
-              </div>}
+              </div>
               <div className="row">
                 <div className="col-md-4">
                   <div className="form-group form-focus">

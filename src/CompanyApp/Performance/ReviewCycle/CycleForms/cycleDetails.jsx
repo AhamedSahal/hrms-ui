@@ -15,107 +15,151 @@ class CycleDetails extends Component {
     super(props)
     this.formikRef = React.createRef();
     this.state = {
-      assign: this.props.formData.cycleDetails1?.assign || '',
       templatesName: [],
       function: [],
-      department: this.props.formData.cycleDetails1?.departments || [],
+      department: [],
       branche: [],
       formValue: {
         cyclename: this.props.formData.cycleDetails1?.cyclename || '',
         description: this.props.formData.cycleDetails1?.description || '',
-        individualSettings: this.props.formData.cycleDetails1?.individualSettings || '',
+        id: this.props.formData.cycleDetails1?.id || 0,
+     //   individualSettings: this.props.formData.cycleDetails1?.individualSettings || '',
         assign: this.props.formData.cycleDetails1?.assign || '',
-        branches: this.props.formData.cycleDetails1?.branches || [],
-        departments: this.props.formData.cycleDetails1?.departments || [],
-        functions: this.props.formData.cycleDetails1?.functions || [],
+        branchId: this.props.formData.cycleDetails1?.branchId || '',
+        departmentId: this.props.formData.cycleDetails1?.departmentId || '',
+        functionId: this.props.formData.cycleDetails1?.functionId || '',
+        departments: [],
+        branches: [],
+        functions: [],
       }
     }
   }
   componentDidMount() {
+
     getBranchLists().then(res => {
       if (res.status == "OK") {
         this.setState({
           branche: res.data,
-        })
+        },() => {
+        const { branchId } = this.state.formValue;
+        if (branchId) {
+          const branchIds = branchId.toString().split(',').map(Number);
+          const brancheData = res.data.filter(br => branchIds.includes(br.id));
+          let formValue = { ...this.state.formValue, branches: brancheData };
+          this.setState({ formValue });
+        }
+      })
       }
     })
     getDepartmentLists().then(res => {
       if (res.status == "OK") {
         this.setState({
           department: res.data,
-        })
+        },() => {
+        const { departmentId } = this.state.formValue;
+        if (departmentId) {
+          const deptIds = departmentId.toString().split(',').map(Number);
+          const departmentData = res.data.filter(d => deptIds.includes(d.id));
+          let formValue = { ...this.state.formValue, departments: departmentData };
+          this.setState({ formValue });
+        }
+      })
       }
     })
     getFunctionLists().then(res => {
       if (res.status == "OK") {
         this.setState({
           function: res.data,
-        })
+        }, () => {
+        const { functionId } = this.state.formValue;
+        if (functionId) {
+          const functionIds = functionId.toString().split(',').map(Number);
+          const functionData = res.data.filter(f => functionIds.includes(f.id));
+          let formValue = { ...this.state.formValue, functions: functionData };
+          this.setState({ formValue });
+        }
+      })
       }
     })
 
   }
   onChangeValue(event) {
-    this.setState({ assign: event.target.value })
-    const newFormValue = { ...this.state.formValue, departments: [] };
-    this.setState({ formValue: newFormValue });
+    this.setState({
+      formValue: {
+        ...this.state.formValue,
+        assign: event.target.value
+      }
+    });
+    // this.setState({ assign: event.target.value })
+    // const newFormValue = { ...this.state.formValue, departments: [] };
+    // this.setState({ formValue: newFormValue });
   }
 
   save = (data, action) => {
-    const { assign } = this.state
+   
+    // const { assign } = this.state.formValue
     
-    if (assign === 'department') {
+    if (data.assign === 'department') {
       const departmentId = data.departments.map(item => item.id)
       const cycleData = {
         cyclename: data.cyclename,
         description: data.description,
-        individualSettings: data.individualSettings,
+       // individualSettings: data.individualSettings,
+        id: this.state.formValue.id,
         departments: data.departments,
         departmentId: departmentId.join(', '),
         assign: data.assign
       }
-      this.props.handleFormData({ cycleDetails1: cycleData, id: 0 })
+      
+      this.props.handleFormData({ cycleDetails1: cycleData, id: this.props.formData?.id || 0})
       this.props.nextStep();
-    } else if (assign === 'function') {
+    } else if (data.assign === 'function') {
       const functionId = data.functions.map(item => item.id)
       const cycleData = {
         cyclename: data.cyclename,
         description: data.description,
-        individualSettings: data.individualSettings,
+      //  individualSettings: data.individualSettings,
+        id: this.state.formValue.id,
         functions: data.functions,
         functionId: functionId.join(', '),
         assign: data.assign
       }
-      this.props.handleFormData({ cycleDetails1: cycleData, id: 0 })
+     
+      this.props.handleFormData({ cycleDetails1: cycleData})
       this.props.nextStep();
-    } else if (assign === 'location') {
-      const brancheId = data.branches.map(item => item.id)
+    } else if (data.assign === 'location') {
+      const branchId = data.branches.map(item => item.id)
       const cycleData = {
         cyclename: data.cyclename,
         description: data.description,
-        individualSettings: data.individualSettings,
+       // individualSettings: data.individualSettings,
+        id: this.state.formValue.id,
         branches: data.branches,
-        brancheId: brancheId.join(', '),
+        branchId: branchId.join(', '),
         assign: data.assign
       }
-      this.props.handleFormData({ cycleDetails1: cycleData, id: 0 })
+      
+      this.props.handleFormData({ cycleDetails1: cycleData })
       this.props.nextStep();
     } else {
       const cycleData = {
         cyclename: data.cyclename,
         description: data.description,
-        individualSettings: data.individualSettings,
+        //individualSettings: data.individualSettings,
+        id: this.state.formValue.id,
         assign: data.assign
       }
-      this.props.handleFormData({ cycleDetails1: cycleData, id: 0 })
-      this.props.nextStep();
+     
+      this.props.handleFormData({ cycleDetails1: cycleData})
+      this.props.nextStep(); 
+    
     }
 
 
   }
 
   render() {
-    const { assign, formValue } = this.state
+    const { assign } = this.state.formValue;
     let options = [];
     if (assign === 'location') {
       options.push(...this.state.branche)
@@ -125,17 +169,27 @@ class CycleDetails extends Component {
     } else if (assign === 'function') {
       options.push(...this.state.function)
     }
-    const CustomSelect = ({ field, setFieldValue }) => {
+    const CustomSelect = ({ field, setFieldValue, form }) => {
       const { name } = field;
+      const {values } = form;
+
+      options = [];
+      if (values.assign === 'location') {
+        options.push(...this.state.branche)
+      } else if (values.assign === 'department') {
+        options.push(...this.state.department)
+      } else if (values.assign === 'function') {
+        options.push(...this.state.function)
+      }
 
       const handleChange = (data) => {
-        if (assign === 'location') {
+        if (values.assign === 'location') {
           setFieldValue("departments", [])
           setFieldValue("functions", [])
-        } else if (assign === 'department') {
+        } else if (values.assign === 'department') {
           setFieldValue("branches", [])
           setFieldValue("functions", [])
-        } else if (assign === 'function') {
+        } else if (values.assign === 'function') {
           setFieldValue("departments", [])
           setFieldValue("branches", [])
         }
@@ -198,7 +252,7 @@ class CycleDetails extends Component {
                 </label>
 
                 <div className='d-flex' onChange={(e) => {
-                  this.onChangeValue(e)
+                  // this.onChangeValue(e)
                   setFieldValue("assign", e.target.value)
                 }}>
                   <Field className='mr-1' type="radio" value="everyone" name="assign" /> Everyone
@@ -210,7 +264,7 @@ class CycleDetails extends Component {
                 <ErrorMessage name="assign">
                   {msg => <div style={{ color: 'red' }}>{msg}</div>}
                 </ErrorMessage>
-                {assign === 'department' &&
+                {values.assign === 'department' &&
                   <div className='col-md-12'>
                     <FormGroup >
                       <label>Select Department
@@ -230,7 +284,7 @@ class CycleDetails extends Component {
                   </div>
                 }
 
-                {assign === 'location' &&
+                {values.assign === 'location' &&
                   <div className='col-md-12'>
                     <FormGroup >
                       <label>Select Branches  <span style={{ color: "red" }}>*</span></label>
@@ -247,7 +301,7 @@ class CycleDetails extends Component {
                     </FormGroup>
                   </div>
                 }
-                {assign === 'function' &&
+                {values.assign === 'function' &&
                   <div className='col-md-12'>
                     <FormGroup >
                       <label>Select Functions  <span style={{ color: "red" }}>*</span></label>
@@ -265,7 +319,7 @@ class CycleDetails extends Component {
                   </div>
                 }
               </FormGroup>
-              <FormGroup>
+              {/* <FormGroup>
                 <label>This setting is for individuals. What details should they see on sharing their feedback?
                   <span style={{ color: "red" }}>*</span>
                 </label>
@@ -278,7 +332,7 @@ class CycleDetails extends Component {
                 <ErrorMessage name="individualSettings">
                   {msg => <div style={{ color: 'red' }}>{msg}</div>}
                 </ErrorMessage>
-              </FormGroup>
+              </FormGroup> */}
               <ModalFooter className="cycle-modal-footer">
                 <div className='mt-2' style={{ marginLeft: 'auto' }}>
                   <button type='submit'

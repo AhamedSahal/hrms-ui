@@ -31,8 +31,9 @@ class Objective extends Component {
     };
   }
   componentDidMount() {
+    const excludeDefault = false;
     this.fetchList();
-    this.props.getObjectiveGroups();
+    this.props.getObjectiveGroups(excludeDefault);
   }
   fetchList = () => {
     if (verifyOrgLevelViewPermission("Module Setup Performance")) {
@@ -127,6 +128,7 @@ class Objective extends Component {
       {
         title: 'Cluster',
         sorter: true,
+        render: (text , record) => record.performanceObjectiveGroup?.name || '-',
       },
       {
         title: 'Action',
@@ -234,8 +236,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    getObjectiveGroups: () => {
-      dispatch(DropdownService.getObjectiveGroups())
+    getObjectiveGroups: (excludeDefault) => {
+      dispatch(DropdownService.getObjectiveGroups(excludeDefault))
     }
   }
 }

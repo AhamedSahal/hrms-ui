@@ -3,7 +3,10 @@ import axios from "axios";
 import "./chatbot.css";
 import BotLogo from '../../../assets/img/logo.png';
 import { MdSend } from "react-icons/md";
-import { getBranchId, getCompanyIdCookie, getEmployeeId, getTokenCookie, getUserName, getUserType } from "../../../utility"; // ✅ adjust this path to where you defined getTokenCookie
+import { getBranchId, getCompanyIdCookie, getEmployeeId, getTokenCookie, getUserName, getUserType } from "../../../utility";
+import { fileDownload } from "../../../HttpRequest";
+import { FaFileDownload } from "react-icons/fa";
+import { Anchor } from "react-bootstrap";
 
 const Chatbot = ({ closeChatbot }) => {
     const [messages, setMessages] = useState([]);
@@ -27,14 +30,14 @@ const Chatbot = ({ closeChatbot }) => {
         const companyId = getCompanyIdCookie();
         const locationId = getBranchId();
         const userType = getUserType();
-        console.log("API Response:", locationId);
+
         const newMessages = [...messages, { role: "user", content: input }];
         setMessages(newMessages);
         setInput("");
         setLoading(true);
 
         try {
-            const response = await axios.post("https://chatbot-service-six.vercel.app/api/chat", {
+            const response = await axios.post("http://localhost:5000/api/chat", {
                 messages: newMessages,
                 employeeId,
                 locationId,
@@ -60,9 +63,8 @@ const Chatbot = ({ closeChatbot }) => {
             console.error("Error fetching response:", error);
         }
 
-  setLoading(false);
-};
-
+        setLoading(false);
+    };
 
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
@@ -79,25 +81,36 @@ const Chatbot = ({ closeChatbot }) => {
                 </span>
             </div>
             <div className="chat-messages">
-                <div style={{ textAlign: 'Center' }} className="mt-3">
+                <div style={{ textAlign: 'center' }} className="mt-3">
                     <a style={{ cursor: 'revert' }}>
                         <img className="aiChatbotLogo" src={BotLogo} alt="WorkPlus" width={"125px"} height={"50px"} />
                     </a>
                     <br />
-                    <span style={{ fontWeight: '500', color: 'grey' }}>Hi I'am Bot! Workplus AI Agent</span>
+                    <span style={{ fontWeight: '500', color: 'grey' }}>Hi I&apos;m Bot! Workplus AI Agent</span>
                 </div>
                 {messages.map((msg, index) => (
                     <div
-                        className={`${msg.role === "user" ? "userChatSpace" : "botMsgSpace"}`}
+                        className={msg.role === "user" ? "userChatSpace" : "botMsgSpace"}
                         key={index}
                     >
-                        {typeof msg.content === "string" ? (
-                            msg.content.split('\n').map((line, idx) => (
-                                <p key={idx} style={{ margin: 0 }}>{line}</p>
-                            ))
-                        ) : (
-                            JSON.stringify(msg.content.content)
-                        )}
+                        {/* Remove console.log from render */}
+                         {console.log("cell File download message:", msg)}
+                        {typeof msg.content === "object" && msg.content?.canDownload
+                            ? <div>
+                               
+                                <span>Here is your document:</span>
+                                <Anchor className="saActionval" onClick={() => {
+                                    fileDownload(msg.content.id, msg.content.id, "POLICY_DOCUMENT", msg.content.filename);
+                                }} title={msg.content.filename}>
+                                    <FaFileDownload className='policyIcon' /> <span className='policyName'>{msg.content.filename}</span>
+                                </Anchor>
+                            </div>
+                            : typeof msg.content === "string"
+                                ? msg.content.split('\n').map((line, idx) => (
+                                    <p key={idx} style={{ margin: 0 }}>{line}</p>
+                                ))
+                                : JSON.stringify(msg.content)
+                        }
                     </div>
                 ))}
 

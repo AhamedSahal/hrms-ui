@@ -100,8 +100,8 @@ export default class ObjectiveForm extends Component {
                                     <span style={{ color: "red" }}>*</span>
                                 </label>
                                 <Field name="performanceObjectiveGroupId" render={field => {
-                                    return <ObjectiveGroupDropdown defaultValue={this.state.objective.performanceObjectiveGroup.id} onChange={e => {
-                                        setFieldValue("performanceObjectiveGroupId", e.target.value)
+                                    return <ObjectiveGroupDropdown defaultValue={this.state.objective.performanceObjectiveGroup.id} excludeDefault={true} onChange={e => {
+                                        setFieldValue("performanceObjectiveGroupId", e.target.value) 
                                     }}></ObjectiveGroupDropdown>
                                 }}></Field>
                                 <ErrorMessage name="performanceObjectiveGroupId">

@@ -24,6 +24,24 @@ export function getPerformanceById(id) {
     });
 }
 
+export function getReviewsByEmpId(id){
+    let path = `${servicePath}/PerformReviews?employeeId=${id}`;
+    return getWithAuth(path).then(res => {
+        return Promise.resolve(res.data);
+    }).catch(err => {
+        return Promise.reject(err);
+    });
+}
+
+export function getReviewsByEmpIdAndDate(id, fromDate, toDate){
+    let path = `${servicePath}/PerformReviewsWithDate?employeeId=${id}&fromDate=${fromDate}&toDate=${toDate}`;
+    return getWithAuth(path).then(res => {
+        return Promise.resolve(res.data);
+    }).catch(err => {
+        return Promise.reject(err);
+    });
+}
+
 export function createNew(data) {
     let post = postWithAuth(servicePath, data);
     return post.then(res => {
@@ -61,3 +79,14 @@ export function deletePerformanceReview(templateId) {
         return Promise.reject(err);
     });
 } 
+
+export function getEmployeesByPerformanceReviewList(searchText, pageNumber, pageSize, sort,self) {
+    let path = `${servicePath}/getEmployeesByPerformanceReviewList?${getPaginationQueryString(searchText, pageNumber, pageSize, sort)}`;
+    path=path+`&self=${self?1:0}`;
+
+    return getWithAuth(path).then(res => {
+        return Promise.resolve(res.data);
+    }).catch(err => {
+        return Promise.reject(err);
+    });
+}

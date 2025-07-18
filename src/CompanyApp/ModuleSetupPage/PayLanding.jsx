@@ -4,7 +4,7 @@ import Expenses from '../ModuleSetup/Expenses/index';
 import PaymentMode from '../ModuleSetup/PaymentMode/list';
 import CurrencySettingForm from '../ModuleSetup/Currency/form';
 import EndofServices from '../ModuleSetup/EndofService';
-
+import PaymentFile from '../ModuleSetup/PaymentFile';
 export default class PayLanding extends Component {
     render() {
         return (
@@ -24,6 +24,9 @@ export default class PayLanding extends Component {
                     </div>
                     <div id="PaymentMode" className="pro-overview tab-pane fade show active">
                         <PaymentMode></PaymentMode>
+                    </div>
+                    <div id="PaymentFile" className="pro-overview tab-pane fade show active">
+                        <PaymentFile></PaymentFile>
                     </div>
                 </div>
             </div>
