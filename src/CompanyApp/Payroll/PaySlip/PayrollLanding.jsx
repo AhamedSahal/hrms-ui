@@ -83,7 +83,8 @@ export default class PayrollLanding extends Component {
             entityId: 0,
             orgsetup: "",
             entityValidationMonth: "",
-            entityName: ""
+            entityName: "",
+            isEntityRefreshing: false
         };
     }
     componentDidMount() {
@@ -1082,7 +1083,7 @@ export default class PayrollLanding extends Component {
                                                         <option value="2022">2022</option>
                                                         <option value="2023">2023</option>
                                                         <option value="2024">2024</option>
-                                                        <option value="2025">2025</option>
+                                                        <option value="2025">2025</option> 
                                                     </select>
                                                 </div>
                                                 {this.state.closeYear && <div className="col-sm-12 col-md-12">
@@ -1130,12 +1131,27 @@ export default class PayrollLanding extends Component {
 
                                                                             <tr className="pedo">
                                                                                 <td className='col-md-6'>
-                                                                                    <EntityDropdown defaultValue={this.state.entityValidationMonth == Months[m] ? this.state.entityId : 0} onChange={e => {
+                                                                                     <div className="d-flex align-items-center">
+                                                                                    <EntityDropdown defaultValue={this.state.entityValidationMonth == Months[m] ? this.state.entityId : 0} onChange={async (e) => {
+                                                                                      
                                                                                         this.setState({
                                                                                             entityId: e.target.value,
-                                                                                            entityValidationMonth: Months[m]
-                                                                                        })
-                                                                                    }}></EntityDropdown></td>
+                                                                                            entityValidationMonth: Months[m],
+                                                                                            isEntityRefreshing: true
+                                                                                        }, () => {
+                                                                                        // Optional: you can add async calls here
+                                                                                         setTimeout(() => {
+                                                                                                this.setState({ isEntityRefreshing: false });
+                                                                                                }, 1000);
+                                                                                            });
+                                                                                            }}></EntityDropdown>
+                                                                                            {this.state.isEntityRefreshing && (
+                                                                                            <i
+                                                                                                className="fa fa-refresh fa-spin ml-2 text-primary"
+                                                                                                title="Refreshing..."
+                                                                                            ></i>
+                                                                                            )}
+                                                                                    </div></td>
 
 
                                                                                 {(this.state.entityId > 0) && this.state.entityValidationMonth == Months[m] && <> <td className='col-md-3'> 

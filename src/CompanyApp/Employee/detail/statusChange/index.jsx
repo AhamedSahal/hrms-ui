@@ -1,16 +1,12 @@
 import { Table } from 'antd';
 import React, { Component } from 'react';
 import { Modal } from 'react-bootstrap';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import moment from 'moment';
-import { toast } from 'react-toastify';
 import { itemRender } from '../../../../paginationfunction';
-import { verifyEditPermission,getReadableDate, getPermission } from '../../../../utility';
+import { getReadableDate, getPermission } from '../../../../utility';
 import EmployeeStatusChangeForm from './form';
 import { getChangeStatusDetails } from './service';
 import { getPersonalInformation } from '../service';
-import { data } from 'jquery';
 import { PERMISSION_LEVEL } from '../../../../Constant/enum';
 const { Header, Body, Footer, Dialog } = Modal;
 export default class ChangeStatus extends Component {

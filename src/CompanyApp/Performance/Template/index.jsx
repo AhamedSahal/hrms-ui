@@ -28,7 +28,8 @@ export default class PerformanceTemplate extends Component {
   }
   componentDidMount() {
     this.fetchList();
-    getObjectiveGroups().then(res => {
+    const excludeDefault = false;
+    getObjectiveGroups(excludeDefault).then(res => {
       if (res.status == "OK") {
       this.setState({
         objectiveGroups: res.data

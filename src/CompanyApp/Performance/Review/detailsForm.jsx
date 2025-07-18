@@ -11,6 +11,7 @@ import { Modal } from 'react-bootstrap';
 import ObjectiveForm from './objectiveForm';
 import { Button, styled, Tooltip, Typography } from '@mui/material';
 import SuccessAlert from '../../../MainPage/successToast';
+import { getGoalsByReviewIdAndFromToDate } from '../PerformanceModule/PerformGoals/service';
 const { Header, Body, Footer, Dialog } = Modal;
 
 const WtTooltip = styled(({ className, ...props }) => (
@@ -40,6 +41,29 @@ export default class PerformanceReviewDetailsForm extends Component {
         }
         this.getData(this.state.id);
     }
+
+    async getGoalByReviewIdAndFromToDate(reviewCycleId, fromDate, toDate,empId) {
+        return getGoalsByReviewIdAndFromToDate(reviewCycleId, fromDate, toDate,empId).then(res => {
+            if (res.status === "OK") {
+               
+                this.setState({
+                    goals: res.data,
+                });
+            }
+        });
+    }
+
+
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            this.state.performanceReview !== prevState.performanceReview &&
+            this.state.performanceReview?.employeePerformanceObjectiveGropList?.some(group => group.defaultRecord)
+        ) {
+
+            this.getGoalByReviewIdAndFromToDate(this.state.performanceReview.reviewCycleId, this.state.performanceReview.fromDate, this.state.performanceReview.toDate,this.state.performanceReview.employee.id);
+        }
+    }
+
     getData(id) {
         getPerformanceById(id).then(res => {
             if (res.status == "OK") {
@@ -49,6 +73,7 @@ export default class PerformanceReviewDetailsForm extends Component {
                     isWeightageDefined: res.data.isWeightageDefined
 
                 });
+
                 let newImprovements = [];
                 for (let i = 0; i < 5; i++) {
                     let improvement = { id: i, area: '', competency: '', how: '' }
@@ -247,12 +272,51 @@ export default class PerformanceReviewDetailsForm extends Component {
     }
 
 
+    handleGoalRatingChange = (e, goalId, isEmployee) => {
+   const updatedGoals = this.state.goals.map(goal => {
+        if (goal.id === goalId) {
+        const rating = parseInt(e.target.value || 0);
+        return isEmployee?{ ...goal, employeeRating: rating }:{ ...goal, managerRating: rating, score: rating * goal.goalWeightage  };
+        }
+        return goal;
+    });
+    this.setState({ goals: updatedGoals });
+    };
+
+    getRatingForGoal = (goalId,isEmployee) => {
+    const ratingString = isEmployee? (this.state.performanceReview?.goalsEmployeeRating || ""):(this.state.performanceReview?.goalsManagerRating || "");
+    const pairs = ratingString.split(",");
+    for (let pair of pairs) {
+        const [id, rating] = pair.split(":");
+        if (parseInt(id) === goalId) {
+            const parsed = parseInt(rating);
+        return isNaN(parsed) ? "" : parsed;
+        }
+    }
+    return ""; 
+    };
+
+
+
     save = (data, action) => {
+       
         action.setSubmitting(true);
         let tmpData = {};
+
         tmpData.ratingData = this.state.userRating;
         tmpData.comment = this.state.comment;
         tmpData.improvementAreaData = this.state.improvements;
+        tmpData.goalsWeightage = this.state.goals?.map(goal => `${goal.id}:${goal.goalWeightage}`).join(',');
+        tmpData.goalsIds = this.state.goals?.map(goal => goal.id).join(',');
+        tmpData.reviewCycleId = this.state.performanceReview.reviewCycleId;
+        tmpData.fromDate = this.state.performanceReview.fromDate;
+        tmpData.toDate = this.state.performanceReview.toDate;
+        tmpData.goalsEmployeeRating = this.state.goals?.filter(goal => goal.employeeRating).map(goal => `${goal.id}:${goal.employeeRating}`).join(',');
+        tmpData.goalsManagerRating = this.state.goals?.filter(goal => goal.managerRating).map(goal => `${goal.id}:${goal.managerRating}`).join(',');
+        tmpData.goalsScore = this.state.goals?.filter(goal => goal.score).map(goal => `${goal.id}:${goal.score}`).join(',');
+
+
+    
         saveRating(tmpData, this.state.performanceReview.id).then(res => {
             if (res.status == "OK") {
                 this.getData(this.state.id);
@@ -270,6 +334,7 @@ export default class PerformanceReviewDetailsForm extends Component {
     }
     render() {
         const { openTable } = this.state
+        const totalGroupWeightage = this.state.performanceReview?.employeePerformanceObjectiveGropList?.reduce((total, group) => total + group.weightage, 0) || 0;
 
         return (
             <div style={{ borderRadius: '5px', border: 'solid 1px #c9c4c4' }}>
@@ -409,10 +474,19 @@ export default class PerformanceReviewDetailsForm extends Component {
                         }) => (
 
                             <Form>
-
+                                {/* 
                                 {!this.state.isWeightageDefined && !this.state.isManager && <div className="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <span>Please request Reviewer to set Weightage.</span> </div>}
-                                {this.state.performanceReview?.employeePerformanceObjectiveGropList?.sort((a, b) => b.weightage - a.weightage).map((objectiveGroup, index) => {
+                                    <span>Please request Reviewer to set Weightage.</span> </div>} */}
+                                {this.state.performanceReview?.employeePerformanceObjectiveGropList?.sort((a, b) => {
+                                    if (a.defaultRecord && !b.defaultRecord) return -1;
+                                    if (!a.defaultRecord && b.defaultRecord) return 1;
+                                    return b.weightage - a.weightage;
+                                }).map((objectiveGroup, index) => {
+                                    const hasValidObjective = objectiveGroup?.employeePerformanceObjectiveEntity?.some(obj => obj.name && obj.name.trim() !== '');
+
+                                    if (!hasValidObjective && !objectiveGroup.defaultRecord) {
+                                        return null;
+                                    }
 
 
                                     return <section className="review-section professional-excellence mt-2" key={index}>
@@ -465,8 +539,9 @@ export default class PerformanceReviewDetailsForm extends Component {
                                                             <tr style={{ background: '#c4c4c4' }}>
                                                                 <th style={{ width: '50px' }}>#</th>
                                                                 <th >Objectives</th>
-                                                                {(this.state.performanceReview?.submitedByEmployee || !this.state.isManager) && <th>Achievements</th>}
                                                                 <th style={{ width: '100px' }}>Weightage %</th>
+                                                                {(this.state.performanceReview?.submitedByEmployee || !this.state.isManager) && <th>Achievements</th>}
+
                                                                 {(!this.state.isManager || this.state.performanceReview?.submitedByEmployee) && <th style={{ width: '100px' }}>Employee Rating</th>}
                                                                 {this.state.isManager && this.state.performanceReview?.submitedByEmployee && <th style={{ width: '100px' }}>Reviewer Rating</th>}
 
@@ -474,33 +549,145 @@ export default class PerformanceReviewDetailsForm extends Component {
                                                         </thead>
                                                         <tbody>
                                                             {
-                                                                objectiveGroup?.employeePerformanceObjectiveEntity?.map((objective, index) => {
-                                                                    return <tr key={index}>
-                                                                        <td>{index + 1}</td>
-                                                                        <td className='pre-wrap'>{objective.name}</td>
-                                                                        {
-                                                                            objective?.employeePerformanceObjectiveTaskEntity?.map((task, index) => {
-                                                                                return <> {(this.state.performanceReview?.submitedByEmployee || !this.state.isManager) && <td className='pre-wrap'>
-                                                                                    {!this.state.performanceReview?.submitedByEmployee && <input className="form-control" required={!this.state.isManager} type="text" defaultValue={task.name} onBlur={e => this.setTask(e, objectiveGroup.id, objective.id, task.id)} />}
-                                                                                    {this.state.performanceReview?.submitedByEmployee && <span className='pre-wrap'>{task.name}</span>}
-                                                                                </td>}
+                                                                objectiveGroup.defaultRecord ? (
+                                                                    this.state.goals?.map((goal, index) => {
+                                                                        return (
+                                                                            <tr key={goal.id}>
+                                                                                <td>{index + 1}</td>
+                                                                                <td className='pre-wrap'>{goal?.name}</td>
 
-                                                                                    <td><input tabIndex={!task.weightage || task.weightage == 0 ? '0' : '-1'} type="number" defaultValue={task.weightage > 0 ? task.weightage : ''} className="form-control"
-                                                                                        onBlur={e => this.setWeightage(e, objectiveGroup.id, objective.id, task.id)} disabled={!this.state.isManager || this.state.performanceReview?.submitedByEmployee} required={!task.weightage || task.weightage == 0} /></td>
+                                                                                <td >
+                                                                                    <input
+                                                                                        tabIndex={(!goal.goalWeightage || goal.goalWeightage == 0 ? '0' : '-1')}
+                                                                                        defaultValue={goal.goalWeightage > 0 ? goal.goalWeightage : ''}
+                                                                                        className="form-control"
+                                                                                        disabled={!this.state.isManager || this.state.performanceReview?.submitedByEmployee}
+                                                                                    />
+                                                                                </td>
 
-                                                                                    {(!this.state.isManager || this.state.performanceReview?.submitedByEmployee) && <td><input type="number" tabIndex={(this.state.isManager || this.state.performanceReview?.submitedByEmployee) ? "-1" : "0"} disabled={this.state.isManager || this.state.performanceReview?.submitedByEmployee} required={(!this.state.isManager && !this.state.performanceReview?.submitedByEmployee)} defaultValue={task.selfRating > 0 ? task.selfRating : ''}
-                                                                                        onBlur={e => this.setRating(e, objectiveGroup.id, objective.id, task.id)}
-                                                                                        className="form-control" min={1} max={5} /></td>}
+                                                                                {(this.state.performanceReview?.submitedByEmployee || !this.state.isManager) && (
+                                                                                    <td className='pre-wrap'>
+                                                                                        {!this.state.performanceReview?.submitedByEmployee ? (
+                                                                                            <input className="form-control" required={!this.state.isManager} type="text" defaultValue={goal.name} />
+                                                                                        ) : (
+                                                                                            <span className='pre-wrap'>{goal.name}</span>
+                                                                                        )}
+                                                                                    </td>
+                                                                                )}
 
-                                                                                    {this.state.isManager && this.state.performanceReview?.submitedByEmployee && <td><input required={this.state.isManager} type="number" defaultValue={task.managerRating > 0 ? task.managerRating : ''}
-                                                                                        onBlur={e => this.setRating(e, objectiveGroup.id, objective.id, task.id)} disabled={this.state.performanceReview?.submitedByReviewer} className="form-control" min={1} max={5} /></td>}
-                                                                                </>
+                                                                                                                  {(!this.state.isManager || this.state.performanceReview?.submitedByEmployee) && (
+                                                                                                                    <td>
+                                                                                                                        <input
+                                                                                                                            type="number"
+                                                                                                                            tabIndex={(this.state.isManager || this.state.performanceReview?.submitedByEmployee) ? "-1" : "0"}
+                                                                                                                            disabled={this.state.isManager || this.state.performanceReview?.submitedByEmployee}
+                                                                                                                            required={!this.state.isManager && !this.state.performanceReview?.submitedByEmployee}
+                                                                                                                            onChange={(e) => this.handleGoalRatingChange(e, goal.id,true)}
+                                                                                                                            defaultValue={this.getRatingForGoal(goal.id, true)}
+                                                                                                                            className="form-control"
+                                                                                                                            min={1}
+                                                                                                                            max={5}
+                                                                                                                        />
+                                                                                                                    </td>
+                                                                                                                )}
 
-                                                                            })
-                                                                        }
-                                                                    </tr>
-                                                                })}
+                                                                                                                 {this.state.isManager && this.state.performanceReview?.submitedByEmployee && (
+                                                                                                                    <td>
+                                                                                                                        <input
+                                                                                                                            required={this.state.isManager}
+                                                                                                                            type="number"
+                                                                                                                            disabled={this.state.performanceReview?.submitedByReviewer}
+                                                                                                                            onChange={(e) => this.handleGoalRatingChange(e, goal.id,false)}
+                                                                                                                            defaultValue={this.getRatingForGoal(goal.id, false)}
+                                                                                                                            className="form-control"
+                                                                                                                            min={1}
+                                                                                                                            max={5}
+                                                                                                                        />
+                                                                                                                    </td>
+                                                                                                                )}
+                                                   
+                                                                            </tr>
+                                                                        );
+                                                                    })
+                                                                ) : (
+                                                                    objectiveGroup?.employeePerformanceObjectiveEntity?.map((objective, index) => {
+                                                                        return (
+                                                                            <tr key={index}>
+                                                                                <td>{index + 1}</td>
+                                                                                <td className='pre-wrap'>{objective.name}</td>
+
+                                                                                {
+                                                                                    objective?.employeePerformanceObjectiveTaskEntity?.map((task, index) => {
+                                                                                        return (
+                                                                                            <>
+                                                                                                <td>
+                                                                                                    <input
+                                                                                                        tabIndex={!task.weightage || task.weightage == 0 ? '0' : '-1'}
+                                                                                                        type="number"
+                                                                                                        defaultValue={task.weightage > 0 ? task.weightage : ''}
+                                                                                                        className="form-control"
+                                                                                                        onBlur={e => this.setWeightage(e, objectiveGroup.id, objective.id, task.id)}
+                                                                                                        disabled={!this.state.isManager || this.state.performanceReview?.submitedByEmployee}
+                                                                                                        required={!task.weightage || task.weightage == 0}
+                                                                                                    />
+                                                                                                </td>
+                                                                                                {(this.state.performanceReview?.submitedByEmployee || !this.state.isManager) && (
+                                                                                                    <td className='pre-wrap'>
+                                                                                                        {!this.state.performanceReview?.submitedByEmployee ? (
+                                                                                                            <input
+                                                                                                                className="form-control"
+                                                                                                                required={!this.state.isManager}
+                                                                                                                type="text"
+                                                                                                                defaultValue={task.name}
+                                                                                                                onBlur={e => this.setTask(e, objectiveGroup.id, objective.id, task.id)}
+                                                                                                            />
+                                                                                                        ) : (
+                                                                                                            <span className='pre-wrap'>{task.name}</span>
+                                                                                                        )}
+                                                                                                    </td>
+                                                                                                )}
+
+
+                                                                                                {(!this.state.isManager || this.state.performanceReview?.submitedByEmployee) && (
+                                                                                                    <td>
+                                                                                                        <input
+                                                                                                            type="number"
+                                                                                                            tabIndex={(this.state.isManager || this.state.performanceReview?.submitedByEmployee) ? "-1" : "0"}
+                                                                                                            disabled={this.state.isManager || this.state.performanceReview?.submitedByEmployee}
+                                                                                                            required={!this.state.isManager && !this.state.performanceReview?.submitedByEmployee}
+                                                                                                            defaultValue={task.selfRating > 0 ? task.selfRating : ''}
+                                                                                                            onBlur={e => this.setRating(e, objectiveGroup.id, objective.id, task.id)}
+                                                                                                            className="form-control"
+                                                                                                            min={1}
+                                                                                                            max={5}
+                                                                                                        />
+                                                                                                    </td>
+                                                                                                )}
+                                                                                                {this.state.isManager && this.state.performanceReview?.submitedByEmployee && (
+                                                                                                    <td>
+                                                                                                        <input
+                                                                                                            required={this.state.isManager}
+                                                                                                            type="number"
+                                                                                                            defaultValue={task.managerRating > 0 ? task.managerRating : ''}
+                                                                                                            onBlur={e => this.setRating(e, objectiveGroup.id, objective.id, task.id)}
+                                                                                                            disabled={this.state.performanceReview?.submitedByReviewer}
+                                                                                                            className="form-control"
+                                                                                                            min={1}
+                                                                                                            max={5}
+                                                                                                        />
+                                                                                                    </td>
+                                                                                                )}
+                                                                                            </>
+                                                                                        );
+                                                                                    })
+                                                                                }
+                                                                            </tr>
+                                                                        );
+                                                                    })
+                                                                )
+                                                            }
                                                         </tbody>
+
 
                                                     </table>
                                                 </div>
@@ -509,6 +696,90 @@ export default class PerformanceReviewDetailsForm extends Component {
 
                                     </section>
                                 })}
+
+
+
+                                {/* 
+                                <div className="row mb-3 mt-5">
+                                <div className="col-md-12 d-flex justify-content-between align-items-center">
+                                    <h4 className="review-title"></h4>
+                                    <WtTooltip placement="top" title={
+                                    <div className='groupWeightageCard'>
+                                        <p>Total Group Weightage</p>
+                                        <div className='innerCardWe'>
+                                        <CircularProgressbarWithChildren
+                                            value={totalGroupWeightage}
+                                            styles={buildStyles({
+                                            strokeLinecap: 'butt',
+                                            pathTransitionDuration: 0.5,
+                                            pathColor: `rgba(16, 39, 70, ${100})`,
+                                            trailColor: '#d6d6d6',
+                                            backgroundColor: '#3e98c7',
+                                            })}
+                                        >
+                                            <div style={{ fontSize: 10, marginTop: -5 }}>
+                                            <strong>{totalGroupWeightage}%</strong>
+                                            </div>
+                                        </CircularProgressbarWithChildren>
+                                        </div>
+                                    </div>
+                                    } arrow>
+                                    <label className='wtgBtn'>Weightage <BsFillInfoCircleFill className='ml-2' size={16} style={{ color: "#1DA8D5" }} /></label>
+                                    </WtTooltip>
+                                </div>
+                                </div>
+
+                                <div className="table-responsive mb-3" >
+                                <table className="table table-bordered review-table mb-0 table-p-5">
+                                    <thead>
+                                    <tr style={{ background: '#c4c4c4' }}>
+                                        <th style={{ width: '50px' }}>#</th>
+                                        <th>Common Factor</th>
+                                        <th>Performance Factor</th>
+                                        <th style={{ width: '100px' }}>Weightage %</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {this.state.performanceReview?.employeePerformanceObjectiveGropList
+                                        ?.sort((a, b) => b.weightage - a.weightage)
+                                        .flatMap((objectiveGroup) =>
+                                        objectiveGroup.employeePerformanceObjectiveEntity.map((objective, index) => ({
+                                            objectiveGroup,
+                                            objective,
+                                            index
+                                        }))
+                                        )
+                                        .map(({ objectiveGroup, objective, index }, idx) => (
+                                        <tr key={idx}>
+                                            <td>{idx + 1}</td>
+                                            <td className='pre-wrap'>{objective?.name}</td>
+                                            <td className='pre-wrap'>{objectiveGroup.name}</td>
+                                            <td>
+                                            <input
+                                                type="number"
+                                                defaultValue={objective.weightage > 0 ? objective.weightage : ''}
+                                                className="form-control"
+                                            />
+                                            </td>
+                                        </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                </div>
+
+ */}
+
+
+
+
+
+
+
+
+
+
+
+
                                 <div className="row">
                                     {(!this.state.isManager || this.state.performanceReview?.submitedByEmployee) &&
                                         <div className="mb-2 col-md-6">
@@ -597,7 +868,7 @@ export default class PerformanceReviewDetailsForm extends Component {
                                         }
 
                                     </section>}
-                                {((!this.state.isManager && !this.state.performanceReview?.submitedByEmployee && this.state.isWeightageDefined) || (this.state.isManager && !this.state.performanceReview?.submitedByReviewer)) && <input style={{ float: 'right', marginTop: '11px', paddingBottom: '0px' }} type="submit" className="btn btn-primary" value="Save" />}
+                                {((!this.state.isManager && !this.state.performanceReview?.submitedByEmployee) || (this.state.isManager && !this.state.performanceReview?.submitedByReviewer)) && <input style={{ float: 'right', marginTop: '11px', paddingBottom: '0px' }} type="submit" className="btn btn-primary" value="Save" />}
                             </Form>
                         )}
                     </Formik>

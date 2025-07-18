@@ -47,7 +47,7 @@ export default class EmployeePerformanceCommentForm extends Component {
 
     save = (data, action) => {
         action.setSubmitting(true);
-        console.log("datadata", this.state.evaluvationId)
+      
         createOneOnOneEvaluvationForm(data,this.state.evaluvationId).then(res => {
             if (res.status == "OK") {
                 toast.success(res.message);

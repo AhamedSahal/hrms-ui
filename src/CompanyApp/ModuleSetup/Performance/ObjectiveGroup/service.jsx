@@ -33,3 +33,12 @@ export function deleteObjectiveGroup(objectivegroupId) {
         return Promise.reject(err);
     });
 }
+
+export function getObjectiveGroupListWeightage() {
+    let path = `${servicePath}/getTotalPerformFactorWeightage`;
+    return getWithAuth(path).then(res => {
+        return Promise.resolve(res.data);
+    }).catch(err => {
+        return Promise.reject(err);
+    });
+}

@@ -18,6 +18,7 @@ import EmployeePerformance1on1MeetingView from './1on1Meeting/view';
 import GoalDetails from './PerformGoals/GoalsViewIndex.jsx';
 import EmployeePerformGoalsList from './PerformGoals/employeeGoalList.jsx';
 import EmployeesGoals from './PerformGoals/EmployeeGoals.jsx';
+import EmployeesReviews from '../Review/EmployeeReviews';
 import { Tooltip } from 'antd';
 import { IoIosPeople } from "react-icons/io";
 import { CiViewList } from "react-icons/ci";
@@ -37,6 +38,7 @@ export default class EmployeePerformanceModule extends Component {
             meetingId: 0,
             goalDetailsData: null,
             buttonState: true,
+            selectedEmp:0
         };
     }
 
@@ -104,6 +106,14 @@ export default class EmployeePerformanceModule extends Component {
         this.setState({ activeMenu: 'empGoals', goalDetailsData: { item, type } });
     };
 
+    handleOpenEmpReview = (item, type,id) => {
+        this.setState({ activeMenu: 'empReviews', goalDetailsData: { item, type },selectedEmp: id });
+    };
+
+    handleBackToReviews = () => {
+        this.setState({ activeMenu: 'Reviews', goalDetailsData: null });
+    };
+
     handleBackToGoals = () => {
         this.setState({ activeMenu: 'Goals', goalDetailsData: null });
     };
@@ -136,7 +146,7 @@ export default class EmployeePerformanceModule extends Component {
                                                     this.handleMenuSection(true)
                                                     this.handleMenuClick('dashboard')
                                                 }} className="nav-item"><a href="#team_div" data-toggle="tab" className="nav-link"><i class="fa fa-users" aria-hidden="true"></i> Team Performance</a></li>}
-                                                {verifyOrgLevelViewPermission("ATTENDANCE") && <li onClick={() => {
+                                                {verifyOrgLevelViewPermission("Performance Review") && <li onClick={() => {
                                                     this.handleMenuSection(true)
                                                     this.handleMenuClick('dashboard')
                                                 }} className="nav-item"><a href="#org_div" data-toggle="tab" className="nav-link"><i class="fa fa-sitemap" aria-hidden="true"></i> Organization Performance</a></li>}
@@ -239,7 +249,8 @@ export default class EmployeePerformanceModule extends Component {
                             </div>
                             <div id='team_div' className="pl-0 pro-overview ant-table-background tab-pane fade  ">
                                 {activeMenu === 'dashboard' && <TeamPerformDashboard />}
-                                {activeMenu === 'Reviews' && <EmployeePerformanceReview />}
+                                {activeMenu === 'Reviews' && <EmployeePerformanceReview handleOpenEmpReview={this.handleOpenEmpReview}  />}
+                                {activeMenu === 'empReviews' && <EmployeesReviews reviewData={goalDetailsData} onBack={this.handleBackToReviews} selectedEmp={this.state.selectedEmp}/>}
                                 {activeMenu === '1on1Meeting' && (!this.state.meetingView ? <EmployeePerformance1on1MeetingModule oneOnOneStatus={1} updateList={this.updateList} /> : <EmployeePerformance1on1MeetingView meetingId={this.state.meetingId} updateView={this.updateView} viewStatus={true} />)}
                                 {activeMenu === 'Goals' && buttonState && <EmployeePerformGoalsList handleOpenEmpGoal={this.handleOpenEmpGoal} onOpenGoalDetails={this.handleOpenGoalDetails} goalStatus={1} />}
                                 {activeMenu === 'Goals' && !buttonState && <PerformGoals onOpenGoalDetails={this.handleOpenGoalDetails} goalStatus={1} />}
@@ -249,7 +260,8 @@ export default class EmployeePerformanceModule extends Component {
                             <div id='org_div' className="pl-0 pro-overview ant-table-background tab-pane fade ">
                                 {activeMenu === 'dashboard' && <OrgPerformDashboard />}
 
-                                {activeMenu === 'Reviews' && <EmployeePerformanceReview />}
+                                {activeMenu === 'Reviews' && <EmployeePerformanceReview handleOpenEmpReview={this.handleOpenEmpReview}  />}
+                                {activeMenu === 'empReviews' && <EmployeesReviews reviewData={goalDetailsData} onBack={this.handleBackToReviews} selectedEmp={this.state.selectedEmp}/>}
                                 {activeMenu === '1on1Meeting' && (!this.state.meetingView ? <EmployeePerformance1on1MeetingModule oneOnOneStatus={2} updateList={this.updateList} /> : <EmployeePerformance1on1MeetingView meetingId={this.state.meetingId} updateView={this.updateView} viewStatus={true} />)}
                                 {activeMenu === 'Goals' && buttonState && <EmployeePerformGoalsList handleOpenEmpGoal={this.handleOpenEmpGoal} onOpenGoalDetails={this.handleOpenGoalDetails} goalStatus={2} />}
                                 {activeMenu === 'Goals' && !buttonState && <PerformGoals onOpenGoalDetails={this.handleOpenGoalDetails} goalStatus={2} />}

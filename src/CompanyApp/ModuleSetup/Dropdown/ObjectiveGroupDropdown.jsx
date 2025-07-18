@@ -6,10 +6,15 @@ class ObjectiveGroupDropdown extends Component {
     constructor(props) {
         super(props)
 
+        this.state = {
+            excludeDefault: props.excludeDefault ?? false
+        };
+
     }
 
     componentDidMount() {
-        this.props.getObjectiveGroups();
+        console.log("excludeDefault: ",this.props.excludeDefault)
+        this.props.getObjectiveGroups(this.state.excludeDefault);
     }
     render() {
         return (
@@ -32,8 +37,10 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        getObjectiveGroups: () => {
-            dispatch(DropdownService.getObjectiveGroups())
+        
+        getObjectiveGroups: (excludeDefault) => {
+             console.log("excludeDefault2: ",excludeDefault)
+            dispatch(DropdownService.getObjectiveGroups(excludeDefault))
         }
     }
 }

@@ -151,33 +151,17 @@ class Header extends Component {
 
     return (
       <>
-        {!isSuperAdmin && getChatbotEnabled() ? <div
-          className="aibot-container"
-          ref={(refValue) => (this.aibotContainerRef = refValue)}
-        >
-          <div onClick={this.handleMouseEnter} className="aibot-circle aibot-chatbot">
-            <img className='botImgGif' src={chatbotGif} alt="Chatbot Gift" />
-          </div>
-          {showOptions &&
-            <div className={`aibot-openai ${showOptions ? 'aibot-visible' : ''}`}> <div className='boticon' >
-
-              <div onClick={this.toggleChatbot}>
-                <FaRobot size={40} />
-              </div>
+        {!isSuperAdmin && getChatbotEnabled() ? 
+            <div >
+              <RasaChat onClose={this.handleCloseChatbot} />
             </div>
-            </div>
-          }
+          
+       : null}
 
-          {showOptions &&
-          <div className={`aibot-rasa ${showOptions ? 'aibot-visible' : ''}`}>
-            <RasaChat onClose={this.handleCloseChatbot} />
-            </div>
-          }
-          {showChatbot && <Chatbot closeChatbot={this.closeChatbot} />}
-        </div> : <></>}
-
-
-
+        <div onClick={this.toggleChatbot} className="vertical-text openAI_Bot_button">
+          AI Bot 🤖
+        </div>
+        {showChatbot && <Chatbot closeChatbot={this.closeChatbot} />}
         <div className="header" style={{ right: "0px" }}>
           <nav id='navbg' className="navbar navbar-expand-lg">
             <div className="container-fluid navbar-container">

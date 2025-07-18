@@ -629,6 +629,7 @@ export default class NewSocialShare extends Component {
     getAttendance = () => {
         getEmployeeDashboardDetail(new Date().toISOString().substring(0, 16)).then(res => {
             this.setState({ dashboard: res.data });
+            console.log('cell-----------' ,res.data);
         });
     }
     postAttendance = () => {

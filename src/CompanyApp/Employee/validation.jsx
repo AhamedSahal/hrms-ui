@@ -125,26 +125,95 @@ export const attendanceByAdminSchema = Yup.object().shape({
         }),
 });
 
-export const BankDetailsSchema = Yup.object().shape({
-    accountHolderName: Yup.string()
-        .max(20, 'Too Long!')
-        .matches(/^[a-zA-Z._ ]+$/,'Account Holder Name should be alphabets' )
-        .required('Please Enter Account Holder Name'),
+export const BankDetailsSchema = (payModeName) => {
+    const isWPS = payModeName === "WPS";
+    return Yup.object().shape({
+        accountHolderName: Yup.string()
+            .max(20, 'Too Long!')
+            .matches(/^[a-zA-Z._ ]+$/, 'Account Holder Name should be alphabets')
+            .when([], {
+                is: () => isWPS,
+                then: schema => schema.required('Please Enter Account Holder Name'),
+                otherwise: schema => schema.notRequired()
+            }),
         accountNumber: Yup.string()
-        .max(30, "Too Long!")
-        .required("Please Enter Account Number")
-        .matches(/^(?!\s*$)[0-9@._ ]+$/, "Please Enter a valid Account Number"), 
-    bankName: Yup.string()
-        .matches(/^[a-zA-Z@._ ]+$/,'Bank Name should not contain numbers' )
-        .required('Please Enter Bank Name'),
-    ibanNumber: Yup.string()
-        .required('Please Enter IBAN Number'),
-    branchLocation: Yup.string()
-        .matches(/^[a-zA-Z@._ ]+$/,'Please enter valid Branch Location')
-        .required('Please Enter Branch-Location '),
-    labourCardNo: Yup.string() 
-        .matches(/^[0-9@._ ]+$/,'Labour card number should contain only numbers')    
-});
+            .min(3, "Account Number must be at least 3 characters long")
+            .max(30, "Too Long!")
+            .matches(/^[0-9]+$/, "Please Enter a valid Account Number")
+            .when([], {
+                is: () => isWPS,
+                then: schema => schema.required('Please Enter Account Number'),
+                otherwise: schema => schema.notRequired()
+            }),
+        bankName: Yup.string()
+            .min(3, 'Bank Name must be at least 3 characters long')
+            .max(100, 'Bank Name is too long')
+            .matches(/^[a-zA-Z ]+$/, 'Bank Name should not contain numbers/special characters')
+            .when([], {
+                is: () => isWPS,
+                then: schema => schema.required('Please Enter Bank Name'),
+                otherwise: schema => schema.notRequired()
+            }),
+        ibanNumber: Yup.string()
+            .min(3, 'Too Short!')
+            .max(50, 'Too Long!')
+            .matches(/^[0-9]+$/, 'Please enter a valid IBAN number')
+            .when([], {
+                is: () => isWPS,
+                then: schema => schema.required('Please Enter IBAN Number'),
+                otherwise: schema => schema.notRequired()
+            }),
+        branchLocation: Yup.string()
+            .min(3, 'Too Short!')
+            .max(100, 'Too Long!')
+            .matches(/^[a-zA-Z@._]+$/, 'Please enter valid Branch Location')
+            .when([], {
+                is: () => isWPS,
+                then: schema => schema.required('Please Enter Branch-Location'),
+                otherwise: schema => schema.notRequired()
+            }),
+        swiftCode: Yup.string()
+            .min(8, 'SWIFT Code must be at least 8 characters')
+            .max(11, 'SWIFT Code must be at most 11 characters')
+            .matches(/^[a-zA-Z0-9-]+$/, 'Please enter a valid SWIFT Code')
+            .when([], {
+                is: () => isWPS,
+                then: schema => schema.required('Please Enter SWIFT Code'),
+                otherwise: schema => schema.notRequired()
+            }),
+        routingCode: Yup.string()
+            .length(9, 'Routing Code must be exactly 9 digits')
+            .matches(/^[0-9]{9}$/, 'Please enter a valid Routing Code')
+            .when([], {
+                is: () => isWPS,
+                then: schema => schema.required('Please Enter Routing Code'),
+                otherwise: schema => schema.notRequired()
+            }),
+        labourCardNo: Yup.string()
+            .min(3, 'Labour card number must be at least 3 digits')
+            .matches(/^[0-9@_]+$/, 'Labour card number should contain only numbers')
+            .when([], {
+                is: () => isWPS,
+                then: schema => schema.required('Please Enter Labour Card Number'),
+                otherwise: schema => schema.notRequired()
+            }),
+       
+        employerId: Yup.string()
+            .min(3, 'Employer ID must be at least 3 digits')
+            .max(15, 'Too Long!')
+            .matches(/^[a-zA-Z0-9@#]+$/, 'Please enter a valid Employer ID')
+            .notRequired(),
+
+        personalNo: Yup.string()
+            .min(3, 'Personal No must be at least 3 digits')
+            .matches(/^[0-9@_]+$/, 'Personal No should contain only numbers')
+            .when([], {
+                is: () => isWPS,
+                then: schema => schema.required('Please Enter Personal No'),
+                otherwise: schema => schema.notRequired()
+            }),
+    });
+};
 
 export const SalaryBasicAndModeSchema = Yup.object().shape({
     basicSalary: Yup.number()

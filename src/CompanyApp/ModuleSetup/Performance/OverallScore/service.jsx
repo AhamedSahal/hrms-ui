@@ -24,7 +24,7 @@ export function getPotentialScoreList(searchText, pageNumber, pageSize, sort) {
 }
 
 export function saveOverallScore(objectivegroup) {
-    let post = objectivegroup.id == 0 ? postWithAuth(servicePath1, objectivegroup)
+    let post = objectivegroup.id == 0 ? postWithAuth(servicePath, objectivegroup)
     : putWithAuth(`${servicePath}?id=${objectivegroup.id}`, objectivegroup);
     return post.then(res => {
         return Promise.resolve(res.data);

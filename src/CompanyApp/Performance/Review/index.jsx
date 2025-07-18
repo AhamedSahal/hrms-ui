@@ -7,8 +7,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Helmet } from 'react-helmet';
 import { toast } from 'react-toastify';
 import { itemRender } from "../../../paginationfunction";
-import { deletePerformanceReview, getPerformanceReviewList } from './service';
-import { getReadableDate, getTitle, getUserType, verifyApprovalPermission, verifyOrgLevelEditPermission, verifyOrgLevelViewPermission, verifySelfViewPermission, verifyViewPermissionForTeam } from '../../../utility';
+import { deletePerformanceReview, getPerformanceReviewList, getEmployeesByPerformanceReviewList } from './service';
+import { getReadableDate, getTitle, getUserType, verifyApprovalPermission, verifyOrgLevelEditPermission, verifyOrgLevelViewPermission, verifySelfViewPermission, verifyViewPermissionForTeam, verifyViewPermission } from '../../../utility';
 import PerformanceReviewForm from './form';
 import EmployeeListColumn from '../../Employee/employeeListColumn';
 import DepartmentDropdown from '../../ModuleSetup/Dropdown/DepartmentDropdown';
@@ -20,6 +20,11 @@ import { BsSliders } from 'react-icons/bs';
 import PerformanceReviewDetailsForm from './detailsForm';
 import SuccessAlert from '../../../MainPage/successToast';
 import checkimg from '../../../assets/img/tickmarkimg.gif'
+import { Empty } from 'antd';
+import EmployeeProfilePhoto from '../../../CompanyApp/Employee/widgetEmployeePhoto';
+
+import InfiniteScroll from 'react-infinite-scroll-component';
+// import EmployeeProfilePhoto from '../../Employee/employeeProfilePhoto';
 const { Header, Body, Footer, Dialog } = Modal;
 export default class EmployeePerformanceReview extends Component {
   constructor(props) {
@@ -37,7 +42,7 @@ export default class EmployeePerformanceReview extends Component {
       fromDate: firstDay.toISOString().split('T')[0],
       toDate: lastDay.toISOString().split('T')[0],
       page: 0,
-      size: 10,
+      size: 99999,
       sort: "id,desc",
       totalPages: 0,
       totalRecords: 0,
@@ -52,11 +57,15 @@ export default class EmployeePerformanceReview extends Component {
     };
   }
   componentDidMount() {
+  
     this.fetchList();
   }
+  
+
   fetchList = () => {
-    getPerformanceReviewList(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.self, this.state.branchId, this.state.departmentId, this.state.jobTitleId, this.state.fromDate, this.state.toDate).then(res => {
+    getEmployeesByPerformanceReviewList(this.state.q, this.state.page, this.state.size, this.state.sort, this.state.self).then(res => {
       if (res.status == "OK") {
+       
         this.setState({
           data: res.data.list,
           totalPages: res.data.totalPages,
@@ -130,31 +139,32 @@ export default class EmployeePerformanceReview extends Component {
       this.setState({ showAlert: false });
     }, 3000);
   }
-  delete = (performanceReview) => {
-    confirmAlert({
-      title: `Delete Performance Review ${performanceReview.name}`,
-      message: 'Are you sure, you want to delete this Performance Review?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () => deletePerformanceReview(performanceReview.id).then(res => {
-            if (res.status == "OK") {
-              toast.success(res.message);
-              this.fetchList();
-            } else {
-              toast.error(res.message)
-            }
-          })
-        },
-        {
-          label: 'No',
-          onClick: () => { }
-        }
-      ]
-    });
-  }
+  // delete = (performanceReview) => {
+  //   confirmAlert({
+  //     title: `Delete Performance Review ${performanceReview.name}`,
+  //     message: 'Are you sure, you want to delete this Performance Review?',
+  //     buttons: [
+  //       {
+  //         label: 'Yes',
+  //         onClick: () => deletePerformanceReview(performanceReview.id).then(res => {
+  //           if (res.status == "OK") {
+  //             toast.success(res.message);
+  //             this.fetchList();
+  //           } else {
+  //             toast.error(res.message)
+  //           }
+  //         })
+  //       },
+  //       {
+  //         label: 'No',
+  //         onClick: () => { }
+  //       }
+  //     ]
+  //   });
+  // }
   render() {
     const isAdmin = (verifyOrgLevelViewPermission("Performance Review") || getUserType() == 'COMPANY_ADMIN');
+    const isEmployee = (verifyViewPermission("Performance Review") || getUserType() == 'EMPLOYEE');
     const { data, totalPages, totalRecords, currentPage, size } = this.state
     let startRange = ((currentPage - 1) * size) + 1;
     let endRange = ((currentPage) * (size + 1)) - 1;
@@ -162,30 +172,32 @@ export default class EmployeePerformanceReview extends Component {
       endRange = totalRecords;
     }
 
-    const menuItems = (text) => [
-      <div key="1">
-        <Link
-          className="muiMenu_item"
-          state={{ empId: text.employee.id }}
-          to={
-            !text.submited
-              ? '#'
-              : `/app/company-app/performance/report/details/${text.id}`   
-          }
-          onClick={() => {
-            if (!text.submited) {
-              this.setState({ showReviewForm: true, reviewId: text.id });
-            }
-          }}
-        >
-          <i className="fa fa-eye m-r-5"></i> {text.submited ? 'Report' : 'View'}
-        </Link>
-      </div>,
-      <div key="2">{text.deleteAlloweed && <a className="muiMenu_item" href="#" onClick={() => {
-        this.delete(text);
-      }}>
-        <i className="fa fa-trash-o m-r-5"></i> Delete</a>}</div>,
-    ]
+    // const menuItems = (text) => [
+    //   <div key="1">
+    //     <Link
+    //       className="muiMenu_item"
+    //       to={
+    //         !text.submited
+    //           ? '#'
+    //           : {
+    //             pathname: '/app/company-app/performance/report/details/' + text.id,
+    //             state: { empId: text.employee.id }
+    //           }
+    //       }
+    //       onClick={() => {
+    //         if (!text.submited) {
+    //           this.setState({ showReviewForm: true, reviewId: text.id });
+    //         }
+    //       }}
+    //     >
+    //       <i className="fa fa-eye m-r-5"></i> {text.submited ? 'Report' : 'View'}
+    //     </Link>
+    //   </div>,
+    //   <div key="2">{text.deleteAlloweed && <a className="muiMenu_item" href="#" onClick={() => {
+    //     this.delete(text);
+    //   }}>
+    //     <i className="fa fa-trash-o m-r-5"></i> Delete</a>}</div>,
+    // ]
 
     // const menuItems = (text) => {
     //   const items = [];
@@ -210,58 +222,61 @@ export default class EmployeePerformanceReview extends Component {
     //   return items;
     // }
 
-    const columns = [
-      {
-        title: 'Employee',
-        sorter: false,
-        render: (text, record) => {
-          return <EmployeeListColumn id={text.employee.id} name={text.employee.name} employeeId={text.employeeId} ></EmployeeListColumn>
-        }
-      },
-      {
-        title: 'Review Period From',
-        dataIndex: 'fromDate',
-        sorter: true,
-        render: (text, record) => {
-          return <>
-            <div>{getReadableDate(text)}</div>
-          </>
-        }
-      },
-      {
-        title: 'Review Period To',
-        dataIndex: 'toDate',
-        sorter: true,
-        render: (text, record) => {
-          return <>
-            <div>{getReadableDate(text)}</div>
-          </>
-        }
-      },
-      {
-        title: 'Reporting Manager',
-        sorter: false,
-        render: (text, record) => {
-          return <span>{text.reviewer.name}</span>
-        }
-      },
-      {
-        title: 'Status',
-        sorter: false,
-        dataIndex: 'status',
-      },
-      {
-        title: 'Action',
-        width: 50,
-        className: "text-center",
 
-        render: (text, record) => (
-          <div className="">
-            <TableDropdown menuItems={menuItems(text)} />
-          </div>
-        ),
-      },
-    ]
+ 
+    // const columns = [
+    //   {
+    //     title: 'Employee',
+    //     sorter: false,
+    //     render: (text, record) => {
+    //       return <EmployeeListColumn id={text.employee.id} name={text.employee.name} employeeId={text.employeeId} ></EmployeeListColumn>
+    //     }
+    //   },
+    //   {
+    //     title: 'Review Period From',
+    //     dataIndex: 'fromDate',
+    //     sorter: true,
+    //     render: (text, record) => {
+    //       return <>
+    //         <div>{getReadableDate(text)}</div>
+    //       </>
+    //     }
+    //   },
+    //   {
+    //     title: 'Review Period To',
+    //     dataIndex: 'toDate',
+    //     sorter: true,
+    //     render: (text, record) => {
+    //       return <>
+    //         <div>{getReadableDate(text)}</div>
+    //       </>
+    //     }
+    //   },
+    //   {
+    //     title: 'Reporting Manager',
+    //     sorter: false,
+    //     render: (text, record) => {
+    //       return <span>{text.reviewer.name}</span>
+    //     }
+    //   },
+    //   {
+    //     title: 'Status',
+    //     sorter: false,
+    //     dataIndex: 'status',
+    //   },
+    //   {
+    //     title: 'Action',
+    //     width: 50,
+    //     className: "text-center",
+
+    //     render: (text, record) => (
+    //       <div className="">
+    //         <TableDropdown menuItems={menuItems(text)} />
+    //       </div>
+    //     ),
+    //   },
+    // ]
+    
     return (
       <div >
         {this.state.showAlert && (
@@ -274,154 +289,195 @@ export default class EmployeePerformanceReview extends Component {
           <title>Performance Review  | {getTitle()}</title>
           <meta name="description" content="Branch page" />
         </Helmet>
-        {/* Page Content */}
-        < div className="p-0 content container-fluid" >
-          {/* Page Header */}
-          < div id='page-head' >
-
-
-            <div className="float-right col-md-5 btn-group btn-group-sm">
-
-              <div className="col-3 ">
-                <div style={{ justifyContent: 'right' }} className="row">
-
-                  <div className={isAdmin ? 'col-4 btn-group btn-group-sm' : 'col-2 btn-group btn-group-sm'}>
-                    {!this.state.self &&
-                      <Button className="btn apply-button btn-primary" onClick={() => {
-                        this.setState({
-                          showForm: true
-                        })
-                      }}><i className="fa fa-plus" /> Create</Button>}
-                    {isAdmin && <div style={{ cursor: 'pointer' }} className='ml-2' onClick={() => this.setState({ showFilter: !this.state.showFilter })} > <BsSliders className='' size={30} /></div>}
-                  </div>
-                </div>
-
+	
+	
+        <div style={{ cursor: 'pointer', textAlign: 'right', marginTop: '-35px', }} className='ml-2 mb-2' onClick={() => this.setState({ showFilter: !this.state.showFilter })} > <BsSliders className='' size={30} /></div>
+        {this.state.showFilter && <div className='mt-5 filterCard p-3'>
+          {isAdmin && <><div className="row">
+            <div className="col-md-4">
+              <div className="form-group form-focus">
+                <BranchDropdown defaultValue={this.state.branchId} onChange={e => {
+                  this.setState({
+                    branchId: e.target.value
+                  })
+                }}></BranchDropdown>
+                <label className="focus-label">Branch</label>
               </div>
             </div>
-
-            {this.state.showFilter && isAdmin && <div className='mt-5 filterCard p-3'>
-              <div className="row">
-                <div className="col-md-4">
-                  <div className="form-group form-focus">
-                    <BranchDropdown defaultValue={this.state.branchId} onChange={e => {
-                      this.setState({
-                        branchId: e.target.value
-                      })
-                    }}></BranchDropdown>
-                    <label className="focus-label">Branch</label>
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div className="form-group form-focus">
-                    <DepartmentDropdown defaultValue={this.state.departmentId} onChange={e => {
-                      this.setState({
-                        departmentId: e.target.value
-                      })
-                    }}></DepartmentDropdown>
-                    <label className="focus-label">Department</label>
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div className="form-group form-focus">
-                    <JobTitlesDropdown defaultValue={this.state.jobTitleId} onChange={e => {
-                      this.setState({
-                        jobTitleId: e.target.value
-                      })
-                    }}></JobTitlesDropdown>
-                    <label className="focus-label">Job Titles</label>
-                  </div>
-                </div>
-
+            <div className="col-md-4">
+              <div className="form-group form-focus">
+                <DepartmentDropdown defaultValue={this.state.departmentId} onChange={e => {
+                  this.setState({
+                    departmentId: e.target.value
+                  })
+                }}></DepartmentDropdown>
+                <label className="focus-label">Department</label>
               </div>
-              <div className="row">
-                <div className="col-md-3">
-                  <div className="form-group form-focus">
-                    <input onChange={e => {
-                      this.setState({
-                        q: e.target.value
-                      })
-                    }} type="text" className="form-control floating" />
-                    <label className="focus-label">Search</label>
-                  </div>
-                </div>
-                <div className="col-md-3">
-                  <div className="form-group form-focus">
-                    <input value={this.state.fromDate} onChange={e => {
-                      this.setState({
-                        fromDate: e.target.value
-                      })
-                    }} type="date" className="form-control floating" />
-                    <label className="focus-label">From Date</label>
-                  </div>
-
-                </div>
-
-                <div className="col-md-3">
-                  <div className="form-group form-focus">
-                    <input value={this.state.toDate} onChange={e => {
-                      this.setState({
-                        toDate: e.target.value
-                      })
-                    }} type="date" className="form-control floating" />
-                    <label className="focus-label">To Date</label>
-                  </div>
-
-                </div>
-                <div className="col-md-3">
-                  <a href="#" onClick={() => {
-                    this.fetchList();
-                  }} className="btn btn-success btn-block"> Search </a>
-                </div>
+            </div>
+            <div className="col-md-4">
+              <div className="form-group form-focus">
+                <JobTitlesDropdown defaultValue={this.state.jobTitleId} onChange={e => {
+                  this.setState({
+                    jobTitleId: e.target.value
+                  })
+                }}></JobTitlesDropdown>
+                <label className="focus-label">Job Titles</label>
               </div>
-            </div>}
-            < div className='mt-5 Table-card' >
-              <div className="tableCard-body">
-                <div className="row " >
-                  <div className="mt-3 col">
-                    <h3 className="page-titleText">Performance Review </h3>
-                  </div>
-                  {!isAdmin && <div className='mt-2 float-right col-md-auto'>
-                    <i onClick={() => this.updateSelf()} className={this.state.self ? 'fa-2x fa fa-toggle-on text-success' : 'fa-2x fa fa-toggle-off text-danger'}></i>
-                    <label className="pl-2 text-dark" style={{ color: 'white' }}>{this.state.self ? 'Self' : 'Team Members'}</label>
-                  </div>}
-                </div>
-                {/* /Page Header */}
-                <div className="tableCard-container row">
-                  <div className="col-md-12">
-                    <div className="table-responsive">
-                      <Table id='Table-style' className="table-striped "
+            </div> 
 
-                        pagination={{
-                          total: totalRecords,
-                          showTotal: (total, range) => {
-                            return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
-                          },
-                          showSizeChanger: true, onShowSizeChange: this.pageSizeChange,
-                          itemRender: itemRender,
-                          pageSizeOptions: [10, 20, 50, 100],
-                          current: currentPage,
-                          defaultCurrent: 1,
-                        }}
-                        style={{ overflowX: 'auto' }}
-                        columns={columns}
-                        // bordered
-                        dataSource={[...data]}
-                        rowKey={record => record.id}
-                        onChange={this.onTableDataChange}
-                      />
-                    </div>
+          </div></>}
+          <div className="row">
+            <div className="col-md-3">
+              <div className="form-group form-focus">
+                <input onChange={e => {
+                  this.setState({
+                    q: e.target.value
+                  })
+                }} type="text" className="form-control floating" />
+                <label className="focus-label">Search</label>
+              </div>
+            </div>
+            {/* <div className="col-md-3">
+              <div className="form-group form-focus">
+                <input value={this.state.fromDate} onChange={e => {
+                  this.setState({
+                    fromDate: e.target.value
+                  })
+                }} type="date" className="form-control floating" />
+                <label className="focus-label">From Date</label>
+              </div>
+
+            </div> */}
+
+            {/* <div className="col-md-3">
+              <div className="form-group form-focus">
+                <input value={this.state.toDate} onChange={e => {
+                  this.setState({
+                    toDate: e.target.value
+                  })
+                }} type="date" className="form-control floating" />
+                <label className="focus-label">To Date</label>
+              </div>
+
+            </div> */}
+            <div className="col-md-3">
+              <a href="#" onClick={() => {
+                this.fetchList();
+              }} className="btn btn-success btn-block"> Search </a>
+            </div>
+          </div>
+        </div>}
+
+        {/* {this.props.reviewStatus === 0 && (
+          <div className='mt-5 Table-card'>
+            <div className="tableCard-body">
+              <div className="row " >
+                <div className="mt-3 col">
+                  <h3 className="page-titleText">Performance Review </h3> <p>{this.props.goalStatus}</p>
+                </div>
+                {isEmployee && <div className='mt-2 float-right col-md-auto'>
+                  <i onClick={() => this.updateSelf()} className={this.state.self ? 'fa-2x fa fa-toggle-on text-success' : 'fa-2x fa fa-toggle-off text-danger'}></i>
+                  <label className="pl-2 text-dark" style={{ color: 'white' }}>{this.state.self ? 'Self' : 'Team Members'}</label>
+                </div>}
+              </div>
+           
+              <div className="tableCard-container row">
+                <div className="col-md-12">
+                  <div className="table-responsive">
+                    <Table id='Table-style' className="table-striped "
+                      pagination={{
+                        total: totalRecords,
+                        showTotal: () => {
+                          return `Showing ${startRange} to ${endRange} of ${totalRecords} entries`;
+                        },
+                        showSizeChanger: true, onShowSizeChange: this.pageSizeChange,
+                        itemRender: itemRender,
+                        pageSizeOptions: [10, 20, 50, 100],
+                        current: currentPage,
+                        defaultCurrent: 1,
+                      }}
+                      style={{ overflowX: 'auto' }}
+                      columns={columns}
+                      // bordered
+                      dataSource={[...data]}
+                      rowKey={record => record.id}
+                      onChange={this.onTableDataChange}
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        )}
+	   */}
+	  
+	  
+	  
+	  
+	        {(<> <div className="p-0 content container-fluid" >
+          < div className='goalPageHead' id='page-head' >
+            {/* <div className=''>
+              <div style={{ cursor: 'pointer', textAlign: 'right' }} className="goalHeader-container">
+                <div className='col-2 btn-group btn-group-sm'>
+                  {!this.state.self &&
+                    <Button className="btn apply-button btn-primary" onClick={() => {
+                      this.setState({
+                        showForm: true
+                      })
+                    }}><i className="fa fa-plus" /> Create</Button>}
+                </div>
+              </div>
+            </div> */}
 
-
-
-
-
-          {/* /Page Content */}
-
+            <InfiniteScroll
+              dataLength={this.state.size}
+              next={this.fetchList}
+              loader={<h4 style={{ marginTop: '11px', textAlign: 'center' }}></h4>}
+              hasMore={this.state.totalRecords > this.state.data.length}
+              endMessage={
+                // <p style={{ marginTop: '11px', textAlign: 'center' }}>
+                //   <b>Yay! You have seen it all</b>
+                // </p>
+                null
+              }
+            >
+              <div className="Goals_table-container">
+                <table className="goals-table">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Title</th>
+                      <th>Reporting Manager</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.length > 0 ? null : (
+                      <tr>
+                        <td colSpan="6">
+                          <Empty />
+                        </td>
+                      </tr>
+                    )}
+                    {data?.map((item) => (
+                      <tr className='Goals_table_row' key={item.id}>
+                        <td onClick={() => this.props.handleOpenEmpReview(item, "empReviews", item.id)} style={{ cursor: 'pointer' }}>
+                          <div className="goal-title">                            
+                            <EmployeeProfilePhoto className='multiSelectImgSize' id={item.id}></EmployeeProfilePhoto>{item.fullName?item.fullName:"-"}
+                          </div>
+                        </td>
+                        <td> - </td>
+                        <td className='GoalName_tab'>
+                          {item.reportingManager?.fullName? item.reportingManager?.fullName : "-"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </InfiniteScroll>
+            </div>
+            </div>
+          </>)}
 
           <Modal enforceFocus={false} size={"md"} show={this.state.showForm} onHide={this.hideForm} >
 
@@ -451,8 +507,10 @@ export default class EmployeePerformanceReview extends Component {
 
 
           </Modal>
+
         </div>
-      </div>
+
+      
     );
   }
 }

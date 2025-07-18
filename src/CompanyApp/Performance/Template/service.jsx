@@ -52,8 +52,8 @@ export function deletePerformanceTemplate(templateId) {
         return Promise.reject(err);
     });
 }
-export function getObjectiveGroups() {    
-    return getWithAuth("/performance-objective-group/select").then(res => {
+export function getObjectiveGroups(excludeDefault) {    
+    return getWithAuth(`/performance-objective-group/select?excludeDefault=${excludeDefault}`).then(res => {
         return Promise.resolve(res.data);
     }).catch(err => {
         return Promise.reject(err);

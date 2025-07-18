@@ -47,8 +47,7 @@ class OnboardMSTaskForm extends Component {
     }
 
     componentDidMount() {
-          console.log("task tested for active:s ")
-                console.log("task tested for active: ",this.props.taskData)
+        
         getBranchLists().then(res => {
             if (res.status === "OK") {
                 this.setState({

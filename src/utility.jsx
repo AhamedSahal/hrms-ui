@@ -136,6 +136,9 @@ export function getMultiEntityCompanies() {
 export function getPrimaryColor() {
     return JSON.parse((localStorage.getItem('userData')))?.companySetting?.primaryColor || "#11e26e";
 }
+export function getCompanyName() {
+    return JSON.parse((localStorage.getItem('userData')))?.companyName || "AA";
+}
 export function getPasswordPolicy() {
     return JSON.parse((localStorage.getItem('userData')))?.companySetting?.passwordPolicy || "";
 }

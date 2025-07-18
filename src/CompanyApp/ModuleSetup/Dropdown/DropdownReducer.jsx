@@ -47,7 +47,8 @@ const initialState = {
     employmentStatus: [],
     goals: [],
     goalsEmployee: [],
-    entity:[]
+    entity: [],
+    reviewCycle: []
 }
 const DropdownReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -288,28 +289,34 @@ const DropdownReducer = (state = initialState, action) => {
             return state;
 
         case 'SET_EMPLOYMENTSTATUS':
-                return {
-                    ...state,
-                    employmentStatus: action.employmentStatus
-                };
-                return state;  
+            return {
+                ...state,
+                employmentStatus: action.employmentStatus
+            };
+            return state;
         case 'SET_GOALS_DATA':
             return {
                 ...state,
                 goals: action.goals
-            };  
-            case 'SET_GOALS_EMPLOYEE_DATA':
+            };
+        case 'SET_GOALS_EMPLOYEE_DATA':
             return {
                 ...state,
                 goalsEmployee: action.goalsEmployee
-            }; 
-	    case 'SET_ENTITY':
+            };
+        case 'SET_ENTITY':
             return {
-                  ...state,
-                        entity: action.entity
-                    };
-                return state;   
-    } 
+                ...state,
+                entity: action.entity
+            };
+            return state;
+        case 'SET_PERFORM_REVIEW_CYCLE':
+            return {
+                ...state,
+                reviewCycle: action.performReviewCycle
+            };
+            return state;
+    }
 };
 export default DropdownReducer;
 
@@ -375,9 +382,9 @@ export function setEmployeeData(employees) {
         employees
     }
 }
-export function setEmployeeDataByCompany(companyEmployees){
+export function setEmployeeDataByCompany(companyEmployees) {
     return {
-        type:"SET_EMPLOYEE_DATA_BY_COMPANY",
+        type: "SET_EMPLOYEE_DATA_BY_COMPANY",
         companyEmployees
     }
 }
@@ -631,12 +638,12 @@ export function setpayhubRevenueData(payhubRevenue) {
     //     type: 'SET_PAYHUB_REVENUE_DATA',
     //     payhubRevenue
     // }
-}   
+}
 export function setEmploymentStatus(employmentStatus) {
-        return {
-            type: 'SET_EMPLOYMENTSTATUS',
-            employmentStatus
-        }
+    return {
+        type: 'SET_EMPLOYMENTSTATUS',
+        employmentStatus
+    }
 }
 
 export function setGoalsData(goals) {
@@ -658,4 +665,16 @@ export function setEntity(entity) {
         type: 'SET_ENTITY',
         entity
     }
+
+
+}
+
+export function setPerformReviewCycle(performReviewCycle) {
+    console.log("from performance review cycle: ", performReviewCycle)
+    return {
+        type: 'SET_PERFORM_REVIEW_CYCLE',
+        performReviewCycle
+    }
+
+
 }

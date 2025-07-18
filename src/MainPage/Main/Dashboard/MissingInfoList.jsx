@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { getEmployeeMissingInfoList, getMissingDocumentList } from './service'
 import EmployeeListColumn from '../../../CompanyApp/Employee/employeeListColumn';
 import DocumentDetailEmployeeForm from '../../../CompanyApp/Employee/detail/documentDetailForm';
+import { verifyOrgLevelEditPermission,getPermission } from '../../../utility';
 import { Modal } from 'react-bootstrap';
-import { verifyOrgLevelEditPermission } from '../../../utility';
 
+import { PERMISSION_LEVEL } from '../../../Constant/enum';
 const { Header, Body, Footer, Dialog } = Modal;
 
 export default class MissingInfoList extends Component {
@@ -177,7 +178,7 @@ export default class MissingInfoList extends Component {
                                                     <th>#</th>
                                                     <th>Employee</th>
                                                     <th>Missing Documents Name</th>
-                                                    {verifyOrgLevelEditPermission("EMPLOYEE") &&
+                                                    {getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION &&
                                                         <th>Action</th>
                                                     }
                                                 </tr>
@@ -196,7 +197,7 @@ export default class MissingInfoList extends Component {
                                                             />
                                                         </td>
                                                         <td className="table-column">{item.documentTypeName}</td>
-                                                        {verifyOrgLevelEditPermission("EMPLOYEE") &&
+                                                        {getPermission("Peoples Organization", "EDIT") == PERMISSION_LEVEL.ORGANIZATION &&
                                                             <td className='table-column'>
                                                                 <div className="dropdown">
                                                                     <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

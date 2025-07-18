@@ -53,8 +53,6 @@ export default class ObjectiveForm extends Component {
         })
     }
     render() {
-        console.log(this.state.objectiveGroup)
-        console.log(this.state.reviewId)
         return (
             <div>
 

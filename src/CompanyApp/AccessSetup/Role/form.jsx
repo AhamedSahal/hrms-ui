@@ -52,7 +52,7 @@ export default class RoleForm extends Component {
         })
     }
     render() {
-        console.log(this.state.role.id);
+        
         return (
             <div>
 

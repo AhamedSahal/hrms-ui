@@ -20,6 +20,8 @@ export default class BankAccountDetailEmployeeForm extends Component {
 
         this.state = {
             editable: false,
+            payModeId: 0,
+            payModeName: "",
             id: props.employeeId || 0,
             employee: props.employee || {
                 id: 0,
@@ -33,6 +35,15 @@ export default class BankAccountDetailEmployeeForm extends Component {
     componentDidMount() {
         this.fetchList()
 
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (!prevState.editable && this.state.editable) {
+            const name = this.getPaymentModeName(this.state.employee.paymentModeId);
+            if (name !== this.state.payModeName) {
+                this.setState({ payModeName: name });
+            }
+        }
     }
 
     fetchList = () => {
@@ -52,7 +63,6 @@ export default class BankAccountDetailEmployeeForm extends Component {
                 toast.success(res.message);
                 this.setState({ employee: res.data, editable: false });
                 this.fetchList()
-                console.log(this.state.employee);
             } else {
                 toast.error(res.message);
             }
@@ -63,11 +73,13 @@ export default class BankAccountDetailEmployeeForm extends Component {
             action.setSubmitting(false);
         })
     }
-    getPaymentName = (paymentId) => {
-        let paymentMode = this.state.paymentModes.find(x => x.id == paymentId);
-        if (paymentMode) {
-            return paymentMode.name;
+    getPaymentModeName = (paymentId) => {
+        if (!paymentId || !this.state.paymentModes || !this.state.paymentModes.length) {
+            return "";
         }
+
+        const paymentMode = this.state.paymentModes.find(x => x.id == paymentId);
+        return paymentMode ? paymentMode.name : "";
     }
 
     render() {
@@ -89,7 +101,7 @@ export default class BankAccountDetailEmployeeForm extends Component {
         employee.routingCode = getOrDefault(employee.routingCode, "");
         employee.labourCardNo = getOrDefault(employee.labourCardNo, "");
         employee.employerId = getOrDefault(employee.employerId, "");
-        employee.paymentMode = getOrDefault(this.getPaymentName(employee.paymentModeId), "");
+        employee.paymentMode = this.getPaymentModeName(employee.paymentModeId);
         return (
             <>
                 <div className="col-md-6 d-flex">
@@ -99,6 +111,10 @@ export default class BankAccountDetailEmployeeForm extends Component {
                                 this.setState({ editable: true })
                             }}><i className="fa fa-edit"></i></Anchor>}</h3>
                             <ul className="personal-info">
+                                <li>
+                                    <div className="title">Payment Mode</div>
+                                    <div className="text">{getOrDefault(employee.paymentMode, "-")}</div>
+                                </li>
                                 <li>
                                     <div className="title">Account Holder Name</div>
                                     <div className="text">{getOrDefault(employee.accountHolderName, "-")}</div>
@@ -135,10 +151,7 @@ export default class BankAccountDetailEmployeeForm extends Component {
                                     <div className="title">Employer Id </div>
                                     <div className="text">{getOrDefault(employee.employerId, "-")}</div>
                                 </li>
-                                <li>
-                                    <div className="title">Payment Mode</div>
-                                    <div className="text">{getOrDefault(employee.paymentMode, "-")}</div>
-                                </li>
+
                             </ul>
                         </div>
                     </div>
@@ -153,7 +166,7 @@ export default class BankAccountDetailEmployeeForm extends Component {
                             enableReinitialize={true}
                             initialValues={employee}
                             onSubmit={this.save}
-                            validationSchema={BankDetailsSchema}
+                            validationSchema={BankDetailsSchema(this.state.payModeName)}
                         >
                             {({
                                 values,
@@ -171,8 +184,21 @@ export default class BankAccountDetailEmployeeForm extends Component {
                                     <div className="row">
                                         <div className="col-md-4">
                                             <FormGroup>
+                                                <label>Payment Mode <span style={{ color: 'red' }}> * </span>
+                                                </label>
+                                                <Field required readOnly={!editable} name="paymentModeId" render={field => {
+                                                    return <PaymentModeDropdown readOnly={!editable} defaultValue={employee.paymentModeId} onChange={e => {
+                                                        setFieldValue("paymentModeId", e.target.value);
+                                                        const name = this.getPaymentModeName(e.target.value);
+                                                        this.setState({ payModeName: name });
+                                                    }}></PaymentModeDropdown>
+                                                }}></Field>
+                                            </FormGroup>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <FormGroup>
                                                 <label>Account Holder Name
-                                                    <span style={{ color: "red" }}>*</span>
+                                                    {this.state.payModeName == "WPS" && <span style={{ color: "red" }}>*</span>}
                                                 </label>
                                                 <Field readOnly={!editable} name="accountHolderName" className="form-control"></Field>
                                                 <ErrorMessage name="accountHolderName">
@@ -182,7 +208,7 @@ export default class BankAccountDetailEmployeeForm extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <FormGroup>
-                                                <label>Account Number <span style={{ color: "red" }}>*</span>
+                                                <label>Account Number {this.state.payModeName == "WPS" && <span style={{ color: "red" }}>*</span>}
                                                 </label>
                                                 <Field readOnly={!editable} name="accountNumber" className="form-control"></Field>
                                                 <ErrorMessage name="accountNumber">
@@ -193,7 +219,7 @@ export default class BankAccountDetailEmployeeForm extends Component {
                                         <div className="col-md-4">
                                             <FormGroup>
                                                 <label>Bank Name
-                                                    <span style={{ color: "red" }}>*</span>
+                                                    {this.state.payModeName == "WPS" && <span style={{ color: "red" }}>*</span>}
                                                 </label>
                                                 <Field readOnly={!editable} name="bankName" className="form-control"></Field>
                                                 <ErrorMessage name="bankName">
@@ -204,7 +230,7 @@ export default class BankAccountDetailEmployeeForm extends Component {
                                         <div className="col-md-4">
                                             <FormGroup>
                                                 <label> IBAN Number
-                                                    <span style={{ color: "red" }}>*</span>
+                                                    {this.state.payModeName == "WPS" && <span style={{ color: "red" }}>*</span>}
                                                 </label>
                                                 <Field readOnly={!editable} name="ibanNumber" className="form-control"></Field>
                                                 <ErrorMessage name="ibanNumber">
@@ -215,7 +241,7 @@ export default class BankAccountDetailEmployeeForm extends Component {
                                         <div className="col-md-4">
                                             <FormGroup>
                                                 <label>Branch Location
-                                                    <span style={{ color: "red" }}>*</span>
+                                                    {this.state.payModeName == "WPS" && <span style={{ color: "red" }}>*</span>}
                                                 </label>
                                                 <Field readOnly={!editable} name="branchLocation" className="form-control"></Field>
                                                 <ErrorMessage name="branchLocation">
@@ -225,20 +251,25 @@ export default class BankAccountDetailEmployeeForm extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <FormGroup>
-                                                <label>SWIFT Code</label>
+                                                <label>SWIFT Code {this.state.payModeName == "WPS" && <span style={{ color: "red" }}>*</span>}</label>
                                                 <Field readOnly={!editable} name="swiftCode" className="form-control"></Field>
-
+                                                <ErrorMessage name="swiftCode">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
                                             </FormGroup>
                                         </div>
                                         <div className="col-md-4">
                                             <FormGroup>
-                                                <label>Routing Code</label>
+                                                <label>Routing Code {this.state.payModeName == "WPS" && <span style={{ color: "red" }}>*</span>}</label>
                                                 <Field readOnly={!editable} name="routingCode" className="form-control"></Field>
+                                                <ErrorMessage name="routingCode">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
                                             </FormGroup>
                                         </div>
                                         <div className="col-md-4">
                                             <FormGroup>
-                                                <label>Labour CardNo</label>
+                                                <label>Labour Card No {this.state.payModeName == "WPS" && <span style={{ color: "red" }}>*</span>}</label>
                                                 <Field readOnly={!editable} name="labourCardNo" className="form-control"></Field>
                                                 <ErrorMessage name="labourCardNo">
                                                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
@@ -249,17 +280,18 @@ export default class BankAccountDetailEmployeeForm extends Component {
                                             <FormGroup>
                                                 <label>Employer Id</label>
                                                 <Field readOnly={!editable} name="employerId" className="form-control"></Field>
+                                                <ErrorMessage name="employerId">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
                                             </FormGroup>
                                         </div>
                                         <div className="col-md-4">
                                             <FormGroup>
-                                                <label>Payment Mode
-                                                </label>
-                                                <Field readOnly={!editable} name="paymentModeId" render={field => {
-                                                    return <PaymentModeDropdown readOnly={!editable} defaultValue={employee.paymentModeId} onChange={e => {
-                                                        setFieldValue("paymentModeId", e.target.value);
-                                                    }}></PaymentModeDropdown>
-                                                }}></Field>
+                                                <label>Personal No(Labour Card) {this.state.payModeName == "WPS" && <span style={{ color: "red" }}>*</span>}</label>
+                                                <Field readOnly={!editable} name="personalNo" className="form-control"></Field>
+                                                <ErrorMessage name="personalNo">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
                                             </FormGroup>
                                         </div>
                                     </div>

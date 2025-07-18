@@ -34,6 +34,7 @@ export default class ObjectiveGroup extends Component {
     getObjectiveGroupList(this.state.q, this.state.page, this.state.size, this.state.sort).then(res => {
 
       if (res.status == "OK") {
+       
         this.setState({
           data: res.data.list,
           totalPages: res.data.totalPages,
@@ -64,6 +65,7 @@ export default class ObjectiveGroup extends Component {
     this.setState({ data },
       () => {
         this.hideForm();
+        this.fetchList();
       });
   }
   pageSizeChange = (currentPage, pageSize) => {
@@ -129,7 +131,17 @@ export default class ObjectiveGroup extends Component {
         className: "text-center",
         render: (text, record) => (
           <div className="dropdow">
-            {verifyOrgLevelEditPermission("Module Setup Performance") && <><a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            {record.defaultRecord ? (
+                <div style={{ color: "#55687d", fontSize: "14px", fontWeight: "bolder", paddingTop: "0px" }}>
+                  <b>
+                    <span>
+                      <i className="pr-2 fa fa-star text-primary"></i>
+                    </span>
+                  </b>
+                  <span> Default </span>
+                </div>
+            )
+            :(verifyOrgLevelEditPermission("Module Setup Performance") && <><a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
               <i className="las la-bars"></i>
             </a>
               <div className="dropdown-menu dropdown-menu-right">
@@ -142,7 +154,7 @@ export default class ObjectiveGroup extends Component {
                 }}>
                   <i className="fa fa-trash-o m-r-5"></i> Delete</a>
 
-              </div></>}
+              </div></>)}
           </div>
         ),
       },
@@ -213,7 +225,7 @@ export default class ObjectiveGroup extends Component {
 
           </Header>
           <Body>
-            <ObjectiveGroupForm updateList={this.updateList} objectivegroup={this.state.objectivegroup}>
+            <ObjectiveGroupForm updateList={this.updateList} objectivegroup={this.state.objectivegroup} >
             </ObjectiveGroupForm>
           </Body>
 
